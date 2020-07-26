@@ -1,0 +1,82 @@
+{
+  "name": "electron-cra-example",
+  "version": "0.1.0",
+  "productName": "quickAdmin",
+  "main": "electron/main.js",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.9.8",
+    "@material-ui/lab": "^4.0.0-alpha.47",
+    "base-64": "^0.1.0",
+    "bcryptjs": "^2.4.3",
+    "bootstrap": "^4.4.1",
+    "json-update": "^5.3.0",
+    "lowdb": "^1.0.0",
+    "mariadb": "^2.1.5",
+    "material-design-icons": "^3.0.1",
+    "mongodb": "^3.5.2",
+    "mssql": "^6.0.1",
+    "mysql": "^2.17.1",
+    "mysql2": "^2.1.0",
+    "node-sass": "^4.14.1",
+    "pg": "^7.17.1",
+    "pg-hstore": "^2.3.3",
+    "pretty-checkbox": "^3.0.3",
+    "rc-menu": "^7.5.4",
+    "react": "^16.8.6",
+    "react-bootstrap": "^1.0.0-beta.16",
+    "react-contextmenu": "^2.13.0",
+    "react-dom": "^16.8.6",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.4.1",
+    "reactstrap": "^8.4.0",
+    "scss": "^0.2.4",
+    "sequelize": "^5.21.3",
+    "sequelize-auto": "^0.5.3",
+    "sequelize-cli": "^5.5.1",
+    "shelljs": "^0.8.3",
+    "sqlite": "^3.0.3",
+    "sqlite3": "^4.1.1",
+    "tedious": "^8.0.1",
+    "utf8": "^3.0.0",
+    "wait-on": "^3.3.0",
+    "xlsx": "^0.15.6"
+  },
+  "homepage": "./",
+  "scripts": {
+    "start": "export BROWSER=none && react-scripts start",
+    "start-win": "set BROWSER=none && react-scripts start",
+    "start-electron": "export ELECTRON_START_URL=http://localhost:3000 && electron .",
+    "start-electron-win": "set ELECTRON_START_URL=http://localhost:3000 && electron .",
+    "clean": "rm -rf build dist",
+    "clean-win": "rmdir build /S /Q & rmdir dist/S /Q",
+    "build": "react-scripts build",
+    "build-electron": "mkdir build/src && cp -r electron/. build/electron && cp -r src/shared/. build/src/shared",
+    "build-electron-win": "mkdir build/src && robocopy electron build/electron /S & robocopy src/shared build/src/shared /S",
+    "package": "electron-builder build --mac -c.extraMetadata.main=build/electron/main.js --publish never",
+    "package-win": "electron-builder build --win -c.extraMetadata.main=build/electron/main.js --publish never",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "build": {
+    "asar": true,
+    "files": [
+      "build",
+      "node_modules",
+      "*.js"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "electron": "^5.0.7",
+    "electron-builder": "^21.1.1"
+  }
+}

@@ -1,0 +1,114 @@
+@import "./variables";
+
+.add-btn{
+  background: #d99900!important;
+}
+
+.add-btn:hover{
+  background: #45597E!important;
+  transition: 0.5s;
+}
+
+.svg_icon:hover{
+    transform: rotate(180deg) scale(1.1)!important;
+
+    transition: 0.25s;
+}
+
+.tables {
+  margin-top: 60px;
+
+  .folders-list {
+      display: flex;
+      flex-direction: row;
+      padding-bottom: 35px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-height: 100vh;
+      overflow: auto;
+  }
+
+  .folder {
+      user-select: none;
+
+      &__title {
+           display: flex;
+           width: 130px;
+           flex-direction: row;
+           justify-content: center;
+           color: $folder-title;
+           font-size: 11px;
+      }
+
+        &__menu {
+            display: flex;
+            flex-direction: column;
+            min-width: 150px;
+            color: $black;
+            background-color: $white;
+            border-radius: 3px;
+
+            box-shadow: 0px 0px 1px 0px black;
+
+            &__line {
+                display: block;
+                width: 100%;
+                height: 1px;
+                background: $context-menu-line;
+            }
+
+            &__title {
+                display: flex;
+                flex-direction: row;
+                justify-content: start;
+                margin-left: 5px;
+                font-weight: 500;
+            }
+
+            &__item {
+                display: flex;
+                flex-direction: row;
+                justify-content: start;
+                padding-left: 5px;
+                user-select: none;
+            }
+  
+            &__item:hover {
+                background: $hover;
+            }
+      }
+
+      i {
+          display: flex;
+          width: 130px;
+          flex-direction: row;
+          justify-content: center;
+          font-size: 60px;
+          color: $folder;
+      }
+
+      .create-folder:hover {
+          color: $create;
+          transform: scale(1.2);
+          transition-duration: 0.8s;
+      }
+
+      .react-contextmenu-wrapper svg:hover {
+          color: $open!important;
+          transform: scale(1.1) !important;
+          transition-duration: 0.8s!important;
+      }
+
+      &__line {
+           display: block;
+           width: 100%;
+           height: 1px;
+           background: $context-menu-line;
+       }
+  }
+}
+
+
+
