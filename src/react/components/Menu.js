@@ -34,7 +34,7 @@ class Menu extends React.Component {
         }
     }
 
-    changeItem = () =>{
+    changeItem = () => {
         let url = window.location.href;
         let lastUrl = url.split('/').reverse()[0];
         if(lastUrl === "settings"){

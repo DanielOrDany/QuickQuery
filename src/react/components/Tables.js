@@ -18,7 +18,7 @@ export default class Tables extends React.Component {
     componentDidMount() {
         if (!localStorage.getItem('current_connection')) {
             alert('pl, choose table');
-            window.location.pathname = '/connections';
+            window.location.hash = '#/connections';
         }
 
         if (!localStorage.getItem('current_tables')) {
@@ -33,7 +33,7 @@ export default class Tables extends React.Component {
             } else {
                 //return to connections
                 alert('pl, choose connection');
-                window.location.pathname = '/connections';
+                window.location.hash = '#/connections';
             }
         } else {
             const tables = JSON.parse(localStorage.getItem('current_tables'));
@@ -60,13 +60,13 @@ export default class Tables extends React.Component {
                 localStorage.setItem("results", JSON.stringify([result]));
             }
 
-            return '/result';
-        }).then(url => window.location.pathname = url);
+            return '#/result';
+        }).then(url => window.location.hash = url);
     }
 
     editTable(table) {
         localStorage.setItem("current_result", JSON.stringify(table));
-        window.location.pathname = "/create-table";
+        window.location.hash = "#/create-table";
     }
 
     deleteTable(alias) {
@@ -82,7 +82,7 @@ export default class Tables extends React.Component {
         if(localStorage.getItem("current_result")){
             localStorage.removeItem("current_result");
         }
-        window.location.pathname = "/create-table"
+        window.location.hash = "#/create-table"
     }
 
 

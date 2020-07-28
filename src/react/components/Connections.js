@@ -115,7 +115,7 @@ export default class Connections extends React.Component {
         const currentConnection = this.getConnectionData(name);
         localStorage.setItem('current_connection', JSON.stringify(currentConnection));
 
-        window.location.pathname = '/tables';
+        window.location.hash = '#/tables';
     };
 
     nameOnChange = (e) => {

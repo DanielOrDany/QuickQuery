@@ -39,7 +39,7 @@ export default class CreateTable extends React.Component {
             updateTableQuery(connectionName, alias, query).then(() => {
                 getAllTables(connectionName).then(tables => {
                     localStorage.setItem("current_tables", JSON.stringify(tables));
-                    window.location.pathname = "/tables";
+                    window.location.hash = "#/tables";
                 });
             });
         } else if (
@@ -48,7 +48,7 @@ export default class CreateTable extends React.Component {
         ) {
             addTable(connectionName, alias,"new", query).then((data) => {
                 if (data) {
-                    return "/tables";
+                    return "#/tables";
                 } else {
                     this.setState({
                         header: "",

@@ -17,7 +17,7 @@ export default class Settings extends React.Component {
         pom.setAttribute('download', filename);
 
         if (document.createEvent) {
-            var event = document.createEvent('MouseEvents');
+            let event = document.createEvent('MouseEvents');
             event.initEvent('click', true, true);
             pom.dispatchEvent(event);
         }
