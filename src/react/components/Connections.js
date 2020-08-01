@@ -100,8 +100,11 @@ export default class Connections extends React.Component {
     };
 
     deleteConnection (name) {
+        console.log(name);
         deleteConnection(name).then(connections => {
+            console.log(connections);
             if (connections) {
+                console.log(connections);
                 this.setState({connections: connections});
             }
         });
@@ -153,9 +156,10 @@ export default class Connections extends React.Component {
         }
     };
 
-    showURI (URI) {
-        alert (URI);
-    };
+    // showURI (URI) {
+    //     console.log(URI);
+    //     alert (URI);
+    // };
 
     render() {
         return (
@@ -262,9 +266,9 @@ export default class Connections extends React.Component {
 
                                         <span className="url-menu-line"/>
 
-                                        <div className="url-menu-item" onClick={() => this.showURI(conn.URI)}>
-                                            <MenuItem>Show URI</MenuItem>
-                                        </div>
+                                        {/*<div className="url-menu-item" onMouseMove={() => this.showURI(conn)}>*/}
+                                        {/*    <MenuItem>Show URI</MenuItem>*/}
+                                        {/*</div>*/}
 
                                         <div className="url-menu-item" onClick={() => this.deleteConnection(conn.name)}>
                                             <MenuItem>Delete URI</MenuItem>

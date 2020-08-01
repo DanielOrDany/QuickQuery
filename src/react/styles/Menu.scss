@@ -1,112 +1,126 @@
-.mr-auto {
-    margin: 0 auto;
-}
+.menu-header {
+    // Header
 
-.nav-item {
-    color: black;
-    height: 55px;
-    width: 120px;
-    transition: height .2s;
-}
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1px;
+    background: #252628;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
-.nav-item:hover {
-    color: #1fdddd;
-}
+    // LOGO: icon & title text
 
-.nav-item:hover .hidden{
-    color: #1fdddd!important;
-}
+    .logo-box {
+        margin-left: 30px;
 
-.nav-item:hover svg{
-    fill: #1fdddd;
-}
+        #l-icon {
+            width: 40px;
+            height: 45px;
+        }
 
-.menu {
-    padding: 0px;
-}
+        #l-title {
+            margin-left: 5px;
+            font-weight: bold;
+            color: white;
+        }
+    }
 
-.current-page {
-    color: #53c3c3;
-    border-bottom: 1px solid #53c3c3;
-}
+    // SHARING: select & export buttons
 
-.other-pages {
-    color: #545454;
-}
+    .menu-box {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-right: 10px;
+        padding-top: 7px;
 
-.icons{
-    width: 33px;
-}
+        .sharing-buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-right: 30px;
 
-.hidden {
-    font-size: small;
-    display: none;
-    opacity: 0;
-    margin-top: 5px;
-    animation: show-up .3s;
-    animation-direction: alternate;
-}
+            // Select button style & animation
 
-.menu:hover .nav-item{
-    width: 120px;
-    /* transition: width 1s; */
-    height: 80px;
-}
+            #import-button::-webkit-file-upload-button {
+                visibility: hidden;
+            }
 
-.menu:hover .hidden {
-    display: block;
-    animation: show-up .3s;
-    opacity: 1;
-}
+            #import-button::before {
+                content: 'Import';
+                display: flex;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 14px;
+                line-height: 17px;
+                align-items: center;
+                text-align: center;
+                justify-content: center;
+                color: white;
+                padding-top: 7px;
+            }
 
-footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    height: 30px;
-    width: 100%;
-    background-color: #363740;
-    color: white;
-    text-align: center;
-}
+            #import-button {
+                margin-right: 10px;
+                width: 70px;
+                height: 30px;
+                display: flex;
+                //font-family: "Scada";
+                font-style: normal;
+                font-weight: normal;
+                font-size: 14px;
+                line-height: 17px;
+                align-items: center;
+                text-align: center;
+                justify-content: center;
+                color: white;
 
-@keyframes show-up {
-    0% {opacity: 0;}
-    50% {opacity: 0.5;}
-    100% {opacity: 1;}
-}
+                background: #EB6E3B;
+                border-radius: 5px;
+            }
 
-.material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 35px;  /* Preferred icon size */
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
-  
-    /* Support for all WebKit browsers. */
-    -webkit-font-smoothing: antialiased;
-    /* Support for Safari and Chrome. */
-    text-rendering: optimizeLegibility;
-    /* Support for Firefox. */
-    -moz-osx-font-smoothing: grayscale;
-    /* Support for IE. */
-    font-feature-settings: 'liga';
-}
+            #import-button:hover
+            {
+                background: #c1562b;
+            }
 
-@font-face {
-    font-family: 'Material Icons';
-    font-style: normal;
-    font-weight: 400;
-    src: url(https://example.com/MaterialIcons-Regular.eot); /* For IE6-8 */
-    src: local('Material Icons'),
-      local('MaterialIcons-Regular'),
-      url(https://example.com/MaterialIcons-Regular.woff2) format('woff2'),
-      url(https://example.com/MaterialIcons-Regular.woff) format('woff'),
-      url(https://example.com/MaterialIcons-Regular.ttf) format('truetype');
+            // Export button style & animation
+
+            #export-button {
+                width: 70px;
+                height: 30px;
+
+                margin-right: 10px;
+                display: flex;
+                //font-family: "Scada";
+                font-style: normal;
+                font-weight: normal;
+                font-size: 14px;
+                line-height: 17px;
+                align-items: center;
+                text-align: center;
+                justify-content: center;
+                color: white;
+
+                background: #EB6E3B;
+                border-radius: 5px;
+            }
+
+            #export-button:hover
+            {
+                background: #c1562b;
+            }
+        }
+
+        #open-tables {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        #open-connections {
+            width: 30px;
+            height: 30px;
+        }
+    }
 }
