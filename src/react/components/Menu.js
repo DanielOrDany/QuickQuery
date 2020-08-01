@@ -2,33 +2,26 @@ import React from 'react';
 import {
     HashRouter as Router,
     Route,
-    Switch,
-    Link
+    Switch
 } from 'react-router-dom';
 import Tables from './Tables';
 import Connections from './Connections';
 import Settings from './Settings';
 import '../styles/Menu.scss';
-import {
-    Navbar,
-    Nav,
-    NavItem,
-    NavLink
-  } from 'reactstrap';
 import Result from "./Result";
 import CreateTable from "./CreateTable";
-import menu_icon from "../icons/menu.svg";
+import connections_icon from "../icons/connections.svg";
+import tables_icon from "../icons/tables.png";
 import logo_icon from "../icons/logo.png";
+import { importConfig, exportConfig } from "../methods";
 
 class Menu extends React.Component {
 
     state = {
-        btnActive: '',
         theme: false
     };
 
     componentDidMount() {
-        this.changeItem();
         if(localStorage.getItem("theme")){
             this.setState({
                 theme: true
@@ -36,23 +29,45 @@ class Menu extends React.Component {
         }
     }
 
-    changeItem = () => {
-        let url = window.location.href;
-        let lastUrl = url.split('/').reverse()[0];
-        if(lastUrl === "settings"){
-            this.setState({
-                btnActive: 3
-            })
-        } else if(lastUrl === "connections"){
-            this.setState({
-                btnActive: 2
-            })
-        } else if(lastUrl === "tables"){
-            this.setState({
-                btnActive: 1
-            })
-        }
+    share = () => {
+        exportConfig().then((data) => {
+            this.exportConfig("config.txt", data);
+        });
     };
+
+    importConfig = (event) => {
+        const input = event.target;
+
+        const reader = new FileReader();
+        reader.onload = function(){
+            const content = reader.result;
+            importConfig(content);
+        };
+        reader.readAsText(input.files[0]);
+    };
+
+    exportConfig(filename, text) {
+        const pom = document.createElement('a');
+        pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        pom.setAttribute('download', filename);
+
+        if (document.createEvent) {
+            let event = document.createEvent('MouseEvents');
+            event.initEvent('click', true, true);
+            pom.dispatchEvent(event);
+        }
+        else {
+            pom.click();
+        }
+    }
+
+    openConnections() {
+        window.location.hash = '#/connections';
+    }
+
+    openTables() {
+        window.location.hash = '#/tables';
+    }
 
     render() {
         return (
@@ -65,10 +80,12 @@ class Menu extends React.Component {
                         </div>
                         <div className="menu-box">
                             <div className="sharing-buttons">
-                                <span id="select-button">Select</span>
-                                <span id="export-button">Export</span>
+                                <span id="export-button" onClick={() => this.share()}>Export</span>
+                                <input id="import-button" type="file" onChange={(event) => this.importConfig(event)}/>
                             </div>
-                            <img src={menu_icon} id="open-menu-button"></img>
+
+                            <img src={tables_icon} id="open-tables" onClick={() => this.openTables()}></img>
+                            <img src={connections_icon} id="open-connections" onClick={() => this.openConnections()}></img>
                         </div>
                     </div>
                     <div>

@@ -40,12 +40,30 @@
             justify-content: space-between;
             margin-right: 30px;
 
-            // Button text
+            // Select button style & animation
 
-            span {
+            #import-button::-webkit-file-upload-button {
+                visibility: hidden;
+            }
+
+            #import-button::before {
+                content: 'Import';
+                display: flex;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 14px;
+                line-height: 17px;
+                align-items: center;
+                text-align: center;
+                justify-content: center;
+                color: white;
+                padding-top: 7px;
+            }
+
+            #import-button {
+                margin-right: 10px;
                 width: 70px;
                 height: 30px;
-
                 display: flex;
                 //font-family: "Scada";
                 font-style: normal;
@@ -61,14 +79,7 @@
                 border-radius: 5px;
             }
 
-
-            // Select button style & animation
-
-            #select-button {
-                margin-right: 10px;
-            }
-
-            #select-button:hover
+            #import-button:hover
             {
                 background: #c1562b;
             }
@@ -76,6 +87,23 @@
             // Export button style & animation
 
             #export-button {
+                width: 70px;
+                height: 30px;
+
+                margin-right: 10px;
+                display: flex;
+                //font-family: "Scada";
+                font-style: normal;
+                font-weight: normal;
+                font-size: 14px;
+                line-height: 17px;
+                align-items: center;
+                text-align: center;
+                justify-content: center;
+                color: white;
+
+                background: #EB6E3B;
+                border-radius: 5px;
             }
 
             #export-button:hover
@@ -84,7 +112,13 @@
             }
         }
 
-        #open-menu-button {
+        #open-tables {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        #open-connections {
             width: 30px;
             height: 30px;
         }
