@@ -8,6 +8,7 @@
 
 
     background: #252628;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
 
 
@@ -103,14 +104,21 @@
             margin-right: 30px;
         }
 
+        #open-tables:hover {
+            cursor: pointer;
+        }
+
         #open-connections {
             width: 30px;
             height: 30px;
             margin-right: 30px;
         }
+
+        #open-connections:hover {
+            cursor: pointer;
+        }
     }
 }
-
 
 
 

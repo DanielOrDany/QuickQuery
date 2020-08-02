@@ -165,63 +165,61 @@ export default class Connections extends React.Component {
         return (
             <div className="container">
                 <div className="column left">
-                    <div className="db_field">
-                        <b>Connection</b>
-                    </div>
 
                     <div className="db_field">
-                        <span>Name</span>
-                        <input id="db-name" ref="name" className="form-control" type="text" placeholder="Yoda"
+                        <span id="input-info">Name</span>
+                        <input id="db-input" ref="name" className="form-control" type="text" placeholder="Yoda"
                                defaultValue={this.state.nameInput} onChange={this.nameOnChange}
                                onKeyPress={this.nameKeyPress}/>
                     </div>
 
                     <div className="db_field">
-                        <span>Host</span>
-                        <input id="db-host" ref="host" className="form-control" type="text" placeholder="127.0.0.1"
+                        <span id="input-info">Host</span>
+                        <input id="db-input" ref="host" className="form-control" type="text" placeholder="127.0.0.1"
                                defaultValue={this.state.hostInput} onChange={this.hostOnChange}
                                onKeyPress={this.hostKeyPress}/>
                     </div>
 
 
                     <div className="db_field">
-                        <span>Port</span>
-                        <input id="db-port" ref="port" className="form-control" type="text" placeholder="5432"
+                        <span id="input-info">Port</span>
+                        <input id="db-input" ref="port" className="form-control" type="text" placeholder="5432"
                                defaultValue={this.state.portInput} onChange={this.portOnChange}
                                onKeyPress={this.portKeyPress}/>
                     </div>
 
                     <div className="db_field">
-                        <span>User</span>
-                        <input id="db-user" ref="user" className="form-control" type="text" placeholder="user name"
+                        <span id="input-info">User</span>
+                        <input id="db-input" ref="user" className="form-control" type="text" placeholder="user name"
                                defaultValue={this.state.userInput} onChange={this.userOnChange}
                                onKeyPress={this.userKeyPress}/>
                     </div>
 
                     <div className="db_field">
-                        <span>Password</span>
-                        <input id="db-password" ref="password" className="form-control" type="text" placeholder="password"
+                        <span id="input-info">Password</span>
+                        <input id="db-input" ref="password" className="form-control" type="text" placeholder="password"
                                defaultValue={this.state.passwordInput} onChange={this.passwordOnChange}
                                onKeyPress={this.passwordKeyPress}/>
                     </div>
 
                     <div className="db_field">
-                        <span>Database</span>
-                        <input id="db-database" ref="database" className="form-control" type="text" placeholder="database name"
+                        <span id="input-info">Database</span>
+                        <input id="db-input" ref="database" className="form-control" type="text" placeholder="database name"
                                defaultValue={this.state.databaseInput} onChange={this.databaseOnChange}
                                onKeyPress={this.databaseKeyPress}/>
                     </div>
 
                     <div className="db_field">
-                        <span>Schema</span>
-                        <input id="db-schema" ref="schema" className="form-control" type="text" placeholder="schema name"
+                        <span id="input-info">Schema</span>
+                        <input id="db-input" ref="schema" className="form-control" type="text" placeholder="schema name"
                                defaultValue={this.state.schemaInput} onChange={this.schemaOnChange}
                                onKeyPress={this.schemaKeyPress}/>
                     </div>
 
-                    <div className="db_field">
-                        <span>Choose d-base type</span>
+                    <div className="choose-db">
+                        <span id="choose-info">Choose d-base type</span>
                         <select
+                            id="choose-type"
                             value={this.state.dtypeInput}
                             onChange={this.dtypeOnChange}
                         >
@@ -230,12 +228,12 @@ export default class Connections extends React.Component {
                         </select>
                     </div>
 
-                    <button type="button" style={localStorage.getItem("theme") ? {color: "white"} :  {color: "#363740"}}  className="btn add-btn" onClick={() => this.addConnection()}>Add</button>
+                    <button type="button" style={localStorage.getItem("theme") ? {color: "white"} :  {color: "#363740"}}  className="add-button" onClick={() => this.addConnection()}>Add</button>
 
                     {this.state.badQuery > 0 &&
-                        <div id="errorMessage" className="alert">
-                            <strong>Message!</strong> {this.state.errorMessage}
-                        </div>
+                    <div id="errorMessage" className="alert">
+                        <strong>Message!</strong> {this.state.errorMessage}
+                    </div>
                     }
                 </div>
 
