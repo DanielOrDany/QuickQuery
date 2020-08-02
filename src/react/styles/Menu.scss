@@ -1,10 +1,134 @@
+/* HEADER */
 .menu-header {
+    height: 50px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+
+    background: #252628;
+
+
+
+    /* LOGO */
+    #l-icon {
+        margin-left: 30px;
+        width: 150px;
+        height: 50px;
+    }
+
+
+
+    /* MENU-BOX */
+    .menu-box {
+        display: flex;
+
+
+
+        /* SHARING-BUTTONS */
+        .sharing-buttons{
+            display: flex;
+
+
+
+            /* EXPORT-BUTTON */
+            #export-button {
+                //font-family: "Scada";
+
+                width: 70px;
+                height: 30px;
+                margin-right: 10px;
+                font-size: 14px;
+
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                background: #EB6E3B;
+                border-radius: 5px;
+            }
+
+            #export-button:hover
+            {
+                background: #c1562b;
+                cursor: pointer;
+            }
+
+
+
+            /* IMPORT-BUTTON */
+            #import-button::-webkit-file-upload-button {
+                visibility: hidden;
+            }
+
+            #import-button::before {
+                font-size: 14px;
+                padding-top: 4px;
+
+                content: "Import";
+                color: white;
+
+                display: flex;
+                justify-content: center;
+
+            }
+
+            #import-button {
+                //font-family: "Scada";
+
+                width: 70px;
+                height: 30px;
+                margin-right: 30px;
+
+
+                background: #EB6E3B;
+                border-radius: 5px;
+            }
+
+            #import-button:hover
+            {
+                background: #c1562b;
+                cursor: pointer;
+            }
+        }
+
+
+
+        /* ICONS */
+        #open-tables {
+            width: 30px;
+            height: 30px;
+            margin-right: 30px;
+        }
+
+        #open-connections {
+            width: 30px;
+            height: 30px;
+            margin-right: 30px;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+/* СТАРИЙ КОД */
+
+
+
+/*.menu-header {
     // Header
 
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
-    padding: 1px;
+
+    height: 50px;
     background: #252628;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
@@ -14,14 +138,8 @@
         margin-left: 30px;
 
         #l-icon {
-            width: 40px;
-            height: 45px;
-        }
-
-        #l-title {
-            margin-left: 5px;
-            font-weight: bold;
-            color: white;
+            width: 150px;
+            height: 50px;
         }
     }
 
@@ -29,16 +147,12 @@
 
     .menu-box {
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
+
         margin-right: 10px;
         padding-top: 7px;
 
         .sharing-buttons {
             display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            margin-right: 30px;
 
             // Select button style & animation
 
@@ -57,11 +171,11 @@
                 text-align: center;
                 justify-content: center;
                 color: white;
-                padding-top: 7px;
+                padding-top: 6px;
             }
 
             #import-button {
-                margin-right: 10px;
+                margin-right: 30px;
                 width: 70px;
                 height: 30px;
                 display: flex;
@@ -87,12 +201,12 @@
             // Export button style & animation
 
             #export-button {
+                //font-family: "Scada";
                 width: 70px;
                 height: 30px;
 
                 margin-right: 10px;
                 display: flex;
-                //font-family: "Scada";
                 font-style: normal;
                 font-weight: normal;
                 font-size: 14px;
@@ -115,12 +229,14 @@
         #open-tables {
             width: 30px;
             height: 30px;
-            margin-right: 10px;
+            margin-right: 30px;
         }
 
         #open-connections {
             width: 30px;
             height: 30px;
+            margin-right: 30px;
         }
     }
 }
+*/

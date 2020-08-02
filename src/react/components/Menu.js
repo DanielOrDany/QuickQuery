@@ -76,7 +76,7 @@ class Menu extends React.Component {
                     <div className="menu-header" expand="md">
                         <div className="logo-box">
                             <img src={logo_icon} id="l-icon"></img>
-                            <span id="l-title">QuickQuery</span>
+
                         </div>
                         <div className="menu-box">
                             <div className="sharing-buttons">
