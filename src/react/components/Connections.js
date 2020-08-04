@@ -228,7 +228,7 @@ export default class Connections extends React.Component {
                         </select>
                     </div>
 
-                    <button type="button" style={localStorage.getItem("theme") ? {color: "white"} :  {color: "#363740"}}  className="add-button" onClick={() => this.addConnection()}>Add</button>
+                    <button type="button" style={localStorage.getItem("theme") ? {color: "white"} :  {color: "white"}}  className="add-button" onClick={() => this.addConnection()}>Add</button>
 
                     {this.state.badQuery > 0 &&
                     <div id="errorMessage" className="alert">

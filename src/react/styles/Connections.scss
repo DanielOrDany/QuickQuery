@@ -1,6 +1,8 @@
 /* ALL PAGE */
 .container {
   display: flex;
+  margin: 0 !important;
+  padding: 0 !important;
 
 
 
@@ -13,6 +15,9 @@
     padding-top: 70px;
 
     background: #EFEFEF;
+
+    position: absolute;
+    z-index: -1;
 
 
 
@@ -76,7 +81,7 @@
       margin-top: 30px;
 
       border-radius: 5px;
-      border: 0px solid;
+      border: 0 solid;
 
       background-color: #EB6E3B;
     }
@@ -94,38 +99,32 @@
 
 /*
 @import "./variables";
-
 .container {
   display: flex;
   margin-top: 40px;
   padding-left: 0px;
-
   .column {
     display: flex;
     flex-direction: column;
   }
 }
-
 .left {
   background: #0f6674;
   border: 2px #0c5460;
   border-radius: 8px;
   padding: 10px;
   margin-top: 15px;
-
   .db_field {
     display: flex;
     justify-content: space-between;
     min-width: 250px;
     margin-bottom: 20px;
     color: white;
-
     span {
       margin-right: 20px;
     }
   }
 }
-
 .right {
   display: flex;
   padding-bottom: 35px;
@@ -135,56 +134,45 @@
   max-height: 100vh;
   overflow: auto;
 }
-
 hr {
   color: #C0C0C0;
   background-color: #C0C0C0;
   height: 1px;
   margin: 40px 0;
 }
-
 .add-btn {
   background-color: #17a2b8!important;;
   border-color: $navbar;
 }
-
 .btn:hover {
   background-color: $navbar;
   color: $white;
 }
-
 .btn-text {
   color: $navbar;
 }
-
 .cancel-btn {
   padding-top: 0;
   color: $cancel-btn;
 }
-
 .connection-folder {
   padding-left: 10px;
   padding-right: 10px;
 }
-
 .link-container {
   transition: transform .3s;
   img {
     width: 120px;
   }
-
   .link {
   }
 }
-
 .link-container:hover {
   transform: translateY(-5px);
 }
-
 .alert {
   margin-top: 20px;
 }
-
 .url-menu {
   min-width: 150px;
   color: $folder-title;
@@ -193,7 +181,6 @@ hr {
   box-shadow: 0px 0px 1px 0px black;
   user-select: none;
   z-index: 1;
-
   &-title {
     display: flex;
     flex-direction: row;
@@ -201,21 +188,18 @@ hr {
     margin-left: 5px;
     font-weight: 500;
   }
-
   &-line {
     display: block;
     width: 100%;
     height: 1px;
     background: $context-menu-line;
   }
-
   &-item {
     display: flex;
     flex-direction: row;
     justify-content: start;
     padding-left: 5px;
   }
-
   &-item:hover {
     background: $hover;
   }
