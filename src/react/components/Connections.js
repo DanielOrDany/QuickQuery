@@ -1,12 +1,15 @@
 import React from 'react';
 import '../styles/Connections.scss';
-import { getDataFromDatabase, deleteConnection, addConnection } from "../methods";
-import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
-import database_icon from "../icons/software.svg"
+import {getDataFromDatabase, deleteConnection, addConnection} from "../methods";
+import {ContextMenu, MenuItem, ContextMenuTrigger} from "react-contextmenu";
+import database_icon from "../icons/software.png"
+import search_icon from "../icons/search.png"
+import delete_icon from "../icons/delete_icon.png"
+import pin_icon from "../icons/pin_icon.png"
 
 
 export default class Connections extends React.Component {
-    constructor (props) {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -23,7 +26,7 @@ export default class Connections extends React.Component {
         };
     };
 
-    componentDidMount () {
+    componentDidMount() {
         getDataFromDatabase()
             .then(data => {
                 console.log("DATA", data);
@@ -35,7 +38,7 @@ export default class Connections extends React.Component {
             });
     };
 
-    addConnection () {
+    addConnection() {
         let nameInput = this.state.nameInput;
         let hostInput = this.state.hostInput;
         let portInput = this.state.portInput;
@@ -99,7 +102,7 @@ export default class Connections extends React.Component {
         }
     };
 
-    deleteConnection (name) {
+    deleteConnection(name) {
         console.log(name);
         deleteConnection(name).then(connections => {
             console.log(connections);
@@ -110,11 +113,11 @@ export default class Connections extends React.Component {
         });
     };
 
-    getConnectionData (connectionName) {
+    getConnectionData(connectionName) {
         return this.state.connections.find(connection => connection.name === connectionName);
     };
 
-    openConnection (name) {
+    openConnection(name) {
         const currentConnection = this.getConnectionData(name);
         localStorage.setItem('current_connection', JSON.stringify(currentConnection));
 
@@ -147,7 +150,7 @@ export default class Connections extends React.Component {
     };
 
     nameKeyPress = (e) => {
-        if(e.key === "Enter"){
+        if (e.key === "Enter") {
             if (this.state.urlInput) {
                 this.addConnection();
             } else {
@@ -163,63 +166,67 @@ export default class Connections extends React.Component {
 
     render() {
         return (
-            <div className="container">
-                <div className="column left">
+            <div className="all-page">
 
-                    <div className="db_field">
-                        <span id="input-info">Name</span>
-                        <input id="db-input" ref="name" className="form-control" type="text" placeholder="Yoda"
+                <div className="left-menu">
+
+                    <div className="information-field">
+                        <span id="input-title">Name:</span>
+                        <input id="input-field" ref="name" className="form-control" type="text" placeholder="Yoda"
                                defaultValue={this.state.nameInput} onChange={this.nameOnChange}
                                onKeyPress={this.nameKeyPress}/>
                     </div>
 
-                    <div className="db_field">
-                        <span id="input-info">Host</span>
-                        <input id="db-input" ref="host" className="form-control" type="text" placeholder="127.0.0.1"
+                    <div className="information-field">
+                        <span id="input-title">Host:</span>
+                        <input id="input-field" ref="host" className="form-control" type="text" placeholder="127.0.0.1"
                                defaultValue={this.state.hostInput} onChange={this.hostOnChange}
                                onKeyPress={this.hostKeyPress}/>
                     </div>
 
 
-                    <div className="db_field">
-                        <span id="input-info">Port</span>
-                        <input id="db-input" ref="port" className="form-control" type="text" placeholder="5432"
+                    <div className="information-field">
+                        <span id="input-title">Port:</span>
+                        <input id="input-field" ref="port" className="form-control" type="text" placeholder="5432"
                                defaultValue={this.state.portInput} onChange={this.portOnChange}
                                onKeyPress={this.portKeyPress}/>
                     </div>
 
-                    <div className="db_field">
-                        <span id="input-info">User</span>
-                        <input id="db-input" ref="user" className="form-control" type="text" placeholder="user name"
+                    <div className="information-field">
+                        <span id="input-title">User:</span>
+                        <input id="input-field" ref="user" className="form-control" type="text" placeholder="user name"
                                defaultValue={this.state.userInput} onChange={this.userOnChange}
                                onKeyPress={this.userKeyPress}/>
                     </div>
 
-                    <div className="db_field">
-                        <span id="input-info">Password</span>
-                        <input id="db-input" ref="password" className="form-control" type="text" placeholder="password"
+                    <div className="information-field">
+                        <span id="input-title">Password:</span>
+                        <input id="input-field" ref="password" className="form-control" type="text"
+                               placeholder="password"
                                defaultValue={this.state.passwordInput} onChange={this.passwordOnChange}
                                onKeyPress={this.passwordKeyPress}/>
                     </div>
 
-                    <div className="db_field">
-                        <span id="input-info">Database</span>
-                        <input id="db-input" ref="database" className="form-control" type="text" placeholder="database name"
+                    <div className="information-field">
+                        <span id="input-title">Database:</span>
+                        <input id="input-field" ref="database" className="form-control" type="text"
+                               placeholder="database name"
                                defaultValue={this.state.databaseInput} onChange={this.databaseOnChange}
                                onKeyPress={this.databaseKeyPress}/>
                     </div>
 
-                    <div className="db_field">
-                        <span id="input-info">Schema</span>
-                        <input id="db-input" ref="schema" className="form-control" type="text" placeholder="schema name"
+                    <div className="information-field">
+                        <span id="input-title">Schema:</span>
+                        <input id="input-field" ref="schema" className="form-control" type="text"
+                               placeholder="schema name"
                                defaultValue={this.state.schemaInput} onChange={this.schemaOnChange}
                                onKeyPress={this.schemaKeyPress}/>
                     </div>
 
-                    <div className="choose-db">
-                        <span id="choose-info">Choose d-base type</span>
+                    <div className="choose-db-field">
+                        <span id="choose-db-title">Choose d-base type:</span>
                         <select
-                            id="choose-type"
+                            id="choose-db"
                             value={this.state.dtypeInput}
                             onChange={this.dtypeOnChange}
                         >
@@ -228,7 +235,9 @@ export default class Connections extends React.Component {
                         </select>
                     </div>
 
-                    <button type="button" style={localStorage.getItem("theme") ? {color: "white"} :  {color: "white"}}  className="add-button" onClick={() => this.addConnection()}>Add</button>
+                    <button type="button" style={localStorage.getItem("theme") ? {color: "white"} : {color: "white"}}
+                            className="add-button" onClick={() => this.addConnection()}>Add
+                    </button>
 
                     {this.state.badQuery > 0 &&
                     <div id="errorMessage" className="alert">
@@ -237,47 +246,87 @@ export default class Connections extends React.Component {
                     }
                 </div>
 
-                <hr/>
+                <div className="line"></div>
 
-                <div className="right">
-                    {this.state.connections ? this.state.connections.map(conn => {
-                            return (
-                                <div className="connection-folder" key={conn.name}>
 
-                                    <ContextMenuTrigger id={conn.name}>
+                <div className="right-side">
 
-                                        <div className="link-container" onDoubleClick={() => this.openConnection(conn.name)}>
-                                            <img alt={"icon database"} src={database_icon}/>
-                                            <div className="link">
-                                                <p>{conn.name}</p>
+                    <div id="menu">
+                        <div id="sort">
+                            Sorted by:
+                            <select id="choose-sort">
+                                <option value="name">name</option>
+                                <option value="time">time</option>
+                            </select>
+                        </div>
+                        <div className="search">
+                            {/*<img id="search-icon" src={search_icon} alt="search_icon"/>*/}
+                            <input id="search-field"/>
+                        </div>
+                    </div>
+
+                    <div id="folders">
+                        {this.state.connections ? this.state.connections.map(conn => {
+                                return (
+
+                                    <div className="connection-folder" key={conn.name}>
+
+                                        <ContextMenuTrigger id={conn.name}>
+
+                                            <div className="link-container"
+                                                 onDoubleClick={() => this.openConnection(conn.name)}>
+                                                <div id="folders-name">
+                                                    <img alt={"icon database"} src={database_icon} id="database-icon"/>
+                                                    <div id="link">
+                                                        <p id="folders-n">{conn.name}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div id="functional">
+                                                    <div id="time">
+                                                        10.08.2020
+                                                    </div>
+                                                    <div
+                                                        onClick={() => alert("PIN поки що не працює - " + conn.name)}>
+                                                        <img alt={"pin icon"} src={pin_icon} id="pin-icon"/>
+                                                    </div>
+                                                    <div
+                                                        onClick={() => alert("DELETE поки що не працює - " + conn.name)}>
+                                                        <img alt={"delete icon"} src={delete_icon} id="delete-icon"/>
+                                                    </div>
+                                                </div>
+
+
                                             </div>
 
-                                        </div>
+                                        </ContextMenuTrigger>
 
-                                    </ContextMenuTrigger>
 
-                                    <ContextMenu id={conn.name} className="url-menu">
+
+                                        <ContextMenu id={conn.name} className="url-menu">
 
                                         <span className="url-menu-title">
                                             Connection menu:
                                         </span>
 
-                                        <span className="url-menu-line"/>
+                                            <span className="url-menu-line"/>
 
-                                        {/*<div className="url-menu-item" onMouseMove={() => this.showURI(conn)}>*/}
-                                        {/*    <MenuItem>Show URI</MenuItem>*/}
-                                        {/*</div>*/}
+                                            {/*<div className="url-menu-item" onMouseMove={() => this.showURI(conn)}>*/}
+                                            {/*    <MenuItem>Show URI</MenuItem>*/}
+                                            {/*</div>*/}
 
-                                        <div className="url-menu-item" onClick={() => this.deleteConnection(conn.name)}>
-                                            <MenuItem>Delete URI</MenuItem>
-                                        </div>
+                                            <div className="url-menu-item" onClick={() => this.deleteConnection(conn.name)}>
+                                                <MenuItem>Delete URI</MenuItem>
+                                            </div>
 
-                                    </ContextMenu>
+                                        </ContextMenu>
 
-                                </div>
-                            )
-                        }
-                    ): null}
+
+                                    </div>
+                                )
+                            }
+                        ) : null}
+                    </div>
                 </div>
             </div>
         );

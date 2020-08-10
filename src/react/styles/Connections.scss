@@ -1,13 +1,21 @@
 /* ALL PAGE */
-.container {
-  display: flex;
-  margin: 0 !important;
+@import "./variables";
+.all-page {
   padding: 0 !important;
+  margin: 0 !important;
+
+  display: grid;
+  grid-template-areas: "left right";
+  grid-template-columns: 300px auto;
 
 
 
   /* LEFT MENU */
-  .left {
+  .left-menu {
+    font-family: 'Scada', sans-serif;
+
+    grid-area: left;
+
     width: 300px;
     height: 100vh;
     padding-left: 30px;
@@ -16,26 +24,26 @@
 
     background: #EFEFEF;
 
-    position: absolute;
-    z-index: -1;
-
 
 
     /* INPUT */
-    .db_field {
+    .information-field {
       margin-bottom: 20px;
 
       display: flex;
       justify-content: space-between;
       align-items: center;
 
-      #input-info {
+      #input-title {
         font-size: 17px;
+        font-family: 'Scada', sans-serif;
 
         color: #3E3E3E;
       }
 
-      #db-input {
+      #input-field {
+        font-family: 'Scada', sans-serif;
+
         width: 150px;
         height: 30px;
         font-size: 14px;
@@ -50,20 +58,23 @@
 
 
     /* CHOOSE DB */
-    .choose-db {
+    .choose-db-field {
       margin-top: 40px;
 
       display: flex;
       flex-direction: column;
       align-items: center;
 
-      #choose-info {
+      #choose-db-title {
+        font-family: 'Scada', sans-serif;
         font-size: 17px;
 
         color: #3E3E3E;
       }
 
-      #choose-type {
+      #choose-db {
+        font-family: 'Scada', sans-serif;
+
         width: 120px;
         height: 30px;
         margin-top: 10px;
@@ -74,8 +85,11 @@
     }
 
 
+
     /* ADD BUTTON */
     .add-button {
+      font-family: 'Scada', sans-serif;
+
       width: 200px;
       height: 40px;
       margin-top: 30px;
@@ -88,120 +102,182 @@
 
     .add-button:hover {
       background: #c1562b;
+
       cursor: pointer;
     }
+
+    .alert {
+      margin-top: 20px;
+    }
   }
-}
 
 
 
-/* СТАРИЙ КОД */
+  /* VERTICAL LINE */
+  .line {
+    width: 1px;
+    height: 100vh;
+    margin-left: 300px;
 
-/*
-@import "./variables";
-.container {
-  display: flex;
-  margin-top: 40px;
-  padding-left: 0px;
-  .column {
-    display: flex;
-    flex-direction: column;
+    background-color: #818181;
+
+    position: absolute;
+
+    filter: blur(1px);
+
   }
-}
-.left {
-  background: #0f6674;
-  border: 2px #0c5460;
-  border-radius: 8px;
-  padding: 10px;
-  margin-top: 15px;
-  .db_field {
-    display: flex;
-    justify-content: space-between;
-    min-width: 250px;
-    margin-bottom: 20px;
-    color: white;
-    span {
-      margin-right: 20px;
+
+
+
+  /* RIGHT SIDE */
+  .right-side {
+    grid-area: right;
+
+    display: grid;
+    grid-template-areas:
+            "menu"
+            "folders";
+    grid-template-rows: 50px auto;
+
+
+
+    /* TOP MENU */
+    #menu {
+      font-family: 'Scada', sans-serif;
+
+      grid-area: menu;
+
+      display: flex;
+
+      border-bottom: .5px solid #EBEBEB;
+
+      background-color: #F9F9F9;
+
+
+      #sort {
+        margin-left: 40px;
+        margin-top: 10px;
+
+        align-items: center;
+
+        color: #3E3E3E;
+
+        #choose-sort {
+          padding-left: 5px;
+          margin-left: 10px;
+          height: 30px;
+          width: 90px;
+
+          border-radius: 5px;
+          border: .5px solid #818181;
+        }
+      }
+
+
+      .search {
+
+        #search-icon {
+          width: 18px;
+          height: 18px;
+
+          position: relative;
+          left: 700px;
+        }
+
+        #search-field {
+          margin-left: 150px;
+          margin-top: 10px;
+          width: 440px;
+          height: 30px;
+
+          border: .4px solid #818181;
+          border-radius: 5px;
+        }
+      }
+    }
+
+
+
+    /* FOLDERS */
+    #folders {
+      font-family: 'Scada', sans-serif;
+
+      grid-area: folders;
+
+      margin: 50px auto 0;
+
+      .connection-folder {
+
+
+        .link-container {
+          width: 940px;
+
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          border-bottom: .2px solid #adadad;
+
+
+          #database-icon {
+            width: 40px;
+            height: 40px;
+          }
+
+
+          #link {
+            margin-left: 10px;
+            font-size: 14px;
+          }
+        }
+
+
+        .link-container:hover {
+          cursor: pointer;
+        }
+      }
+
+      #folders-n {
+        margin-bottom: 0;
+        font-size: 14px;
+        color: #3E3E3E;
+        font-family: 'Scada', sans-serif;
+        font-weight: 400;
+
+      }
+
+      #folders-name {
+        display: flex;
+        align-items: center;
+
+
+      }
+
+      #functional {
+        display: flex;
+        align-items: center;
+
+
+        #time {
+          color: #8D8D8D;
+          margin-right: 10px;
+          font-size: 14px;
+        }
+
+        #pin-icon {
+          width: 20px;
+          height: 20px;
+          margin-right: 10px;
+        }
+
+        #delete-icon {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+
+
     }
   }
 }
-.right {
-  display: flex;
-  padding-bottom: 35px;
-  flex-wrap: wrap;
-  margin-left: 40px;
-  width: 100%;
-  max-height: 100vh;
-  overflow: auto;
-}
-hr {
-  color: #C0C0C0;
-  background-color: #C0C0C0;
-  height: 1px;
-  margin: 40px 0;
-}
-.add-btn {
-  background-color: #17a2b8!important;;
-  border-color: $navbar;
-}
-.btn:hover {
-  background-color: $navbar;
-  color: $white;
-}
-.btn-text {
-  color: $navbar;
-}
-.cancel-btn {
-  padding-top: 0;
-  color: $cancel-btn;
-}
-.connection-folder {
-  padding-left: 10px;
-  padding-right: 10px;
-}
-.link-container {
-  transition: transform .3s;
-  img {
-    width: 120px;
-  }
-  .link {
-  }
-}
-.link-container:hover {
-  transform: translateY(-5px);
-}
-.alert {
-  margin-top: 20px;
-}
-.url-menu {
-  min-width: 150px;
-  color: $folder-title;
-  background-color: $white;
-  border-radius: 3px;
-  box-shadow: 0px 0px 1px 0px black;
-  user-select: none;
-  z-index: 1;
-  &-title {
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    margin-left: 5px;
-    font-weight: 500;
-  }
-  &-line {
-    display: block;
-    width: 100%;
-    height: 1px;
-    background: $context-menu-line;
-  }
-  &-item {
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    padding-left: 5px;
-  }
-  &-item:hover {
-    background: $hover;
-  }
-}
-*/
