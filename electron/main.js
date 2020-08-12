@@ -74,10 +74,11 @@ ipcMain.on(channels.APP_INFO, (event) => {
 ipcMain.on(channels.DELETE_CONNECTION, async (event, name) => {
   try {
     const result = await Connection.deleteConnection(name);
-    event.sender.send(channels.DELETE_CONNECTION, result);
+    successful.data = result;
+    await event.sender.send(channels.DELETE_CONNECTION, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.DELETE_CONNECTION, unsuccessful);
+    await event.sender.send(channels.DELETE_CONNECTION, unsuccessful);
   }
 });
 
@@ -85,10 +86,10 @@ ipcMain.on(channels.ADD_CONNECTION, async (event, name, host, port, user, passwo
   try {
     const result = await Connection.addConnection(name, host, port, user, password, database, schema, dtype);
     successful.data = result;
-    event.sender.send(channels.ADD_CONNECTION, result);
+    await event.sender.send(channels.ADD_CONNECTION, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.ADD_CONNECTION, unsuccessful);
+    await event.sender.send(channels.ADD_CONNECTION, unsuccessful);
   }
 });
 
@@ -100,20 +101,20 @@ ipcMain.on(channels.CREATE_DB, async (event) => {
   try {
     const result = await Database.createDefaultDatabase();
     successful.data = result;
-    event.sender.send(channels.CREATE_DB, result);
+    await event.sender.send(channels.CREATE_DB, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.CREATE_DB, unsuccessful);
+    await event.sender.send(channels.CREATE_DB, unsuccessful);
   }
 });
 
 ipcMain.on(channels.LOAD_DB, async (event, encodedDatabase) => {
   try {
     await Database.loadDatabase(encodedDatabase);
-    event.sender.send(channels.LOAD_DB, successful);
+    await event.sender.send(channels.LOAD_DB, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.LOAD_DB, unsuccessful);
+    await event.sender.send(channels.LOAD_DB, unsuccessful);
   }
 });
 
@@ -127,10 +128,10 @@ ipcMain.on(channels.GET_DB, async (event) => {
 
     successful.data = result;
     console.log("DATA: ", result);
-    event.sender.send(channels.GET_DB, successful);
+    await event.sender.send(channels.GET_DB, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.GET_DB, unsuccessful);
+    await event.sender.send(channels.GET_DB, unsuccessful);
   }
 });
 
@@ -138,10 +139,10 @@ ipcMain.on(channels.SHARE_DB, async (event) => {
   try {
     const result = await Database.getDatabaseForTransport();
     successful.data = result;
-    event.sender.send(channels.SHARE_DB, successful);
+    await event.sender.send(channels.SHARE_DB, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.SHARE_DB, unsuccessful);
+    await event.sender.send(channels.SHARE_DB, unsuccessful);
   }
 });
 
@@ -152,20 +153,20 @@ ipcMain.on(channels.SHARE_DB, async (event) => {
 ipcMain.on(channels.UPDATE_LANGUAGE, async (event, language) => {
   try {
     await Settings.updateLanguage(language);
-    event.sender.send(channels.UPDATE_LANGUAGE, successful);
+    await event.sender.send(channels.UPDATE_LANGUAGE, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.UPDATE_LANGUAGE, unsuccessful);
+    await event.sender.send(channels.UPDATE_LANGUAGE, unsuccessful);
   }
 });
 
 ipcMain.on(channels.UPDATE_THEME, async (event, theme) => {
   try {
     await Settings.updateTheme(theme);
-    event.sender.send(channels.UPDATE_LANGUAGE, successful);
+    await event.sender.send(channels.UPDATE_LANGUAGE, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.UPDATE_LANGUAGE, unsuccessful);
+    await event.sender.send(channels.UPDATE_LANGUAGE, unsuccessful);
   }
 });
 
@@ -177,10 +178,10 @@ ipcMain.on(channels.GET_ALL_TABLES, async (event, connectionName) => {
   try {
     const result = await Table.getAllTables(connectionName);
     successful.data = result;
-    event.sender.send(channels.GET_ALL_TABLES, successful);
+    await event.sender.send(channels.GET_ALL_TABLES, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.GET_ALL_TABLES, unsuccessful);
+    await event.sender.send(channels.GET_ALL_TABLES, unsuccessful);
   }
 });
 
@@ -188,10 +189,10 @@ ipcMain.on(channels.DELETE_TABLE, async (event, connectionName, alias) => {
   try {
     const result = await Table.deleteTable(connectionName, alias);
     successful.data = result;
-    event.sender.send(channels.DELETE_TABLE, successful);
+    await event.sender.send(channels.DELETE_TABLE, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.DELETE_TABLE, unsuccessful);
+    await event.sender.send(channels.DELETE_TABLE, unsuccessful);
   }
 });
 
@@ -199,10 +200,10 @@ ipcMain.on(channels.GET_TABLE, async (event, connectionName, alias) => {
   try {
     const result = await Table.getTable(connectionName, alias);
     successful.data = result;
-    event.sender.send(channels.GET_TABLE, successful);
+    await event.sender.send(channels.GET_TABLE, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.GET_TABLE, unsuccessful);
+    await event.sender.send(channels.GET_TABLE, unsuccessful);
   }
 });
 
@@ -210,30 +211,30 @@ ipcMain.on(channels.ADD_TABLE, async (event, connectionName, query, type, alias)
   try {
     const result = await Table.addTable(connectionName, query, type, alias);
     successful.data = result;
-    event.sender.send(channels.ADD_TABLE, successful);
+    await event.sender.send(channels.ADD_TABLE, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.ADD_TABLE, unsuccessful);
+    await event.sender.send(channels.ADD_TABLE, unsuccessful);
   }
 });
 
 ipcMain.on(channels.RENAME_TABLE, async (event, connectionName, alias, newAlias) => {
   try {
     await Table.renameTable(connectionName, alias, newAlias);
-    event.sender.send(channels.RENAME_TABLE, successful);
+    await event.sender.send(channels.RENAME_TABLE, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.RENAME_TABLE, unsuccessful);
+    await event.sender.send(channels.RENAME_TABLE, unsuccessful);
   }
 });
 
 ipcMain.on(channels.UPDATE_QUERY, async (event, connectionName, alias, query) => {
   try {
     await Table.updateTableQuery(connectionName, alias, query);
-    event.sender.send(channels.UPDATE_QUERY, successful);
+    await event.sender.send(channels.UPDATE_QUERY, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.UPDATE_QUERY, unsuccessful);
+    await event.sender.send(channels.UPDATE_QUERY, unsuccessful);
   }
 });
 
@@ -241,10 +242,10 @@ ipcMain.on(channels.LOAD_QUERY, async (event, connectionName, alias, options) =>
   try {
     const result = await Table.loadTableResult(connectionName, alias, options);
     successful.data = result;
-    event.sender.send(channels.LOAD_QUERY, successful);
+    await event.sender.send(channels.LOAD_QUERY, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.LOAD_QUERY, unsuccessful);
+    await event.sender.send(channels.LOAD_QUERY, unsuccessful);
   }
 });
 
@@ -252,9 +253,9 @@ ipcMain.on(channels.TEST_QUERY, async (event, connectionName, query) => {
   try {
     const result = await Table.runQuery(connectionName, query);
     successful.data = result;
-    event.sender.send(channels.TEST_QUERY, successful);
+    await event.sender.send(channels.TEST_QUERY, successful);
   } catch (e) {
     unsuccessful.message = e;
-    event.sender.send(channels.TEST_QUERY, unsuccessful);
+    await event.sender.send(channels.TEST_QUERY, unsuccessful);
   }
 });

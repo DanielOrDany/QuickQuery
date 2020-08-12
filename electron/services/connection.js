@@ -34,9 +34,9 @@ async function verifyConnection (name) {
 }
 
 async function addConnection(name, host, port, user, password, database, schema, dtype) {
-    console.log(name, host, port, user, password, database, schema, dtype);
+    console.log('server', name, host, port, user, password, database, schema, dtype);
     // throw error if connection already exist
-    verifyConnection(name);
+    await verifyConnection(name);
 
     try {
         const sequelize = new Sequelize(
@@ -66,6 +66,7 @@ async function addConnection(name, host, port, user, password, database, schema,
 
         await sequelize.query(selectAllTables).then(tables => {
             console.log(tables);
+
             // Generate default tables
             if (dtype === 'postgres') {
                 tables[0].forEach(table => {

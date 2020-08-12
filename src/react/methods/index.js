@@ -32,9 +32,11 @@ export const
     },
 
     addConnection = async (name, host, port, user, password, database, schema, dtype) => {
+        console.log(name, host, port, user, password, database, schema, dtype);
         return new Promise(resolve => {
             ipcRenderer.send(channels.ADD_CONNECTION, name, host, port, user, password, database, schema, dtype);
             ipcRenderer.on(channels.ADD_CONNECTION, (event, result) => {
+                console.log('result',result);
                 resolve(result.data);
             });
         });

@@ -1,11 +1,20 @@
 import React from 'react';
+import {
+    ContextMenu,
+    MenuItem,
+    ContextMenuTrigger
+} from "react-contextmenu";
+
+import {
+    getDataFromDatabase,
+    deleteConnection,
+    addConnection
+} from "../methods";
+
+import database_icon from "../icons/software.png";
+import delete_icon from "../icons/delete_icon.png";
+import pin_icon from "../icons/pin_icon.png";
 import '../styles/Connections.scss';
-import {getDataFromDatabase, deleteConnection, addConnection} from "../methods";
-import {ContextMenu, MenuItem, ContextMenuTrigger} from "react-contextmenu";
-import database_icon from "../icons/software.png"
-import search_icon from "../icons/search.png"
-import delete_icon from "../icons/delete_icon.png"
-import pin_icon from "../icons/pin_icon.png"
 
 
 export default class Connections extends React.Component {
@@ -71,6 +80,7 @@ export default class Connections extends React.Component {
                 schemaInput,
                 dtypeInput
             ).then(connection => {
+                console.log('connection', connection);
                 if (connection) {
                     const connections = JSON.parse(localStorage.getItem("connections"));
                     connections.push(connection);
@@ -80,13 +90,8 @@ export default class Connections extends React.Component {
                         badQuery: 0,
                         errorMessage: ""
                     });
-                    document.getElementById("db-name").value = "";
-                    document.getElementById("db-host").value = "";
-                    document.getElementById("db-port").value = "";
-                    document.getElementById("db-user").value = "";
-                    document.getElementById("db-password").value = "";
-                    document.getElementById("db-database").value = "";
-                    document.getElementById("db-schema").value = "";
+
+                    document.getElementById("input-field").value = "";
                 } else {
                     this.setState({
                         badQuery: 1,
@@ -103,12 +108,12 @@ export default class Connections extends React.Component {
     };
 
     deleteConnection(name) {
-        console.log(name);
-        deleteConnection(name).then(connections => {
-            console.log(connections);
+        deleteConnection(name).then(data => {
+            console.log('deleted data:', data);
+            const connections = data.connections;
+
             if (connections) {
-                console.log(connections);
-                this.setState({connections: connections});
+                this.setState({ connections: connections });
             }
         });
     };
@@ -270,9 +275,6 @@ export default class Connections extends React.Component {
                                 return (
 
                                     <div className="connection-folder" key={conn.name}>
-
-                                        <ContextMenuTrigger id={conn.name}>
-
                                             <div className="link-container"
                                                  onDoubleClick={() => this.openConnection(conn.name)}>
                                                 <div id="folders-name">
@@ -291,37 +293,11 @@ export default class Connections extends React.Component {
                                                         <img alt={"pin icon"} src={pin_icon} id="pin-icon"/>
                                                     </div>
                                                     <div
-                                                        onClick={() => alert("DELETE поки що не працює - " + conn.name)}>
+                                                        onClick={() => this.deleteConnection(conn.name)}>
                                                         <img alt={"delete icon"} src={delete_icon} id="delete-icon"/>
                                                     </div>
                                                 </div>
-
-
                                             </div>
-
-                                        </ContextMenuTrigger>
-
-
-
-                                        <ContextMenu id={conn.name} className="url-menu">
-
-                                        <span className="url-menu-title">
-                                            Connection menu:
-                                        </span>
-
-                                            <span className="url-menu-line"/>
-
-                                            {/*<div className="url-menu-item" onMouseMove={() => this.showURI(conn)}>*/}
-                                            {/*    <MenuItem>Show URI</MenuItem>*/}
-                                            {/*</div>*/}
-
-                                            <div className="url-menu-item" onClick={() => this.deleteConnection(conn.name)}>
-                                                <MenuItem>Delete URI</MenuItem>
-                                            </div>
-
-                                        </ContextMenu>
-
-
                                     </div>
                                 )
                             }
