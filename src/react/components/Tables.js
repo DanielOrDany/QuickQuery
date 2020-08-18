@@ -115,7 +115,7 @@ export default class Tables extends React.Component {
                             .map(table => {
                                 return(
                                     <div className="table" key={table.name}>
-                                        <div className="container" onDoubleClick={() => this.openTable()}>
+                                        <div className="container" onDoubleClick={() => this.openTable(table.alias)}>
                                             <div id="table-name">
                                                 <span>&#11044;</span>
                                                 <div id="name">
