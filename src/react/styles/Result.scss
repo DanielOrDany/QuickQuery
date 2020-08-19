@@ -5,13 +5,9 @@
 .page {
   height: 100vh;
   font-family: 'Scada', sans-serif;
-  display: grid;
-  grid-template-areas: "left right";
-  grid-template-columns: 300px auto;
 }
 
 #right-side {
-  grid-area: right;
 
   display: grid;
   grid-template-areas:
@@ -22,8 +18,6 @@
 
 #left-menu {
   font-family: 'Scada', sans-serif;
-
-  grid-area: left;
 
   width: 300px;
   height: 100%;
