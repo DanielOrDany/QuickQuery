@@ -165,10 +165,6 @@ export default class Result extends React.Component {
         } else {
             return (
                 <div className="page">
-                    <div id="left-menu">Hello</div>
-
-                    <div className="line"></div>
-
                     <div id="right-side">
                         <div className={"menu_table"}>
                             <div className={'pagination_page search'}>

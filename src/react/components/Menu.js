@@ -93,9 +93,9 @@ class Menu extends React.Component {
                             <Route path="/tables" component={Tables} />
                             <Route path="/connections" component={Connections} />
                             <Route path="/settings" component={Settings} />
-                            <Route path="/result" component={Result} />
-                            <Route path="/create-table" component={CreateTable} />
-                            <Route path="/" component={Connections} />
+                            {/* <Route path="/result" component={Result} />
+                            <Route path="/create-table" component={CreateTable} /> */}
+                            <Route exact path="/" component={Connections} />
                         </Switch>
                     </div>
                 </Router>

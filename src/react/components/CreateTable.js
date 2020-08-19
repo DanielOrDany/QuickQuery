@@ -127,11 +127,13 @@ export default class CreateTable extends React.Component {
         } else {
             return(
                 <div className="create_edit_table">
-                    <div className="actions">
-                        <button type="button" className="runButton" onClick={() => this.run()}><span>Run </span></button>
-                        <div className="saving-result">
-                            <input type="text" id="aliasText" placeholder="Table name" className="form-control"/>
-                            <button type="button" className="saveButton" onClick={() => this.save()}>Save</button>
+                    <div id="mini-menu">
+                        <div className="actions">
+                            <button type="button" className="runButton" onClick={() => this.run()}><span>Run </span></button>
+                            <div className="saving-result">
+                                <input type="text" id="aliasText" placeholder="Table name" className="form-control"/>
+                                <button type="button" className="saveButton" onClick={() => this.save()}>Save</button>
+                            </div>
                         </div>
                     </div>
                     <textarea id="queryText" placeholder="/*  SQL select query should be here  */" />

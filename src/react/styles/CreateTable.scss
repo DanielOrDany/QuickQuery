@@ -1,6 +1,98 @@
 @import "./variables";
 
 .create_edit_table {
+
+  #mini-menu {
+    font-family: 'Scada', sans-serif;
+
+    border-bottom: .5px solid #EBEBEB;
+
+    background-color: #F9F9F9;
+
+    height: 50px;
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+  
+      .runButton {
+        margin-top: 10px;
+        margin-left: 10px;
+        vertical-align: middle;
+        display: inline-block;
+        border-radius: 4px;
+        background-color: #EB6E3B;
+        border: none;
+        color: #FFFFFF;
+        text-align: center;
+        font-size: 16px;
+        width: 90px;
+        height: 30px;
+        transition: all 0.5s;
+        cursor: pointer;
+  
+        span {
+          cursor: pointer;
+          display: inline-block;
+          position: relative;
+          transition: 0.5s;
+        }
+  
+        span:after {
+          content: '\00bb';
+          position: absolute;
+          opacity: 0;
+          top: 0;
+          right: -20px;
+          transition: 0.5s;
+        }
+      }
+  
+      .runButton:hover span {
+        padding-right: 25px;
+      }
+  
+      .runButton:hover span:after {
+        opacity: 1;
+        right: 0;
+      }
+  
+      .saving-result {
+        display: flex;
+  
+        .saveButton {
+          margin-top: 10px;
+          margin-right: 10px;
+          background-color: #EB6E3B;
+          border-radius: 4px;
+          border: none;
+          color: white;
+          padding: 0px 32px;
+          width: 90px;
+          height: 30px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          cursor: pointer;
+          -webkit-transition-duration: 0.4s; /* Safari */
+          transition-duration: 0.4s;
+        }
+  
+        .saveButton:hover {
+          box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+        }
+  
+        #aliasText {
+          margin-top: 10px;
+          margin-right: 20px;
+          height: 30px;
+          width: 320px;
+        }
+      }
+    }
+  }
+
   table {
     margin-left: 10px;
     width: calc(100% - 20px);
@@ -10,89 +102,9 @@
     margin-top: 40px;
     margin-left: 10px;
     width: calc(100% - 25px);
-    height: 400px;
+    height: 290px;
     resize: none;
-    border: 1px solid #8bc34a;
-    box-shadow: 0 0 0 0.2rem rgba(139, 195, 74, .25);
-  }
-
-  .actions {
-    margin-top: 40px;
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-
-    .runButton {
-      vertical-align: middle;
-      display: inline-block;
-      border-radius: 4px;
-      background-color: $green;
-      border: none;
-      color: #FFFFFF;
-      text-align: center;
-      font-size: 16px;
-      padding: 5px;
-      width: 100px;
-      transition: all 0.5s;
-      cursor: pointer;
-      margin: 5px;
-
-      span {
-        cursor: pointer;
-        display: inline-block;
-        position: relative;
-        transition: 0.5s;
-      }
-
-      span:after {
-        content: '\00bb';
-        position: absolute;
-        opacity: 0;
-        top: 0;
-        right: -20px;
-        transition: 0.5s;
-      }
-    }
-
-    .runButton:hover span {
-      padding-right: 25px;
-    }
-
-    .runButton:hover span:after {
-      opacity: 1;
-      right: 0;
-    }
-
-    .saving-result {
-      display: flex;
-
-      .saveButton {
-        background-color: $green; /* Green */
-        border-radius: 4px;
-        border: none;
-        color: white;
-        padding: 0px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 6px 2px;
-        cursor: pointer;
-        -webkit-transition-duration: 0.4s; /* Safari */
-        transition-duration: 0.4s;
-      }
-
-      .saveButton:hover {
-        box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
-      }
-
-      #aliasText {
-        margin-right: 15px;
-        margin-top: 6px;
-        height: 32px;
-        width: 200px;
-      }
-    }
+    border: 0.5px solid #989898;
   }
 
   .alert {

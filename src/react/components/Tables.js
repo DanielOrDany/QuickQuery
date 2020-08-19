@@ -1,5 +1,10 @@
 import React from 'react';
 import '../styles/Tables.scss';
+import {
+    Route
+} from 'react-router-dom';
+import CreateTable from "./CreateTable";
+import Result from "./Result";
 import { ContextMenu, ContextMenuTrigger } from "react-contextmenu";
 import { getAllTables, getTable, deleteTable} from "../methods";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
@@ -60,7 +65,7 @@ export default class Tables extends React.Component {
                 localStorage.setItem("results", JSON.stringify([result]));
             }
 
-            return '#/result';
+            return '#tables/result';
         }).then(url => window.location.hash = url);
     }
 
@@ -95,49 +100,50 @@ export default class Tables extends React.Component {
                 </div>
             );
         } else return(
-            <div className="all-page">
+                <div className="all-page">
 
-                <div className="left-side">
-                    <div id="mini-menu">
+                    <div className="left-side">
+                        <div id="mini-menu">
 
-                        <button type="button"className="add-button">
-                            Add
-                        </button>
+                            <button type="button" className="add-button" onClick={() => {window.location.hash = "#tables/create-table"}}>
+                                Add
+                            </button>
 
-                        <div className="search">
-                            <input id="search-field"/>
+                            <div className="search">
+                                <input id="search-field"/>
+                            </div>
+
                         </div>
 
-                    </div>
-
-                    <div id="tables">
-                        {this.state.tables
-                            .map(table => {
-                                return(
-                                    <div className="table" key={table.name}>
-                                        <div className="container" onDoubleClick={() => this.openTable(table.alias)}>
-                                            <div id="table-name">
-                                                <span>&#11044;</span>
-                                                <div id="name">
-                                                    <p id="table-n">{table.alias}</p>
+                        <div id="tables">
+                            {this.state.tables
+                                .map(table => {
+                                    return(
+                                        <div className="table" key={table.name}>
+                                            <div className="container" onDoubleClick={() => this.openTable(table.alias)}>
+                                                <div id="table-name">
+                                                    <span>&#11044;</span>
+                                                    <div id="name">
+                                                        <p id="table-n">{table.alias}</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                );
-                            }
-                        )}
+                                    );
+                                }
+                            )}
+                        </div>
+                    </div>
+
+
+                    <div className="line"></div>
+
+
+                    <div className="right-side">
+                        <Route path="/tables/create-table" component={CreateTable} />
+                        <Route path="/tables/result" component={Result}/>
                     </div>
                 </div>
-
-
-                <div className="line"></div>
-
-
-                <div className="right-side">
-
-                </div>
-            </div>
             // <div className="tables">
             //     <div className="folders-list">
             //         <div className="folder" onClick={() => this.createTable()}>
