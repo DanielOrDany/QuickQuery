@@ -2,7 +2,39 @@
   margin: 20px;
 }
 
-.loading{
+.page {
+  height: 100vh;
+  font-family: 'Scada', sans-serif;
+  display: grid;
+  grid-template-areas: "left right";
+  grid-template-columns: 300px auto;
+}
+
+#right-side {
+  grid-area: right;
+
+  display: grid;
+  grid-template-areas:
+            "menu"
+            "table";
+  grid-template-rows: 50px auto;
+}
+
+#left-menu {
+  font-family: 'Scada', sans-serif;
+
+  grid-area: left;
+
+  width: 300px;
+  height: 100%;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 70px;
+
+  background: #EFEFEF;
+}
+
+.loading {
   width: 100%;
   height: 85vh;
   display: grid;
@@ -15,24 +47,41 @@
 
 .save {
   button {
-    padding: 10px 20px;
-    background: transparent;
-    border: 2px solid #d99900;
+    width: 90px;
+    height: 30px;
+    margin-right: 10px;
+    margin-left: 170px;
+
+    background-color: #EB6E3B;
     color: white;
-    font-family: 'Open Sans', sans-serif;
-    border-radius: 8px;
+    font-size: 14px;
+
+    border: 0 solid #EB6E3B;
+    border-radius: 5px;
   }
 }
 
-body{
-  padding: 0 5%;
+
+
+.line {
+  width: 1px;
+  height: 100%;
+  margin-left: 300px;
+
+  background-color: #818181;
+
+  position: absolute;
+
+  filter: blur(1px);
+
 }
 
+
 table {
-  width: 100%;
+  margin: 10px;
+  grid-area: table;
+
   color: white;
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 900;
   border-collapse: separate;
   background: transparent;
   border-spacing: 7px 11px;
@@ -40,62 +89,90 @@ table {
 
 td, th {
   background: dimgrey;
+  border-left: 1px solid gray;
+  border-right: 1px solid gray;
   padding: 20px 0;
 }
 
-tr th{
-  background: transparent;
-  color: #d99900;
-}
-
-.column_one td{
-  background: rgb(66, 73, 90);
-  border: 1px solid gray;
-}
-
-.column_two td{
-  background: rgb(46, 52, 69);
-  border: 1px solid gray;
-}
-
-.pagination_page{
-  display: grid;
-  grid-template-columns: auto auto auto;
-  justify-content: center;
-  justify-self: start;
-}
-
-.pagination_page span{
+tr th {
+  font-size: 16px;
+  font-family: 'Scada', sans-serif;
+  background: #252628;
   color: white;
-  margin: 0 10px;
+}
+
+
+.column_one td {
+  background: #EFEFEF;
+  border: 1px solid gray;
+}
+
+.column_two td {
+  background: #EFEFEF;
+  border: 1px solid gray;
+}
+
+.pagination_page {
+}
+
+.pagination_page span {
+  color: black;
+  margin: 0 25px;
   align-self: center;
 }
 
-.pagination_page button{
-  padding: 10px 20px;
-  background: transparent;
-  border: 2px solid #d99900;
+.pagination_page button {
+  width: 70px;
+  height: 30px;
+
+  background-color: #EB6E3B;
   color: white;
-  font-family: 'Open Sans', sans-serif;
-  border-radius: 8px;
+  font-size: 14px;
+
+  border: 0 solid #EB6E3B;
+  border-radius: 5px;
 }
 
-.menu_table{
+.menu_table {
+  grid-area: menu;
+
+  border-bottom: .5px solid #EBEBEB;
+
+  background-color: #F9F9F9;
+
   display: flex;
   justify-content: space-between;
-  margin-top: 40px;
-  margin-bottom: 80px;
-  margin-left: 50px;
-  margin-right: 30px;
+  align-items: center;
 }
 
-.menu_table .search{
+.menu_table .search {
   justify-self: end;
   grid-gap: 10px;
 }
 
-.menu_table .search input{
+#search-btn {
+  margin-right: 170px;
+  width: 80px;
+  height: 30px;
+}
+
+.menu_table select {
+  height: 30px;
+  width: 130px;
+
+  margin-left: 10px;
+  margin-right: 20px;
+
+  border-radius: 5px;
+  border: 1px solid #adadad;
+}
+
+.menu_table .search input {
   padding: 0 10px;
-  border: 2px solid #d99900;
-  border-radius: 8px;
+  border: 1px solid #adadad;
+  border-radius: 5px;
+  width: 210px;
+  height: 30px;
+
+  margin-right: 20px;
 }

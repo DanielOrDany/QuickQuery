@@ -1,5 +1,5 @@
 import React from 'react';
-import { loadTableResult } from "../methods";
+import {loadTableResult} from "../methods";
 import '../styles/Result.scss';
 import XLSX from 'xlsx';
 import xxx from "../icons/Gear-0.2s-200px (1).svg"
@@ -39,7 +39,7 @@ export default class Result extends React.Component {
     }
 
     handleSubmit() {
-        alert('Отправленное имя: ' + this.state.value + this.state.column) ;
+        alert('Отправленное имя: ' + this.state.value + this.state.column);
     }
 
     componentDidMount() {
@@ -47,7 +47,7 @@ export default class Result extends React.Component {
         let span = document.getElementsByTagName("span");
 
         if (!this.state.rows === "") {
-            if(localStorage.getItem("theme")){
+            if (localStorage.getItem("theme")) {
                 button[0].style.color = "#FFFFFF";
                 button[0].style.background = "#363740";
                 button[1].style.color = "#FFFFFF";
@@ -75,7 +75,7 @@ export default class Result extends React.Component {
         this.loadTable();
     }
 
-    loadTable = () =>{
+    loadTable = () => {
         const result = JSON.parse(localStorage.getItem('current_result'));
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const options = {
@@ -97,8 +97,8 @@ export default class Result extends React.Component {
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(prevState.pageNumber !== this.state.pageNumber){
-          this.loadTable()
+        if (prevState.pageNumber !== this.state.pageNumber) {
+            this.loadTable()
         }
     }
 
@@ -118,7 +118,7 @@ export default class Result extends React.Component {
         });
     }
 
-    changePage = (operation) =>{
+    changePage = (operation) => {
         let n = this.state.pageNumber + operation;
         if (n === 0) n += 1;
         if (n > 0 && n < this.state.pages) {
@@ -128,13 +128,13 @@ export default class Result extends React.Component {
         }
     };
 
-    searchMthods = () =>{
+    searchMthods = () => {
         const result = JSON.parse(localStorage.getItem('current_result'));
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const options = {
             page: this.state.pageNumber,
             pageSize: 10000000,
-            search: { column: this.state.selectValue, value: this.state.value }
+            search: {column: this.state.selectValue, value: this.state.value}
         };
 
         loadTableResult(connectionName, result.alias, options).then(async data => {
@@ -155,7 +155,7 @@ export default class Result extends React.Component {
     };
 
     render() {
-        if (this.state === null){
+        if (this.state === null) {
             return (
                 <div className={"loading"}>
                     <img src={xxx}/>
@@ -163,53 +163,66 @@ export default class Result extends React.Component {
                 </div>
             );
         } else {
-            return(
-                <div>
-                    <div className={"menu_table"}>
-                        <div className={'pagination_page search'}>
-                            <select
-                                value={this.state.selectValue}
-                                onChange={this.handleChange}
-                            >
-                                {this.state.header ? this.state.header.map((item) => {
-                                        return <option value={item}>{item}</option>
+            return (
+                <div className="page">
+                    <div id="left-menu">Hello</div>
+
+                    <div className="line"></div>
+
+                    <div id="right-side">
+                        <div className={"menu_table"}>
+                            <div className={'pagination_page search'}>
+                                <select
+                                    value={this.state.selectValue}
+                                    onChange={this.handleChange}
+                                >
+                                    {this.state.header ? this.state.header.map((item) => {
+                                            return <option value={item}>{item}</option>
+                                        })
+                                        : null}
+                                </select>
+                                <input placeholder={"value"} value={this.state.value}
+                                       onChange={this.handleChange_value}/>
+                                <button id="search-btn" onClick={() => this.searchMthods()}>Search</button>
+                            </div>
+                            <div className={"pagination_page"}>
+                                <button onClick={() => this.changePage(-1)}>Prev</button>
+                                <span>Page: {this.state.pageNumber + 1}</span>
+                                <button onClick={() => this.changePage(1)}>Next</button>
+                            </div>
+                            <div className={"save"}>
+                                <button onClick={() => this.save()}>Save</button>
+                            </div>
+                        </div>
+                        {this.state.null_results === true ?
+                            <span>{"none results"}</span>
+                            :
+
+                            <table>
+                                <tr>
+                                    {this.state.header ? this.state.header.map((item) => {
+                                            return <th>{item}</th>
+                                        })
+                                        : null}
+                                </tr>
+                                {this.state.rows ? this.state.rows.map((item, key) => {
+                                        return <tr className={key++ % 2 === 0 ? "column_one" : "column_two"}>{
+                                            Object.values(item).map((get_item, key) => {
+                                                return <td style={key === 0 ? {
+                                                    color: "#3E3E3E",
+                                                    background: "#EFEFEF",
+                                                    border: "1px solid grey",
+                                                } : {color: "#3E3E3E"}}>{get_item}</td>
+
+                                            })}
+                                        </tr>
+
                                     })
                                     : null}
-                            </select>
-                            <input placeholder={"value"} value={this.state.value} onChange={this.handleChange_value} />
-                            <button onClick={() => this.searchMthods()}>Search</button>
-                        </div>
-                        <div className={"pagination_page"}>
-                            <button onClick={() => this.changePage(-1)}>Prev</button>
-                            <span>Page: {this.state.pageNumber + 1}</span>
-                            <button onClick={() => this.changePage(1)}>Next</button>
-                        </div>
-                        <div className={"save"}>
-                            <button onClick={() => this.save()}>Save</button>
-                        </div>
+                            </table>
+
+                        }
                     </div>
-                    { this.state.null_results === true ?
-                        <span>{"none results"}</span>
-                     :
-                        <table>
-                            <tr>
-                                {this.state.header ? this.state.header.map((item) => {
-                                        return <th>{item}</th>
-                                    })
-                                    : null}
-                            </tr>
-                            {this.state.rows ? this.state.rows.map((item, key) => {
-                                    return <tr className={key++%2 === 0 ? "column_one" : "column_two"}>{
-                                        Object.values(item).map((get_item, key) => {
-                                            return <td style={key === 0? {color: "#BD3C4D"  , background: "transparent" , border: "0px"} : {color: "white"}}>{get_item}</td>
-
-                                        })}
-                                    </tr>
-
-                                })
-                                : null}
-                        </table>
-                    }
                 </div>
             );
         }
