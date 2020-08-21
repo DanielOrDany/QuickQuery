@@ -7,6 +7,7 @@ import CreateTable from "./CreateTable";
 import Result from "./Result";
 import { ContextMenu, ContextMenuTrigger } from "react-contextmenu";
 import { getAllTables, getTable, deleteTable} from "../methods";
+import mini_menu from "../icons/menu-vertical.png";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
 
 
@@ -120,13 +121,14 @@ export default class Tables extends React.Component {
                                 .map(table => {
                                     return(
                                         <div className="table" key={table.name}>
-                                            <div className="container" onClick={() => this.openTable(table.alias)}>
-                                                <div id="table-name">
+                                            <div className="container">
+                                                <div id="table-name" onClick={() => this.openTable(table.alias)}>
                                                     <span>&#11044;</span>
                                                     <div id="name">
                                                         <p id="table-n">{table.alias}</p>
                                                     </div>
                                                 </div>
+                                                <img src={mini_menu} id="table_menu"></img>
                                             </div>
                                         </div>
                                     );

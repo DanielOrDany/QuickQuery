@@ -82,15 +82,16 @@
 
         .container {
           padding-left: 5px;
-
-
+          padding-right: 0px;
 
           border-bottom: .2px solid #adadad;
 
-
+          display: flex;
+          justify-content: space-between;
           #table-name {
 
             display: flex;
+            width: 200px;
 
             #name {
 
@@ -104,10 +105,20 @@
                 padding: 0;
               }
             }
+          }
 
-            #name:hover {
-              cursor: pointer;
-            }
+          #table-name:hover {
+            cursor: pointer;
+          }
+
+          #table_menu {
+            margin-right: 0px;
+            height: 23px;
+            width: 23px;
+          }
+
+          #table_menu:hover {
+            cursor: pointer;
           }
         }
       }

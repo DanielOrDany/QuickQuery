@@ -16,8 +16,8 @@ export default class CreateTable extends React.Component {
     }
 
     componentDidMount() {
-        if(localStorage.getItem("current_result")) {
-            let result = JSON.parse(localStorage.getItem("current_result"));
+        if(localStorage.getItem("current_result_info")) {
+            let result = JSON.parse(localStorage.getItem("current_result_info"));
             let name = document.getElementById("aliasText");
             let query = document.getElementById("queryText");
             name.value = result.alias;
@@ -35,7 +35,7 @@ export default class CreateTable extends React.Component {
         const alias = document.getElementById("aliasText").value;
         const query = document.getElementById("queryText").value;
 
-        if(localStorage.getItem("current_result") && inputVirify(query) > 0) {
+        if(localStorage.getItem("current_result_info") && inputVirify(query) > 0) {
             updateTableQuery(connectionName, alias, query).then(() => {
                 getAllTables(connectionName).then(tables => {
                     localStorage.setItem("current_tables", JSON.stringify(tables));
