@@ -45,6 +45,7 @@ export default class Result extends React.Component {
     componentDidMount() {
         let button = document.getElementsByTagName("button");
         let span = document.getElementsByTagName("span");
+        localStorage.setItem("current_page", window.location.href);
 
         if (!this.state.rows === "") {
             if (localStorage.getItem("theme")) {
@@ -75,6 +76,16 @@ export default class Result extends React.Component {
         this.loadTable();
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.pageNumber !== this.state.pageNumber) {
+            this.loadTable()
+        }
+        if(window.location.href != localStorage.getItem("current_page")) {
+            localStorage.setItem("current_page", window.location.href);
+            this.loadTable();
+        }
+    }
+
     loadTable = () => {
         const result = JSON.parse(localStorage.getItem('current_result'));
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
@@ -92,15 +103,8 @@ export default class Result extends React.Component {
                 rows: Object.values(db_rows),
                 pages: data.pages
             });
-
         });
     };
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevState.pageNumber !== this.state.pageNumber) {
-            this.loadTable()
-        }
-    }
 
     save() {
         const result = JSON.parse(localStorage.getItem('current_result'));

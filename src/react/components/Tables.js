@@ -65,7 +65,7 @@ export default class Tables extends React.Component {
                 localStorage.setItem("results", JSON.stringify([result]));
             }
 
-            return '#tables/result';
+            return `#/tables/result/${alias}`; 
         }).then(url => window.location.hash = url);
     }
 
@@ -87,7 +87,7 @@ export default class Tables extends React.Component {
         if(localStorage.getItem("current_result")){
             localStorage.removeItem("current_result");
         }
-        window.location.hash = "#/create-table"
+        window.location.hash = "#/tables/create-table"
     }
 
 
@@ -105,7 +105,7 @@ export default class Tables extends React.Component {
                     <div className="left-side">
                         <div id="mini-menu">
 
-                            <button type="button" className="add-button" onClick={() => {window.location.hash = "#tables/create-table"}}>
+                            <button type="button" className="add-button" onClick={() => this.createTable()}>
                                 Add
                             </button>
 
@@ -120,7 +120,7 @@ export default class Tables extends React.Component {
                                 .map(table => {
                                     return(
                                         <div className="table" key={table.name}>
-                                            <div className="container" onDoubleClick={() => this.openTable(table.alias)}>
+                                            <div className="container" onClick={() => this.openTable(table.alias)}>
                                                 <div id="table-name">
                                                     <span>&#11044;</span>
                                                     <div id="name">
@@ -141,7 +141,7 @@ export default class Tables extends React.Component {
 
                     <div className="right-side">
                         <Route path="/tables/create-table" component={CreateTable} />
-                        <Route path="/tables/result" component={Result}/>
+                        <Route path={`/tables/result/:tableAlias`} component={Result}/>
                     </div>
                 </div>
             // <div className="tables">
