@@ -56,7 +56,7 @@ export default class Tables extends React.Component {
     openTable(alias) {
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         getTable(connectionName, alias).then(result => {
-            localStorage.setItem("current_result", JSON.stringify(result));
+            localStorage.setItem("current_result_info", JSON.stringify(result));
             const results = JSON.parse(localStorage.getItem("results"));
             if (results) {
                 results.push(result);
@@ -70,7 +70,7 @@ export default class Tables extends React.Component {
     }
 
     editTable(table) {
-        localStorage.setItem("current_result", JSON.stringify(table));
+        localStorage.setItem("current_result_info", JSON.stringify(table));
         window.location.hash = "#/create-table";
     }
 
@@ -84,8 +84,8 @@ export default class Tables extends React.Component {
     }
 
     createTable() {
-        if(localStorage.getItem("current_result")){
-            localStorage.removeItem("current_result");
+        if(localStorage.getItem("current_result_info")){
+            localStorage.removeItem("current_result_info");
         }
         window.location.hash = "#/tables/create-table"
     }

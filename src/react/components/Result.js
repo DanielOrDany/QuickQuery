@@ -45,7 +45,8 @@ export default class Result extends React.Component {
     componentDidMount() {
         let button = document.getElementsByTagName("button");
         let span = document.getElementsByTagName("span");
-        localStorage.setItem("current_page", window.location.href);
+        localStorage.setItem("current_result", window.location.href.split('/')[window.location.href.split('/').length - 1]);
+        localStorage.setItem("current_page", 1);
 
         if (!this.state.rows === "") {
             if (localStorage.getItem("theme")) {
@@ -80,21 +81,21 @@ export default class Result extends React.Component {
         if (prevState.pageNumber !== this.state.pageNumber) {
             this.loadTable()
         }
-        if(window.location.href != localStorage.getItem("current_page")) {
-            localStorage.setItem("current_page", window.location.href);
+        if(window.location.href.split('/')[window.location.href.split('/').length - 1] != localStorage.getItem("current_result")) {
+            localStorage.setItem("current_result", window.location.href.split('/')[window.location.href.split('/').length - 1]);
             this.loadTable();
         }
     }
 
     loadTable = () => {
-        const result = JSON.parse(localStorage.getItem('current_result'));
+        const result = localStorage.getItem("current_result");
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const options = {
             page: this.state.pageNumber,
             pageSize: 10,
         };
 
-        loadTableResult(connectionName, result.alias, options).then(async data => {
+        loadTableResult(connectionName, result, options).then(async data => {
             console.log(data);
             const db_rows = await Promise.all(data.rows);
             this.setState({
@@ -102,7 +103,9 @@ export default class Result extends React.Component {
                 selectValue: Object.keys(db_rows[0])[0],
                 rows: Object.values(db_rows),
                 pages: data.pages
+                // pages: Math.ceil()
             });
+            console.log(this.state);
         });
     };
 
@@ -110,21 +113,22 @@ export default class Result extends React.Component {
         const result = JSON.parse(localStorage.getItem('current_result'));
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const options = {page: 0, pageSize: 1000};
-        loadTableResult(connectionName, result.alias, options).then(async data => {
+        loadTableResult(connectionName, result, options).then(async data => {
             const db_rows = await Promise.all(data.rows);
             const rows = Object.values(db_rows);
 
             let binaryWS = XLSX.utils.json_to_sheet(rows);
             var wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, binaryWS, `${result.alias}`);
+            XLSX.utils.book_append_sheet(wb, binaryWS, `${result}`);
 
-            XLSX.writeFile(wb, `${result.alias}.xlsx`);
+            XLSX.writeFile(wb, `${result}.xlsx`);
         });
     }
 
     changePage = (operation) => {
         let n = this.state.pageNumber + operation;
         if (n === 0) n += 1;
+        console.log(this.state.pages);
         if (n > 0 && n < this.state.pages) {
             this.setState({
                 pageNumber: this.state.pageNumber + operation
@@ -141,7 +145,7 @@ export default class Result extends React.Component {
             search: {column: this.state.selectValue, value: this.state.value}
         };
 
-        loadTableResult(connectionName, result.alias, options).then(async data => {
+        loadTableResult(connectionName, result, options).then(async data => {
             if (data.rows.length) {
                 const db_rows = await Promise.all(data.rows);
 
