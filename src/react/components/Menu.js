@@ -54,17 +54,22 @@ class Menu extends React.Component {
     };
 
     exportConfig(filename, text) {
-        const pom = document.createElement('a');
-        pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-        pom.setAttribute('download', filename);
+        try {
+            const pom = document.createElement('a');
+            pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            pom.setAttribute('download', filename);
 
-        if (document.createEvent) {
-            let event = document.createEvent('MouseEvents');
-            event.initEvent('click', true, true);
-            pom.dispatchEvent(event);
+            if (document.createEvent) {
+                let event = document.createEvent('MouseEvents');
+                event.initEvent('click', true, true);
+                pom.dispatchEvent(event);
+            }
+            else {
+                pom.click();
+            }
         }
-        else {
-            pom.click();
+        catch (e) {
+            alert("FAIL")
         }
     }
 
