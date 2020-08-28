@@ -282,12 +282,12 @@ export default class Connections extends React.Component {
                 <div className="right-side">
 
                     <div id="menu">
-                        <div id="sort">
-                            Sorted by:
-                            <select id="choose-sort">
-                                <option value="name">name</option>
-                            </select>
-                        </div>
+                        {/*<div id="sort">*/}
+                        {/*    Sorted by:*/}
+                        {/*    <select id="choose-sort">*/}
+                        {/*        <option value="name">name</option>*/}
+                        {/*    </select>*/}
+                        {/*</div>*/}
                         <div className="search">
                             <input id="search-field"/>
                             <button type="button" className="search-button" onClick={() => this.search()}>Search</button>
