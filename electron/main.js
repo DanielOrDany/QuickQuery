@@ -122,7 +122,7 @@ ipcMain.on(channels.GET_DB, async (event) => {
   try {
     const result = await Database.getDataFromDatabase();
 
-    if (!result.Connections) {
+    if (!result.connections) {
       await Database.createDefaultDatabase();
     }
 

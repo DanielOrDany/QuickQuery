@@ -38,12 +38,12 @@ export default class Connections extends React.Component {
     componentDidMount() {
         getDataFromDatabase()
             .then(data => {
-                console.log("DATA", data);
+                console.log('Data: ', data);
+                localStorage.setItem("connections", JSON.stringify(data.connections));
+                localStorage.setItem("data", JSON.stringify(data));
                 this.setState({
                     connections: data.connections
                 });
-                localStorage.setItem("connections", JSON.stringify(data.connections));
-                localStorage.setItem("data", JSON.stringify(data));
             });
     };
 
@@ -82,9 +82,15 @@ export default class Connections extends React.Component {
             ).then(connection => {
                 console.log('connection', connection);
                 if (connection) {
+                    const data = JSON.parse(localStorage.getItem("data"));
                     const connections = JSON.parse(localStorage.getItem("connections"));
+
                     connections.push(connection);
+                    data.connections = connections;
+
+                    localStorage.setItem("data", JSON.stringify(data));
                     localStorage.setItem("connections", JSON.stringify(connections));
+
                     this.setState({
                         connections: JSON.parse(localStorage.getItem("connections")),
                         badQuery: 0,

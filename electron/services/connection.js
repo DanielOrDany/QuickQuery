@@ -28,7 +28,7 @@ const pg = require('pg');
 pg.defaults.ssl = true;
 
 async function verifyConnection (name) {
-    const connectionInDatabase = await db.get('Connections').find({name: name}).value();
+    const connectionInDatabase = await db.get('connections').find({name: name}).value();
     if (connectionInDatabase)
         throw "Connection with this name already exist!";
 }
@@ -88,17 +88,19 @@ async function addConnection(name, host, port, user, password, database, schema,
 
             // Get connections
             const connections = db
-                .get('Connections')
+                .get('connections')
                 .value();
 
             // Add new one
             connections.push(connection);
 
             // Update connections
-            db.get('Connections')
+            db.get('connections')
                 .assign({ connections })
                 .write();
         });
+
+        console.log('connection added!');
         return connection;
     } catch (e) {
         console.log(e);
@@ -109,7 +111,7 @@ async function deleteConnection(name) {
 
     // Get connections
     const connections = await db
-        .get('Connections')
+        .get('connections')
         .value();
 
     // Add new one
@@ -117,7 +119,7 @@ async function deleteConnection(name) {
         connections.findIndex(connection => connection.name === name), 1);
 
     // Update connections
-    db.get('Connections')
+    db.get('connections')
         .assign({ connections })
         .write();
 

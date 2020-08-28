@@ -50,6 +50,7 @@ export default class Tables extends React.Component {
 
     loadTables(connectionName) {
         getAllTables(connectionName).then(tables => {
+            console.log(tables);
             this.setState({tables: tables});
         });
     }

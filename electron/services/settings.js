@@ -26,7 +26,7 @@ function getAppDataPath() {
 function updateLanguage(language){
 
     // Update language
-    db.set('Settings.language', language)
+    db.set('settings.language', language)
         .write();
 }
 
@@ -37,7 +37,7 @@ function updateLanguage(language){
 function updateTheme(theme){
 
     // Update theme
-    db.set('Settings.theme', theme)
+    db.set('settings.theme', theme)
         .write();
 }
 
