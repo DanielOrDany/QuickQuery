@@ -214,7 +214,7 @@ export default class Connections extends React.Component {
 
                     <div className="information-field">
                         <span id="input-title">Password:</span>
-                        <input id="input-field" ref="password" className="form-control" type="text"
+                        <input id="input-field" ref="password" className="form-control" type="password"
                                placeholder="password"
                                defaultValue={this.state.passwordInput} onChange={this.passwordOnChange}
                                onKeyPress={this.passwordKeyPress}/>
