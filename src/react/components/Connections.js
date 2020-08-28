@@ -91,7 +91,14 @@ export default class Connections extends React.Component {
                         errorMessage: ""
                     });
 
-                    document.getElementById("input-field").value = "";
+                    document.getElementById("input-field-name").value = "";
+                    document.getElementById("input-field-host").value = "";
+                    document.getElementById("input-field-port").value = "";
+                    document.getElementById("input-field-user").value = "";
+                    document.getElementById("input-field-password").value = "";
+                    document.getElementById("input-field-database").value = "";
+                    document.getElementById("input-field-schema").value = "";
+
                 } else {
                     this.setState({
                         badQuery: 1,
@@ -177,14 +184,14 @@ export default class Connections extends React.Component {
 
                     <div className="information-field">
                         <span id="input-title">Name:</span>
-                        <input id="input-field" ref="name" className="form-control" type="text" placeholder="Yoda"
+                        <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda"
                                defaultValue={this.state.nameInput} onChange={this.nameOnChange}
                                onKeyPress={this.nameKeyPress}/>
                     </div>
 
                     <div className="information-field">
                         <span id="input-title">Host:</span>
-                        <input id="input-field" ref="host" className="form-control" type="text" placeholder="127.0.0.1"
+                        <input id="input-field-host" ref="host" className="form-control" type="text" placeholder="127.0.0.1"
                                defaultValue={this.state.hostInput} onChange={this.hostOnChange}
                                onKeyPress={this.hostKeyPress}/>
                     </div>
@@ -192,21 +199,21 @@ export default class Connections extends React.Component {
 
                     <div className="information-field">
                         <span id="input-title">Port:</span>
-                        <input id="input-field" ref="port" className="form-control" type="text" placeholder="5432"
+                        <input id="input-field-port" ref="port" className="form-control" type="text" placeholder="5432"
                                defaultValue={this.state.portInput} onChange={this.portOnChange}
                                onKeyPress={this.portKeyPress}/>
                     </div>
 
                     <div className="information-field">
                         <span id="input-title">User:</span>
-                        <input id="input-field" ref="user" className="form-control" type="text" placeholder="user name"
+                        <input id="input-field-user" ref="user" className="form-control" type="text" placeholder="user name"
                                defaultValue={this.state.userInput} onChange={this.userOnChange}
                                onKeyPress={this.userKeyPress}/>
                     </div>
 
                     <div className="information-field">
                         <span id="input-title">Password:</span>
-                        <input id="input-field" ref="password" className="form-control" type="text"
+                        <input id="input-field-password" ref="password" className="form-control" type="text"
                                placeholder="password"
                                defaultValue={this.state.passwordInput} onChange={this.passwordOnChange}
                                onKeyPress={this.passwordKeyPress}/>
@@ -214,7 +221,7 @@ export default class Connections extends React.Component {
 
                     <div className="information-field">
                         <span id="input-title">Database:</span>
-                        <input id="input-field" ref="database" className="form-control" type="text"
+                        <input id="input-field-database" ref="database" className="form-control" type="text"
                                placeholder="database name"
                                defaultValue={this.state.databaseInput} onChange={this.databaseOnChange}
                                onKeyPress={this.databaseKeyPress}/>
@@ -222,7 +229,7 @@ export default class Connections extends React.Component {
 
                     <div className="information-field">
                         <span id="input-title">Schema:</span>
-                        <input id="input-field" ref="schema" className="form-control" type="text"
+                        <input id="input-field-schema" ref="schema" className="form-control" type="text"
                                placeholder="schema name"
                                defaultValue={this.state.schemaInput} onChange={this.schemaOnChange}
                                onKeyPress={this.schemaKeyPress}/>
