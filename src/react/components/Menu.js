@@ -41,7 +41,14 @@ class Menu extends React.Component {
         const reader = new FileReader();
         reader.onload = function(){
             const content = reader.result;
-            importConfig(content);
+            importConfig(content).then(data => {
+                if (data === true) {
+                    alert("Successfully uploaded.");
+                }
+                else {
+                    alert("Wrong file!");
+                }
+            });
         };
         reader.readAsText(input.files[0]);
     };

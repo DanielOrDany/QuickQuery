@@ -33,11 +33,11 @@ pg.defaults.ssl = true;
 // Set some defaults (required if your JSON file is empty)
 async function createDefaultDatabase() {
     await database.defaults({
-        "Connections":[],
+        "Connections": [],
         "Settings":
             {
-                "language":"en",
-                "theme":"white"
+                "language": "en",
+                "theme": "white"
             }
     }).write();
 }
@@ -63,9 +63,19 @@ async function getDatabaseForTransport() {
 async function loadDatabase(encodedDatabase) {
     let bytes = await base64.decode(encodedDatabase);
     let databaseInString = await utf8.decode(bytes);
-    fs.writeFile('database.json', '', () => {
-        fs.writeFile('database.json', databaseInString, function() { console.log('done') })
-    });
+
+    if (databaseInString.includes("connections" && "settings")) {
+        fs.writeFile('database.json', '', () => {
+            fs.writeFile('database.json', databaseInString, function () {
+                console.log('done')
+            })
+        });
+
+        return true;
+    } else {
+        return false;
+    }
+
 }
 
 
