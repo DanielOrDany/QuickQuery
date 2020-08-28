@@ -23,6 +23,7 @@ export default class Connections extends React.Component {
 
         this.state = {
             connections: [],
+            searchedConnections: [],
             nameInput: '',
             hostInput: '',
             portInput: '',
@@ -42,7 +43,8 @@ export default class Connections extends React.Component {
                 localStorage.setItem("connections", JSON.stringify(data.connections));
                 localStorage.setItem("data", JSON.stringify(data));
                 this.setState({
-                    connections: data.connections
+                    connections: data.connections,
+                    searchedConnections: data.connections
                 });
             });
     };
@@ -93,6 +95,7 @@ export default class Connections extends React.Component {
 
                     this.setState({
                         connections: JSON.parse(localStorage.getItem("connections")),
+                        searchedConnections: JSON.parse(localStorage.getItem("connections")),
                         badQuery: 0,
                         errorMessage: ""
                     });
@@ -170,6 +173,20 @@ export default class Connections extends React.Component {
                 this.refs.url.focus();
             }
         }
+    };
+
+    search = () => {
+      const searchValue = document.getElementById('search-field').value;
+      let searchedConnections = [];
+
+      this.state.connections.forEach(connection => {
+          console.log(connection);
+          if (connection.name.includes(searchValue)) {
+              searchedConnections.push(connection);
+          }
+      });
+
+      this.setState({ searchedConnections: searchedConnections });
     };
 
     // showURI (URI) {
@@ -269,17 +286,16 @@ export default class Connections extends React.Component {
                             Sorted by:
                             <select id="choose-sort">
                                 <option value="name">name</option>
-                                <option value="time">time</option>
                             </select>
                         </div>
                         <div className="search">
-                            {/*<img id="search-icon" src={search_icon} alt="search_icon"/>*/}
                             <input id="search-field"/>
+                            <button type="button" className="search-button" onClick={() => this.search()}>Search</button>
                         </div>
                     </div>
 
                     <div id="folders">
-                        {this.state.connections ? this.state.connections.map(conn => {
+                        {this.state.searchedConnections ? this.state.searchedConnections.map(conn => {
                                 return (
 
                                     <div className="connection-folder" key={conn.name} id={conn.name}>
@@ -293,13 +309,13 @@ export default class Connections extends React.Component {
                                                 </div>
 
                                                 <div id="functional">
-                                                    <div id="time">
-                                                        10.08.2020
-                                                    </div>
-                                                    <div
-                                                        onClick={() => alert("PIN поки що не працює - " + conn.name)}>
-                                                        <img alt={"pin icon"} src={pin_icon} id="pin-icon"/>
-                                                    </div>
+                                                    {/*<div id="time">*/}
+                                                    {/*    10.08.2020*/}
+                                                    {/*</div>*/}
+                                                    {/*<div*/}
+                                                    {/*    onClick={() => alert("PIN поки що не працює - " + conn.name)}>*/}
+                                                    {/*    <img alt={"pin icon"} src={pin_icon} id="pin-icon"/>*/}
+                                                    {/*</div>*/}
                                                     <div
                                                         onClick={() => this.deleteConnection(conn.name)}>
                                                         <img alt={"delete icon"} src={delete_icon} id="delete-icon"/>

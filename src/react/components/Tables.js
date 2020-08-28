@@ -17,7 +17,8 @@ export default class Tables extends React.Component {
         super(props);
 
         this.state = {
-            tables: []
+            tables: [],
+            searchedTables: []
         };
     }
 
@@ -44,14 +45,19 @@ export default class Tables extends React.Component {
         } else {
             const tables = JSON.parse(localStorage.getItem('current_tables'));
             localStorage.removeItem('current_tables');
-            this.setState({tables: tables});
+            this.setState({
+                tables: tables,
+                searchedTables: tables
+            });
         }
     }
 
     loadTables(connectionName) {
         getAllTables(connectionName).then(tables => {
-            console.log(tables);
-            this.setState({tables: tables});
+            this.setState({
+                tables: tables,
+                searchedTables: tables
+            });
         });
     }
 
@@ -92,6 +98,18 @@ export default class Tables extends React.Component {
         window.location.hash = "#/tables/create-table"
     }
 
+    search = () => {
+        const searchValue = document.getElementById('search-field').value;
+        let searchedTables = [];
+
+        this.state.tables.forEach(table => {
+            if (table.alias.includes(searchValue)) {
+                searchedTables.push(table);
+            }
+        });
+
+        this.setState({ searchedTables: searchedTables });
+    };
 
     render() {
         if (!this.state.tables){
@@ -113,12 +131,13 @@ export default class Tables extends React.Component {
 
                             <div className="search">
                                 <input id="search-field"/>
+                                <button type="button" className="search-button" onClick={() => this.search()}>Search</button>
                             </div>
 
                         </div>
 
                         <div id="tables">
-                            {this.state.tables
+                            {this.state.searchedTables
                                 .map(table => {
                                     return(
                                         <div className="table" key={table.name}>
