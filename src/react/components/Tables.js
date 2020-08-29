@@ -101,7 +101,7 @@ export default class Tables extends React.Component {
                 </div>
             );
         } else return(
-                <div className="all-page">
+                <div className="all-page-tables">
 
                     <div className="left-side">
                         <div id="mini-menu">
@@ -141,7 +141,7 @@ export default class Tables extends React.Component {
                     <div className="line"></div>
 
 
-                    <div className="right-side">
+                    <div className="right-side-tables-page">
                         <Route path="/tables/create-table" component={CreateTable} />
                         <Route path={`/tables/result/:tableAlias`} component={Result}/>
                     </div>

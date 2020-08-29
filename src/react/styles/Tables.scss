@@ -1,13 +1,24 @@
 @import "./variables";
 
-.all-page {
+.all-page-tables {
   padding: 0 !important;
   margin: 0 !important;
+
+  display: grid;
+  grid-template-areas: "left right";
+  grid-template-columns: 300px auto;
+
+
 
 
   /* LEFT SIDE */
   .left-side {
     font-family: 'Scada', sans-serif;
+    grid-area: left;
+
+
+
+
 
     width: 300px;
     height: 100vh;
@@ -129,7 +140,7 @@
   /* VERTICAL LINE */
   .line {
     width: 1px;
-    height: 100vh;
+    height: 100%;
     margin-left: 300px;
 
     background-color: #818181;
@@ -141,7 +152,8 @@
 
 
   /* RIGHT SIDE */
-  .right-side {
+  .right-side-tables-page {
+    grid-area: right;
 
   }
 }

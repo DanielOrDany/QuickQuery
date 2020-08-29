@@ -81,7 +81,7 @@ export default class Result extends React.Component {
         if (prevState.pageNumber !== this.state.pageNumber) {
             this.loadTable()
         }
-        if(window.location.href.split('/')[window.location.href.split('/').length - 1] != localStorage.getItem("current_result")) {
+        if (window.location.href.split('/')[window.location.href.split('/').length - 1] != localStorage.getItem("current_result")) {
             localStorage.setItem("current_result", window.location.href.split('/')[window.location.href.split('/').length - 1]);
             this.loadTable();
         }
@@ -172,10 +172,9 @@ export default class Result extends React.Component {
             );
         } else {
             return (
-                <div className="page">
-                    <div id="right-side">
+                <div className="all-page-result">
                         <div className={"menu_table"}>
-                            <div className={'pagination_page search'}>
+                            <div id="sorting-and-search">
                                 <select
                                     value={this.state.selectValue}
                                     onChange={this.handleChange}
@@ -185,14 +184,15 @@ export default class Result extends React.Component {
                                         })
                                         : null}
                                 </select>
-                                <input placeholder={"value"} value={this.state.value}
+                                <input id="search-field" placeholder={"value"} value={this.state.value}
                                        onChange={this.handleChange_value}/>
                                 <button id="search-btn" onClick={() => this.searchMthods()}>Search</button>
                             </div>
-                            <div className={"pagination_page"}>
-                                <button onClick={() => this.changePage(-1)}>Prev</button>
+
+                            <div id="select-page">
+                                <button id="select-page-btn" onClick={() => this.changePage(-1)}>Prev</button>
                                 <span>Page: {this.state.pageNumber + 1}</span>
-                                <button onClick={() => this.changePage(1)}>Next</button>
+                                <button id="select-page-btn" onClick={() => this.changePage(1)}>Next</button>
                             </div>
                             <div className={"save"}>
                                 <button onClick={() => this.save()}>Save</button>
@@ -201,32 +201,32 @@ export default class Result extends React.Component {
                         {this.state.null_results === true ?
                             <span>{"none results"}</span>
                             :
+                            <div id="result-tables">
+                                <table>
+                                    <tr>
+                                        {this.state.header ? this.state.header.map((item) => {
+                                                return <th>{item}</th>
+                                            })
+                                            : null}
+                                    </tr>
+                                    {this.state.rows ? this.state.rows.map((item, key) => {
+                                            return <tr className={key++ % 2 === 0 ? "column_one" : "column_two"}>{
+                                                Object.values(item).map((get_item, key) => {
+                                                    return <td style={key === 0 ? {
+                                                        color: "#3E3E3E",
+                                                        background: "#EFEFEF",
+                                                        border: "1px solid grey",
+                                                    } : {color: "#3E3E3E"}}>{get_item}</td>
 
-                            <table>
-                                <tr>
-                                    {this.state.header ? this.state.header.map((item) => {
-                                            return <th>{item}</th>
+                                                })}
+                                            </tr>
+
                                         })
                                         : null}
-                                </tr>
-                                {this.state.rows ? this.state.rows.map((item, key) => {
-                                        return <tr className={key++ % 2 === 0 ? "column_one" : "column_two"}>{
-                                            Object.values(item).map((get_item, key) => {
-                                                return <td style={key === 0 ? {
-                                                    color: "#3E3E3E",
-                                                    background: "#EFEFEF",
-                                                    border: "1px solid grey",
-                                                } : {color: "#3E3E3E"}}>{get_item}</td>
-
-                                            })}
-                                        </tr>
-
-                                    })
-                                    : null}
-                            </table>
+                                </table>
+                            </div>
 
                         }
-                    </div>
                 </div>
             );
         }
