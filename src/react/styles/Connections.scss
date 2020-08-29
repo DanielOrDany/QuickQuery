@@ -1,5 +1,6 @@
 /* ALL PAGE */
 @import "./variables";
+
 .all-page {
   padding: 0 !important;
   margin: 0 !important;
@@ -7,7 +8,6 @@
   display: grid;
   grid-template-areas: "left right";
   grid-template-columns: 300px auto;
-
 
 
   /* LEFT MENU */
@@ -23,7 +23,6 @@
     padding-top: 70px;
 
     background: #EFEFEF;
-
 
 
     /* INPUT */
@@ -56,7 +55,6 @@
     }
 
 
-
     /* CHOOSE DB */
     .choose-db-field {
       margin-top: 40px;
@@ -85,7 +83,6 @@
     }
 
 
-
     /* ADD BUTTON */
     .add-button {
       font-family: 'Scada', sans-serif;
@@ -112,7 +109,6 @@
   }
 
 
-
   /* VERTICAL LINE */
   .line {
     width: 1px;
@@ -128,7 +124,6 @@
   }
 
 
-
   /* RIGHT SIDE */
   .right-side {
     grid-area: right;
@@ -138,7 +133,6 @@
             "menu"
             "folders";
     grid-template-rows: 50px auto;
-
 
 
     /* TOP MENU */
@@ -181,7 +175,7 @@
           height: 18px;
 
           position: relative;
-          left: 700px;
+          //left: 700px;
         }
 
         #search-field {
@@ -195,7 +189,6 @@
         }
       }
     }
-
 
 
     /* FOLDERS */
@@ -277,7 +270,204 @@
       }
 
 
-
     }
   }
 }
+
+@media (max-width: 1350px) {
+  .right-side {
+    max-width: 940px;
+  }
+  #folders {
+    margin-left: 30px;
+
+    .connection-folder {
+      .link-container {
+        max-width: 740px;
+        margin-left: 50px;
+        margin-right: 50px;
+      }
+    }
+  }
+}
+
+@media (max-width: 1240px) {
+  .right-side {
+    max-width: 940px;
+  }
+  #folders {
+    margin-left: 30px;
+
+    .connection-folder {
+
+      .link-container {
+
+        max-width: 740px;
+        margin-left: 50px;
+        margin-right: 50px;
+
+      }
+    }
+  }
+}
+@media (max-width: 1140px) {
+  /* TOP MENU */
+  #menu {
+    .search {
+      #search-field {
+        margin-left: 40px !important;
+        margin-top: 10px;
+        margin-right: 52px;
+        max-width: 440px;
+        height: 30px;
+      }
+    }
+  }
+
+  .right-side {
+    max-width: 940px;
+  }
+  #folders {
+    margin-left: auto;
+
+    .connection-folder {
+      .link-container {
+        max-width: 540px;
+        margin-left: 40px;
+        margin-right: 40px;
+      }
+    }
+  }
+}
+
+@media (max-width: 1050px) {
+  /* TOP MENU */
+  #menu {
+
+    .search {
+      #search-field {
+        margin-left: 20px !important;
+        margin-top: 10px;
+        margin-right: 52px;
+        max-width: 400px;
+        height: 30px;
+      }
+    }
+  }
+}
+
+@media (max-width: 990px){
+  /* TOP MENU */
+  #menu {
+
+    .search {
+      #search-field {
+        margin-left: 15px !important;
+        margin-top: 10px;
+        margin-right: 52px;
+        max-width: 300px;
+        height: 30px;
+      }
+    }
+  }
+}
+
+@media (max-width: 920px) {
+  /* TOP MENU */
+  #menu {
+
+    .search {
+      #search-field {
+        margin-left: 15px !important;
+        margin-top: 10px;
+        margin-right: 52px;
+        max-width: 270px;
+        height: 30px;
+      }
+    }
+  }
+
+  .right-side {
+    max-width: 940px;
+  }
+  #folders {
+    margin-left: auto;
+
+    .connection-folder {
+      .link-container {
+        max-width: 480px;
+        margin-left: 40px;
+        margin-right: 40px;
+      }
+    }
+  }
+}
+@media (max-width: 860px) {
+  /* TOP MENU */
+  #menu {
+    height: 70px;
+
+    .search {
+      #search-field {
+        margin-left: 15px !important;
+        margin-top: 25px;
+        margin-right: 52px;
+        max-width: 220px;
+        height: 30px;
+      }
+    }
+  }
+
+  .right-side {
+    max-width: 940px;
+  }
+  #folders {
+    margin-left: auto;
+
+    .connection-folder {
+      .link-container {
+        max-width: 400px;
+        margin-left: 40px;
+        margin-right: 40px;
+      }
+    }
+  }
+}
+
+@media (max-width: 770px) {
+  /* TOP MENU */
+  #menu {
+    height: 70px;
+
+    .search {
+
+      #search-field {
+        margin-left: 15px;
+        margin-top: 10px;
+        margin-right: 52px;
+        max-width: 220px;
+        height: 30px;
+
+      }
+    }
+  }
+
+  .right-side {
+    max-width: 940px;
+  }
+  #folders {
+    margin-left: auto;
+
+    .connection-folder {
+
+      .link-container {
+
+        max-width: 340px;
+        margin-left: 20px;
+        margin-right: 20px;
+
+      }
+    }
+  }
+}
+
