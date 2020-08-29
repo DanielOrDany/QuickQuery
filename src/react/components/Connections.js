@@ -92,12 +92,12 @@ export default class Connections extends React.Component {
                     });
 
                     document.getElementById("input-field-name").value = "";
-                    document.getElementById("input-field-host").value = "ec2-54-247-72-30.eu-west-1.compute.amazonaws.com";
-                    document.getElementById("input-field-port").value = "5432";
-                    document.getElementById("input-field-user").value = "swyjcrddjtomrg";
-                    document.getElementById("input-field-password").value = "39e359a26acfc1a5d324bf7953e0f85231f8d1927d3bcaf06285f2e6a9c97606";
-                    document.getElementById("input-field-database").value = "deiuejksj9fvj8";
-                    document.getElementById("input-field-schema").value = "public";
+                    document.getElementById("input-field-host").value = "";
+                    document.getElementById("input-field-port").value = "";
+                    document.getElementById("input-field-user").value = "";
+                    document.getElementById("input-field-password").value = "";
+                    document.getElementById("input-field-database").value = "";
+                    document.getElementById("input-field-schema").value = "";
 
                 } else {
                     this.setState({
