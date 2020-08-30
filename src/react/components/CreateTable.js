@@ -17,6 +17,7 @@ export default class CreateTable extends React.Component {
 
     componentDidMount() {
         if(localStorage.getItem("current_result_info")) {
+            console.log("Here");
             let result = JSON.parse(localStorage.getItem("current_result_info"));
             let name = document.getElementById("aliasText");
             let query = document.getElementById("queryText");
