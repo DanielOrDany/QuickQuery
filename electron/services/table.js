@@ -29,77 +29,77 @@ pg.defaults.ssl = true;
 
 //Add new table to the current connection
 async function addTable (connectionName, query, type, alias){
+    try {
+        const connection = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .value();
 
-    const URI = db.read()
-        .get('connections')
-        .find({name: connectionName})
-        .get('URI')
-        .value();
+        const URI = connection.URI;
+        const connectionQueries = connection.queries;
+        console.log('connection', connection);
 
-    const sequelize = new Sequelize(URI.database, URI.user, URI.password, URI.others);
-    await sequelize.query(query);
+        const sequelize = new Sequelize(URI.database, URI.user, URI.password, URI.others);
+        const index = connectionQueries.findIndex(query => query.alias === alias);
+        if (index > 0) throw "Table with this name already exist!";
 
-    // Get queries
-    const queries = db.read()
-        .get('connections')
-        .find({name: connectionName})
-        .get('queries')
-        .value();
+        // Add new one
+        connectionQueries.push({
+            "query": query,
+            "type": type,
+            "alias": alias
+        });
 
-    const index = queries.findIndex(query => query.alias === alias);
-    if (index > 0) throw "Table with this name already exist!";
+        console.log(connectionQueries);
 
-    // Add new one
-    queries.push({
-        "query": query,
-        "type": type,
-        "alias": alias
-    });
+        // Update queries
+        db.get('connections')
+            .find({name: connectionName})
+            .get('queries')
+            .assign({ connectionQueries })
+            .write();
 
-    // Update queries
-    db.read()
-        .get('connections')
-        .find({name: connectionName})
-        .get('queries')
-        .assign({ queries })
-        .write();
+        // let replaced = query.replace(';', ' LIMIT 5 OFFSET 0;');
+        // if (query.length === replaced.length) query += ' LIMIT 5 OFFSET 0';
+        // if (query.length < replaced.length) query = replaced;
 
-    const replaced = query.replace(';', ' LIMIT 5 OFFSET 0;');
-    if (query.length === replaced.length) query += ' LIMIT 5 OFFSET 0';
-    if (query.length < replaced.length) query = replaced;
+        query = query.replace(';', ' ');
+        query += ' LIMIT 10 OFFSET 0';
 
-    const queryResult = await sequelize.query(
-        `use ${URI.database}; ` + query);
+        console.log('query', query);
+        const [results, metadata] = await sequelize.query(query);
 
-    return {
-        "rows": queryResult[1].rows,
-        "fields": queryResult[1].fields
+        return {
+            "rows": results,
+            "fields": metadata.fields
+        }
+    } catch (e) {
+        console.log(e);
     }
 }
 
 async function runQuery (connectionName, query){
+    try {
+        const URI = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .get('URI')
+            .value();
 
-    const URI = db.read()
-        .get('connections')
-        .find({name: connectionName})
-        .get('URI')
-        .value();
+        console.log('URI', URI);
 
-    const sequelize = new Sequelize(URI.database, URI.user, URI.password, URI.others);
-    await sequelize.query(query);
+        const sequelize = new Sequelize(URI.database, URI.user, URI.password, URI.others);
+        query = query.replace(';', ' ');
+        query += ' LIMIT 10 OFFSET 0';
 
-    if (query[query.length] === ';') {
-        query = query[query.length].replace(';', ' ');
-    }
+        const [results, metadata] = await sequelize.query(query);
 
-    query += ' LIMIT 10 OFFSET 0';
-
-    const queryResult = await sequelize.query(
-        `use ${URI.database}; ` + query);
-
-    return {
-        "rows": queryResult[1].rows,
-        "fields": queryResult[1].fields
+        return {
+            "rows": results,
+            "fields": metadata.fields
+        }
+    } catch (e) {
+        console.log(e);
     }
 }
 
