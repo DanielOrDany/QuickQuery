@@ -138,7 +138,7 @@ export default class Tables extends React.Component {
                     </div>
 
 
-                    <div className="line"></div>
+                    <div className="line-tables-page"></div>
 
 
                     <div className="right-side-tables-page">
