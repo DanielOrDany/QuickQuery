@@ -22,9 +22,11 @@ function removeTable(alias) {
     const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
     deleteTable(connectionName, alias).then(tables => {
         if(tables)  {
-            this.setState({tables: tables});
+            localStorage.setItem('current_tables', JSON.stringify(tables));
+            // TODO: write deletion for html element
+            return `#/tables/${alias}`;
         }
-    });
+    }).then(url => window.location.hash = url);
 }
 
 function editTable(table) {

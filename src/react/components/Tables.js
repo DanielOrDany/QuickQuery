@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import '../styles/Tables.scss';
 import {
     Route
 } from 'react-router-dom';
 import CreateTable from "./CreateTable";
 import Result from "./Result";
-import { getAllTables, getTable, deleteTable} from "../methods";
+import { getAllTables, getTable} from "../methods";
 import { ReactComponent as MiniMenuIcon } from "../icons/open-menu.svg";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
 import MiniMenu from "./MiniMenu";

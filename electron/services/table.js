@@ -130,6 +130,8 @@ function deleteTable (connectionName, alias) {
     queries.splice(
         queries.findIndex(query => query.alias === alias), 1);
 
+    console.log(queries);
+
     // Update queries
     db.get('connections')
         .find({name: connectionName})
