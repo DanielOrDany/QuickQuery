@@ -23,7 +23,7 @@ function removeTable(alias) {
     deleteTable(connectionName, alias).then(tables => {
         if(tables)  {
             localStorage.setItem('current_tables', JSON.stringify(tables));
-            // TODO: write deletion for html element
+            document.getElementById(alias).remove();
             return `#/tables/${alias}`;
         }
     }).then(url => window.location.hash = url);

@@ -125,7 +125,7 @@ export default class Tables extends React.Component {
                             {this.state.searchedTables
                                 .map(table => {
                                     return(
-                                        <div className="table" key={table.name}>
+                                        <div id={table.alias} className="table" key={table.alias}>
                                             <div className="container">
                                                 <div id="table-name" onClick={() => this.openTable(table.alias)}>
                                                     <span>&#11044;</span>
