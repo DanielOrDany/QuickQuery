@@ -23,7 +23,7 @@ export default class CreateTable extends React.Component {
     }
 
     componentDidUpdate() {
-        if(window.location.href.split('/')[window.location.href.split('/').length - 1] != localStorage.getItem("current_result")) {
+        if(window.location.href.split('/')[window.location.href.split('/').length - 2] == "edit-table" && window.location.href.split('/')[window.location.href.split('/').length - 1] != localStorage.getItem("current_result")) {
             localStorage.setItem("current_result", window.location.href.split('/')[window.location.href.split('/').length - 1]);
             this.renderFields();
         }
