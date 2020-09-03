@@ -87,7 +87,7 @@ class Menu extends React.Component {
                 <Router hashType="noslash">
                     <div className="menu-header" expand="md">
                         <div className="logo-box">
-                            <img src={logo_icon} id="l-icon"></img>
+                            <img src={logo_icon} id="l-icon" onClick={() => this.openConnections()}></img>
 
                         </div>
                         <div className="menu-box">
