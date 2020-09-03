@@ -148,6 +148,7 @@ export default class Tables extends React.Component {
 
                     <div className="right-side-tables-page">
                         <Route path="/tables/create-table" component={CreateTable} />
+                        <Route path={`/tables/edit-table/:tableAlias`} component={CreateTable} />
                         <Route path={`/tables/result/:tableAlias`} component={Result}/>
                     </div>
                 </div>
