@@ -69,9 +69,8 @@ export default class CreateTable extends React.Component {
                     });
                 }
             }).then((url) => {
-                getAllTables(connectionName).then(tables => {
-                    window.location.pathname = url;
-                });
+                localStorage.setItem("new_table", JSON.stringify(true));
+                window.location.hash = url;
             });
         } else {
             this.setState({

@@ -47,6 +47,11 @@ export default class Tables extends React.Component {
             localStorage.removeItem("need_update");
             this.loadTables(JSON.parse(localStorage.getItem('current_connection')).name);
         }
+
+        if(localStorage.getItem("new_table")) {
+            localStorage.removeItem("new_table");
+            this.loadTables(JSON.parse(localStorage.getItem('current_connection')).name);
+        }
     }
 
     loadTables(connectionName) {
