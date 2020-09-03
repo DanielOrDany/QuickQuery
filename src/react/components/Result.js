@@ -10,11 +10,11 @@ export default class Result extends React.Component {
         super(props);
 
         this.state = {
-            header: "",
+            headers: "",
             rows: "",
             pageNumber: 0,
             value: '',
-            selectValue: '',
+            selectedItem: '',
             null_results: false,
             records: 0,
             pages: 0
@@ -28,7 +28,7 @@ export default class Result extends React.Component {
 
     handleChange(event) {
         this.setState({
-            selectValue: event.target.value
+            selectedItem: event.target.value
         });
     }
 
@@ -96,39 +96,46 @@ export default class Result extends React.Component {
         };
 
         loadTableResult(connectionName, result, options).then(async data => {
-            console.log(data);
             const db_rows = await Promise.all(data.rows);
+            const headers = Object.keys(db_rows[0]);
+            const selectedValue = Object.keys(db_rows[0])[0];
+            const rows = Object.values(db_rows);
+
             this.setState({
-                header: Object.keys(db_rows[0]),
-                selectValue: Object.keys(db_rows[0])[0],
-                rows: Object.values(db_rows),
+                headers: headers,
+                selectedItem: selectedValue,
+                rows: rows,
                 pages: data.pages
-                // pages: Math.ceil()
             });
-            console.log(this.state);
         });
     };
 
     save() {
-        const result = JSON.parse(localStorage.getItem('current_result'));
+        const result = localStorage.getItem('current_result');
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
-        const options = {page: 0, pageSize: 1000};
+        const options = {
+            page: 0,
+            pageSize: 1000,
+            search: this.state.value === '' ? undefined
+                : { column: this.state.selectedItem, value: this.state.value }
+        };
+
         loadTableResult(connectionName, result, options).then(async data => {
             const db_rows = await Promise.all(data.rows);
             const rows = Object.values(db_rows);
 
             let binaryWS = XLSX.utils.json_to_sheet(rows);
-            var wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, binaryWS, `${result}`);
+            let wb = XLSX.utils.book_new();
 
+            XLSX.utils.book_append_sheet(wb, binaryWS, `${result}`);
             XLSX.writeFile(wb, `${result}.xlsx`);
         });
     }
 
     changePage = (operation) => {
         let n = this.state.pageNumber + operation;
+
         if (n === 0) n += 1;
-        console.log(this.state.pages);
         if (n > 0 && n < this.state.pages) {
             this.setState({
                 pageNumber: this.state.pageNumber + operation
@@ -136,22 +143,25 @@ export default class Result extends React.Component {
         }
     };
 
-    searchMthods = () => {
-        const result = JSON.parse(localStorage.getItem('current_result'));
+    search = () => {
+        const result = localStorage.getItem('current_result');
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const options = {
             page: this.state.pageNumber,
-            pageSize: 10000000,
-            search: {column: this.state.selectValue, value: this.state.value}
+            pageSize: 1000,
+            search: this.state.value === '' ? undefined
+                : { column: this.state.selectedItem, value: this.state.value }
         };
 
         loadTableResult(connectionName, result, options).then(async data => {
             if (data.rows.length) {
                 const db_rows = await Promise.all(data.rows);
+                const headers = Object.keys(db_rows[0]);
+                const rows = Object.values(db_rows);
 
                 this.setState({
-                    header: Object.keys(db_rows[0]),
-                    rows: Object.values(db_rows),
+                    headers: headers,
+                    rows: rows,
                     null_results: false
                 });
             } else {
@@ -175,18 +185,15 @@ export default class Result extends React.Component {
                 <div className="all-page-result">
                         <div className={"menu_table"}>
                             <div id="sorting-and-search">
-                                <select
-                                    value={this.state.selectValue}
-                                    onChange={this.handleChange}
-                                >
-                                    {this.state.header ? this.state.header.map((item) => {
+                                <select value={ this.state.selectedItem } onChange={ this.handleChange }>
+                                    { this.state.headers ? this.state.headers.map((item) => {
                                             return <option value={item}>{item}</option>
                                         })
-                                        : null}
+                                        : null }
                                 </select>
                                 <input id="search-field" placeholder={"value"} value={this.state.value}
                                        onChange={this.handleChange_value}/>
-                                <button id="search-btn" onClick={() => this.searchMthods()}>Search</button>
+                                <button id="search-btn" onClick={() => this.search()}>Search</button>
                             </div>
 
                             <div id="select-page">
@@ -199,12 +206,12 @@ export default class Result extends React.Component {
                             </div>
                         </div>
                         {this.state.null_results === true ?
-                            <span>{"none results"}</span>
+                            <span>{"-none- results"}</span>
                             :
                             <div id="result-tables">
                                 <table>
                                     <tr>
-                                        {this.state.header ? this.state.header.map((item) => {
+                                        {this.state.headers ? this.state.headers.map((item) => {
                                                 return <th>{item}</th>
                                             })
                                             : null}
