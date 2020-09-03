@@ -1,8 +1,8 @@
 const low = require('lowdb');
 const path = require('path');
 const FileSync = require('lowdb/adapters/FileSync');
-const appDatatDirPath = getAppDataPath();
-const adapter = new FileSync(path.join(appDatatDirPath, 'database.json'));
+const appDataDirPath = getAppDataPath();
+const adapter = new FileSync(path.join(appDataDirPath, 'database.json'));
 const database = low(adapter);
 
 function getAppDataPath() {
@@ -33,8 +33,8 @@ pg.defaults.ssl = true;
 // Set some defaults (required if your JSON file is empty)
 async function createDefaultDatabase() {
     await database.defaults({
-        "Connections": [],
-        "Settings":
+        "connections": [],
+        "settings":
             {
                 "language": "en",
                 "theme": "white"
@@ -44,15 +44,15 @@ async function createDefaultDatabase() {
 
 async function getDataFromDatabase() {
     return {
-        connections: await database.get('Connections').value(),
-        settings: await database.get('Settings').value()
+        connections: await database.get('connections').value(),
+        settings: await database.get('settings').value()
     }
 }
 
 async function getDatabaseForTransport() {
     const databaseInJSON = {
-        connections: await database.get('Connections').value(),
-        settings: await database.get('Settings').value()
+        connections: await database.get('connections').value(),
+        settings: await database.get('settings').value()
     };
     let databaseInString = JSON.stringify(databaseInJSON);
     let bytes = await utf8.encode(databaseInString);

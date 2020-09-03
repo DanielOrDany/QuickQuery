@@ -1,8 +1,8 @@
 const low = require('lowdb');
 const path = require('path');
 const FileSync = require('lowdb/adapters/FileSync');
-const appDatatDirPath = getAppDataPath();
-const adapter = new FileSync(path.join(appDatatDirPath, 'database.json'));
+const appDataDirPath = getAppDataPath();
+const adapter = new FileSync(path.join(appDataDirPath, 'database.json'));
 const db = low(adapter);
 
 function getAppDataPath() {
@@ -26,7 +26,7 @@ function getAppDataPath() {
 function updateLanguage(language){
 
     // Update language
-    db.set('Settings.language', language)
+    db.set('settings.language', language)
         .write();
 }
 
@@ -37,7 +37,7 @@ function updateLanguage(language){
 function updateTheme(theme){
 
     // Update theme
-    db.set('Settings.theme', theme)
+    db.set('settings.theme', theme)
         .write();
 }
 

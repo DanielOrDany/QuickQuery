@@ -1,8 +1,8 @@
 const low = require('lowdb');
 const path = require('path');
 const FileSync = require('lowdb/adapters/FileSync');
-const appDatatDirPath = getAppDataPath();
-const adapter = new FileSync(path.join(appDatatDirPath, 'database.json'));
+const appDataDirPath = getAppDataPath();
+const adapter = new FileSync(path.join(appDataDirPath, 'database.json'));
 const db = low(adapter);
 
 function getAppDataPath() {
@@ -30,7 +30,7 @@ pg.defaults.ssl = true;
 //Add new table to the current connection
 async function addTable (connectionName, query, type, alias){
 
-    const URI = db.get('Connections')
+    const URI = db.get('connections')
         .find({name: connectionName})
         .get('URI')
         .value();
@@ -39,7 +39,7 @@ async function addTable (connectionName, query, type, alias){
     await sequelize.query(query);
 
     // Get queries
-    const queries = db.get('Connections')
+    const queries = db.get('connections')
         .find({name: connectionName})
         .get('queries')
         .value();
@@ -55,7 +55,7 @@ async function addTable (connectionName, query, type, alias){
     });
 
     // Update queries
-    db.get('Connections')
+    db.get('connections')
         .find({name: connectionName})
         .get('queries')
         .assign({ queries })
@@ -75,7 +75,7 @@ async function addTable (connectionName, query, type, alias){
 
 async function runQuery (connectionName, query){
 
-    const URI = db.get('Connections')
+    const URI = db.get('connections')
         .find({name: connectionName})
         .get('URI')
         .value();
@@ -100,7 +100,7 @@ async function runQuery (connectionName, query){
 function renameTable (connectionName, alias, newAlias){
 
     // Get queries
-    const queries = db.get('Connections')
+    const queries = db.get('connections')
         .find({name: connectionName})
         .get('queries')
         .value();
@@ -110,7 +110,7 @@ function renameTable (connectionName, alias, newAlias){
     queries[index].alias = newAlias;
 
     // Update queries
-    db.get('Connections')
+    db.get('connections')
         .find({name: connectionName})
         .get('queries')
         .assign({ queries })
@@ -120,7 +120,7 @@ function renameTable (connectionName, alias, newAlias){
 function deleteTable (connectionName, alias) {
 
     // Get queries
-    const queries = db.get('Connections')
+    const queries = db.get('connections')
         .find({name: connectionName})
         .get('queries')
         .value();
@@ -130,14 +130,14 @@ function deleteTable (connectionName, alias) {
         queries.findIndex(query => query.alias === alias), 1);
 
     // Update queries
-    db.get('Connections')
+    db.get('connections')
         .find({name: connectionName})
         .get('queries')
         .assign({ queries })
         .write();
 
     return db
-        .get('Connections')
+        .get('connections')
         .find({name: connectionName})
         .get('queries')
         .value();
@@ -145,7 +145,7 @@ function deleteTable (connectionName, alias) {
 
 function getTable (connectionName, alias) {
     console.log("TABLE: ", db
-        .get('Connections')
+        .get('connections')
         .find({name: connectionName})
         .get('queries')
         .find({alias: alias})
@@ -153,7 +153,7 @@ function getTable (connectionName, alias) {
 
     // Get table
     return db
-        .get('Connections')
+        .get('connections')
         .find({name: connectionName})
         .get('queries')
         .find({alias: alias})
@@ -164,7 +164,7 @@ function getAllTables(connectionName) {
 
     // Get tables
     return db
-        .get('Connections')
+        .get('connections')
         .find({name: connectionName})
         .get('queries')
         .value();
@@ -186,7 +186,7 @@ function updateTableQuery(connectionName, alias, query) {
     verifyQuery(query);
 
     // Get queries
-    const queries = db.get('Connections')
+    const queries = db.get('connections')
         .find({name: connectionName})
         .get('queries')
         .value();
@@ -196,7 +196,7 @@ function updateTableQuery(connectionName, alias, query) {
     queries[index].query = query;
 
     // Update queries
-    db.get('Connections')
+    db.get('connections')
         .find({name: connectionName})
         .get('queries')
         .assign({ queries })
@@ -205,7 +205,7 @@ function updateTableQuery(connectionName, alias, query) {
 
 async function loadTableResult(connectionName, alias, options){
     try {
-        const URI = db.get('Connections')
+        const URI = db.get('connections')
             .find({name: connectionName})
             .get('URI')
             .value();
@@ -215,7 +215,7 @@ async function loadTableResult(connectionName, alias, options){
         const limit = Number(options.pageSize);
 
         // Get table result
-        let query = db.get('Connections')
+        let query = db.get('connections')
             .find({name: connectionName})
             .get('queries')
             .find({alias: alias})
