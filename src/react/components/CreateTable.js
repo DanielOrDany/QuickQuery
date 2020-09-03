@@ -17,13 +17,25 @@ export default class CreateTable extends React.Component {
 
     componentDidMount() {
         if(localStorage.getItem("current_result_info")) {
-            let result = JSON.parse(localStorage.getItem("current_result_info"));
+            localStorage.setItem("current_result", window.location.href.split('/')[window.location.href.split('/').length - 1]);
+            this.renderFields();
+        }
+    }
+
+    componentDidUpdate() {
+        if(window.location.href.split('/')[window.location.href.split('/').length - 1] != localStorage.getItem("current_result")) {
+            localStorage.setItem("current_result", window.location.href.split('/')[window.location.href.split('/').length - 1]);
+            this.renderFields();
+        }
+    }
+
+    renderFields() {
+        let result = JSON.parse(localStorage.getItem("current_result_info"));
             let name = document.getElementById("aliasText");
             let query = document.getElementById("queryText");
             name.value = result.alias;
             name.disabled = true;
             query.value = result.query;
-        }
     }
 
     save() {
