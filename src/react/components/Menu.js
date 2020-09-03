@@ -41,23 +41,35 @@ class Menu extends React.Component {
         const reader = new FileReader();
         reader.onload = function(){
             const content = reader.result;
-            importConfig(content);
+            importConfig(content).then(data => {
+                if (data === true) {
+                    alert("Successfully uploaded.");
+                }
+                else {
+                    alert("Wrong file!");
+                }
+            });
         };
         reader.readAsText(input.files[0]);
     };
 
     exportConfig(filename, text) {
-        const pom = document.createElement('a');
-        pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-        pom.setAttribute('download', filename);
+        try {
+            const pom = document.createElement('a');
+            pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            pom.setAttribute('download', filename);
 
-        if (document.createEvent) {
-            let event = document.createEvent('MouseEvents');
-            event.initEvent('click', true, true);
-            pom.dispatchEvent(event);
+            if (document.createEvent) {
+                let event = document.createEvent('MouseEvents');
+                event.initEvent('click', true, true);
+                pom.dispatchEvent(event);
+            }
+            else {
+                pom.click();
+            }
         }
-        else {
-            pom.click();
+        catch (e) {
+            alert("FAIL")
         }
     }
 
@@ -75,7 +87,7 @@ class Menu extends React.Component {
                 <Router hashType="noslash">
                     <div className="menu-header" expand="md">
                         <div className="logo-box">
-                            <img src={logo_icon} id="l-icon"></img>
+                            <img src={logo_icon} id="l-icon" onClick={() => this.openConnections()}></img>
 
                         </div>
                         <div className="menu-box">

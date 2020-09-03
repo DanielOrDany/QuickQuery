@@ -16,8 +16,8 @@ export default class CreateTable extends React.Component {
     }
 
     componentDidMount() {
-        if(localStorage.getItem("current_result")) {
-            let result = JSON.parse(localStorage.getItem("current_result"));
+        if(localStorage.getItem("current_result_info")) {
+            let result = JSON.parse(localStorage.getItem("current_result_info"));
             let name = document.getElementById("aliasText");
             let query = document.getElementById("queryText");
             name.value = result.alias;
@@ -35,7 +35,7 @@ export default class CreateTable extends React.Component {
         const alias = document.getElementById("aliasText").value;
         const query = document.getElementById("queryText").value;
 
-        if(localStorage.getItem("current_result") && inputVirify(query) > 0) {
+        if(localStorage.getItem("current_result_info") && inputVirify(query) > 0) {
             updateTableQuery(connectionName, alias, query).then(() => {
                 getAllTables(connectionName).then(tables => {
                     localStorage.setItem("current_tables", JSON.stringify(tables));
@@ -143,8 +143,9 @@ export default class CreateTable extends React.Component {
                         </div>
                     }
                     {this.state.header !== "" && this.state.rows !== "" &&
-                        <div>
-                            <table>
+
+                        <div id="add-btn-table">
+                            <table id="your-new-table">
                                 <tr>
                                 {this.state.header ? this.state.header.map((item) => {
                                         return <th>{item}</th>
@@ -155,10 +156,10 @@ export default class CreateTable extends React.Component {
                                         return <tr className={key++ % 2 === 0 ? "column_one" : "column_two"}>{
                                             Object.values(item).map((get_item, key) => {
                                                 return <td style={key === 0 ? {
-                                                    color: "#BD3C4D",
-                                                    background: "transparent",
-                                                    border: "0px"
-                                                } : {color: "white"}}>{get_item}</td>
+                                                    color: "#3E3E3E",
+                                                    background: "#EFEFEF",
+                                                    border: "1px solid grey"
+                                                } : {color: "#3E3E3E"}}>{get_item}</td>
 
                                             })}
                                         </tr>

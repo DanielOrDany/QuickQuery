@@ -6,18 +6,16 @@
   margin: 0 !important;
 
   display: grid;
-  grid-template-areas: "left right";
-  grid-template-columns: 300px auto;
-
+  grid-template-areas: "left line right";
+  grid-template-columns: 300px 1px auto;
 
   /* LEFT MENU */
   .left-menu {
     font-family: 'Scada', sans-serif;
 
     grid-area: left;
+    min-height: 100vh;
 
-    width: 300px;
-    height: 100vh;
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 70px;
@@ -40,7 +38,7 @@
         color: #3E3E3E;
       }
 
-      #input-field {
+      .form-control {
         font-family: 'Scada', sans-serif;
 
         width: 150px;
@@ -90,6 +88,7 @@
       width: 200px;
       height: 40px;
       margin-top: 30px;
+      margin-bottom: 10px;
 
       border-radius: 5px;
       border: 0 solid;
@@ -111,13 +110,11 @@
 
   /* VERTICAL LINE */
   .line {
-    width: 1px;
-    height: 100vh;
-    margin-left: 300px;
+    grid-area: line;
+    height: 100%;
 
     background-color: #818181;
 
-    position: absolute;
 
     filter: blur(1px);
 
@@ -126,6 +123,7 @@
 
   /* RIGHT SIDE */
   .right-side {
+
     grid-area: right;
 
     display: grid;
@@ -198,8 +196,12 @@
       grid-area: folders;
 
       margin: 50px auto 0;
+      max-height: 600px;
+      overflow: scroll;
+
 
       .connection-folder {
+
 
 
         .link-container {
@@ -402,6 +404,7 @@
     }
   }
 }
+
 @media (max-width: 860px) {
   /* TOP MENU */
   #menu {
@@ -469,5 +472,5 @@
       }
     }
   }
-}
 
+}

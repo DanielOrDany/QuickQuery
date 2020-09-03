@@ -7,6 +7,7 @@ import CreateTable from "./CreateTable";
 import Result from "./Result";
 import { ContextMenu, ContextMenuTrigger } from "react-contextmenu";
 import { getAllTables, getTable, deleteTable} from "../methods";
+import mini_menu from "../icons/menu-vertical.png";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
 
 
@@ -56,7 +57,7 @@ export default class Tables extends React.Component {
     openTable(alias) {
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         getTable(connectionName, alias).then(result => {
-            localStorage.setItem("current_result", JSON.stringify(result));
+            localStorage.setItem("current_result_info", JSON.stringify(result));
             const results = JSON.parse(localStorage.getItem("results"));
             if (results) {
                 results.push(result);
@@ -65,12 +66,12 @@ export default class Tables extends React.Component {
                 localStorage.setItem("results", JSON.stringify([result]));
             }
 
-            return '#tables/result';
+            return `#/tables/result/${alias}`; 
         }).then(url => window.location.hash = url);
     }
 
     editTable(table) {
-        localStorage.setItem("current_result", JSON.stringify(table));
+        localStorage.setItem("current_result_info", JSON.stringify(table));
         window.location.hash = "#/create-table";
     }
 
@@ -84,10 +85,10 @@ export default class Tables extends React.Component {
     }
 
     createTable() {
-        if(localStorage.getItem("current_result")){
-            localStorage.removeItem("current_result");
+        if(localStorage.getItem("current_result_info")){
+            localStorage.removeItem("current_result_info");
         }
-        window.location.hash = "#/create-table"
+        window.location.hash = "#/tables/create-table"
     }
 
 
@@ -100,12 +101,12 @@ export default class Tables extends React.Component {
                 </div>
             );
         } else return(
-                <div className="all-page">
+                <div className="all-page-tables">
 
                     <div className="left-side">
                         <div id="mini-menu">
 
-                            <button type="button" className="add-button" onClick={() => {window.location.hash = "#tables/create-table"}}>
+                            <button type="button" className="add-button" onClick={() => this.createTable()}>
                                 Add
                             </button>
 
@@ -120,13 +121,14 @@ export default class Tables extends React.Component {
                                 .map(table => {
                                     return(
                                         <div className="table" key={table.name}>
-                                            <div className="container" onDoubleClick={() => this.openTable(table.alias)}>
-                                                <div id="table-name">
+                                            <div className="container">
+                                                <div id="table-name" onClick={() => this.openTable(table.alias)}>
                                                     <span>&#11044;</span>
                                                     <div id="name">
                                                         <p id="table-n">{table.alias}</p>
                                                     </div>
                                                 </div>
+                                                <img src={mini_menu} id="table_menu"></img>
                                             </div>
                                         </div>
                                     );
@@ -136,12 +138,12 @@ export default class Tables extends React.Component {
                     </div>
 
 
-                    <div className="line"></div>
+                    <div className="line-tables-page"></div>
 
 
-                    <div className="right-side">
+                    <div className="right-side-tables-page">
                         <Route path="/tables/create-table" component={CreateTable} />
-                        <Route path="/tables/result" component={Result}/>
+                        <Route path={`/tables/result/:tableAlias`} component={Result}/>
                     </div>
                 </div>
             // <div className="tables">
