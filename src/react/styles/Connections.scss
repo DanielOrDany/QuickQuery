@@ -9,7 +9,6 @@
   grid-template-areas: "left line right";
   grid-template-columns: 300px 1px auto;
 
-
   /* LEFT MENU */
   .left-menu {
     font-family: 'Scada', sans-serif;
@@ -277,36 +276,10 @@
   }
 }
 
-@media (max-height: 720px) {
-
-
-  #folders {
-    height: 500px;
-  }
-}
-
-@media (max-height: 600px) {
-
-  #folders {
-    height: 450px;
-  }
-}
-
-@media (max-height: 550px) {
-
-  #folders {
-    height: 400px;
-  }
-}
-
 @media (max-width: 1350px) {
-
-
   .right-side {
-    width: 100%;
+    max-width: 940px;
   }
-
-
   #folders {
     margin-left: 30px;
 
@@ -431,6 +404,7 @@
     }
   }
 }
+
 @media (max-width: 860px) {
   /* TOP MENU */
   #menu {
@@ -498,4 +472,5 @@
       }
     }
   }
+
 }
