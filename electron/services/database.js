@@ -43,17 +43,11 @@ async function createDefaultDatabase() {
 }
 
 async function getDataFromDatabase() {
-    return {
-        connections: await database.get('connections').value(),
-        settings: await database.get('settings').value()
-    }
+    return await database.read().value();
 }
 
 async function getDatabaseForTransport() {
-    const databaseInJSON = {
-        connections: await database.get('connections').value(),
-        settings: await database.get('settings').value()
-    };
+    const databaseInJSON = await database.read().value();
     let databaseInString = JSON.stringify(databaseInJSON);
     let bytes = await utf8.encode(databaseInString);
     let encodedDatabase = base64.encode(bytes);

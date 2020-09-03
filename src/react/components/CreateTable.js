@@ -17,6 +17,7 @@ export default class CreateTable extends React.Component {
 
     componentDidMount() {
         if(localStorage.getItem("current_result_info")) {
+            console.log("Here");
             let result = JSON.parse(localStorage.getItem("current_result_info"));
             let name = document.getElementById("aliasText");
             let query = document.getElementById("queryText");
@@ -27,7 +28,7 @@ export default class CreateTable extends React.Component {
     }
 
     save() {
-        function inputVirify(args) {
+        function inputVerify(args) {
             return args.replace(/^\s+|\s+$/gm, '').length;
         }
 
@@ -35,7 +36,7 @@ export default class CreateTable extends React.Component {
         const alias = document.getElementById("aliasText").value;
         const query = document.getElementById("queryText").value;
 
-        if(localStorage.getItem("current_result_info") && inputVirify(query) > 0) {
+        if(localStorage.getItem("current_result_info") && inputVerify(query) > 0) {
             updateTableQuery(connectionName, alias, query).then(() => {
                 getAllTables(connectionName).then(tables => {
                     localStorage.setItem("current_tables", JSON.stringify(tables));
@@ -43,10 +44,10 @@ export default class CreateTable extends React.Component {
                 });
             });
         } else if (
-            inputVirify(alias) > 0 &&
-            inputVirify(query) > 0
+            inputVerify(alias) > 0 &&
+            inputVerify(query) > 0
         ) {
-            addTable(connectionName, alias,"new", query).then((data) => {
+            addTable(connectionName, query,"new", alias).then((data) => {
                 if (data) {
                     return "#/tables";
                 } else {
@@ -74,7 +75,7 @@ export default class CreateTable extends React.Component {
     }
 
     run() {
-        function inputVirify(args) {
+        function inputVerify(args) {
             return args.replace(/^\s+|\s+$/gm, '').length;
         }
 
@@ -82,7 +83,7 @@ export default class CreateTable extends React.Component {
         const query = document.getElementById("queryText").value;
 
         if (
-            inputVirify(query) > 0
+            inputVerify(query) > 0
         ) {
             try {
                 testTableQuery(connectionName, query).then(async data => {

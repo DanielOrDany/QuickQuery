@@ -99,6 +99,8 @@ async function addConnection(name, host, port, user, password, database, schema,
                 .assign({ connections })
                 .write();
         });
+
+        console.log('connection added!');
         return connection;
     } catch (e) {
         console.log(e);

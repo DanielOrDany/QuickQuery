@@ -1,15 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../styles/Tables.scss';
 import {
     Route
 } from 'react-router-dom';
 import CreateTable from "./CreateTable";
 import Result from "./Result";
-import { ContextMenu, ContextMenuTrigger } from "react-contextmenu";
 import { getAllTables, getTable, deleteTable} from "../methods";
-import mini_menu from "../icons/menu-vertical.png";
+import { ReactComponent as MiniMenuIcon } from "../icons/open-menu.svg";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
-
+import MiniMenu from "./MiniMenu";
 
 export default class Tables extends React.Component {
 
@@ -17,7 +16,8 @@ export default class Tables extends React.Component {
         super(props);
 
         this.state = {
-            tables: []
+            tables: [],
+            searchedTables: []
         };
     }
 
@@ -44,13 +44,19 @@ export default class Tables extends React.Component {
         } else {
             const tables = JSON.parse(localStorage.getItem('current_tables'));
             localStorage.removeItem('current_tables');
-            this.setState({tables: tables});
+            this.setState({
+                tables: tables,
+                searchedTables: tables
+            });
         }
     }
 
     loadTables(connectionName) {
         getAllTables(connectionName).then(tables => {
-            this.setState({tables: tables});
+            this.setState({
+                tables: tables,
+                searchedTables: tables
+            });
         });
     }
 
@@ -70,20 +76,6 @@ export default class Tables extends React.Component {
         }).then(url => window.location.hash = url);
     }
 
-    editTable(table) {
-        localStorage.setItem("current_result_info", JSON.stringify(table));
-        window.location.hash = "#/create-table";
-    }
-
-    deleteTable(alias) {
-        const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
-        deleteTable(connectionName, alias).then(tables => {
-            if(tables)  {
-                this.setState({tables: tables});
-            }
-        });
-    }
-
     createTable() {
         if(localStorage.getItem("current_result_info")){
             localStorage.removeItem("current_result_info");
@@ -91,6 +83,18 @@ export default class Tables extends React.Component {
         window.location.hash = "#/tables/create-table"
     }
 
+    search = () => {
+        const searchValue = document.getElementById('search-field').value;
+        let searchedTables = [];
+
+        this.state.tables.forEach(table => {
+            if (table.alias.includes(searchValue)) {
+                searchedTables.push(table);
+            }
+        });
+
+        this.setState({ searchedTables: searchedTables });
+    };
 
     render() {
         if (!this.state.tables){
@@ -112,12 +116,13 @@ export default class Tables extends React.Component {
 
                             <div className="search">
                                 <input id="search-field"/>
+                                <button type="button" className="search-button" onClick={() => this.search()}>Search</button>
                             </div>
 
                         </div>
 
                         <div id="tables">
-                            {this.state.tables
+                            {this.state.searchedTables
                                 .map(table => {
                                     return(
                                         <div className="table" key={table.name}>
@@ -128,7 +133,7 @@ export default class Tables extends React.Component {
                                                         <p id="table-n">{table.alias}</p>
                                                     </div>
                                                 </div>
-                                                <img src={mini_menu} id="table_menu"></img>
+                                                <MiniMenu icon={<MiniMenuIcon />} table={table}/>
                                             </div>
                                         </div>
                                     );
@@ -146,42 +151,6 @@ export default class Tables extends React.Component {
                         <Route path={`/tables/result/:tableAlias`} component={Result}/>
                     </div>
                 </div>
-            // <div className="tables">
-            //     <div className="folders-list">
-            //         <div className="folder" onClick={() => this.createTable()}>
-            //             <svg className={"svg_icon"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#d99900" width="60px" height="60px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-8-2h2v-4h4v-2h-4V7h-2v4H7v2h4z"/></svg>
-            //             <p className="folder__title" style={localStorage.getItem("theme") ? {color: "white"} :  {color: "#363740"}}>
-            //                 create new
-            //             </p>
-            //         </div>
-            //         {this.state.tables
-            //             .map((table) => (
-            //                 <div key={table.alias} className="folder" onDoubleClick={() => this.openTable(table.alias)}>
-            //                     <ContextMenuTrigger id={table.alias}>
-            //                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1EB7B7" width="60px" height="60px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/></svg>
-            //                     </ContextMenuTrigger>
-            //                     <p className="folder__title" style={localStorage.getItem("theme") ? {color: "white"} :  {color: "#363740"}}>
-            //                         {table.alias}
-            //                     </p>
-            //                     <ContextMenu id={table.alias} className="folder__menu">
-            //                         <div className="folder__menu">
-            //                             <span className="folder__menu__item" onClick={() => this.openTable(table.alias)}>
-            //                                 open
-            //                             </span>
-            //                             <span className="folder__menu__item" onClick={() => this.editTable(table)}>
-            //                                 edit query
-            //                             </span>
-            //                             <span className="folder__menu__item" onClick={() => this.deleteTable(table.alias)}>
-            //                                 delete
-            //                             </span>
-            //                         </div>
-            //                         <span className="folder__menu__line"/>
-            //                     </ContextMenu>
-            //                 </div>
-            //             ))}
-            //     </div>
-            // </div>
         );
     }
-
 }
