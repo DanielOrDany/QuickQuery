@@ -50,7 +50,7 @@ export default class CreateTable extends React.Component {
         if(localStorage.getItem("current_result_info") && inputVerify(query) > 0) {
             console.log(connectionName, alias, query);
             updateTableQuery(connectionName, alias, query).then((tables) => {
-                localStorage.setItem("current_tables", JSON.stringify(tables));
+                localStorage.setItem("need_update", JSON.stringify(true));
                 window.location.hash = "#/tables";
             });
         } else if (
@@ -70,7 +70,6 @@ export default class CreateTable extends React.Component {
                 }
             }).then((url) => {
                 getAllTables(connectionName).then(tables => {
-                    localStorage.setItem("current_tables", JSON.stringify(tables));
                     window.location.pathname = url;
                 });
             });

@@ -22,7 +22,6 @@ function removeTable(alias) {
     const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
     deleteTable(connectionName, alias).then(tables => {
         if(tables)  {
-            localStorage.setItem('current_tables', JSON.stringify(tables));
             document.getElementById(alias).remove();
             return `#/tables/${alias}`;
         }

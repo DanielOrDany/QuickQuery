@@ -27,27 +27,25 @@ export default class Tables extends React.Component {
             window.location.hash = '#/connections';
         }
 
-        if (!localStorage.getItem('current_tables')) {
-            const database = JSON.parse(localStorage.getItem("data"));
-            const connections = database.connections;
-            const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
-            const result = connections.filter(connection => connection.name === connectionName);
+        const database = JSON.parse(localStorage.getItem("data"));
+        const connections = database.connections;
+        const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+        const result = connections.filter(connection => connection.name === connectionName);
 
-            // Verify if connection is not deleted!
-            if (result.length !== 0) {
-                this.loadTables(connectionName);
-            } else {
-                //return to connections
-                alert('pl, choose connection');
-                window.location.hash = '#/connections';
-            }
+        // Verify if connection is not deleted!
+        if (result.length !== 0) {
+            this.loadTables(connectionName);
         } else {
-            const tables = JSON.parse(localStorage.getItem('current_tables'));
-            localStorage.removeItem('current_tables');
-            this.setState({
-                tables: tables,
-                searchedTables: tables
-            });
+            //return to connections
+            alert('pl, choose connection');
+            window.location.hash = '#/connections';
+        }
+    }
+
+    componentDidUpdate() {
+        if(localStorage.getItem("need_update")){
+            localStorage.removeItem("need_update");
+            this.loadTables(JSON.parse(localStorage.getItem('current_connection')).name);
         }
     }
 
