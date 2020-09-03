@@ -28,7 +28,7 @@ const pg = require('pg');
 pg.defaults.ssl = true;
 
 //Add new table to the current connection
-async function addTable (connectionName, query, type, alias){
+async function addTable (connectionName, query, type, alias) {
     try {
         const connection = db.read()
             .get('connections')
@@ -49,8 +49,6 @@ async function addTable (connectionName, query, type, alias){
             "alias": alias
         });
 
-        console.log(connectionQueries);
-
         // Update queries
         db.get('connections')
             .find({name: connectionName})
@@ -65,7 +63,6 @@ async function addTable (connectionName, query, type, alias){
         query = query.replace(';', ' ');
         query += ' LIMIT 10 OFFSET 0';
 
-        console.log('query', query);
         const [results, metadata] = await sequelize.query(query);
 
         return {
@@ -77,15 +74,13 @@ async function addTable (connectionName, query, type, alias){
     }
 }
 
-async function runQuery (connectionName, query){
+async function runQuery (connectionName, query) {
     try {
         const URI = db.read()
             .get('connections')
             .find({name: connectionName})
             .get('URI')
             .value();
-
-        console.log('URI', URI);
 
         const sequelize = new Sequelize(URI.database, URI.user, URI.password, URI.others);
         query = query.replace(';', ' ');
@@ -102,8 +97,7 @@ async function runQuery (connectionName, query){
     }
 }
 
-function renameTable (connectionName, alias, newAlias){
-
+function renameTable (connectionName, alias, newAlias) {
     // Get queries
     const queries = db.read()
         .get('connections')
@@ -125,7 +119,6 @@ function renameTable (connectionName, alias, newAlias){
 }
 
 function deleteTable (connectionName, alias) {
-
     // Get queries
     const queries = db.read()
         .get('connections')
@@ -138,29 +131,16 @@ function deleteTable (connectionName, alias) {
         queries.findIndex(query => query.alias === alias), 1);
 
     // Update queries
-    db.read()
-        .get('connections')
+    db.get('connections')
         .find({name: connectionName})
         .get('queries')
         .assign({ queries })
         .write();
 
-    return db.read()
-        .get('connections')
-        .find({name: connectionName})
-        .get('queries')
-        .value();
+    return queries;
 }
 
 function getTable (connectionName, alias) {
-
-    console.log("TABLE: ", db.read()
-        .get('connections')
-        .find({name: connectionName})
-        .get('queries')
-        .find({alias: alias})
-        .value());
-
     // Get table
     return db.read()
         .get('connections')
@@ -171,7 +151,6 @@ function getTable (connectionName, alias) {
 }
 
 function getAllTables(connectionName) {
-
     // Get tables
     return db.read()
         .get('connections')
@@ -207,15 +186,16 @@ function updateTableQuery(connectionName, alias, query) {
     queries[index].query = query;
 
     // Update queries
-    db.read()
-        .get('connections')
+    db.get('connections')
         .find({name: connectionName})
         .get('queries')
         .assign({ queries })
         .write();
+
+    return queries;
 }
 
-async function loadTableResult(connectionName, alias, options){
+async function loadTableResult(connectionName, alias, options) {
     try {
         const URI = db.read()
             .get('connections')

@@ -23,7 +23,6 @@ function getAppDataPath() {
     }
 }
 
-
 const fs = require('fs');
 const base64 = require('base-64');
 const utf8 = require('utf8');
@@ -71,7 +70,6 @@ async function loadDatabase(encodedDatabase) {
     }
 
 }
-
 
 // Export database's methods
 module.exports = {

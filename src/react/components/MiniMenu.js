@@ -53,7 +53,7 @@ function MiniMenu(props) {
         <div id="table_menu" onClick={() => {setOpen(!open)}} ref={wrapperRef}>
             {props.icon}
             {open && (
-                <div className="dropdown">
+                <div className="dropdown" id="dropdown">
                     <div className="menu">
                         <div className="menu-item" onClick={() => openTable(props.table.alias)}>
                             Open

@@ -23,31 +23,21 @@ function getAppDataPath() {
     }
 }
 
-function updateLanguage(language){
-
+function updateLanguage(language) {
     // Update language
     db.set('settings.language', language)
         .write();
 }
 
-
-
-
-
-function updateTheme(theme){
-
+function updateTheme(theme) {
     // Update theme
     db.set('settings.theme', theme)
         .write();
 }
-
-
-
 
 // Export db's methods
 module.exports = {
 
     updateLanguage,
     updateTheme
-
-}
+};

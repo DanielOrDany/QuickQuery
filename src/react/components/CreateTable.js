@@ -37,11 +37,12 @@ export default class CreateTable extends React.Component {
         const query = document.getElementById("queryText").value;
 
         if(localStorage.getItem("current_result_info") && inputVerify(query) > 0) {
-            updateTableQuery(connectionName, alias, query).then(() => {
-                getAllTables(connectionName).then(tables => {
-                    localStorage.setItem("current_tables", JSON.stringify(tables));
-                    window.location.hash = "#/tables";
-                });
+            console.log(connectionName, alias, query);
+            updateTableQuery(connectionName, alias, query).then((tables) => {
+                // getAllTables(connectionName).then(tables => {
+                localStorage.setItem("current_tables", JSON.stringify(tables));
+                window.location.hash = "#/tables";
+                // });
             });
         } else if (
             inputVerify(alias) > 0 &&

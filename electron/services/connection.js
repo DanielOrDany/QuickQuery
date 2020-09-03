@@ -108,7 +108,6 @@ async function addConnection(name, host, port, user, password, database, schema,
 }
 
 async function deleteConnection(name) {
-
     // Get connections
     const connections = await db
         .get('connections')
@@ -128,8 +127,6 @@ async function deleteConnection(name) {
 
 // Export db's methods
 module.exports = {
-
     addConnection,
     deleteConnection
-
 };
