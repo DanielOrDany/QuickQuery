@@ -110,7 +110,8 @@ ipcMain.on(channels.CREATE_DB, async (event) => {
 
 ipcMain.on(channels.LOAD_DB, async (event, encodedDatabase) => {
   try {
-    await Database.loadDatabase(encodedDatabase);
+    const result = await Database.loadDatabase(encodedDatabase);
+    successful.data = result;
     await event.sender.send(channels.LOAD_DB, successful);
   } catch (e) {
     unsuccessful.message = e;

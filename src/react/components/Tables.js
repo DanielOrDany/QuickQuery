@@ -1,7 +1,13 @@
 import React from 'react';
 import '../styles/Tables.scss';
+import {
+    Route
+} from 'react-router-dom';
+import CreateTable from "./CreateTable";
+import Result from "./Result";
 import { ContextMenu, ContextMenuTrigger } from "react-contextmenu";
 import { getAllTables, getTable, deleteTable} from "../methods";
+import mini_menu from "../icons/menu-vertical.png";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
 
 
@@ -51,7 +57,7 @@ export default class Tables extends React.Component {
     openTable(alias) {
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         getTable(connectionName, alias).then(result => {
-            localStorage.setItem("current_result", JSON.stringify(result));
+            localStorage.setItem("current_result_info", JSON.stringify(result));
             const results = JSON.parse(localStorage.getItem("results"));
             if (results) {
                 results.push(result);
@@ -60,12 +66,12 @@ export default class Tables extends React.Component {
                 localStorage.setItem("results", JSON.stringify([result]));
             }
 
-            return '#/result';
+            return `#/tables/result/${alias}`; 
         }).then(url => window.location.hash = url);
     }
 
     editTable(table) {
-        localStorage.setItem("current_result", JSON.stringify(table));
+        localStorage.setItem("current_result_info", JSON.stringify(table));
         window.location.hash = "#/create-table";
     }
 
@@ -79,10 +85,10 @@ export default class Tables extends React.Component {
     }
 
     createTable() {
-        if(localStorage.getItem("current_result")){
-            localStorage.removeItem("current_result");
+        if(localStorage.getItem("current_result_info")){
+            localStorage.removeItem("current_result_info");
         }
-        window.location.hash = "#/create-table"
+        window.location.hash = "#/tables/create-table"
     }
 
 
@@ -95,41 +101,86 @@ export default class Tables extends React.Component {
                 </div>
             );
         } else return(
-            <div className="tables">
-                <div className="folders-list">
-                    <div className="folder" onClick={() => this.createTable()}>
-                        <svg className={"svg_icon"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#d99900" width="60px" height="60px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-8-2h2v-4h4v-2h-4V7h-2v4H7v2h4z"/></svg>
-                        <p className="folder__title" style={localStorage.getItem("theme") ? {color: "white"} :  {color: "#363740"}}>
-                            create new
-                        </p>
-                    </div>
-                    {this.state.tables
-                        .map((table) => (
-                            <div key={table.alias} className="folder" onDoubleClick={() => this.openTable(table.alias)}>
-                                <ContextMenuTrigger id={table.alias}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1EB7B7" width="60px" height="60px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/></svg>
-                                </ContextMenuTrigger>
-                                <p className="folder__title" style={localStorage.getItem("theme") ? {color: "white"} :  {color: "#363740"}}>
-                                    {table.alias}
-                                </p>
-                                <ContextMenu id={table.alias} className="folder__menu">
-                                    <div className="folder__menu">
-                                        <span className="folder__menu__item" onClick={() => this.openTable(table.alias)}>
-                                            open
-                                        </span>
-                                        <span className="folder__menu__item" onClick={() => this.editTable(table)}>
-                                            edit query
-                                        </span>
-                                        <span className="folder__menu__item" onClick={() => this.deleteTable(table.alias)}>
-                                            delete
-                                        </span>
-                                    </div>
-                                    <span className="folder__menu__line"/>
-                                </ContextMenu>
+                <div className="all-page-tables">
+
+                    <div className="left-side">
+                        <div id="mini-menu">
+
+                            <button type="button" className="add-button" onClick={() => this.createTable()}>
+                                Add
+                            </button>
+
+                            <div className="search">
+                                <input id="search-field"/>
                             </div>
-                        ))}
+
+                        </div>
+
+                        <div id="tables">
+                            {this.state.tables
+                                .map(table => {
+                                    return(
+                                        <div className="table" key={table.name}>
+                                            <div className="container">
+                                                <div id="table-name" onClick={() => this.openTable(table.alias)}>
+                                                    <span>&#11044;</span>
+                                                    <div id="name">
+                                                        <p id="table-n">{table.alias}</p>
+                                                    </div>
+                                                </div>
+                                                <img src={mini_menu} id="table_menu"></img>
+                                            </div>
+                                        </div>
+                                    );
+                                }
+                            )}
+                        </div>
+                    </div>
+
+
+                    <div className="line-tables-page"></div>
+
+
+                    <div className="right-side-tables-page">
+                        <Route path="/tables/create-table" component={CreateTable} />
+                        <Route path={`/tables/result/:tableAlias`} component={Result}/>
+                    </div>
                 </div>
-            </div>
+            // <div className="tables">
+            //     <div className="folders-list">
+            //         <div className="folder" onClick={() => this.createTable()}>
+            //             <svg className={"svg_icon"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#d99900" width="60px" height="60px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-8-2h2v-4h4v-2h-4V7h-2v4H7v2h4z"/></svg>
+            //             <p className="folder__title" style={localStorage.getItem("theme") ? {color: "white"} :  {color: "#363740"}}>
+            //                 create new
+            //             </p>
+            //         </div>
+            //         {this.state.tables
+            //             .map((table) => (
+            //                 <div key={table.alias} className="folder" onDoubleClick={() => this.openTable(table.alias)}>
+            //                     <ContextMenuTrigger id={table.alias}>
+            //                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1EB7B7" width="60px" height="60px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/></svg>
+            //                     </ContextMenuTrigger>
+            //                     <p className="folder__title" style={localStorage.getItem("theme") ? {color: "white"} :  {color: "#363740"}}>
+            //                         {table.alias}
+            //                     </p>
+            //                     <ContextMenu id={table.alias} className="folder__menu">
+            //                         <div className="folder__menu">
+            //                             <span className="folder__menu__item" onClick={() => this.openTable(table.alias)}>
+            //                                 open
+            //                             </span>
+            //                             <span className="folder__menu__item" onClick={() => this.editTable(table)}>
+            //                                 edit query
+            //                             </span>
+            //                             <span className="folder__menu__item" onClick={() => this.deleteTable(table.alias)}>
+            //                                 delete
+            //                             </span>
+            //                         </div>
+            //                         <span className="folder__menu__line"/>
+            //                     </ContextMenu>
+            //                 </div>
+            //             ))}
+            //     </div>
+            // </div>
         );
     }
 

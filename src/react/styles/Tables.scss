@@ -1,114 +1,349 @@
 @import "./variables";
 
-.add-btn{
-  background: #d99900!important;
-}
+.all-page-tables {
+  padding: 0 !important;
+  margin: 0 !important;
 
-.add-btn:hover{
-  background: #45597E!important;
-  transition: 0.5s;
-}
+  display: grid;
+  grid-template-areas: "left line right";
+  grid-template-columns: 300px 1px auto;
 
-.svg_icon:hover{
-    transform: rotate(180deg) scale(1.1)!important;
 
-    transition: 0.25s;
-}
 
-.tables {
-  margin-top: 60px;
 
-  .folders-list {
+  /* LEFT SIDE */
+  .left-side {
+    font-family: 'Scada', sans-serif;
+    grid-area: left;
+
+    width: 300px;
+    min-height: 100vh;
+    // padding-left: 30px;
+    // padding-right: 30px;
+    // padding-top: 70px;
+
+    background: #EFEFEF;
+
+    #mini-menu {
+      font-family: 'Scada', sans-serif;
       display: flex;
-      flex-direction: row;
-      padding-bottom: 35px;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      max-height: 100vh;
-      overflow: auto;
+      height: 50px;
+      background-color: #E3E3E3;
+      border-bottom: .1px solid #9d9d9d;
+
+      /* ADD BUTTON */
+      .add-button {
+        font-family: 'Scada', sans-serif;
+
+        width: 50px;
+        height: 30px;
+        margin-left: 20px;
+        margin-top: 10px;
+        font-size: 12px;
+
+        border-radius: 5px;
+        border: 0 solid;
+
+        color: white;
+        background-color: #EB6E3B;
+      }
+
+      .add-button:hover {
+        background: #c1562b;
+
+        cursor: pointer;
+      }
+
+      .search {
+
+        #search-icon {
+          width: 18px;
+          height: 18px;
+
+          position: relative;
+          left: 700px;
+        }
+
+        #search-field {
+          // margin-left: 150px;
+          margin-top: 10px;
+          margin-left: 10px;
+          width: 200px;
+          height: 30px;
+
+          border: .4px solid #818181;
+          border-radius: 5px;
+        }
+      }
+    }
+
+    #tables {
+      margin-top: 20px;
+      overflow: scroll;
+      max-height: 650px;
+
+      font-family: 'Scada', sans-serif;
+
+      .table {
+        width: 260px;
+        margin-left: 20px;
+        margin-bottom: 10px;
+
+
+        .container {
+          padding-left: 5px;
+          padding-right: 0px;
+
+          border-bottom: .2px solid #adadad;
+
+          display: flex;
+          justify-content: space-between;
+          #table-name {
+
+            display: flex;
+            width: 200px;
+
+            #name {
+
+              margin-left: 15px;
+              font-size: 14px;
+              margin-bottom: 10px;
+
+              #folder-n, p{
+                font-size: 14px;
+                margin: 0;
+                padding: 0;
+              }
+            }
+          }
+
+          #table-name:hover {
+            cursor: pointer;
+          }
+
+          #table_menu {
+            margin-right: 0px;
+            height: 23px;
+            width: 23px;
+          }
+
+          #table_menu:hover {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
   }
 
-  .folder {
-      user-select: none;
+  /* VERTICAL LINE */
+  .line-tables-page {
+    grid-area: line;
 
-      &__title {
-           display: flex;
-           width: 130px;
-           flex-direction: row;
-           justify-content: center;
-           color: $folder-title;
-           font-size: 11px;
-      }
+    width: 1px;
+    height: 100%;
 
-        &__menu {
-            display: flex;
-            flex-direction: column;
-            min-width: 150px;
-            color: $black;
-            background-color: $white;
-            border-radius: 3px;
+    background-color: #818181;
 
-            box-shadow: 0px 0px 1px 0px black;
+    filter: blur(1px);
+  }
 
-            &__line {
-                display: block;
-                width: 100%;
-                height: 1px;
-                background: $context-menu-line;
-            }
 
-            &__title {
-                display: flex;
-                flex-direction: row;
-                justify-content: start;
-                margin-left: 5px;
-                font-weight: 500;
-            }
+  /* RIGHT SIDE */
+  .right-side-tables-page {
+    grid-area: right;
 
-            &__item {
-                display: flex;
-                flex-direction: row;
-                justify-content: start;
-                padding-left: 5px;
-                user-select: none;
-            }
-  
-            &__item:hover {
-                background: $hover;
-            }
-      }
-
-      i {
-          display: flex;
-          width: 130px;
-          flex-direction: row;
-          justify-content: center;
-          font-size: 60px;
-          color: $folder;
-      }
-
-      .create-folder:hover {
-          color: $create;
-          transform: scale(1.2);
-          transition-duration: 0.8s;
-      }
-
-      .react-contextmenu-wrapper svg:hover {
-          color: $open!important;
-          transform: scale(1.1) !important;
-          transition-duration: 0.8s!important;
-      }
-
-      &__line {
-           display: block;
-           width: 100%;
-           height: 1px;
-           background: $context-menu-line;
-       }
   }
 }
+
+@media (max-height: 750px) {
+
+  #tables {
+    margin-top: 20px;
+    overflow: scroll;
+    height: 580px;
+
+    font-family: 'Scada', sans-serif;
+  }
+}
+
+@media (max-height: 690px) {
+
+  #tables {
+    margin-top: 20px;
+    overflow: scroll;
+    height: 540px;
+
+    font-family: 'Scada', sans-serif;
+  }
+}
+
+@media (max-height: 640px) {
+
+  #tables {
+    margin-top: 20px;
+    overflow: scroll;
+    height: 500px;
+
+    font-family: 'Scada', sans-serif;
+  }
+}
+
+@media (max-height: 600px) {
+
+  #tables {
+    margin-top: 20px;
+    overflow: scroll;
+    height: 460px;
+
+    font-family: 'Scada', sans-serif;
+  }
+}
+
+@media (max-height: 560px) {
+
+  #tables {
+    margin-top: 20px;
+    overflow: scroll;
+    height: 420px;
+
+    font-family: 'Scada', sans-serif;
+  }
+}
+
+@media (max-height: 520px) {
+
+  #tables {
+    margin-top: 20px;
+    overflow: scroll;
+    height: 380px;
+
+    font-family: 'Scada', sans-serif;
+  }
+}
+
+@media (max-height: 480px) {
+
+  #tables {
+    margin-top: 20px;
+    overflow: scroll;
+    height: 340px;
+
+    font-family: 'Scada', sans-serif;
+  }
+}
+
+
+
+// .add-btn{
+//   background: #d99900!important;
+// }
+
+// .add-btn:hover{
+//   background: #45597E!important;
+//   transition: 0.5s;
+// }
+
+// .svg_icon:hover{
+//     transform: rotate(180deg) scale(1.1)!important;
+
+//     transition: 0.25s;
+// }
+
+// .tables {
+//   margin-top: 60px;
+
+//   .folders-list {
+//       display: flex;
+//       flex-direction: row;
+//       padding-bottom: 35px;
+//       flex-wrap: wrap;
+//       align-items: center;
+//       justify-content: center;
+//       width: 100%;
+//       max-height: 100vh;
+//       overflow: auto;
+//   }
+
+//   .folder {
+//       user-select: none;
+
+//       &__title {
+//            display: flex;
+//            width: 130px;
+//            flex-direction: row;
+//            justify-content: center;
+//            color: $folder-title;
+//            font-size: 11px;
+//       }
+
+//         &__menu {
+//             display: flex;
+//             flex-direction: column;
+//             min-width: 150px;
+//             color: $black;
+//             background-color: $white;
+//             border-radius: 3px;
+
+//             box-shadow: 0px 0px 1px 0px black;
+
+//             &__line {
+//                 display: block;
+//                 width: 100%;
+//                 height: 1px;
+//                 background: $context-menu-line;
+//             }
+
+//             &__title {
+//                 display: flex;
+//                 flex-direction: row;
+//                 justify-content: start;
+//                 margin-left: 5px;
+//                 font-weight: 500;
+//             }
+
+//             &__item {
+//                 display: flex;
+//                 flex-direction: row;
+//                 justify-content: start;
+//                 padding-left: 5px;
+//                 user-select: none;
+//             }
+
+//             &__item:hover {
+//                 background: $hover;
+//             }
+//       }
+
+//       i {
+//           display: flex;
+//           width: 130px;
+//           flex-direction: row;
+//           justify-content: center;
+//           font-size: 60px;
+//           color: $folder;
+//       }
+
+//       .create-folder:hover {
+//           color: $create;
+//           transform: scale(1.2);
+//           transition-duration: 0.8s;
+//       }
+
+//       .react-contextmenu-wrapper svg:hover {
+//           color: $open!important;
+//           transform: scale(1.1) !important;
+//           transition-duration: 0.8s!important;
+//       }
+
+//       &__line {
+//            display: block;
+//            width: 100%;
+//            height: 1px;
+//            background: $context-menu-line;
+//        }
+//   }
+// }
 
 
 
