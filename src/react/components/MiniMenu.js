@@ -22,8 +22,7 @@ function removeTable(alias) {
     const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
     deleteTable(connectionName, alias).then(tables => {
         if(tables)  {
-            localStorage.setItem('current_tables', JSON.stringify(tables));
-            // TODO: write deletion for html element
+            document.getElementById(alias).remove();
             return `#/tables/${alias}`;
         }
     }).then(url => window.location.hash = url);
@@ -31,7 +30,7 @@ function removeTable(alias) {
 
 function editTable(table) {
     localStorage.setItem("current_result_info", JSON.stringify(table));
-    window.location.hash = "#/tables/create-table";
+    window.location.hash = `#/tables/edit-table/${table.alias}`;
 }
 
 function MiniMenu(props) {

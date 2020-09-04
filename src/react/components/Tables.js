@@ -27,27 +27,30 @@ export default class Tables extends React.Component {
             window.location.hash = '#/connections';
         }
 
-        if (!localStorage.getItem('current_tables')) {
-            const database = JSON.parse(localStorage.getItem("data"));
-            const connections = database.connections;
-            const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
-            const result = connections.filter(connection => connection.name === connectionName);
+        const database = JSON.parse(localStorage.getItem("data"));
+        const connections = database.connections;
+        const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+        const result = connections.filter(connection => connection.name === connectionName);
 
-            // Verify if connection is not deleted!
-            if (result.length !== 0) {
-                this.loadTables(connectionName);
-            } else {
-                //return to connections
-                alert('pl, choose connection');
-                window.location.hash = '#/connections';
-            }
+        // Verify if connection is not deleted!
+        if (result.length !== 0) {
+            this.loadTables(connectionName);
         } else {
-            const tables = JSON.parse(localStorage.getItem('current_tables'));
-            localStorage.removeItem('current_tables');
-            this.setState({
-                tables: tables,
-                searchedTables: tables
-            });
+            //return to connections
+            alert('pl, choose connection');
+            window.location.hash = '#/connections';
+        }
+    }
+
+    componentDidUpdate() {
+        if(localStorage.getItem("need_update")){
+            localStorage.removeItem("need_update");
+            this.loadTables(JSON.parse(localStorage.getItem('current_connection')).name);
+        }
+
+        if(localStorage.getItem("new_table")) {
+            localStorage.removeItem("new_table");
+            this.loadTables(JSON.parse(localStorage.getItem('current_connection')).name);
         }
     }
 
@@ -125,7 +128,7 @@ export default class Tables extends React.Component {
                             {this.state.searchedTables
                                 .map(table => {
                                     return(
-                                        <div className="table" key={table.name}>
+                                        <div id={table.alias} className="table" key={table.alias}>
                                             <div className="container">
                                                 <div id="table-name" onClick={() => this.openTable(table.alias)}>
                                                     <span>&#11044;</span>
@@ -148,6 +151,7 @@ export default class Tables extends React.Component {
 
                     <div className="right-side-tables-page">
                         <Route path="/tables/create-table" component={CreateTable} />
+                        <Route path={`/tables/edit-table/:tableAlias`} component={CreateTable} />
                         <Route path={`/tables/result/:tableAlias`} component={Result}/>
                     </div>
                 </div>

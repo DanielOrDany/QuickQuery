@@ -114,7 +114,7 @@ export default class Connections extends React.Component {
         deleteConnection(name).then(data => {
             console.log('deleted data:', data);
             const connections = data.connections;
-
+            document.getElementById(name).remove();
             if (connections) {
                 this.setState({ connections: connections });
             }
@@ -289,8 +289,7 @@ export default class Connections extends React.Component {
                     <div id="folders">
                         {this.state.searchedConnections ? this.state.searchedConnections.map(conn => {
                                 return (
-
-                                    <div className="connection-folder" key={conn.name}>
+                                    <div id={conn.name} className="connection-folder" key={conn.name}>
                                             <div className="link-container"
                                                  onDoubleClick={() => this.openConnection(conn.name)}>
                                                 <div id="folders-name">

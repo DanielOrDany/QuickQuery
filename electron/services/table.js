@@ -8,13 +8,13 @@ const db = low(adapter);
 function getAppDataPath() {
     switch (process.platform) {
         case "darwin": {
-            return path.join(process.env.HOME, "Library", "Application Support", "quickAdmin");
+            return path.join(process.env.HOME, "Library", "Application Support", "QuickQuery");
         }
         case "win32": {
-            return path.join(process.env.APPDATA, "quickAdmin");
+            return path.join(process.env.APPDATA, "QuickQuery");
         }
         case "linux": {
-            return path.join(process.env.HOME, ".quickAdmin");
+            return path.join(process.env.HOME, ".QuickQuery");
         }
         default: {
             console.log("Unsupported platform!");
@@ -217,6 +217,8 @@ async function loadTableResult(connectionName, alias, options) {
             .find({alias: alias})
             .value().query;
 
+        console.log('query', query);
+
         if (query[query.length] === ';') {
             query = query[query.length].replace(';', ' ');
         }
@@ -232,14 +234,19 @@ async function loadTableResult(connectionName, alias, options) {
         const countQ = `SELECT COUNT(*) as c FROM (${query}) as c;`;
         const numberOfRecords = await sequelize.query(countQ);
 
+        console.log('numberOfRecords: ', numberOfRecords);
+
         if (!options.search) query += ` LIMIT ${limit} OFFSET ${offset}`;
 
         const queryResult = await sequelize.query(query);
 
-        const number = numberOfRecords[0][0].count/limit;
+        console.log('result', queryResult);
+
+        const number = numberOfRecords[0][0].c/limit;
         const one_as_string = String(number).charAt(0);
         const one = Number(one_as_string);
         let pages = 0;
+        const records = numberOfRecords[0][0].c;
 
         if (number > one) {
             pages = one + 1;
@@ -247,19 +254,22 @@ async function loadTableResult(connectionName, alias, options) {
             pages = number;
         }
 
+        console.log('pages: ', pages);
+        console.log('records: ', records);
+
         if (URI.others.dialect === 'postgres') {
             return {
                 "rows": queryResult[1].rows,
                 "fields": queryResult[1].fields,
                 "pages": pages,
-                "records": numberOfRecords[0][0].count
+                "records": records
             };
         } else {
             return {
                 "rows": queryResult[0],
                 "fields": queryResult[0],
                 "pages": pages,
-                "records": numberOfRecords[0][0].count
+                "records": records
             };
         }
     } catch (e) {

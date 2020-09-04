@@ -17,13 +17,25 @@ export default class CreateTable extends React.Component {
 
     componentDidMount() {
         if(localStorage.getItem("current_result_info")) {
-            let result = JSON.parse(localStorage.getItem("current_result_info"));
+            localStorage.setItem("current_result", window.location.href.split('/')[window.location.href.split('/').length - 1]);
+            this.renderFields();
+        }
+    }
+
+    componentDidUpdate() {
+        if(window.location.href.split('/')[window.location.href.split('/').length - 2] == "edit-table" && window.location.href.split('/')[window.location.href.split('/').length - 1] != localStorage.getItem("current_result")) {
+            localStorage.setItem("current_result", window.location.href.split('/')[window.location.href.split('/').length - 1]);
+            this.renderFields();
+        }
+    }
+
+    renderFields() {
+        let result = JSON.parse(localStorage.getItem("current_result_info"));
             let name = document.getElementById("aliasText");
             let query = document.getElementById("queryText");
             name.value = result.alias;
             name.disabled = true;
             query.value = result.query;
-        }
     }
 
     save() {
@@ -38,7 +50,7 @@ export default class CreateTable extends React.Component {
         if(localStorage.getItem("current_result_info") && inputVerify(query) > 0) {
             console.log(connectionName, alias, query);
             updateTableQuery(connectionName, alias, query).then((tables) => {
-                localStorage.setItem("current_tables", JSON.stringify(tables));
+                localStorage.setItem("need_update", JSON.stringify(true));
                 window.location.hash = "#/tables";
             });
         } else if (
@@ -57,10 +69,8 @@ export default class CreateTable extends React.Component {
                     });
                 }
             }).then((url) => {
-                getAllTables(connectionName).then(tables => {
-                    localStorage.setItem("current_tables", JSON.stringify(tables));
-                    window.location.pathname = url;
-                });
+                localStorage.setItem("new_table", JSON.stringify(true));
+                window.location.hash = url;
             });
         } else {
             this.setState({
