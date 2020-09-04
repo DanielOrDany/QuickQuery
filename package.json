@@ -1,7 +1,7 @@
 {
-  "name": "electron-cra-example",
-  "version": "0.1.0",
-  "productName": "quickAdmin",
+  "name": "quick-query",
+  "version": "1.0.0",
+  "productName": "QuickQuery",
   "main": "electron/main.js",
   "private": true,
   "dependencies": {
@@ -60,9 +60,19 @@
     "eject": "react-scripts eject"
   },
   "build": {
+    "appId": "quick-query",
+    "productName": "QuickQuery",
+    "copyright": "Copyright © 2020 BatiBots",
+    "mac": {
+      "icon": "./public/icon.ico"
+    },
+    "win": {
+      "icon": "./public/icon.png"
+    },
     "asar": true,
     "files": [
       "build",
+      "public",
       "node_modules",
       "*.js"
     ]

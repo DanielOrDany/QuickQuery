@@ -8,13 +8,13 @@ const database = low(adapter);
 function getAppDataPath() {
     switch (process.platform) {
         case "darwin": {
-            return path.join(process.env.HOME, "Library", "Application Support", "quickAdmin");
+            return path.join(process.env.HOME, "Library", "Application Support", "QuickQuery");
         }
         case "win32": {
-            return path.join(process.env.APPDATA, "quickAdmin");
+            return path.join(process.env.APPDATA, "QuickQuery");
         }
         case "linux": {
-            return path.join(process.env.HOME, ".quickAdmin");
+            return path.join(process.env.HOME, ".QuickQuery");
         }
         default: {
             console.log("Unsupported platform!");

@@ -20,7 +20,7 @@ let unsuccessful = {
 };
 
 function createWindow () {
-  const startUrl = process.env.ELECTRON_START_URL || url.format({
+  let startUrl = process.env.ELECTRON_START_URL || url.format({
     pathname: path.join(__dirname, '../index.html'),
     protocol: 'file:', //file:
     slashes: true
@@ -28,8 +28,8 @@ function createWindow () {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 800,
-    height: 600,
+    width: 1366,
+    height: 768,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     }
@@ -41,9 +41,13 @@ function createWindow () {
 
   mainWindow.loadURL(startUrl);
 
-  // mainWindow.on('closed', function () {
-  //   mainWindow = null;
-  // });
+  mainWindow.webContents.on("devtools-opened", () => {
+      mainWindow.closeDevTools();
+  });
+
+  mainWindow.on('closed', function () {
+      app.quit();
+  });
 }
 
 app.on('ready', createWindow);
