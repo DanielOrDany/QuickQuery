@@ -16,8 +16,8 @@ export default class CreateTable extends React.Component {
     }
 
     componentDidMount() {
-        if(localStorage.getItem("current_result")) {
-            let result = JSON.parse(localStorage.getItem("current_result"));
+        if(localStorage.getItem("current_result_info")) {
+            let result = JSON.parse(localStorage.getItem("current_result_info"));
             let name = document.getElementById("aliasText");
             let query = document.getElementById("queryText");
             name.value = result.alias;
@@ -27,7 +27,7 @@ export default class CreateTable extends React.Component {
     }
 
     save() {
-        function inputVirify(args) {
+        function inputVerify(args) {
             return args.replace(/^\s+|\s+$/gm, '').length;
         }
 
@@ -35,18 +35,17 @@ export default class CreateTable extends React.Component {
         const alias = document.getElementById("aliasText").value;
         const query = document.getElementById("queryText").value;
 
-        if(localStorage.getItem("current_result") && inputVirify(query) > 0) {
-            updateTableQuery(connectionName, alias, query).then(() => {
-                getAllTables(connectionName).then(tables => {
-                    localStorage.setItem("current_tables", JSON.stringify(tables));
-                    window.location.hash = "#/tables";
-                });
+        if(localStorage.getItem("current_result_info") && inputVerify(query) > 0) {
+            console.log(connectionName, alias, query);
+            updateTableQuery(connectionName, alias, query).then((tables) => {
+                localStorage.setItem("current_tables", JSON.stringify(tables));
+                window.location.hash = "#/tables";
             });
         } else if (
-            inputVirify(alias) > 0 &&
-            inputVirify(query) > 0
+            inputVerify(alias) > 0 &&
+            inputVerify(query) > 0
         ) {
-            addTable(connectionName, alias,"new", query).then((data) => {
+            addTable(connectionName, query,"new", alias).then((data) => {
                 if (data) {
                     return "#/tables";
                 } else {
@@ -74,7 +73,7 @@ export default class CreateTable extends React.Component {
     }
 
     run() {
-        function inputVirify(args) {
+        function inputVerify(args) {
             return args.replace(/^\s+|\s+$/gm, '').length;
         }
 
@@ -82,7 +81,7 @@ export default class CreateTable extends React.Component {
         const query = document.getElementById("queryText").value;
 
         if (
-            inputVirify(query) > 0
+            inputVerify(query) > 0
         ) {
             try {
                 testTableQuery(connectionName, query).then(async data => {
@@ -127,11 +126,13 @@ export default class CreateTable extends React.Component {
         } else {
             return(
                 <div className="create_edit_table">
-                    <div className="actions">
-                        <button type="button" className="runButton" onClick={() => this.run()}><span>Run </span></button>
-                        <div className="saving-result">
-                            <input type="text" id="aliasText" placeholder="Table name" className="form-control"/>
-                            <button type="button" className="saveButton" onClick={() => this.save()}>Save</button>
+                    <div id="mini-menu">
+                        <div className="actions">
+                            <button type="button" className="runButton" onClick={() => this.run()}><span>Run </span></button>
+                            <div className="saving-result">
+                                <input type="text" id="aliasText" placeholder="Table name" className="form-control"/>
+                                <button type="button" className="saveButton" onClick={() => this.save()}>Save</button>
+                            </div>
                         </div>
                     </div>
                     <textarea id="queryText" placeholder="/*  SQL select query should be here  */" />
@@ -141,8 +142,9 @@ export default class CreateTable extends React.Component {
                         </div>
                     }
                     {this.state.header !== "" && this.state.rows !== "" &&
-                        <div>
-                            <table>
+
+                        <div id="add-btn-table">
+                            <table id="your-new-table">
                                 <tr>
                                 {this.state.header ? this.state.header.map((item) => {
                                         return <th>{item}</th>
@@ -153,10 +155,10 @@ export default class CreateTable extends React.Component {
                                         return <tr className={key++ % 2 === 0 ? "column_one" : "column_two"}>{
                                             Object.values(item).map((get_item, key) => {
                                                 return <td style={key === 0 ? {
-                                                    color: "#BD3C4D",
-                                                    background: "transparent",
-                                                    border: "0px"
-                                                } : {color: "white"}}>{get_item}</td>
+                                                    color: "#3E3E3E",
+                                                    background: "#EFEFEF",
+                                                    border: "1px solid grey"
+                                                } : {color: "#3E3E3E"}}>{get_item}</td>
 
                                             })}
                                         </tr>

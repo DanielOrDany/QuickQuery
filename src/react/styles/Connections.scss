@@ -1,29 +1,26 @@
 /* ALL PAGE */
 @import "./variables";
+
 .all-page {
   padding: 0 !important;
   margin: 0 !important;
 
   display: grid;
-  grid-template-areas: "left right";
-  grid-template-columns: 300px auto;
-
-
+  grid-template-areas: "left line right";
+  grid-template-columns: 300px 1px auto;
 
   /* LEFT MENU */
   .left-menu {
     font-family: 'Scada', sans-serif;
 
     grid-area: left;
+    min-height: 100vh;
 
-    width: 300px;
-    height: 100vh;
     padding-left: 30px;
     padding-right: 30px;
     padding-top: 70px;
 
     background: #EFEFEF;
-
 
 
     /* INPUT */
@@ -41,7 +38,7 @@
         color: #3E3E3E;
       }
 
-      #input-field {
+      .form-control {
         font-family: 'Scada', sans-serif;
 
         width: 150px;
@@ -54,7 +51,6 @@
         color: #3E3E3E;
       }
     }
-
 
 
     /* CHOOSE DB */
@@ -85,7 +81,6 @@
     }
 
 
-
     /* ADD BUTTON */
     .add-button {
       font-family: 'Scada', sans-serif;
@@ -93,6 +88,7 @@
       width: 200px;
       height: 40px;
       margin-top: 30px;
+      margin-bottom: 10px;
 
       border-radius: 5px;
       border: 0 solid;
@@ -106,31 +102,32 @@
       cursor: pointer;
     }
 
+
+
+    /* ALERT */
+
     .alert {
       margin-top: 20px;
     }
   }
 
 
-
   /* VERTICAL LINE */
   .line {
-    width: 1px;
-    height: 100vh;
-    margin-left: 300px;
+    grid-area: line;
+    height: 100%;
 
     background-color: #818181;
 
-    position: absolute;
 
     filter: blur(1px);
 
   }
 
 
-
   /* RIGHT SIDE */
   .right-side {
+
     grid-area: right;
 
     display: grid;
@@ -138,7 +135,6 @@
             "menu"
             "folders";
     grid-template-rows: 50px auto;
-
 
 
     /* TOP MENU */
@@ -174,6 +170,10 @@
       }
 
 
+
+
+      /* SEARCH INPUT */
+
       .search {
 
         #search-icon {
@@ -181,21 +181,45 @@
           height: 18px;
 
           position: relative;
-          left: 700px;
+          //left: 700px;
         }
 
         #search-field {
-          margin-left: 150px;
+          margin-left: 30px;
           margin-top: 10px;
-          width: 440px;
+          width: 640px;
           height: 30px;
 
           border: .4px solid #818181;
           border-radius: 5px;
         }
       }
-    }
 
+
+
+
+      /* SEARCH BUTTON */
+      .search-button {
+        color: white;
+        font-size: 14px;
+        font-family: 'Scada', sans-serif;
+
+        width: 60px;
+        height: 30px;
+        margin-left: 20px;
+
+        border-radius: 5px;
+        border: 0 solid;
+
+        background-color: #EB6E3B;
+      }
+
+      .search-button:hover {
+        background: #c1562b;
+
+        cursor: pointer;
+      }
+    }
 
 
     /* FOLDERS */
@@ -205,8 +229,12 @@
       grid-area: folders;
 
       margin: 50px auto 0;
+      max-height: 600px;
+      overflow: scroll;
+
 
       .connection-folder {
+
 
 
         .link-container {
@@ -275,6 +303,207 @@
           height: 20px;
         }
       }
+
+
     }
   }
+}
+
+@media (max-width: 1350px) {
+  .right-side {
+    max-width: 940px;
+  }
+  #folders {
+    margin-left: 30px;
+
+    .connection-folder {
+      .link-container {
+        max-width: 740px;
+        margin-left: 50px;
+        margin-right: 50px;
+      }
+    }
+  }
+}
+
+@media (max-width: 1240px) {
+  .right-side {
+    max-width: 940px;
+  }
+  #folders {
+    margin-left: 30px;
+
+    .connection-folder {
+
+      .link-container {
+
+        max-width: 740px;
+        margin-left: 50px;
+        margin-right: 50px;
+
+      }
+    }
+  }
+}
+@media (max-width: 1140px) {
+  /* TOP MENU */
+  #menu {
+    .search {
+      #search-field {
+        margin-left: 40px !important;
+        margin-top: 10px;
+        margin-right: 52px;
+        max-width: 440px;
+        height: 30px;
+      }
+    }
+  }
+
+  .right-side {
+    max-width: 940px;
+  }
+  #folders {
+    margin-left: auto;
+
+    .connection-folder {
+      .link-container {
+        max-width: 540px;
+        margin-left: 40px;
+        margin-right: 40px;
+      }
+    }
+  }
+}
+
+@media (max-width: 1050px) {
+  /* TOP MENU */
+  #menu {
+
+    .search {
+      #search-field {
+        margin-left: 20px !important;
+        margin-top: 10px;
+        margin-right: 52px;
+        max-width: 400px;
+        height: 30px;
+      }
+    }
+  }
+}
+
+@media (max-width: 990px){
+  /* TOP MENU */
+  #menu {
+
+    .search {
+      #search-field {
+        margin-left: 15px !important;
+        margin-top: 10px;
+        margin-right: 52px;
+        max-width: 300px;
+        height: 30px;
+      }
+    }
+  }
+}
+
+@media (max-width: 920px) {
+  /* TOP MENU */
+  #menu {
+
+    .search {
+      #search-field {
+        margin-left: 15px !important;
+        margin-top: 10px;
+        margin-right: 52px;
+        max-width: 270px;
+        height: 30px;
+      }
+    }
+  }
+
+  .right-side {
+    max-width: 940px;
+  }
+  #folders {
+    margin-left: auto;
+
+    .connection-folder {
+      .link-container {
+        max-width: 480px;
+        margin-left: 40px;
+        margin-right: 40px;
+      }
+    }
+  }
+}
+
+@media (max-width: 860px) {
+  /* TOP MENU */
+  #menu {
+    height: 70px;
+
+    .search {
+      #search-field {
+        margin-left: 15px !important;
+        margin-top: 25px;
+        margin-right: 52px;
+        max-width: 220px;
+        height: 30px;
+      }
+    }
+  }
+
+  .right-side {
+    max-width: 940px;
+  }
+  #folders {
+    margin-left: auto;
+
+    .connection-folder {
+      .link-container {
+        max-width: 400px;
+        margin-left: 40px;
+        margin-right: 40px;
+      }
+    }
+  }
+}
+
+@media (max-width: 770px) {
+  /* TOP MENU */
+  #menu {
+    height: 70px;
+
+    .search {
+
+      #search-field {
+        margin-left: 15px;
+        margin-top: 10px;
+        margin-right: 52px;
+        max-width: 220px;
+        height: 30px;
+
+      }
+    }
+  }
+
+  .right-side {
+    max-width: 940px;
+  }
+  #folders {
+    margin-left: auto;
+
+    .connection-folder {
+
+      .link-container {
+
+        max-width: 340px;
+        margin-left: 20px;
+        margin-right: 20px;
+
+      }
+    }
+  }
+
 }

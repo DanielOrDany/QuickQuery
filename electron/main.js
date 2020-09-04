@@ -110,7 +110,8 @@ ipcMain.on(channels.CREATE_DB, async (event) => {
 
 ipcMain.on(channels.LOAD_DB, async (event, encodedDatabase) => {
   try {
-    await Database.loadDatabase(encodedDatabase);
+    const result = await Database.loadDatabase(encodedDatabase);
+    successful.data = result;
     await event.sender.send(channels.LOAD_DB, successful);
   } catch (e) {
     unsuccessful.message = e;
@@ -122,7 +123,7 @@ ipcMain.on(channels.GET_DB, async (event) => {
   try {
     const result = await Database.getDataFromDatabase();
 
-    if (!result.Connections) {
+    if (!result.connections) {
       await Database.createDefaultDatabase();
     }
 
@@ -230,7 +231,8 @@ ipcMain.on(channels.RENAME_TABLE, async (event, connectionName, alias, newAlias)
 
 ipcMain.on(channels.UPDATE_QUERY, async (event, connectionName, alias, query) => {
   try {
-    await Table.updateTableQuery(connectionName, alias, query);
+    const result = await Table.updateTableQuery(connectionName, alias, query);
+    successful.data = result;
     await event.sender.send(channels.UPDATE_QUERY, successful);
   } catch (e) {
     unsuccessful.message = e;

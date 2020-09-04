@@ -1,8 +1,8 @@
 const low = require('lowdb');
 const path = require('path');
 const FileSync = require('lowdb/adapters/FileSync');
-const appDatatDirPath = getAppDataPath();
-const adapter = new FileSync(path.join(appDatatDirPath, 'database.json'));
+const appDataDirPath = getAppDataPath();
+const adapter = new FileSync(path.join(appDataDirPath, 'database.json'));
 const db = low(adapter);
 
 function getAppDataPath() {
@@ -28,79 +28,79 @@ const pg = require('pg');
 pg.defaults.ssl = true;
 
 //Add new table to the current connection
-async function addTable (connectionName, query, type, alias){
+async function addTable (connectionName, query, type, alias) {
+    try {
+        const connection = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .value();
 
-    const URI = db.get('Connections')
-        .find({name: connectionName})
-        .get('URI')
-        .value();
+        const URI = connection.URI;
+        const connectionQueries = connection.queries;
 
-    const sequelize = new Sequelize(URI.database, URI.user, URI.password, URI.others);
-    await sequelize.query(query);
+        const sequelize = new Sequelize(URI.database, URI.user, URI.password, URI.others);
+        const index = connectionQueries.findIndex(query => query.alias === alias);
+        if (index > 0) throw "Table with this name already exist!";
 
-    // Get queries
-    const queries = db.get('Connections')
-        .find({name: connectionName})
-        .get('queries')
-        .value();
+        // Add new one
+        connectionQueries.push({
+            "query": query,
+            "type": type,
+            "alias": alias
+        });
 
-    const index = queries.findIndex(query => query.alias === alias);
-    if (index > 0) throw "Table with this name already exist!";
+        // Update queries
+        db.get('connections')
+            .find({name: connectionName})
+            .get('queries')
+            .assign({ connectionQueries })
+            .write();
 
-    // Add new one
-    queries.push({
-        "query": query,
-        "type": type,
-        "alias": alias
-    });
+        // let replaced = query.replace(';', ' LIMIT 5 OFFSET 0;');
+        // if (query.length === replaced.length) query += ' LIMIT 5 OFFSET 0';
+        // if (query.length < replaced.length) query = replaced;
 
-    // Update queries
-    db.get('Connections')
-        .find({name: connectionName})
-        .get('queries')
-        .assign({ queries })
-        .write();
+        query = query.replace(';', ' ');
+        query += ' LIMIT 10 OFFSET 0';
 
-    const replaced = query.replace(';', ' LIMIT 5 OFFSET 0;');
-    if (query.length === replaced.length) query += ' LIMIT 5 OFFSET 0';
-    if (query.length < replaced.length) query = replaced;
+        const [results, metadata] = await sequelize.query(query);
 
-    const queryResult = await sequelize.query(query);
-
-    return {
-        "rows": queryResult[1].rows,
-        "fields": queryResult[1].fields
+        return {
+            "rows": results,
+            "fields": metadata.fields
+        }
+    } catch (e) {
+        console.log(e);
     }
 }
 
-async function runQuery (connectionName, query){
+async function runQuery (connectionName, query) {
+    try {
+        const URI = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .get('URI')
+            .value();
 
-    const URI = db.get('Connections')
-        .find({name: connectionName})
-        .get('URI')
-        .value();
+        const sequelize = new Sequelize(URI.database, URI.user, URI.password, URI.others);
+        query = query.replace(';', ' ');
+        query += ' LIMIT 10 OFFSET 0';
 
-    const sequelize = new Sequelize(URI.database, URI.user, URI.password, URI.others);
-    await sequelize.query(query);
+        const [results, metadata] = await sequelize.query(query);
 
-    if (query[query.length] === ';') {
-        query = query[query.length].replace(';', ' ');
-    }
-
-    query += ' LIMIT 10 OFFSET 0';
-
-    const queryResult = await sequelize.query(query);
-
-    return {
-        "rows": queryResult[1].rows,
-        "fields": queryResult[1].fields
+        return {
+            "rows": results,
+            "fields": metadata.fields
+        }
+    } catch (e) {
+        console.log(e);
     }
 }
 
-function renameTable (connectionName, alias, newAlias){
-
+function renameTable (connectionName, alias, newAlias) {
     // Get queries
-    const queries = db.get('Connections')
+    const queries = db.read()
+        .get('connections')
         .find({name: connectionName})
         .get('queries')
         .value();
@@ -110,7 +110,8 @@ function renameTable (connectionName, alias, newAlias){
     queries[index].alias = newAlias;
 
     // Update queries
-    db.get('Connections')
+    db.read()
+        .get('connections')
         .find({name: connectionName})
         .get('queries')
         .assign({ queries })
@@ -118,9 +119,9 @@ function renameTable (connectionName, alias, newAlias){
 }
 
 function deleteTable (connectionName, alias) {
-
     // Get queries
-    const queries = db.get('Connections')
+    const queries = db.read()
+        .get('connections')
         .find({name: connectionName})
         .get('queries')
         .value();
@@ -129,31 +130,22 @@ function deleteTable (connectionName, alias) {
     queries.splice(
         queries.findIndex(query => query.alias === alias), 1);
 
+    console.log(queries);
+
     // Update queries
-    db.get('Connections')
+    db.get('connections')
         .find({name: connectionName})
         .get('queries')
         .assign({ queries })
         .write();
 
-    return db
-        .get('Connections')
-        .find({name: connectionName})
-        .get('queries')
-        .value();
+    return queries;
 }
 
 function getTable (connectionName, alias) {
-    console.log("TABLE: ", db
-        .get('Connections')
-        .find({name: connectionName})
-        .get('queries')
-        .find({alias: alias})
-        .value());
-
     // Get table
-    return db
-        .get('Connections')
+    return db.read()
+        .get('connections')
         .find({name: connectionName})
         .get('queries')
         .find({alias: alias})
@@ -161,10 +153,9 @@ function getTable (connectionName, alias) {
 }
 
 function getAllTables(connectionName) {
-
     // Get tables
-    return db
-        .get('Connections')
+    return db.read()
+        .get('connections')
         .find({name: connectionName})
         .get('queries')
         .value();
@@ -186,7 +177,8 @@ function updateTableQuery(connectionName, alias, query) {
     verifyQuery(query);
 
     // Get queries
-    const queries = db.get('Connections')
+    const queries = db.read()
+        .get('connections')
         .find({name: connectionName})
         .get('queries')
         .value();
@@ -196,16 +188,19 @@ function updateTableQuery(connectionName, alias, query) {
     queries[index].query = query;
 
     // Update queries
-    db.get('Connections')
+    db.get('connections')
         .find({name: connectionName})
         .get('queries')
         .assign({ queries })
         .write();
+
+    return queries;
 }
 
-async function loadTableResult(connectionName, alias, options){
+async function loadTableResult(connectionName, alias, options) {
     try {
-        const URI = db.get('Connections')
+        const URI = db.read()
+            .get('connections')
             .find({name: connectionName})
             .get('URI')
             .value();
@@ -215,7 +210,8 @@ async function loadTableResult(connectionName, alias, options){
         const limit = Number(options.pageSize);
 
         // Get table result
-        let query = db.get('Connections')
+        let query = db.read()
+            .get('connections')
             .find({name: connectionName})
             .get('queries')
             .find({alias: alias})

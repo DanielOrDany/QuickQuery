@@ -1,8 +1,8 @@
 const low = require('lowdb');
 const path = require('path');
 const FileSync = require('lowdb/adapters/FileSync');
-const appDatatDirPath = getAppDataPath();
-const adapter = new FileSync(path.join(appDatatDirPath, 'database.json'));
+const appDataDirPath = getAppDataPath();
+const adapter = new FileSync(path.join(appDataDirPath, 'database.json'));
 const database = low(adapter);
 
 function getAppDataPath() {
@@ -23,7 +23,6 @@ function getAppDataPath() {
     }
 }
 
-
 const fs = require('fs');
 const base64 = require('base-64');
 const utf8 = require('utf8');
@@ -33,27 +32,21 @@ pg.defaults.ssl = true;
 // Set some defaults (required if your JSON file is empty)
 async function createDefaultDatabase() {
     await database.defaults({
-        "Connections":[],
-        "Settings":
+        "connections": [],
+        "settings":
             {
-                "language":"en",
-                "theme":"white"
+                "language": "en",
+                "theme": "white"
             }
     }).write();
 }
 
 async function getDataFromDatabase() {
-    return {
-        connections: await database.get('Connections').value(),
-        settings: await database.get('Settings').value()
-    }
+    return await database.read().value();
 }
 
 async function getDatabaseForTransport() {
-    const databaseInJSON = {
-        connections: await database.get('Connections').value(),
-        settings: await database.get('Settings').value()
-    };
+    const databaseInJSON = await database.read().value();
     let databaseInString = JSON.stringify(databaseInJSON);
     let bytes = await utf8.encode(databaseInString);
     let encodedDatabase = base64.encode(bytes);
@@ -63,11 +56,20 @@ async function getDatabaseForTransport() {
 async function loadDatabase(encodedDatabase) {
     let bytes = await base64.decode(encodedDatabase);
     let databaseInString = await utf8.decode(bytes);
-    fs.writeFile('database.json', '', () => {
-        fs.writeFile('database.json', databaseInString, function() { console.log('done') })
-    });
-}
 
+    if (databaseInString.includes("connections" && "settings")) {
+        fs.writeFile('database.json', '', () => {
+            fs.writeFile('database.json', databaseInString, function () {
+                console.log('done')
+            })
+        });
+
+        return true;
+    } else {
+        return false;
+    }
+
+}
 
 // Export database's methods
 module.exports = {
