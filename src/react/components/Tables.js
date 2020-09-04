@@ -22,9 +22,12 @@ export default class Tables extends React.Component {
     }
 
     componentDidMount() {
-        if (!localStorage.getItem('current_connection')) {
-            alert('pl, choose table');
+        if (
+            !localStorage.getItem('current_connection')
+        ) {
+            alert("Choose the connection. If you don't have any connection, please add a new one.");
             window.location.hash = '#/connections';
+            return;
         }
 
         const database = JSON.parse(localStorage.getItem("data"));
