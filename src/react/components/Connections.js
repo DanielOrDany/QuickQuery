@@ -75,11 +75,13 @@ export default class Connections extends React.Component {
                 schemaInput,
                 dtypeInput
             ).then(connection => {
-                console.log('connection', connection);
                 if (connection) {
                     const connections = JSON.parse(localStorage.getItem("connections"));
                     connections.push(connection);
+
                     localStorage.setItem("connections", JSON.stringify(connections));
+                    localStorage.setItem("current_connection", JSON.stringify(connection));
+
                     this.setState({
                         connections: JSON.parse(localStorage.getItem("connections")),
                         searchedConnections: JSON.parse(localStorage.getItem("connections")),
@@ -112,9 +114,9 @@ export default class Connections extends React.Component {
 
     deleteConnection(name) {
         deleteConnection(name).then(data => {
-            console.log('deleted data:', data);
             const connections = data.connections;
             document.getElementById(name).remove();
+
             if (connections) {
                 this.setState({ connections: connections });
             }
@@ -246,7 +248,7 @@ export default class Connections extends React.Component {
                     </div>
 
                     <div className="choose-db-field">
-                        <span id="choose-db-title">Choose d-base type:</span>
+                        <span id="choose-db-title">Choose database type:</span>
                         <select
                             id="choose-db"
                             value={this.state.dtypeInput}

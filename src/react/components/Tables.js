@@ -30,19 +30,8 @@ export default class Tables extends React.Component {
             return;
         }
 
-        const database = JSON.parse(localStorage.getItem("data"));
-        const connections = database.connections;
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
-        const result = connections.filter(connection => connection.name === connectionName);
-
-        // Verify if connection is not deleted!
-        if (result.length !== 0) {
-            this.loadTables(connectionName);
-        } else {
-            //return to connections
-            alert('pl, choose connection');
-            window.location.hash = '#/connections';
-        }
+        this.loadTables(connectionName);
     }
 
     componentDidUpdate() {
