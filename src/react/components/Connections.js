@@ -80,7 +80,7 @@ export default class Connections extends React.Component {
                     connections.push(connection);
 
                     localStorage.setItem("connections", JSON.stringify(connections));
-                    localStorage.setItem("current_connection", JSON.stringify(connection));
+                    // localStorage.setItem("current_connection", JSON.stringify(connection));
 
                     this.setState({
                         connections: JSON.parse(localStorage.getItem("connections")),
@@ -113,12 +113,15 @@ export default class Connections extends React.Component {
     };
 
     deleteConnection(name) {
-        deleteConnection(name).then(data => {
-            const connections = data.connections;
+        deleteConnection(name).then(connections => {
             document.getElementById(name).remove();
 
             if (connections) {
                 this.setState({ connections: connections });
+            }
+
+            if(JSON.parse(localStorage.getItem("current_connection")).name == name) {
+                localStorage.removeItem("current_connection");
             }
         });
     };

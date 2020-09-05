@@ -41,9 +41,9 @@ function createWindow () {
 
   mainWindow.loadURL(startUrl);
 
-  mainWindow.webContents.on("devtools-opened", () => {
-      mainWindow.closeDevTools();
-  });
+  // mainWindow.webContents.on("devtools-opened", () => {
+  //     mainWindow.closeDevTools();
+  // });
 
   mainWindow.on('closed', function () {
       app.quit();
