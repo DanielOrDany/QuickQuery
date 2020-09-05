@@ -5,6 +5,9 @@ import {
     addConnection
 } from "../methods";
 
+import Button from './Button';
+import Modal from './Modal';
+
 import database_icon from "../icons/software.png";
 import delete_icon from "../icons/delete_icon.png";
 import '../styles/Connections.scss';
@@ -25,9 +28,24 @@ export default class Connections extends React.Component {
             databaseInput: '',
             schemaInput: '',
             dtypeInput: 'mysql',
-            errorMessage: ""
+            errorMessage: "",
+            isOpen: false
         };
     };
+
+    openModal = () => {
+        this.setState({ isOpen: true });
+    }
+    
+    handleSubmit = () => {
+        console.log('Submit function!');
+        this.addConnection();
+    }
+    
+    handleCancel = () => {
+        console.log('Cancel function!');
+        this.setState({ isOpen: false });
+    }
 
     componentDidMount() {
         getDataFromDatabase()
@@ -86,16 +104,19 @@ export default class Connections extends React.Component {
                         connections: JSON.parse(localStorage.getItem("connections")),
                         searchedConnections: JSON.parse(localStorage.getItem("connections")),
                         badQuery: 0,
-                        errorMessage: ""
+                        errorMessage: "",
+                        isOpen: false
                     });
 
-                    document.getElementById("input-field-name").value = "";
-                    document.getElementById("input-field-host").value = "";
-                    document.getElementById("input-field-port").value = "";
-                    document.getElementById("input-field-user").value = "";
-                    document.getElementById("input-field-password").value = "";
-                    document.getElementById("input-field-database").value = "";
-                    document.getElementById("input-field-schema").value = "";
+                    // this.setState({ isOpen: false });
+
+                    // document.getElementById("input-field-name").value = "";
+                    // document.getElementById("input-field-host").value = "";
+                    // document.getElementById("input-field-port").value = "";
+                    // document.getElementById("input-field-user").value = "";
+                    // document.getElementById("input-field-password").value = "";
+                    // document.getElementById("input-field-database").value = "";
+                    // document.getElementById("input-field-schema").value = "";
 
                 } else {
                     this.setState({
@@ -197,7 +218,7 @@ export default class Connections extends React.Component {
 
                 <div className="left-menu">
 
-                    <div className="information-field">
+                    {/* <div className="information-field">
                         <span id="input-title">Name:</span>
                         <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda"
                                defaultValue={this.state.nameInput} onChange={this.nameOnChange}
@@ -260,17 +281,83 @@ export default class Connections extends React.Component {
                             <option value="mysql">mysql</option>
                             <option value="postgres">postgres</option>
                         </select>
-                    </div>
+                    </div> */}
 
                     <button type="button" style={localStorage.getItem("theme") ? {color: "white"} : {color: "white"}}
                             className="add-button" onClick={() => this.addConnection()}>Add
                     </button>
 
-                    {this.state.badQuery > 0 &&
-                    <div id="errorMessage" className="alert">
-                        <strong>Message!</strong> {this.state.errorMessage}
-                    </div>
-                    }
+                    <Button onClick={this.openModal}>Add connection</Button>
+                    <Modal
+                        title="Enter connection data:"
+                        isOpen={this.state.isOpen}
+                        onCancel={this.handleCancel}
+                        onSubmit={this.handleSubmit}
+                    >
+                        <div className="information-field">
+                            <span id="input-title">Name:</span>
+                            <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda"
+                                onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
+                        </div>
+
+                        <div className="information-field">
+                            <span id="input-title">Host:</span>
+                            <input id="input-field-host" ref="host" className="form-control" type="text" placeholder="127.0.0.1"
+                                onChange={this.hostOnChange} onKeyPress={this.hostKeyPress}/>
+                        </div>
+
+
+                        <div className="information-field">
+                            <span id="input-title">Port:</span>
+                            <input id="input-field-port" ref="port" className="form-control" type="text" placeholder="5432"
+                                onChange={this.portOnChange} onKeyPress={this.portKeyPress}/>
+                        </div>
+
+                        <div className="information-field">
+                            <span id="input-title">User:</span>
+                            <input id="input-field-user" ref="user" className="form-control" type="text" placeholder="user name"
+                                onChange={this.userOnChange} onKeyPress={this.userKeyPress}/>
+                        </div>
+
+                        <div className="information-field">
+                            <span id="input-title">Password:</span>
+                            <input id="input-field-password" ref="password" className="form-control" type="text"
+                                placeholder="password"
+                                onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
+                        </div>
+
+                        <div className="information-field">
+                            <span id="input-title">Database:</span>
+                            <input id="input-field-database" ref="database" className="form-control" type="text"
+                                placeholder="database name"
+                                onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
+                        </div>
+
+                        <div className="information-field">
+                            <span id="input-title">Schema:</span>
+                            <input id="input-field-schema" ref="schema" className="form-control" type="text"
+                                placeholder="schema name"
+                                onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
+                        </div>
+
+                        <div className="choose-db-field">
+                            <span id="choose-db-title">Choose database type:</span>
+                            <select
+                                id="choose-db"
+                                value={this.state.dtypeInput}
+                                onChange={this.dtypeOnChange}
+                            >
+                                <option value="mysql">mysql</option>
+                                <option value="postgres">postgres</option>
+                            </select>
+                        </div>
+
+                        {this.state.badQuery > 0 &&
+                            <div id="errorMessage" className="alert">
+                                <strong>Message!</strong> {this.state.errorMessage}
+                            </div>
+                        }
+                    </Modal>
                 </div>
 
                 <div className="line"></div>
