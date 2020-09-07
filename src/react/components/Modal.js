@@ -25,8 +25,8 @@ const Modal = ({
                   {children}
                 </div>
                 <div className="modalFooter">
-                  <Button onClick={onCancel} invert>Cancel</Button>
-                  <Button onClick={onSubmit}>Submit</Button>
+                  <Button id="cancelBtn" onClick={onCancel} invert>Cancel</Button>
+                  <Button id="subBtn" onClick={onSubmit}>Submit</Button>
                 </div>
               </div>
             </div>

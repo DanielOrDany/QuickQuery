@@ -31,7 +31,7 @@ export default class Connections extends React.Component {
             urlInput: '',
             errorMessage: '',
             isOpen: false,
-            bigInput: true
+            bigInput: false
         };
     };
 
@@ -226,8 +226,6 @@ export default class Connections extends React.Component {
     bigInput = () => {
         return(
             <div>
-                <Button onClick={()=>this.setState({bigInput: false})} invert>Small Input</Button>
-
                 <div className="information-field">
                     <span id="input-title">Name:</span>
                     <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda"
@@ -275,7 +273,7 @@ export default class Connections extends React.Component {
                 </div>
 
                 <div className="choose-db-field">
-                    <span id="choose-db-title">Choose database type:</span>
+                    <span id="choose-db-title">Choose database: </span>
                     <select
                         id="choose-db"
                         value={this.state.dtypeInput}
@@ -285,6 +283,8 @@ export default class Connections extends React.Component {
                         <option value="postgres">postgres</option>
                     </select>
                 </div>
+
+                <Button id="simplified-connection-btn" onClick={()=>this.setState({bigInput: false})} invert>Simplified connection</Button>
             </div>
         );
     };
@@ -292,8 +292,6 @@ export default class Connections extends React.Component {
     smallInput = () => {
         return(
             <div>
-                <Button onClick={()=>this.setState({bigInput: true})} invert>Big Input</Button>
-
                 <div className="information-field">
                     <span id="input-title">Name:</span>
                     <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda"
@@ -314,98 +312,64 @@ export default class Connections extends React.Component {
                         placeholder="schema name"
                         onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                 </div>
+
+                <Button id="configure-manually-btn" onClick={()=>this.setState({bigInput: true})} invert>Configure manually</Button>
             </div>
         );
     };
 
-    // showURI (URI) {
-    //     console.log(URI);
-    //     alert (URI);
-    // };
-
     render() {
         return (
-            <div className="all-page">
+            <div className="connections-page">
+                <Modal
+                    title="Creating a connection"
+                    isOpen={this.state.isOpen}
+                    onCancel={this.handleCancel}
+                    onSubmit={this.handleSubmit}
+                >
+                    {this.state.bigInput && this.bigInput()}
+                    {!this.state.bigInput && this.smallInput()}
+                    {this.state.badQuery > 0 &&
+                        <div id="errorMessage" className="alert">
+                            <strong>Message!</strong> {this.state.errorMessage}
+                        </div>
+                    }
+                </Modal>
 
-                <div className="left-menu">
-
+                <div id="menu">
                     <button type="button" style={localStorage.getItem("theme") ? {color: "white"} : {color: "white"}}
-                            className="add-button" onClick={() => this.addConnection()}>Add
+                            className="add-button" onClick={() => this.openModal()}>Add connection
                     </button>
-
-                    <Button onClick={this.openModal}>Add connection</Button>
-                    <Modal
-                        title="Enter connection data:"
-                        isOpen={this.state.isOpen}
-                        onCancel={this.handleCancel}
-                        onSubmit={this.handleSubmit}
-                    >
-                        {
-                            this.state.bigInput && this.bigInput()
-                        }
-
-                        {
-                            !this.state.bigInput && this.smallInput()
-                        }
-
-                        {this.state.badQuery > 0 &&
-                            <div id="errorMessage" className="alert">
-                                <strong>Message!</strong> {this.state.errorMessage}
-                            </div>
-                        }
-                    </Modal>
+                    <div className="search">
+                        <input id="search-field"/>
+                        <button type="button" className="search-button" onClick={() => this.search()}>Search</button>
+                    </div>
                 </div>
 
-                <div className="line"></div>
-
-
-                <div className="right-side">
-
-                    <div id="menu">
-                        {/*<div id="sort">*/}
-                        {/*    Sorted by:*/}
-                        {/*    <select id="choose-sort">*/}
-                        {/*        <option value="name">name</option>*/}
-                        {/*    </select>*/}
-                        {/*</div>*/}
-                        <div className="search">
-                            <input id="search-field"/>
-                            <button type="button" className="search-button" onClick={() => this.search()}>Search</button>
-                        </div>
-                    </div>
-
-                    <div id="folders">
-                        {this.state.searchedConnections ? this.state.searchedConnections.map(conn => {
-                                return (
-                                    <div id={conn.name} className="connection-folder" key={conn.name}>
-                                            <div className="link-container"
-                                                 onDoubleClick={() => this.openConnection(conn.name)}>
-                                                <div id="folders-name">
-                                                    <img alt={"icon database"} src={database_icon} id="database-icon"/>
-                                                    <div id="link">
-                                                        <p id="folders-n">{conn.name}</p>
-                                                    </div>
-                                                </div>
-
-                                                <div id="functional">
-                                                    {/*<div id="time">*/}
-                                                    {/*    10.08.2020*/}
-                                                    {/*</div>*/}
-                                                    {/*<div*/}
-                                                    {/*    onClick={() => alert("PIN поки що не працює - " + conn.name)}>*/}
-                                                    {/*    <img alt={"pin icon"} src={pin_icon} id="pin-icon"/>*/}
-                                                    {/*</div>*/}
-                                                    <div
-                                                        onClick={() => this.deleteConnection(conn.name)}>
-                                                        <img alt={"delete icon"} src={delete_icon} id="delete-icon"/>
-                                                    </div>
+                <div id="folders">
+                    {this.state.searchedConnections ? this.state.searchedConnections.map(conn => {
+                            return (
+                                <div id={conn.name} className="connection-folder" key={conn.name}>
+                                        <div className="link-container"
+                                             onDoubleClick={() => this.openConnection(conn.name)}>
+                                            <div id="folders-name">
+                                                <img alt={"icon database"} src={database_icon} id="database-icon"/>
+                                                <div id="link">
+                                                    <p id="folders-n">{conn.name}</p>
                                                 </div>
                                             </div>
-                                    </div>
-                                )
-                            }
-                        ) : null}
-                    </div>
+
+                                            <div id="functional">
+                                                <div
+                                                    onClick={() => this.deleteConnection(conn.name)}>
+                                                    <img alt={"delete icon"} src={delete_icon} id="delete-icon"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                            )
+                        }
+                    ) : null}
                 </div>
             </div>
         );
