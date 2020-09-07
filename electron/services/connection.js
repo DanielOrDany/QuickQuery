@@ -33,13 +33,18 @@ async function verifyConnection (name) {
         throw "Connection with this name already exist!";
 }
 
-async function addConnection(name, host, port, user, password, database, schema, dtype) {
-    console.log('server', name, host, port, user, password, database, schema, dtype);
+async function addConnection(params) {
+    let { name, host, port, user, password, database, schema, dtype, uri } = params;
+
+    if (uri) {
+        dtype = uri.split('://')[0];
+    }
+
     // throw error if connection already exist
     await verifyConnection(name);
 
     try {
-        const sequelize = new Sequelize(
+        const sequelize = uri ? new Sequelize(uri) : new Sequelize(
             database,
             user,
             password,
@@ -54,18 +59,21 @@ async function addConnection(name, host, port, user, password, database, schema,
 
         const connection = {
             name: name,
-            URI: {
+            URI: uri ? uri : {
                 database: database,
                 user: user,
                 password: password,
                 schema: schema,
-                others: {host: host, dialect:dtype}
+                port: port,
+                others: {
+                    host: host,
+                    dialect: dtype
+                }
             },
             queries: []
         };
 
         await sequelize.query(selectAllTables).then(tables => {
-            console.log(tables);
 
             // Generate default tables
             if (dtype === 'postgres') {

@@ -57,21 +57,30 @@ export default class CreateTable extends React.Component {
             inputVerify(alias) > 0 &&
             inputVerify(query) > 0
         ) {
-            addTable(connectionName, query,"new", alias).then((data) => {
-                if (data) {
-                    return "#/tables";
-                } else {
-                    this.setState({
-                        header: "",
-                        rows: "",
-                        badQuery: 1,
-                        errorMessage: "Query is not valid."
-                    });
-                }
-            }).then((url) => {
-                localStorage.setItem("new_table", JSON.stringify(true));
-                window.location.hash = url;
-            });
+            if (alias.indexOf(' ') !== -1) {
+                this.setState({
+                    header: "",
+                    rows: "",
+                    badQuery: 1,
+                    errorMessage: "Please, remove any spaces in alias."
+                });
+            } else {
+                addTable(connectionName, query,"new", alias).then((data) => {
+                    if (data) {
+                        return "#/tables";
+                    } else {
+                        this.setState({
+                            header: "",
+                            rows: "",
+                            badQuery: 1,
+                            errorMessage: "Query is not valid."
+                        });
+                    }
+                }).then((url) => {
+                    localStorage.setItem("new_table", JSON.stringify(true));
+                    window.location.hash = url;
+                });
+            }
         } else {
             this.setState({
                 header: "",

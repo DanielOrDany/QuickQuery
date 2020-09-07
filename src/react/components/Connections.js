@@ -28,7 +28,8 @@ export default class Connections extends React.Component {
             databaseInput: '',
             schemaInput: '',
             dtypeInput: 'mysql',
-            errorMessage: "",
+            urlInput: '',
+            errorMessage: '',
             isOpen: false,
             bigInput: true
         };
@@ -36,15 +37,15 @@ export default class Connections extends React.Component {
 
     openModal = () => {
         this.setState({ isOpen: true });
-    }
+    };
     
     handleSubmit = () => {
         this.addConnection();
-    }
+    };
     
     handleCancel = () => {
         this.setState({ isOpen: false });
-    }
+    };
 
     componentDidMount() {
         getDataFromDatabase()
@@ -60,70 +61,89 @@ export default class Connections extends React.Component {
     };
 
     addConnection() {
-        if(this.state.bigInput) {
-            let nameInput = this.state.nameInput;
-            let hostInput = this.state.hostInput;
-            let portInput = this.state.portInput;
-            let userInput = this.state.userInput;
-            let passwordInput = this.state.passwordInput;
-            let databaseInput = this.state.databaseInput;
-            let schemaInput = this.state.schemaInput;
-            let dtypeInput = this.state.dtypeInput;
+        let nameInput = this.state.nameInput;
+        let hostInput = this.state.hostInput;
+        let portInput = this.state.portInput;
+        let userInput = this.state.userInput;
+        let passwordInput = this.state.passwordInput;
+        let databaseInput = this.state.databaseInput;
+        let schemaInput = this.state.schemaInput;
+        let dtypeInput = this.state.dtypeInput;
+        let uriInput = this.state.uriInput;
 
-            function inputVirify(args) {
-                return args.replace(/^\s+|\s+$/gm, '').length;
-            }
+        console.log({
+            nameInput,
+            hostInput,
+            portInput,
+            userInput,
+            passwordInput,
+            databaseInput,
+            schemaInput,
+            dtypeInput,
+            uriInput
+        });
 
-            if (inputVirify(nameInput) > 0 &&
-                inputVirify(hostInput) > 0 &&
-                inputVirify(portInput) > 0 &&
-                inputVirify(userInput) > 0 &&
-                inputVirify(passwordInput) > 0 &&
-                inputVirify(databaseInput) > 0 &&
-                inputVirify(schemaInput) > 0 &&
-                inputVirify(dtypeInput) > 0
-            ) {
-                addConnection(
-                    nameInput,
-                    hostInput,
-                    portInput,
-                    userInput,
-                    passwordInput,
-                    databaseInput,
-                    schemaInput,
-                    dtypeInput
-                ).then(connection => {
-                    if (connection) {
-                        const connections = JSON.parse(localStorage.getItem("connections"));
-                        connections.push(connection);
-
-                        localStorage.setItem("connections", JSON.stringify(connections));
-
-                        this.setState({
-                            connections: JSON.parse(localStorage.getItem("connections")),
-                            searchedConnections: JSON.parse(localStorage.getItem("connections")),
-                            badQuery: 0,
-                            errorMessage: "",
-                            isOpen: false
-                        });
-
-                    } else {
-                        this.setState({
-                            badQuery: 1,
-                            errorMessage: "Bad URI."
-                        });
-                    }
-                });
-            } else {
+        function inputVirify(args) {
+            if (args.replace(/^\s+|\s+$/gm, '').length === 0) {
                 this.setState({
                     badQuery: 1,
                     errorMessage: "Please, fill in all the fields."
                 });
             }
         }
-        if(!this.state.bigInput) {
-            console.log("Small input");
+
+        // Check valid inputs
+        if (this.state.bigInput) {
+            inputVirify(nameInput);
+            inputVirify(hostInput);
+            inputVirify(portInput);
+            inputVirify(userInput);
+            inputVirify(passwordInput);
+            inputVirify(databaseInput);
+            inputVirify(schemaInput);
+            inputVirify(dtypeInput);
+        } else {
+            inputVirify(nameInput);
+            inputVirify(uriInput);
+            inputVirify(schemaInput);
         }
+
+        addConnection(this.state.bigInput ? {
+            name: nameInput,
+            host: hostInput,
+            port: portInput,
+            user: userInput,
+            password: passwordInput,
+            database: databaseInput,
+            schema: schemaInput,
+            dtype: dtypeInput
+        } : {
+            schema: schemaInput,
+            uri: uriInput,
+            name: nameInput
+        }).then(connection => {
+            if (connection) {
+                const connections = JSON.parse(localStorage.getItem("connections"));
+                connections.push(connection);
+
+                localStorage.setItem("connections", JSON.stringify(connections));
+
+                this.setState({
+                    connections: JSON.parse(localStorage.getItem("connections")),
+                    searchedConnections: JSON.parse(localStorage.getItem("connections")),
+                    badQuery: 0,
+                    errorMessage: "",
+                    isOpen: false
+                });
+
+            } else {
+                this.setState({
+                    badQuery: 1,
+                    errorMessage: "Bad URI."
+                });
+            }
+        });
+
     };
 
     deleteConnection(name) {
@@ -174,6 +194,9 @@ export default class Connections extends React.Component {
     };
     dtypeOnChange = (e) => {
         this.setState({dtypeInput: e.target.value})
+    };
+    uriOnChange = (e) => {
+        this.setState({uriInput: e.target.value})
     };
 
     nameKeyPress = (e) => {
@@ -272,9 +295,17 @@ export default class Connections extends React.Component {
                 <Button onClick={()=>this.setState({bigInput: true})} invert>Big Input</Button>
 
                 <div className="information-field">
+                    <span id="input-title">Name:</span>
+                    <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda"
+                           onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
+                </div>
+
+                <div className="information-field">
                     <span id="input-title">URI:</span>
-                    <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="databaseType://username:password@host:port/databaseName"
-                        onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
+                    <input id="input-field-uri" ref="uri" className="form-control" type="text"
+                           placeholder="databaseType://username:password@host:port/databaseName"
+                           onChange={this.uriOnChange} onKeyPress={this.uriKeyPress}
+                    />
                 </div>
 
                 <div className="information-field">

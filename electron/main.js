@@ -86,9 +86,9 @@ ipcMain.on(channels.DELETE_CONNECTION, async (event, name) => {
   }
 });
 
-ipcMain.on(channels.ADD_CONNECTION, async (event, name, host, port, user, password, database, schema, dtype) => {
+ipcMain.on(channels.ADD_CONNECTION, async (event, params) => {
   try {
-    const result = await Connection.addConnection(name, host, port, user, password, database, schema, dtype);
+    const result = await Connection.addConnection(params);
     successful.data = result;
     await event.sender.send(channels.ADD_CONNECTION, successful);
   } catch (e) {

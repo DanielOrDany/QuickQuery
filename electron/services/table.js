@@ -38,7 +38,13 @@ async function addTable (connectionName, query, type, alias) {
         const URI = connection.URI;
         const connectionQueries = connection.queries;
 
-        const sequelize = new Sequelize(URI.database, URI.user, URI.password, URI.others);
+        const sequelize = URI.database ? new Sequelize(
+            URI.database,
+            URI.user,
+            URI.password,
+            URI.others
+        ) : new Sequelize(URI);
+
         const index = connectionQueries.findIndex(query => query.alias === alias);
         if (index > 0) throw "Table with this name already exist!";
 
@@ -82,7 +88,13 @@ async function runQuery (connectionName, query) {
             .get('URI')
             .value();
 
-        const sequelize = new Sequelize(URI.database, URI.user, URI.password, URI.others);
+        const sequelize = URI.database ? new Sequelize(
+            URI.database,
+            URI.user,
+            URI.password,
+            URI.others
+        ) : new Sequelize(URI);
+
         query = query.replace(';', ' ');
         query += ' LIMIT 10 OFFSET 0';
 
@@ -172,7 +184,6 @@ function verifyQuery(query) {
 }
 
 function updateTableQuery(connectionName, alias, query) {
-
     // verify that query have select character
     verifyQuery(query);
 
@@ -205,9 +216,26 @@ async function loadTableResult(connectionName, alias, options) {
             .get('URI')
             .value();
 
-        const sequelize = new Sequelize(URI.database, URI.user, URI.password, URI.others);
+        console.log(URI);
+
+        const sequelize = URI.database ? new Sequelize(
+            URI.database,
+            URI.user,
+            URI.password,
+            URI.others
+        ) : new Sequelize(URI);
+
         const offset = Number(options.page) * Number(options.pageSize);
         const limit = Number(options.pageSize);
+
+        let dialect;
+        if (typeof URI === 'string') {
+            dialect = URI.split('://')[0];
+        } else {
+            dialect = URI.others.dialect;
+        }
+
+        console.log('dialect: ', dialect);
 
         // Get table result
         let query = db.read()
@@ -217,15 +245,13 @@ async function loadTableResult(connectionName, alias, options) {
             .find({alias: alias})
             .value().query;
 
-        console.log('query', query);
-
         if (query[query.length] === ';') {
             query = query[query.length].replace(';', ' ');
         }
 
         if (options.search) {
             const search = options.search;
-            if (URI.others.dialect === 'mysql')
+            if (dialect === 'mysql')
                 query += ` WHERE '%${search.value}%' LIKE CONCAT('%', CAST(id AS CHAR(50)), '%')`;
             else
                 query += ` WHERE CAST(${search.column} AS VARCHAR(50)) Like '%${search.value}%'`;
@@ -234,13 +260,9 @@ async function loadTableResult(connectionName, alias, options) {
         const countQ = `SELECT COUNT(*) as c FROM (${query}) as c;`;
         const numberOfRecords = await sequelize.query(countQ);
 
-        console.log('numberOfRecords: ', numberOfRecords);
-
         if (!options.search) query += ` LIMIT ${limit} OFFSET ${offset}`;
 
         const queryResult = await sequelize.query(query);
-
-        console.log('result', queryResult);
 
         const number = numberOfRecords[0][0].c/limit;
         const one_as_string = String(number).charAt(0);
@@ -257,7 +279,7 @@ async function loadTableResult(connectionName, alias, options) {
         console.log('pages: ', pages);
         console.log('records: ', records);
 
-        if (URI.others.dialect === 'postgres') {
+        if (dialect === 'postgres') {
             return {
                 "rows": queryResult[1].rows,
                 "fields": queryResult[1].fields,
