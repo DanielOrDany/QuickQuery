@@ -8,12 +8,12 @@ import Tables from './Tables';
 import Connections from './Connections';
 import Settings from './Settings';
 import '../styles/Menu.scss';
-import Result from "./Result";
-import CreateTable from "./CreateTable";
 import connections_icon from "../icons/connections.svg";
 import tables_icon from "../icons/tables.png";
 import logo_icon from "../icons/logo.png";
 import { importConfig, exportConfig } from "../methods";
+
+import Modal from './Modal';
 
 class Menu extends React.Component {
 
@@ -24,10 +24,20 @@ class Menu extends React.Component {
     componentDidMount() {
         if(localStorage.getItem("theme")){
             this.setState({
-                theme: true
+                theme: true,
+                isOpen: false,
+                message: ""
             });
         }
     }
+
+    handleSubmit = () => {
+        this.setState({message: "", isOpen: false });
+    };
+    
+    handleCancel = () => {
+        this.setState({message: "", isOpen: false });
+    };
 
     share = () => {
         exportConfig().then((data) => {
@@ -39,14 +49,14 @@ class Menu extends React.Component {
         const input = event.target;
 
         const reader = new FileReader();
-        reader.onload = function(){
+        reader.onload = () => {
             const content = reader.result;
             importConfig(content).then(data => {
                 if (data === true) {
-                    alert("Successfully uploaded.");
+                    this.setState({message: "Successfully uploaded.", isOpen: true});
                 }
                 else {
-                    alert("Wrong file!");
+                    this.setState({message: "Wrong file!", isOpen: true});
                 }
             });
         };
@@ -69,7 +79,7 @@ class Menu extends React.Component {
             }
         }
         catch (e) {
-            alert("FAIL")
+            this.setState({message: "FAIL", isOpen: true});
         }
     }
 
@@ -84,6 +94,17 @@ class Menu extends React.Component {
     render() {
         return (
             <div>
+                <Modal
+                    title="Error"
+                    isOpen={this.state.isOpen}
+                    onCancel={this.handleCancel}
+                    onSubmit={this.handleSubmit}
+                    submitTitle="OK"
+                >
+                    <div>
+                        <strong>{this.state.message}</strong>
+                    </div>
+                </Modal>
                 <Router hashType="noslash">
                     <div className="menu-header" expand="md">
                         <div className="logo-box">

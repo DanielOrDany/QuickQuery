@@ -8,7 +8,9 @@ import Result from "./Result";
 import { getAllTables, getTable} from "../methods";
 import { ReactComponent as MiniMenuIcon } from "../icons/open-menu.svg";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
+
 import MiniMenu from "./MiniMenu";
+import Modal from './Modal';
 
 export default class Tables extends React.Component {
 
@@ -17,7 +19,8 @@ export default class Tables extends React.Component {
 
         this.state = {
             tables: [],
-            searchedTables: []
+            searchedTables: [],
+            isOpen: false
         };
     }
 
@@ -25,8 +28,7 @@ export default class Tables extends React.Component {
         if (
             !localStorage.getItem('current_connection')
         ) {
-            alert("Choose the connection. If you don't have any connection, please add a new one.");
-            window.location.hash = '#/connections';
+            this.openModal();
             return;
         }
 
@@ -45,6 +47,20 @@ export default class Tables extends React.Component {
             this.loadTables(JSON.parse(localStorage.getItem('current_connection')).name);
         }
     }
+
+    openModal = () => {
+        this.setState({ isOpen: true });
+    };
+
+    handleSubmit = () => {
+        this.setState({ isOpen: false });
+        window.location.hash = '#/connections';
+    };
+    
+    handleCancel = () => {
+        this.setState({ isOpen: false });
+        window.location.hash = '#/connections';
+    };
 
     loadTables(connectionName) {
         getAllTables(connectionName).then(tables => {
@@ -101,6 +117,18 @@ export default class Tables extends React.Component {
             );
         } else return(
                 <div className="all-page-tables">
+
+                <Modal
+                    title="Error"
+                    isOpen={this.state.isOpen}
+                    onCancel={this.handleCancel}
+                    onSubmit={this.handleSubmit}
+                    submitTitle="OK"
+                >
+                    <div>
+                        <strong>Choose the connection. If you don't have any connection, please add a new one.</strong>
+                    </div>
+                </Modal>
 
                     <div className="left-side">
                         <div id="mini-menu">

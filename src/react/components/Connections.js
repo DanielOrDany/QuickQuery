@@ -327,6 +327,7 @@ export default class Connections extends React.Component {
                     isOpen={this.state.isOpen}
                     onCancel={this.handleCancel}
                     onSubmit={this.handleSubmit}
+                    cancelButton={true}
                 >
                     {this.state.bigInput && this.bigInput()}
                     {!this.state.bigInput && this.smallInput()}
