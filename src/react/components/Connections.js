@@ -53,7 +53,8 @@ export default class Connections extends React.Component {
                 console.log("DATA", data);
                 this.setState({
                     connections: data.connections,
-                    searchedConnections: data.connections
+                    searchedConnections: data.connections,
+                    isOpen: data.connections.length ? false : true //show popup without any conns
                 });
                 localStorage.setItem("connections", JSON.stringify(data.connections));
                 localStorage.setItem("data", JSON.stringify(data));
