@@ -168,6 +168,7 @@
 /* TABLE */
 
 table {
+  font-family: 'Scada', sans-serif;
 
   margin-top: 10px;
   margin-left: 10px;
@@ -177,11 +178,12 @@ table {
 
 
   color: white;
-  border-collapse: separate;
+  border-collapse: collapse;
   background: transparent;
 }
 
 td, th {
+  font-family: 'Scada', sans-serif;
   background: dimgrey;
   border-left: 1px solid gray;
   border-right: 1px solid gray;
