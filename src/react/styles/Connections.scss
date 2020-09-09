@@ -84,7 +84,7 @@
     font-family: 'Scada', sans-serif;
     grid-area: folders;
     margin: 50px auto 0;
-    max-height: 600px;
+    min-height: calc(100vh - 150px);
     overflow: scroll;
 
     .connection-folder {

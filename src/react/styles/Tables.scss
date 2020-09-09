@@ -10,14 +10,13 @@
 
 
 
-
   /* LEFT SIDE */
   .left-side {
     font-family: 'Scada', sans-serif;
     grid-area: left;
 
     width: 300px;
-    min-height: 100vh;
+    height: calc(100vh - 50px);
     // padding-left: 30px;
     // padding-right: 30px;
     // padding-top: 70px;
@@ -160,7 +159,7 @@
     grid-area: line;
 
     width: 1px;
-    height: 100%;
+    height: calc(100vh - 50px);
 
     background-color: #818181;
 
@@ -171,6 +170,7 @@
   /* RIGHT SIDE */
   .right-side-tables-page {
     grid-area: right;
+    // height: calc(100vh - 50px);
 
   }
 }
