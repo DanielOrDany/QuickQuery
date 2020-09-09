@@ -3,10 +3,13 @@
 .create_edit_table {
   display: grid;
 
+  height: calc(100vh - 50px);
+
   grid-template-areas:
             "miniMenu"
             "queryText"
             "newTable";
+  grid-template-rows: 50px 45vh auto;
 
   ::-webkit-scrollbar {
     height: 5px;
@@ -103,10 +106,10 @@
 
   #queryText {
     grid-area: queryText;
-    margin-top: 40px;
+    margin-top: 5.4%;
     margin-left: 10px;
     width: calc(100% - 25px);
-    height: 290px;
+    height: 78.4%;
     resize: none;
     border: 0.5px solid #989898;
   }
@@ -147,6 +150,4 @@
 
 #your-new-table {
   margin-top: 10px;
-
-
 }
