@@ -8,7 +8,7 @@ import delete_icon from "../icons/delete_icon.png";
 import '../styles/Modal.scss';
 
 const Modal = ({
-    title, isOpen, onCancel, onSubmit, cancelButton, cancelTitle, submitTitle, children,
+    title, isOpen, onCancel, onSubmit, cancelButton, cancelTitle, submitTitle, noCross, children,
   }) => {
   
     return (
@@ -19,7 +19,9 @@ const Modal = ({
               <div className="modalWindow">
                 <div className="modalHeader">
                   <div className="modalTitle">{title}</div>
-                  <img alt={"delete icon"} src={delete_icon} onClick={onCancel} id="delete-icon"/>
+                  {!noCross &&
+                    <img alt={"delete icon"} src={delete_icon} onClick={onCancel} id="delete-icon"/>
+                  }
                 </div>
                 <div className="modalBody">
                   {children}
@@ -45,6 +47,7 @@ const Modal = ({
     cancelButton: PropTypes.bool,
     cancelTitle: PropTypes.string,
     submitTitle: PropTypes.string,
+    noCross: PropTypes.bool,
     children: PropTypes.node,
   };
   Modal.defaultProps = {
@@ -55,6 +58,7 @@ const Modal = ({
     cancelButton: false,
     cancelTitle: "Cancel",
     submitTitle: "Submit",
+    noCross: false,
     children: null,
   };
 
