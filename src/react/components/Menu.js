@@ -18,7 +18,8 @@ import Modal from './Modal';
 class Menu extends React.Component {
 
     state = {
-        theme: false
+        theme: false,
+        toTables: true
     };
 
     componentDidMount() {
@@ -28,6 +29,16 @@ class Menu extends React.Component {
                 isOpen: false,
                 message: ""
             });
+        }
+
+        if(!(window.location.href.split("/")[3] == "" || window.location.href.split("/")[3] == "#connections")) {
+            this.setState({toTables: false});
+        }
+
+        window.onhashchange = () => {
+            if(!(window.location.href.split("/")[3] == "" || window.location.href.split("/")[3] == "#connections") && this.state.toTables) {
+                this.setState({toTables: false});
+            }
         }
     }
 
@@ -84,10 +95,14 @@ class Menu extends React.Component {
     }
 
     openConnections() {
+        this.setState({toTables: true});
         window.location.hash = '#/connections';
     }
 
     openTables() {
+        if(localStorage.getItem("current_connection")) {
+            this.setState({toTables: false});
+        }
         window.location.hash = '#/tables';
     }
 
@@ -117,8 +132,12 @@ class Menu extends React.Component {
                                 <input id="import-button" type="file" onChange={(event) => this.importConfig(event)}/>
                             </div>
 
-                            <img src={tables_icon} id="open-tables" onClick={() => this.openTables()}></img>
-                            <img src={connections_icon} id="open-connections" onClick={() => this.openConnections()}></img>
+                            {this.state.toTables &&
+                                <img src={tables_icon} id="open-tables" onClick={() => this.openTables()}></img>
+                            }
+                            {!this.state.toTables &&
+                                <img src={connections_icon} id="open-connections" onClick={() => this.openConnections()}></img>
+                            }
                         </div>
                     </div>
                     <div>
