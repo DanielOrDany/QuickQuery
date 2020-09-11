@@ -1,5 +1,5 @@
 /* ALL PAGE */
-.all-page-result {
+.result {
   display: grid;
   grid-template-areas:
             "menu"
@@ -40,32 +40,19 @@
 
 
 /* RIGHT SIDE - TOP MENU */
-.menu_table {
+.result-menu {
   grid-area: menu;
-
   border-bottom: .5px solid #EBEBEB;
-
   background-color: #F9F9F9;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 200px;
 
-
-
-
-  /* SORT AND SEARCH */
-  #sorting-and-search {
+  .result-operations {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
 
-    width: 460px;
-
-    margin-left: 10px;
-
-
-    /* SORTING */
     select {
       height: 30px;
       width: 130px;
@@ -74,19 +61,54 @@
       border: 1px solid #adadad;
     }
 
-
     /* SEARCH */
-    #search-field {
-      padding: 0 10px;
-      border: 1px solid #adadad;
-      border-radius: 5px;
-      width: 210px;
-      height: 30px;
+    .result-search {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 460px;
+      margin-left: 10px;
 
+      /* SEARCH */
+      #search-field {
+        padding: 0 10px;
+        border: 1px solid #adadad;
+        border-radius: 5px;
+        width: 210px;
+        height: 30px;
+
+      }
     }
 
+    /* FILTER */
+    .result-filter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 460px;
+      margin-left: 10px;
 
-    #search-btn {
+
+      /* Filter fields */
+      #filter-field1 {
+        padding: 0 10px;
+        border: 1px solid #adadad;
+        border-radius: 5px;
+        width: 210px;
+        height: 30px;
+      }
+
+      #filter-field2 {
+        padding: 0 10px;
+        border: 1px solid #adadad;
+        border-radius: 5px;
+        width: 210px;
+        height: 30px;
+
+      }
+    }
+
+    #load-operations-result-btn {
       background-color: #EB6E3B;
       width: 80px;
       height: 30px;
@@ -155,14 +177,11 @@
 }
 
 
-
-
 #result-tables {
   grid-area: table;
-
   overflow: auto;
   max-height: 670px;
-
+  margin-top: 200px;
 }
 
 /* TABLE */
@@ -176,7 +195,7 @@ table {
 
   min-width: 800px;
 
-  height: calc(100vh -100px);
+  height: calc(100vh - 100px);
 
   color: white;
   border-collapse: collapse;

@@ -4,6 +4,9 @@ import '../styles/Result.scss';
 import XLSX from 'xlsx';
 import xxx from "../icons/Gear-0.2s-200px (1).svg"
 
+const DESC = "DESC";
+const ASC = "ASC";
+
 export default class Result extends React.Component {
 
     constructor(props) {
@@ -13,33 +16,21 @@ export default class Result extends React.Component {
             headers: "",
             rows: "",
             pageNumber: 0,
-            value: '',
+            searchValue: '',
+            filterValue1: '',
+            filterValue2: '',
+            orderScore: DESC,
             selectedItem: '',
             null_results: false,
             records: 0,
             pages: 0
         };
 
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleChange_value = this.handleChange_value.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleChange(event) {
-        this.setState({
-            selectedItem: event.target.value
-        });
-    }
-
-    handleChange_value(event) {
-        this.setState({
-            value: event.target.value,
-        });
-    }
-
-    handleSubmit() {
-        alert('Отправленное имя: ' + this.state.value + this.state.column);
+        this.handleOrderSelectChange = this.handleOrderSelectChange.bind(this);
+        this.handleCommonSelectChange = this.handleCommonSelectChange.bind(this);
+        this.handleChangeFilterValue1 = this.handleChangeFilterValue1.bind(this);
+        this.handleChangeFilterValue2 = this.handleChangeFilterValue2.bind(this);
+        this.handleChangeSearchValue = this.handleChangeSearchValue.bind(this);
     }
 
     componentDidMount() {
@@ -110,49 +101,7 @@ export default class Result extends React.Component {
         });
     };
 
-    save() {
-        const result = localStorage.getItem('current_result');
-        const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
-        const options = {
-            page: 0,
-            pageSize: 1000,
-            search: this.state.value === '' ? undefined
-                : { column: this.state.selectedItem, value: this.state.value }
-        };
-
-        loadTableResult(connectionName, result, options).then(async data => {
-            const db_rows = await Promise.all(data.rows);
-            const rows = Object.values(db_rows);
-
-            let binaryWS = XLSX.utils.json_to_sheet(rows);
-            let wb = XLSX.utils.book_new();
-
-            XLSX.utils.book_append_sheet(wb, binaryWS, `${result}`);
-            XLSX.writeFile(wb, `${result}.xlsx`);
-        });
-    }
-
-    changePage = (operation) => {
-        let n = this.state.pageNumber + operation;
-
-        if (n === 0) n += 1;
-        if (n > 0 && n < this.state.pages) {
-            this.setState({
-                pageNumber: this.state.pageNumber + operation
-            });
-        }
-    };
-
-    search = () => {
-        const result = localStorage.getItem('current_result');
-        const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
-        const options = {
-            page: this.state.pageNumber,
-            pageSize: 1000,
-            search: this.state.value === '' ? undefined
-                : { column: this.state.selectedItem, value: this.state.value }
-        };
-
+    reloadTable = (connectionName, result, options) => {
         loadTableResult(connectionName, result, options).then(async data => {
             if (data.rows.length) {
                 const db_rows = await Promise.all(data.rows);
@@ -172,6 +121,102 @@ export default class Result extends React.Component {
         });
     };
 
+    changePage = (operation) => {
+        let n = this.state.pageNumber + operation;
+
+        if (n === 0) n += 1;
+        if (n > 0 && n < this.state.pages) {
+            this.setState({
+                pageNumber: this.state.pageNumber + operation
+            });
+        }
+    };
+
+    save() {
+        const result = localStorage.getItem('current_result');
+        const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+        const options = {
+            page: 0,
+            pageSize: 1000,
+            search: this.state.searchValue === '' ? undefined
+                : { column: this.state.selectedItem, value: this.state.searchValue },
+            filter: (this.state.filterValue1 === '' || this.state.filterValue2 === '') ? undefined
+                : {
+                    column: this.state.selectedItem,
+                    value1: this.state.filterValue1,
+                    value2: this.state.filterValue2
+                },
+            order: this.state.orderScore === '' ? undefined : {
+                column: this.state.selectedItem,
+                score: this.state.orderScore
+            }
+        };
+
+        loadTableResult(connectionName, result, options).then(async data => {
+            const db_rows = await Promise.all(data.rows);
+            const rows = Object.values(db_rows);
+
+            let binaryWS = XLSX.utils.json_to_sheet(rows);
+            let wb = XLSX.utils.book_new();
+
+            XLSX.utils.book_append_sheet(wb, binaryWS, `${result}`);
+            XLSX.writeFile(wb, `${result}.xlsx`);
+        });
+    }
+
+    processOperations = () => {
+        const result = localStorage.getItem('current_result');
+        const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+        const options = {
+            page: this.state.pageNumber,
+            pageSize: 1000,
+            search: this.state.searchValue === '' ? undefined
+                : { column: this.state.selectedItem, value: this.state.searchValue },
+            filter: (this.state.filterValue1 === '' || this.state.filterValue2 === '') ? undefined
+                : {
+                    column: this.state.selectedItem,
+                    value1: this.state.filterValue1,
+                    value2: this.state.filterValue2
+                },
+            order: this.state.orderScore === '' ? undefined : {
+                column: this.state.selectedItem,
+                score: this.state.orderScore
+            }
+        };
+
+        this.reloadTable(connectionName, result, options);
+    };
+
+    handleCommonSelectChange(event) {
+        this.setState({
+            selectedItem: event.target.value
+        });
+    }
+
+    handleOrderSelectChange(event) {
+        this.setState({
+            orderScore: event.target.value
+        });
+    }
+
+    handleChangeSearchValue(event) {
+        this.setState({
+            searchValue: event.target.value,
+        });
+    }
+
+    handleChangeFilterValue1(event) {
+        this.setState({
+            filterValue1: event.target.value,
+        });
+    }
+
+    handleChangeFilterValue2(event) {
+        this.setState({
+            filterValue2: event.target.value,
+        });
+    }
+
     render() {
         if (this.state === null) {
             return (
@@ -182,18 +227,37 @@ export default class Result extends React.Component {
             );
         } else {
             return (
-                <div className="all-page-result">
-                        <div className={"menu_table"}>
-                            <div id="sorting-and-search">
-                                <select value={ this.state.selectedItem } onChange={ this.handleChange }>
+                <div className="result">
+                        <div className="result-menu">
+                            <div className="result-operations">
+                                <div>
+                                    Select column: <select value={ this.state.selectedItem } onChange={ this.handleCommonSelectChange }>
                                     { this.state.headers ? this.state.headers.map((item) => {
                                             return <option value={item}>{item}</option>
                                         })
                                         : null }
                                 </select>
-                                <input id="search-field" placeholder={"value"} value={this.state.value}
-                                       onChange={this.handleChange_value}/>
-                                <button id="search-btn" onClick={() => this.search()}>Search</button>
+                                </div>
+                                <div className="result-search">
+                                    Search:
+                                    <input id="search-field" placeholder={"value"} value={this.state.searchValue}
+                                           onChange={this.handleChangeSearchValue}/>
+                                </div>
+                                <div className="result-filter">
+                                    Filtering:
+                                    <input id="filter-field1" placeholder={"value"} value={this.state.filterValue1}
+                                           onChange={this.handleChangeFilterValue1}/>
+                                    <input id="filter-field2" placeholder={"value"} value={this.state.filterValue2}
+                                           onChange={this.handleChangeFilterValue2}/>
+                                </div>
+                                <div className="result-filter">
+                                    Order:
+                                    <select value={ this.state.orderScore } onChange={ this.handleOrderSelectChange }>
+                                        <option value={DESC}>{DESC}</option>
+                                        <option value={ASC}>{ASC}</option>
+                                    </select>
+                                </div>
+                                <button id="load-operations-result-btn" onClick={() => this.processOperations()}>process</button>
                             </div>
 
                             <div id="select-page">
