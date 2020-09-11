@@ -1,6 +1,13 @@
 /* ALL PAGE */
 @import "./variables";
 
+#configure-manually-btn, #simplified-connection-btn {
+  background-color: #FFFFFF;
+  color: #000000;
+  font-size: 15px;
+  text-decoration: underline;
+}
+
 .connections-page {
   padding: 0 !important;
   margin: 0 !important;
