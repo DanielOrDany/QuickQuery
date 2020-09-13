@@ -1,9 +1,17 @@
 .sharing-buttons{
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
     /* EXPORT-BUTTON */
+    #import-div, #export-div {
+        font-family: 'Scada', sans-serif;
+        display: flex;
+        justify-content: left;
+        font-size: 15px;
+    }
+
+    p {
+        margin-top: 4px;
+    }
+
     #export-button {
         font-family: 'Scada', sans-serif;
 
