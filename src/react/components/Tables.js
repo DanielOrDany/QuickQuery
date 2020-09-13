@@ -5,9 +5,10 @@ import {
 } from 'react-router-dom';
 import CreateTable from "./CreateTable";
 import Result from "./Result";
-import { getAllTables, getTable} from "../methods";
-import { ReactComponent as MiniMenuIcon } from "../icons/open-menu.svg";
+import {getAllTables, getTable} from "../methods";
+import {ReactComponent as MiniMenuIcon} from "../icons/open-menu.svg";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
+import plus from "../icons/plus.png";
 
 import MiniMenu from "./MiniMenu";
 import Modal from './Modal';
@@ -37,28 +38,28 @@ export default class Tables extends React.Component {
     }
 
     componentDidUpdate() {
-        if(localStorage.getItem("need_update")){
+        if (localStorage.getItem("need_update")) {
             localStorage.removeItem("need_update");
             this.loadTables(JSON.parse(localStorage.getItem('current_connection')).name);
         }
 
-        if(localStorage.getItem("new_table")) {
+        if (localStorage.getItem("new_table")) {
             localStorage.removeItem("new_table");
             this.loadTables(JSON.parse(localStorage.getItem('current_connection')).name);
         }
     }
 
     openModal = () => {
-        this.setState({ isOpen: true });
+        this.setState({isOpen: true});
     };
 
     handleSubmit = () => {
-        this.setState({ isOpen: false });
+        this.setState({isOpen: false});
         window.location.hash = '#/connections';
     };
-    
+
     handleCancel = () => {
-        this.setState({ isOpen: false });
+        this.setState({isOpen: false});
         window.location.hash = '#/connections';
     };
 
@@ -83,12 +84,12 @@ export default class Tables extends React.Component {
                 localStorage.setItem("results", JSON.stringify([result]));
             }
 
-            return `#/tables/result/${alias}`; 
+            return `#/tables/result/${alias}`;
         }).then(url => window.location.hash = url);
     }
 
     createTable() {
-        if(localStorage.getItem("current_result_info")){
+        if (localStorage.getItem("current_result_info")) {
             localStorage.removeItem("current_result_info");
         }
         window.location.hash = "#/tables/create-table"
@@ -104,19 +105,19 @@ export default class Tables extends React.Component {
             }
         });
 
-        this.setState({ searchedTables: searchedTables });
+        this.setState({searchedTables: searchedTables});
     };
 
     render() {
-        if (!this.state.tables){
+        if (!this.state.tables) {
             return (
                 <div className={"loading"}>
                     <img src={xxx}/>
                     Loading...
                 </div>
             );
-        } else return(
-                <div className="all-page-tables">
+        } else return (
+            <div className="all-page-tables">
 
                 <Modal
                     title="Error"
@@ -130,24 +131,24 @@ export default class Tables extends React.Component {
                     </div>
                 </Modal>
 
-                    <div className="left-side">
-                        <div id="mini-menu">
+                <div className="left-side">
+                    <div id="mini-menu">
 
-                            <button type="button" className="add-button" onClick={() => this.createTable()}>
-                                Add
+                        <div className="search">
+                            <input id="search-field"/>
+                            <button type="button" className="search-button" onClick={() => this.search()}>Search
                             </button>
-
-                            <div className="search">
-                                <input id="search-field"/>
-                                <button type="button" className="search-button" onClick={() => this.search()}>Search</button>
-                            </div>
-
                         </div>
 
-                        <div id="tables">
-                            {this.state.searchedTables
-                                .map(table => {
-                                    return(
+                    </div>
+
+                    <div id="list">List of queries:</div>
+                    <div id="lineUp"></div>
+
+                    <div id="tables">
+                        {this.state.searchedTables
+                            .map(table => {
+                                    return (
                                         <div id={table.alias} className="table" key={table.alias}>
                                             <div className="container">
                                                 <div id="table-name" onClick={() => this.openTable(table.alias)}>
@@ -156,25 +157,33 @@ export default class Tables extends React.Component {
                                                         <p id="table-n">{table.alias}</p>
                                                     </div>
                                                 </div>
-                                                <MiniMenu icon={<MiniMenuIcon />} table={table}/>
+                                                <MiniMenu icon={<MiniMenuIcon/>} table={table}/>
                                             </div>
                                         </div>
                                     );
                                 }
                             )}
-                        </div>
                     </div>
 
 
-                    <div className="line-tables-page"></div>
+                    <div id="add-btn-field">
 
+                        <img className="add-button" src={plus} onClick={() => this.createTable()}/>
 
-                    <div className="right-side-tables-page">
-                        <Route path="/tables/create-table" component={CreateTable} />
-                        <Route path={`/tables/edit-table/:tableAlias`} component={CreateTable} />
-                        <Route path={`/tables/result/:tableAlias`} component={Result}/>
                     </div>
+
                 </div>
+
+
+                <div className="line-tables-page"></div>
+
+
+                <div className="right-side-tables-page">
+                    <Route path="/tables/create-table" component={CreateTable}/>
+                    <Route path={`/tables/edit-table/:tableAlias`} component={CreateTable}/>
+                    <Route path={`/tables/result/:tableAlias`} component={Result}/>
+                </div>
+            </div>
         );
     }
 }

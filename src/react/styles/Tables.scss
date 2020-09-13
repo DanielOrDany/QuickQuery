@@ -9,11 +9,20 @@
   grid-template-columns: 300px 1px auto;
 
 
-
   /* LEFT SIDE */
   .left-side {
     font-family: 'Scada', sans-serif;
     grid-area: left;
+
+    display: grid;
+    grid-template-areas:
+            "miniMenu"
+            "queries"
+            "lineUp"
+            "tables"
+            "addBtn";
+    grid-template-rows: 50px 30px 1px auto;
+
 
     width: 300px;
     height: calc(100vh - 50px);
@@ -24,34 +33,15 @@
     background: #EFEFEF;
 
     #mini-menu {
+      grid-area: miniMenu;
+
+
       font-family: 'Scada', sans-serif;
       display: flex;
       align-items: center;
       height: 50px;
       background-color: #E3E3E3;
       border-bottom: .1px solid #9d9d9d;
-
-      /* ADD BUTTON */
-      .add-button {
-        font-family: 'Scada', sans-serif;
-
-        width: 40px;
-        height: 30px;
-        margin-left: 20px;
-        font-size: 12px;
-
-        border-radius: 5px;
-        border: 0 solid;
-
-        color: white;
-        background-color: #EB6E3B;
-      }
-
-      .add-button:hover {
-        background: #c1562b;
-
-        cursor: pointer;
-      }
 
       .search {
         display: flex;
@@ -61,7 +51,7 @@
           // margin-left: 150px;
           padding-left: 10px;
           margin-left: 20px;
-          width: 145px;
+          width: 190px;
           height: 30px;
 
           border: .4px solid #818181;
@@ -70,35 +60,57 @@
       }
 
 
-
       /* SEARCH BUTTON */
       .search-button {
         color: white;
         font-family: 'Scada', sans-serif;
         font-size: 12px;
 
-        width: 50px;
+        width: 60px;
         height: 30px;
 
-        margin-left: 5px;
+        margin-left: 10px;
 
         border-radius: 5px;
         border: 0 solid;
 
-        background-color: #EB6E3B;
+        background-color: #535353;
       }
 
       .search-button:hover {
-        background: #c1562b;
+      background-color: #3E3E3E;
 
         cursor: pointer;
       }
     }
 
+    #list {
+      grid-area: queries;
+
+      font-family: 'Scada', sans-serif;
+      color: #3E3E3E;
+
+      font-size: 19px;
+      display: flex;
+      margin: 0 auto;
+      align-items: center;
+    }
+
+    #lineUp {
+      grid-area: lineUp;
+      height: 1px;
+      width: 280px;
+      margin: 0 auto;
+      background-color: #ABABAB;
+    }
+
+
+    /* TABLES */
     #tables {
-      margin-top: 20px;
+      grid-area: tables;
+
+      margin-top: 10px;
       overflow: scroll;
-      max-height: 650px;
 
       font-family: 'Scada', sans-serif;
 
@@ -116,6 +128,7 @@
 
           display: flex;
           justify-content: space-between;
+
           #table-name {
 
             display: flex;
@@ -127,7 +140,7 @@
               font-size: 14px;
               margin-bottom: 10px;
 
-              #folder-n, p{
+              #folder-n, p {
                 font-size: 14px;
                 margin: 0;
                 padding: 0;
@@ -149,6 +162,26 @@
             cursor: pointer;
           }
         }
+      }
+    }
+
+
+
+    /* ADD BUTTON */
+
+    #add-btn-field {
+      grid-area: addBtn;
+
+
+      .add-button {
+        width: 40px;
+        height: 40px;
+        margin: 0 auto 10px;
+      }
+
+      .add-button:hover {
+
+        cursor: pointer;
       }
     }
 
@@ -175,12 +208,12 @@
   }
 }
 
+/*
 @media (max-height: 750px) {
 
   #tables {
     margin-top: 20px;
     overflow: scroll;
-    height: 580px;
 
     font-family: 'Scada', sans-serif;
   }
@@ -251,8 +284,7 @@
     font-family: 'Scada', sans-serif;
   }
 }
-
-
+*/
 
 // .add-btn{
 //   background: #d99900!important;

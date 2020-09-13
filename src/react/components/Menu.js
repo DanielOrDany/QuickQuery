@@ -128,8 +128,12 @@ class Menu extends React.Component {
                         </div>
                         <div className="menu-box">
                             <div className="sharing-buttons">
-                                <span id="export-button" onClick={() => this.share()}>Export</span>
-                                <input id="import-button" type="file" onChange={(event) => this.importConfig(event)}/>
+                                <button id="settings-btn">Settings</button>
+                                {/*
+                                    <span id="export-button" onClick={() => this.share()}>Export</span>
+                                    <input id="import-button" type="file" onChange={(event) => this.importConfig(event)}/>
+
+                                */}
                             </div>
 
                             {this.state.toTables &&

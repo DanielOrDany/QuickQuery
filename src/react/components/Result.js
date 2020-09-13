@@ -2,7 +2,8 @@ import React from 'react';
 import {loadTableResult} from "../methods";
 import '../styles/Result.scss';
 import XLSX from 'xlsx';
-import xxx from "../icons/Gear-0.2s-200px (1).svg"
+import xxx from "../icons/Gear-0.2s-200px (1).svg";
+
 
 export default class Result extends React.Component {
 
@@ -117,7 +118,7 @@ export default class Result extends React.Component {
             page: 0,
             pageSize: 1000,
             search: this.state.value === '' ? undefined
-                : { column: this.state.selectedItem, value: this.state.value }
+                : {column: this.state.selectedItem, value: this.state.value}
         };
 
         loadTableResult(connectionName, result, options).then(async data => {
@@ -150,7 +151,7 @@ export default class Result extends React.Component {
             page: this.state.pageNumber,
             pageSize: 1000,
             search: this.state.value === '' ? undefined
-                : { column: this.state.selectedItem, value: this.state.value }
+                : {column: this.state.selectedItem, value: this.state.value}
         };
 
         loadTableResult(connectionName, result, options).then(async data => {
@@ -183,57 +184,61 @@ export default class Result extends React.Component {
         } else {
             return (
                 <div className="all-page-result">
-                        <div className={"menu_table"}>
-                            <div id="sorting-and-search">
-                                <select value={ this.state.selectedItem } onChange={ this.handleChange }>
-                                    { this.state.headers ? this.state.headers.map((item) => {
-                                            return <option value={item}>{item}</option>
-                                        })
-                                        : null }
-                                </select>
-                                <input id="search-field" placeholder={"value"} value={this.state.value}
-                                       onChange={this.handleChange_value}/>
-                                <button id="search-btn" onClick={() => this.search()}>Search</button>
-                            </div>
-
-                            <div id="select-page">
-                                <button id="select-page-btn" onClick={() => this.changePage(-1)}>Prev</button>
-                                <span>Page: {this.state.pageNumber + 1}</span>
-                                <button id="select-page-btn" onClick={() => this.changePage(1)}>Next</button>
-                            </div>
-                            <div className={"save"}>
-                                <button onClick={() => this.save()}>Save</button>
-                            </div>
+                    <div className={"menu_table"}>
+                        <div id="sorting-and-search">
+                            <select value={this.state.selectedItem} onChange={this.handleChange}>
+                                {this.state.headers ? this.state.headers.map((item) => {
+                                        return <option value={item}>{item}</option>
+                                    })
+                                    : null}
+                            </select>
+                            <input id="search-field" placeholder={"value"} value={this.state.value}
+                                   onChange={this.handleChange_value}/>
+                            <button id="search-btn" onClick={() => this.search()}>Search</button>
                         </div>
-                        {this.state.null_results === true ?
-                            <span>{"-none- results"}</span>
-                            :
-                            <div id="result-tables">
-                                <table>
-                                    <tr>
-                                        {this.state.headers ? this.state.headers.map((item) => {
-                                                return <th>{item}</th>
-                                            })
-                                            : null}
-                                    </tr>
-                                    {this.state.rows ? this.state.rows.map((item, key) => {
-                                            return <tr className={key++ % 2 === 0 ? "column_one" : "column_two"}>{
-                                                Object.values(item).map((get_item, key) => {
-                                                    return <td style={key === 0 ? {
-                                                        color: "#3E3E3E",
-                                                        background: "#EFEFEF",
-                                                        border: "1px solid grey",
-                                                    } : {color: "#3E3E3E"}}>{get_item}</td>
 
-                                                })}
-                                            </tr>
 
+                        <div className={"save"}>
+                            <button onClick={() => this.save()}>Export excel</button>
+                        </div>
+                    </div>
+                    {this.state.null_results === true ?
+                        <span>{"-none- results"}</span>
+                        :
+                        <div id="result-tables">
+                            <table>
+                                <tr>
+                                    {this.state.headers ? this.state.headers.map((item) => {
+                                            return <th>{item}</th>
                                         })
                                         : null}
-                                </table>
-                            </div>
+                                </tr>
+                                {this.state.rows ? this.state.rows.map((item, key) => {
+                                        return <tr className={key++ % 2 === 0 ? "column_one" : "column_two"}>{
+                                            Object.values(item).map((get_item, key) => {
+                                                return <td style={key === 0 ? {
+                                                    color: "#3E3E3E",
+                                                    background: "#EFEFEF",
+                                                    border: "1px solid grey",
+                                                } : {color: "#3E3E3E"}}>{get_item}</td>
 
-                        }
+                                            })}
+                                        </tr>
+
+                                    })
+                                    : null}
+                            </table>
+                        </div>
+
+
+                    }
+                    <div id="pages-field">
+                        <div id="select-page">
+                            <button id="select-page-btn" onClick={() => this.changePage(-1)}>Prev</button>
+                            <span>Page: {this.state.pageNumber + 1}</span>
+                            <button id="select-page-btn" onClick={() => this.changePage(1)}>Next</button>
+                        </div>
+                    </div>
                 </div>
             );
         }

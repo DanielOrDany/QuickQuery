@@ -31,6 +31,25 @@
         .sharing-buttons{
             display: flex;
 
+            #settings-btn {
+                font-family: 'Scada', sans-serif;
+
+                width: 80px;
+                height: 30px;
+                margin-right: 30px;
+                font-size: 14px;
+
+                background: #EB6E3B;
+                color: white;
+                border: 0;
+                border-radius: 5px;
+            }
+
+            #settings-btn:hover {
+                background: #c1562b;
+                cursor: pointer;
+            }
+
 
 
             /* EXPORT-BUTTON */
