@@ -69,7 +69,7 @@ function MiniMenu(props) {
     };
 
     return(
-        <div>
+        <>
             <Modal
                 title="Delete query"
                 isOpen={isOpen}
@@ -102,7 +102,7 @@ function MiniMenu(props) {
                     </div>
                 )}
             </div>
-        </div>
+        </>
     )
 }
 

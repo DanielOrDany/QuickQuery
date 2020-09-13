@@ -1,3 +1,70 @@
+.sharing-buttons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* EXPORT-BUTTON */
+    #export-button {
+        font-family: 'Scada', sans-serif;
+
+        width: 70px;
+        height: 30px;
+        margin-right: 10px;
+        font-size: 14px;
+
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: #EB6E3B;
+        border-radius: 5px;
+    }
+
+    #export-button:hover
+    {
+        background: #c1562b;
+        cursor: pointer;
+    }
+
+
+
+    /* IMPORT-BUTTON */
+    #import-button::-webkit-file-upload-button {
+        visibility: hidden;
+    }
+
+    #import-button::before {
+        font-size: 14px;
+        padding-top: 4px;
+
+        content: "Import";
+        color: white;
+
+        display: flex;
+        justify-content: center;
+
+    }
+
+    #import-button {
+        font-family: 'Scada', sans-serif;
+
+        width: 70px;
+        height: 30px;
+        margin-right: 10px;
+
+
+        background: #EB6E3B;
+        border-radius: 5px;
+    }
+
+    #import-button:hover
+    {
+        background: #c1562b;
+        cursor: pointer;
+    }
+}
+
 /* HEADER */
 .menu-header {
     height: 50px;
@@ -27,8 +94,8 @@
 
 
 
-        /* SHARING-BUTTONS */
-        .sharing-buttons{
+        /* settings-BUTTONS */
+        .settings-buttons{
             display: flex;
 
             #settings-btn {
@@ -53,12 +120,12 @@
 
 
             /* EXPORT-BUTTON */
-            #export-button {
+            #settings-button {
                 font-family: 'Scada', sans-serif;
 
                 width: 70px;
                 height: 30px;
-                margin-right: 10px;
+                margin-right: 30px;
                 font-size: 14px;
 
                 color: white;
@@ -70,44 +137,7 @@
                 border-radius: 5px;
             }
 
-            #export-button:hover
-            {
-                background: #c1562b;
-                cursor: pointer;
-            }
-
-
-
-            /* IMPORT-BUTTON */
-            #import-button::-webkit-file-upload-button {
-                visibility: hidden;
-            }
-
-            #import-button::before {
-                font-size: 14px;
-                padding-top: 4px;
-
-                content: "Import";
-                color: white;
-
-                display: flex;
-                justify-content: center;
-
-            }
-
-            #import-button {
-                font-family: 'Scada', sans-serif;
-
-                width: 70px;
-                height: 30px;
-                margin-right: 30px;
-
-
-                background: #EB6E3B;
-                border-radius: 5px;
-            }
-
-            #import-button:hover
+            #settings-button:hover
             {
                 background: #c1562b;
                 cursor: pointer;

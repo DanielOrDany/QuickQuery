@@ -251,16 +251,33 @@ async function loadTableResult(connectionName, alias, options) {
 
         if (options.search) {
             const search = options.search;
-            if (dialect === 'mysql')
+
+            if (dialect === 'mysql') {
                 query += ` WHERE '%${search.value}%' LIKE CONCAT('%', CAST(id AS CHAR(50)), '%')`;
-            else
+            } else {
                 query += ` WHERE CAST(${search.column} AS VARCHAR(50)) Like '%${search.value}%'`;
+            }
+        }
+
+        if (options.filter) {
+            const filter = options.filter;
+            if (options.search) {
+                query += ` AND ${filter.column} BETWEEN ${filter.value1} AND ${filter.value2}`;
+            } else {
+                query += ` WHERE ${filter.column} BETWEEN ${filter.value1} AND ${filter.value2}`;
+            }
+        }
+
+        if (options.order) {
+            const order = options.order;
+            query += ` ORDER BY ${order.column} ${order.score}`;
         }
 
         const countQ = `SELECT COUNT(*) as c FROM (${query}) as c;`;
         const numberOfRecords = await sequelize.query(countQ);
 
-        if (!options.search) query += ` LIMIT ${limit} OFFSET ${offset}`;
+        // if (!options.search)
+        query += ` LIMIT ${limit} OFFSET ${offset}`;
 
         const queryResult = await sequelize.query(query);
 

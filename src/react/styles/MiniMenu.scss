@@ -20,8 +20,6 @@
 .menu-item {
     height: 20px;
     text-align: center;
-    border-radius: var(--border-radius);
-    transition: background var(--speed);
 }
 .menu-item:hover {
     background-color: gray;

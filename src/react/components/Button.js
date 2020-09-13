@@ -5,7 +5,7 @@ import classNames from "classnames";
 import "../styles/Button.scss";
 
 const Button = ({
-    children, onClick, className, disabled, active, invert, ...attrs
+    children, onClick, className, disabled, active, invert, underline, ...attrs
   }) => {
     const onClickAction = e => {
       if (disabled) {
@@ -20,6 +20,7 @@ const Button = ({
       className,
       { active },
       { invert },
+      { underline },
     );
   
     const Tag = attrs.href ? 'a' : 'button';
