@@ -139,7 +139,7 @@ export default class Result extends React.Component {
             page: 0,
             pageSize: 1000,
             search: this.state.searchValue === '' ? undefined
-                : { column: this.state.selectedItem, value: this.state.searchValue },
+                : {column: this.state.selectedItem, value: this.state.searchValue},
             filter: (this.state.filterValue1 === '' || this.state.filterValue2 === '') ? undefined
                 : {
                     column: this.state.selectedItem,
@@ -171,7 +171,7 @@ export default class Result extends React.Component {
             page: this.state.pageNumber,
             pageSize: 1000,
             search: this.state.searchValue === '' ? undefined
-                : { column: this.state.selectedItem, value: this.state.searchValue },
+                : {column: this.state.selectedItem, value: this.state.searchValue},
             filter: (this.state.filterValue1 === '' || this.state.filterValue2 === '') ? undefined
                 : {
                     column: this.state.selectedItem,
@@ -230,43 +230,49 @@ export default class Result extends React.Component {
                 <div className="result">
                     <div className="result-menu">
                         <div className="result-operations">
-                            <div>
-                                Select column: <select value={ this.state.selectedItem } onChange={ this.handleCommonSelectChange }>
-                                { this.state.headers ? this.state.headers.map((item) => {
-                                        return <option value={item}>{item}</option>
-                                    })
-                                    : null }
-                            </select>
-                            </div>
-                            <div className="result-search">
-                                Search:
-                                <input id="search-field" placeholder={"value"} value={this.state.searchValue}
-                                       onChange={this.handleChangeSearchValue}/>
-                            </div>
-                            <div className="result-filter">
-                                Filtering:
-                                <input id="filter-field1" placeholder={"value"} value={this.state.filterValue1}
-                                       onChange={this.handleChangeFilterValue1}/>
-                                <input id="filter-field2" placeholder={"value"} value={this.state.filterValue2}
-                                       onChange={this.handleChangeFilterValue2}/>
-                            </div>
-                            <div className="result-filter">
-                                Order:
-                                <select value={ this.state.orderScore } onChange={ this.handleOrderSelectChange }>
-                                    <option value={DESC}>{DESC}</option>
-                                    <option value={ASC}>{ASC}</option>
+                            <div id="result-left">
+                                <div className="result-select-column">
+                                    <span id="result-select-column-title">Select column:</span>
+                                    <select value={this.state.selectedItem}
+                                                           onChange={this.handleCommonSelectChange}>
+                                    {this.state.headers ? this.state.headers.map((item) => {
+                                            return <option value={item}>{item}</option>
+                                        })
+                                        : null}
                                 </select>
+                                </div>
+                                <div className="result-order">
+                                    <span id="result-order-title">Order:</span>
+                                    <select value={this.state.orderScore} onChange={this.handleOrderSelectChange}>
+                                        <option value={DESC}>{DESC}</option>
+                                        <option value={ASC}>{ASC}</option>
+                                    </select>
+                                </div>
                             </div>
-                            <button id="load-operations-result-btn" onClick={() => this.processOperations()}>process</button>
+
+
+                            <div id="result-right">
+                                <div className="result-search">
+                                    <span id="result-search-title">Search:</span>
+                                    <input id="search-field" placeholder={"value"} value={this.state.searchValue}
+                                           onChange={this.handleChangeSearchValue}/>
+                                </div>
+                                <div className="result-filter">
+                                    <span id="result-filter-title">Filtering:</span>
+                                    <input id="filter-field1" placeholder={"value"} value={this.state.filterValue1}
+                                           onChange={this.handleChangeFilterValue1}/>
+                                    <input id="filter-field2" placeholder={"value"} value={this.state.filterValue2}
+                                           onChange={this.handleChangeFilterValue2}/>
+                                </div>
+                            </div>
+
+                            <button id="load-operations-result-btn" onClick={() => this.processOperations()}>process
+                            </button>
                         </div>
 
-                        <div id="select-page">
-                            <button id="select-page-btn" onClick={() => this.changePage(-1)}>Prev</button>
-                            <span>Page: {this.state.pageNumber + 1}</span>
-                            <button id="select-page-btn" onClick={() => this.changePage(1)}>Next</button>
-                        </div>
+
                         <div className={"save"}>
-                            <button onClick={() => this.save()}>Save</button>
+                            <button onClick={() => this.save()}>Export excel</button>
                         </div>
                     </div>
                     {this.state.null_results === true ?
@@ -298,6 +304,14 @@ export default class Result extends React.Component {
                         </div>
 
                     }
+
+                    <div id="pages-field">
+                        <div id="select-page">
+                            <button id="select-page-btn" onClick={() => this.changePage(-1)}>Prev</button>
+                            <span>Page: {this.state.pageNumber + 1}</span>
+                            <button id="select-page-btn" onClick={() => this.changePage(1)}>Next</button>
+                        </div>
+                    </div>
                 </div>
             );
         }

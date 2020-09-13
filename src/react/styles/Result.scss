@@ -5,7 +5,7 @@
             "menu"
             "table"
             "pages";
-  grid-template-rows: 50px auto 50px;
+  grid-template-rows: 90px auto 50px;
 
   height: calc(100vh - 50px);
 
@@ -49,13 +49,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 200px;
 
 .result-operations {
-  display:flex;
-  flex-direction: column;
+  display: flex;
 
   select {
+    font-size: 14px;
     height: 30px;
     width: 130px;
 
@@ -63,13 +62,58 @@
     border: 1px solid #adadad;
   }
 
+  #result-left {
+    margin-left: 20px;
+  }
+
+  .result-select-column {
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 10px;
+
+
+    #result-select-column-title {
+      color: #3E3E3E;
+      font-family: 'Scada', sans-serif;
+      font-size: 14px;
+      width: 95px;
+      text-align: left;
+    }
+
+
+  }
+
+  .result-order {
+    display: flex;
+    align-items: center;
+
+    #result-order-title {
+      color: #3E3E3E;
+      font-family: 'Scada', sans-serif;
+      font-size: 14px;
+      width: 95px;
+      text-align: left;
+    }
+  }
+
+
+  #result-right {
+    margin-left: 20px;
+  }
   /* SEARCH */
   .result-search {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    width: 460px;
-    margin-left: 10px;
+    margin-bottom: 10px;
+
+    #result-search-title {
+      font-family: 'Scada', sans-serif;
+      color: #3E3E3E;
+      font-size: 14px;
+      width: 60px;
+      text-align: left;
+    }
 
     /* SEARCH */
     #search-field {
@@ -79,6 +123,7 @@
       width: 210px;
       height: 30px;
 
+
     }
   }
 
@@ -86,16 +131,22 @@
   .result-filter {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    width: 460px;
-    margin-left: 10px;
 
+
+    #result-filter-title {
+      font-family: 'Scada', sans-serif;
+      color: #3E3E3E;
+      font-size: 14px;
+      width: 60px;
+      text-align: left;
+    }
 
     /* Filter fields */
     #filter-field1 {
       padding: 0 10px;
       border: 1px solid #adadad;
       border-radius: 5px;
+
       width: 210px;
       height: 30px;
     }
@@ -106,6 +157,7 @@
       border-radius: 5px;
       width: 210px;
       height: 30px;
+      margin-left: 10px;
 
     }
   }
@@ -155,7 +207,6 @@
     grid-area: table;
     overflow: auto;
     max-height: 670px;
-    margin-top: 200px;
   }
 
   /* TABLE */
@@ -328,7 +379,7 @@
       grid-area: table;
 
       overflow: auto;
-      max-width: 590px;
+      width: 590px;
 
     }
 
@@ -340,7 +391,7 @@
       grid-area: table;
 
       overflow: auto;
-      max-width: 560px;
+      width: 560px;
 
     }
 
@@ -352,7 +403,7 @@
       grid-area: table;
 
       overflow: auto;
-      max-width: 530px;
+      width: 530px;
 
     }
 
@@ -365,7 +416,7 @@
       grid-area: table;
 
       overflow: auto;
-      max-width: 525px;
+      width: 525px;
 
     }
   }
@@ -377,7 +428,7 @@
       grid-area: table;
 
       overflow: auto;
-      max-width: 520px;
+      width: 520px;
 
     }
 
@@ -389,7 +440,7 @@
       grid-area: table;
 
       overflow: auto;
-      max-width: 490px;
+      width: 490px;
 
     }
 
@@ -401,7 +452,7 @@
       grid-area: table;
 
       overflow: auto;
-      max-width: 450px;
+      width: 450px;
 
     }
 
