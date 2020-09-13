@@ -27,7 +27,8 @@ class Menu extends React.Component {
             this.setState({
                 theme: true,
                 isOpen: false,
-                message: ""
+                message: "",
+                error: true
             });
         }
 
@@ -64,10 +65,10 @@ class Menu extends React.Component {
             const content = reader.result;
             importConfig(content).then(data => {
                 if (data === true) {
-                    this.setState({message: "Successfully uploaded.", isOpen: true});
+                    this.setState({error: true, message: "Successfully uploaded.", isOpen: true});
                 }
                 else {
-                    this.setState({message: "Wrong file!", isOpen: true});
+                    this.setState({error: true, message: "Wrong file!", isOpen: true});
                 }
             });
         };
@@ -90,7 +91,7 @@ class Menu extends React.Component {
             }
         }
         catch (e) {
-            this.setState({message: "FAIL", isOpen: true});
+            this.setState({error: true, message: "FAIL", isOpen: true});
         }
     }
 
@@ -109,17 +110,35 @@ class Menu extends React.Component {
     render() {
         return (
             <div>
-                <Modal
-                    title="Error"
-                    isOpen={this.state.isOpen}
-                    onCancel={this.handleCancel}
-                    onSubmit={this.handleSubmit}
-                    submitTitle="OK"
-                >
-                    <div>
-                        <strong>{this.state.message}</strong>
-                    </div>
-                </Modal>
+                {
+                    this.state.error &&
+                    <Modal
+                        title="Error"
+                        isOpen={this.state.isOpen}
+                        onCancel={this.handleCancel}
+                        onSubmit={this.handleSubmit}
+                        submitTitle="OK"
+                    >
+                        <div>
+                            <strong>{this.state.message}</strong>
+                        </div>
+                    </Modal>
+                }
+                {
+                    !this.state.error &&
+                    <Modal
+                        title="Settings"
+                        isOpen={this.state.isOpen}
+                        onCancel={this.handleCancel}
+                        onSubmit={this.handleCancel}
+                        submitTitle="OK"
+                    >
+                        <div className="sharing-buttons">
+                            <span id="export-button" onClick={() => this.share()}>Export</span>
+                            <input id="import-button" type="file" onChange={(event) => this.importConfig(event)}/>
+                        </div>
+                    </Modal>
+                }
                 <Router hashType="noslash">
                     <div className="menu-header" expand="md">
                         <div className="logo-box">
@@ -127,9 +146,8 @@ class Menu extends React.Component {
 
                         </div>
                         <div className="menu-box">
-                            <div className="sharing-buttons">
-                                <span id="export-button" onClick={() => this.share()}>Export</span>
-                                <input id="import-button" type="file" onChange={(event) => this.importConfig(event)}/>
+                            <div className="settings-buttons">
+                                <span id="settings-button" onClick={() => this.setState({error: false, isOpen: true})}>Settings</span>
                             </div>
 
                             {this.state.toTables &&
