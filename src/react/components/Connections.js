@@ -228,54 +228,51 @@ export default class Connections extends React.Component {
         return(
             <div>
                 <div className="information-field">
-                    <span id="input-title">Name:</span>
+                    <span className="input-title">Name:</span>
                     <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda"
                         onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
                 </div>
-
                 <div className="information-field">
-                    <span id="input-title">Host:</span>
+                    <span className="input-title">Host:</span>
                     <input id="input-field-host" ref="host" className="form-control" type="text" placeholder="127.0.0.1"
                         onChange={this.hostOnChange} onKeyPress={this.hostKeyPress}/>
                 </div>
-
-
                 <div className="information-field">
-                    <span id="input-title">Port:</span>
+                    <span className="input-title">Port:</span>
                     <input id="input-field-port" ref="port" className="form-control" type="text" placeholder="5432"
                         onChange={this.portOnChange} onKeyPress={this.portKeyPress}/>
                 </div>
-
                 <div className="information-field">
-                    <span id="input-title">User:</span>
-                    <input id="input-field-user" ref="user" className="form-control" type="text" placeholder="user name"
+                    <span className="input-title">User name:</span>
+                    <input id="input-field-user" ref="user" className="form-control" type="text" placeholder="root"
                         onChange={this.userOnChange} onKeyPress={this.userKeyPress}/>
                 </div>
-
                 <div className="information-field">
-                    <span id="input-title">Password:</span>
+                    <span className="input-title">Password:</span>
                     <input id="input-field-password" ref="password" className="form-control" type="text"
-                        placeholder="password"
+                        placeholder="pass1234"
                         onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
                 </div>
-
                 <div className="information-field">
-                    <span id="input-title">Database:</span>
+                    <span className="input-title">Database:</span>
                     <input id="input-field-database" ref="database" className="form-control" type="text"
-                        placeholder="database name"
+                        placeholder="flightradar24"
                         onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
                 </div>
-
                 <div className="information-field">
-                    <span id="input-title">Schema:</span>
+                    <span className="input-title">Schema name:
+                        <div className="help-tip" id="schema-tip">
+                            <p>A schema is a collection of database objects associated with one particular database username.</p>
+                        </div>
+                    </span>
                     <input id="input-field-schema" ref="schema" className="form-control" type="text"
-                        placeholder="schema name"
+                        placeholder="public"
                         onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                 </div>
-
                 <div className="choose-db-field">
                     <span id="choose-db-title">Choose database: </span>
                     <select
+                        className="selector"
                         id="choose-db"
                         value={this.state.dtypeInput}
                         onChange={this.dtypeOnChange}
@@ -284,7 +281,7 @@ export default class Connections extends React.Component {
                         <option value="postgres">postgres</option>
                     </select>
                 </div>
-
+                <hr/>
                 <Button id="simplified-connection-btn" onClick={()=>this.setState({bigInput: false})} invert>Simplified connection</Button>
             </div>
         );
@@ -294,26 +291,28 @@ export default class Connections extends React.Component {
         return(
             <div>
                 <div className="information-field">
-                    <span id="input-title">Name:</span>
+                    <span className="input-title">Name:</span>
                     <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda"
                            onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
                 </div>
-
                 <div className="information-field">
-                    <span id="input-title">URI:</span>
+                    <span className="input-title">URI:</span>
                     <input id="input-field-uri" ref="uri" className="form-control" type="text"
                            placeholder="databaseType://username:password@host:port/databaseName"
                            onChange={this.uriOnChange} onKeyPress={this.uriKeyPress}
                     />
                 </div>
-
                 <div className="information-field">
-                    <span id="input-title">Schema:</span>
+                    <span className="input-title">Schema name:
+                        <div className="help-tip" id="schema-tip">
+                            <p>A schema is a collection of database objects associated with one particular database username.</p>
+                        </div>
+                    </span>
                     <input id="input-field-schema" ref="schema" className="form-control" type="text"
-                        placeholder="schema name"
+                        placeholder="public"
                         onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                 </div>
-
+                <hr/>
                 <Button id="configure-manually-btn" onClick={()=>this.setState({bigInput: true})} invert>Configure manually</Button>
             </div>
         );
