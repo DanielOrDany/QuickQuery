@@ -131,11 +131,17 @@ class Menu extends React.Component {
                         isOpen={this.state.isOpen}
                         onCancel={this.handleCancel}
                         onSubmit={this.handleCancel}
-                        submitTitle="OK"
+                        submitTitle="Close"
                     >
                         <div className="sharing-buttons">
-                            <span id="export-button" onClick={() => this.share()}>Export</span>
-                            <input id="import-button" type="file" onChange={(event) => this.importConfig(event)}/>
+                            <div id="import-div">
+                                <input id="import-button" type="file" onChange={(event) => this.importConfig(event)}/>
+                                <p>Import settings from file</p>
+                            </div>
+                            <div id="export-div">
+                                <span id="export-button" onClick={() => this.share()}>Export</span>
+                                <p>Export app settings into file</p>
+                            </div>
                         </div>
                     </Modal>
                 }
