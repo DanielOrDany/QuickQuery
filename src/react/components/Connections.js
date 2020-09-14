@@ -28,9 +28,10 @@ export default class Connections extends React.Component {
             databaseInput: '',
             schemaInput: '',
             dtypeInput: 'mysql',
-            urlInput: '',
+            uriInput: '',
             errorMessage: '',
             isOpen: false,
+            isErrorOpen: false,
             bigInput: false
         };
     };
@@ -47,6 +48,14 @@ export default class Connections extends React.Component {
         this.setState({ isOpen: false });
     };
 
+    openErrorModal = () => {
+        this.setState({ isErrorOpen: true });
+    };
+    
+    handleErrorCancel = () => {
+        this.setState({ isErrorOpen: false });
+    };
+
     componentDidMount() {
         getDataFromDatabase()
             .then(data => {
@@ -61,6 +70,17 @@ export default class Connections extends React.Component {
             });
     };
 
+    inputVirify(args) {
+        if (args.replace(/^\s+|\s+$/gm, '').length === 0) {
+            this.setState({
+                errorMessage: "Please, fill in all the fields.",
+                isErrorOpen: true
+            });
+            return false;
+        }
+        return true;
+    }
+
     addConnection() {
         let nameInput = this.state.nameInput;
         let hostInput = this.state.hostInput;
@@ -71,6 +91,8 @@ export default class Connections extends React.Component {
         let schemaInput = this.state.schemaInput;
         let dtypeInput = this.state.dtypeInput;
         let uriInput = this.state.uriInput;
+        
+        let successfullVerify = false;
 
         console.log({
             nameInput,
@@ -84,67 +106,61 @@ export default class Connections extends React.Component {
             uriInput
         });
 
-        function inputVirify(args) {
-            if (args.replace(/^\s+|\s+$/gm, '').length === 0) {
-                this.setState({
-                    badQuery: 1,
-                    errorMessage: "Please, fill in all the fields."
-                });
-            }
-        }
-
         // Check valid inputs
         if (this.state.bigInput) {
-            inputVirify(nameInput);
-            inputVirify(hostInput);
-            inputVirify(portInput);
-            inputVirify(userInput);
-            inputVirify(passwordInput);
-            inputVirify(databaseInput);
-            inputVirify(schemaInput);
-            inputVirify(dtypeInput);
+            successfullVerify = 
+                this.inputVirify(nameInput) &&
+                this.inputVirify(hostInput) &&
+                this.inputVirify(portInput) &&
+                this.inputVirify(userInput) &&
+                this.inputVirify(passwordInput) &&
+                this.inputVirify(databaseInput) &&
+                this.inputVirify(schemaInput) &&
+                this.inputVirify(dtypeInput);
         } else {
-            inputVirify(nameInput);
-            inputVirify(uriInput);
-            inputVirify(schemaInput);
+            successfullVerify = 
+                this.inputVirify(nameInput) &&
+                this.inputVirify(uriInput) &&
+                this.inputVirify(schemaInput);
         }
 
-        addConnection(this.state.bigInput ? {
-            name: nameInput,
-            host: hostInput,
-            port: portInput,
-            user: userInput,
-            password: passwordInput,
-            database: databaseInput,
-            schema: schemaInput,
-            dtype: dtypeInput
-        } : {
-            schema: schemaInput,
-            uri: uriInput,
-            name: nameInput
-        }).then(connection => {
-            if (connection) {
-                const connections = JSON.parse(localStorage.getItem("connections"));
-                connections.push(connection);
+        if(successfullVerify) {
+            addConnection(this.state.bigInput ? {
+                name: nameInput,
+                host: hostInput,
+                port: portInput,
+                user: userInput,
+                password: passwordInput,
+                database: databaseInput,
+                schema: schemaInput,
+                dtype: dtypeInput
+            } : {
+                schema: schemaInput,
+                uri: uriInput,
+                name: nameInput
+            }).then(connection => {
+                if (connection) {
+                    const connections = JSON.parse(localStorage.getItem("connections"));
+                    connections.push(connection);
 
-                localStorage.setItem("connections", JSON.stringify(connections));
+                    localStorage.setItem("connections", JSON.stringify(connections));
 
-                this.setState({
-                    connections: JSON.parse(localStorage.getItem("connections")),
-                    searchedConnections: JSON.parse(localStorage.getItem("connections")),
-                    badQuery: 0,
-                    errorMessage: "",
-                    isOpen: false
-                });
+                    this.setState({
+                        connections: JSON.parse(localStorage.getItem("connections")),
+                        searchedConnections: JSON.parse(localStorage.getItem("connections")),
+                        isErrorOpen: false,
+                        errorMessage: "",
+                        isOpen: false
+                    });
 
-            } else {
-                this.setState({
-                    badQuery: 1,
-                    errorMessage: "Bad URI."
-                });
-            }
-        });
-
+                } else {
+                    this.setState({
+                        errorMessage: "Bad URI.",
+                        isErrorOpen: true
+                    });
+                }
+            });
+        }
     };
 
     deleteConnection(name) {
@@ -282,7 +298,20 @@ export default class Connections extends React.Component {
                     </select>
                 </div>
                 <hr/>
-                <Button id="simplified-connection-btn" onClick={()=>this.setState({bigInput: false})} invert>Simplified connection</Button>
+                <Button id="simplified-connection-btn" 
+                    onClick={()=>this.setState({
+                                    bigInput: false,
+                                    nameInput: '',
+                                    hostInput: '',
+                                    portInput: '',
+                                    userInput: '',
+                                    passwordInput: '',
+                                    databaseInput: '',
+                                    schemaInput: '',
+                                    dtypeInput: 'mysql'
+                                })} invert>
+                    Simplified connection
+                </Button>
             </div>
         );
     };
@@ -313,7 +342,15 @@ export default class Connections extends React.Component {
                         onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                 </div>
                 <hr/>
-                <Button id="configure-manually-btn" onClick={()=>this.setState({bigInput: true})} invert>Configure manually</Button>
+                <Button id="configure-manually-btn" 
+                    onClick={()=>this.setState({
+                                    bigInput: true,
+                                    nameInput: '',
+                                    uriInput: '',
+                                    schemaInput: ''
+                                })} invert>
+                    Configure manually
+                </Button>
             </div>
         );
     };
@@ -330,11 +367,16 @@ export default class Connections extends React.Component {
                 >
                     {this.state.bigInput && this.bigInput()}
                     {!this.state.bigInput && this.smallInput()}
-                    {this.state.badQuery > 0 &&
-                        <div id="errorMessage" className="alert">
-                            <strong>Message!</strong> {this.state.errorMessage}
-                        </div>
-                    }
+                </Modal>
+
+                <Modal
+                    title="Error"
+                    isOpen={this.state.isErrorOpen}
+                    onCancel={this.handleErrorCancel}
+                    onSubmit={this.handleErrorCancel}
+                    submitTitle="Ok"
+                >
+                    <strong>Message!</strong> {this.state.errorMessage}
                 </Modal>
 
                 <div id="menu">
