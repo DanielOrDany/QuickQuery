@@ -1,12 +1,12 @@
 /* Dropdown Menu */
 
 #dropdown {
-    position: relative;
+    position: absolute;
 }
 
 .dropdown {
     width: 96px;
-    transform: translateX(-100%) translateY(-30%);
+    transform: translateX(30%) translateY(10%);;
     background-color: #FFFFFF;
     border: 0.2px solid #3a3a3a;
     overflow: hidden;

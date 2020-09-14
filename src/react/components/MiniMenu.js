@@ -39,6 +39,7 @@ function MiniMenu(props) {
     const [open, setOpen] = useState(false);
     const [isOpen, openPopup] = useState(false);
     const [table, setTable] = useState();
+    const [heigth, setHeigth] = useState();
     const wrapperRef = useRef(null);
 
     useEffect(() => {
@@ -68,6 +69,13 @@ function MiniMenu(props) {
         openPopup(false);
     };
 
+    function openMenu(e) {
+        setOpen(!open);
+        if(!open) {
+            setHeigth(e.target.parentElement.getBoundingClientRect().top);
+        }
+    }
+
     return(
         <>
             <Modal
@@ -84,10 +92,10 @@ function MiniMenu(props) {
                     <strong>Are you sure?</strong>
                 </div>
             </Modal>
-            <div id="table_menu" onClick={() => {setOpen(!open)}} ref={wrapperRef}>
+            <div id="table_menu" onClick={(e) => {openMenu(e)}} ref={wrapperRef}>
                 {props.icon}
                 {open && (
-                    <div className="dropdown" id="dropdown">
+                    <div className="dropdown" id="dropdown" style={{top: heigth}}>
                         <div className="menu">
                             <div className="menu-item" onClick={() => openTable(props.table.alias)}>
                                 Open
