@@ -307,9 +307,9 @@ export default class Result extends React.Component {
 
                     <div id="pages-field">
                         <div id="select-page">
-                            <button id="select-page-btn" onClick={() => this.changePage(-1)}>Prev</button>
+                            <button id="select-page-btn" onClick={() => this.changePage(-1)} disabled={this.state.pageNumber==0}>Prev</button>
                             <span>Page: {this.state.pageNumber + 1}</span>
-                            <button id="select-page-btn" onClick={() => this.changePage(1)}>Next</button>
+                            <button id="select-page-btn" onClick={() => this.changePage(1)} disabled={this.state.pageNumber==this.state.pages-1}>Next</button>
                         </div>
                     </div>
                 </div>
