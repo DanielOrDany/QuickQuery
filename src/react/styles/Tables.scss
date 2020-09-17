@@ -21,7 +21,7 @@
             "lineUp"
             "tables"
             "addBtn";
-    grid-template-rows: 50px 30px 1px auto;
+    grid-template-rows: 50px 30px 1px auto 55px;
 
 
     width: 300px;
@@ -107,20 +107,22 @@
 
     /* TABLES */
     #tables {
-      grid-area: tables;
 
+      grid-area: tables;
       margin-top: 10px;
       overflow: scroll;
 
       font-family: 'Scada', sans-serif;
 
       .table {
+
         width: 260px;
         margin-left: 20px;
         margin-bottom: 10px;
 
 
         .container {
+
           padding-left: 5px;
           padding-right: 0px;
 

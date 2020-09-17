@@ -163,14 +163,15 @@ export default class Tables extends React.Component {
                                     );
                                 }
                             )}
+
                     </div>
-
-
                     <div id="add-btn-field">
 
                         <img className="add-button" src={plus} onClick={() => this.createTable()}/>
 
                     </div>
+
+
 
                 </div>
 
