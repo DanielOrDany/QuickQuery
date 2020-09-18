@@ -2,8 +2,8 @@
 @import "./variables";
 
 #configure-manually-btn, #simplified-connection-btn {
-  background-color: #FFFFFF;
-  color: #000000;
+  background-color: $white;
+  color: $black;
   font-size: 15px;
   text-decoration: underline;
 }
@@ -51,14 +51,13 @@
   .help-tip:before {
     content: '?';
     font-weight: bold;
-    color: #fff;
+    color: $white;
   }
 
   .help-tip:hover p {
     display: block;
     z-index: 999;
     transform-origin: 100% 0%;
-
     -webkit-animation: fadeIn 0.3s ease-in-out;
     animation: fadeIn 0.3s ease-in-out;
   }
@@ -73,7 +72,7 @@
     border-radius: 3px;
     box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
     right: 210px;
-    color: #FFF;
+    color: $white;
     font-size: 13px;
     line-height: 1.4;
   }
@@ -125,35 +124,33 @@
   flex-direction: column;
 
   /* TOP MENU */
-  #menu {
-
+  .menu {
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 50px;
-
     border-bottom: .5px solid #EBEBEB;
     background-color: #F9F9F9;
 
     /* ADD BUTTON */
-    .add-button {
+    #add-button {
       font-size: 14px;
       margin-right: 20px;
       margin-left: 30px;
       font-family: 'Scada', sans-serif;
-
       min-width: 130px;
       width: 140px;
       height: 30px;
-
+      border: 1px solid #3E3E3E;
+      box-sizing: border-box;
       border-radius: 5px;
-      border: 0 solid;
-
-      background-color: #EB6E3B;
+      color: $black;
+      background-color: $white;
     }
 
-    .add-button:hover {
-      background: #c1562b;
+    #add-button:hover {
+      color: $black;
+      background-color: $hover-white;
       cursor: pointer;
     }
 
@@ -163,41 +160,37 @@
       align-items: center;
 
       #search-field {
-
         width: 400px;
         height: 30px;
         margin-right: 20px;
         padding-left: 10px;
-
         border: .4px solid #818181;
         border-radius: 5px;
       }
 
       /* SEARCH BUTTON */
-      .search-button {
-        color: white;
+      #search-button {
+        color: $black;
         font-size: 14px;
         font-family: 'Scada', sans-serif;
-
         width: 70px;
         height: 30px;
         margin-right: 30px;
-
+        border: 1px solid $border-color;
+        box-sizing: border-box;
         border-radius: 5px;
-        border: 0 solid;
-
-        background-color: black;
+        background-color: $white;
       }
 
-      .search-button:hover {
-        background: #3E3E3E;
+      #search-button:hover {
+        background: $hover-white;
         cursor: pointer;
       }
     }
   }
 
   /* FOLDERS */
-  #folders {
+  .folders {
     font-family: 'Scada', sans-serif;
     grid-area: folders;
     margin: 50px auto 0;
@@ -284,11 +277,11 @@
 }
 
 @media (max-width: 1140px) {
-
   #folders {
     margin-left: auto;
 
     .connection-folder {
+
       .link-container {
         max-width: 640px;
         margin-left: 40px;
@@ -304,6 +297,7 @@
     margin-left: auto;
 
     .connection-folder {
+
       .link-container {
         max-width: 580px;
         margin-left: 40px;
@@ -318,6 +312,7 @@
     margin-left: auto;
 
     .connection-folder {
+
       .link-container {
         max-width: 500px;
         margin-left: 40px;
@@ -334,7 +329,6 @@
     .connection-folder {
 
       .link-container {
-
         max-width: 440px;
         margin-left: 20px;
         margin-right: 20px;
@@ -342,18 +336,17 @@
       }
     }
   }
-
 }
 
 @media (max-width: 690px) {
-  #menu {
-    .search {
-      #search-field {
+  .menu {
 
+    .search {
+
+      #search-field {
         max-width: 300px;
         height: 30px;
         margin-right: 20px;
-
         border: .4px solid #818181;
         border-radius: 5px;
       }
@@ -362,14 +355,14 @@
 }
 
 @media (max-width: 590px) {
-  #menu {
-    .search {
-      #search-field {
+  .menu {
 
+    .search {
+
+      #search-field {
         max-width: 200px;
         height: 30px;
         margin-right: 20px;
-
         border: .4px solid #818181;
         border-radius: 5px;
       }

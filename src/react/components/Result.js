@@ -1,7 +1,10 @@
-import React from 'react';
-import {loadTableResult} from "../methods";
-import '../styles/Result.scss';
-import XLSX from 'xlsx';
+import React from "react";
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import 'react-day-picker/lib/style.css';
+import dateFnsFormat from 'date-fns/format';
+import { loadTableResult } from "../methods";
+import "../styles/Result.scss";
+import XLSX from "xlsx";
 import xxx from "../icons/Gear-0.2s-200px (1).svg"
 
 const DESC = "DESC";
@@ -21,13 +24,12 @@ export default class Result extends React.Component {
             filterValue2: '',
             orderScore: DESC,
             selectedItem: '',
-            null_results: false,
+            isNullResults: false,
             records: 0,
-            pages: 0
+            pages: 0,
+            options: []
         };
 
-        this.handleOrderSelectChange = this.handleOrderSelectChange.bind(this);
-        this.handleCommonSelectChange = this.handleCommonSelectChange.bind(this);
         this.handleChangeFilterValue1 = this.handleChangeFilterValue1.bind(this);
         this.handleChangeFilterValue2 = this.handleChangeFilterValue2.bind(this);
         this.handleChangeSearchValue = this.handleChangeSearchValue.bind(this);
@@ -69,9 +71,12 @@ export default class Result extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevState.pageNumber !== this.state.pageNumber) {
-            this.loadTable()
+        const { pageNumber } = this.state;
+
+        if (prevState.pageNumber !== pageNumber) {
+            this.loadTable();
         }
+
         if (window.location.href.split('/')[window.location.href.split('/').length - 1] != localStorage.getItem("current_result")) {
             localStorage.setItem("current_result", window.location.href.split('/')[window.location.href.split('/').length - 1]);
             this.loadTable();
@@ -79,44 +84,86 @@ export default class Result extends React.Component {
     }
 
     loadTable = () => {
+        const { pageNumber, options } = this.state;
         const result = localStorage.getItem("current_result");
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
-        const options = {
-            page: this.state.pageNumber,
+        const loadingOptions = {
+            page: pageNumber,
             pageSize: 10,
+            operationsOptions: options.length ? options : null
         };
 
-        loadTableResult(connectionName, result, options).then(async data => {
-            const db_rows = await Promise.all(data.rows);
-            const headers = Object.keys(db_rows[0]);
-            const selectedValue = Object.keys(db_rows[0])[0];
-            const rows = Object.values(db_rows);
+        localStorage.setItem('isChangedPicker1', false);
+        localStorage.setItem('isChangedPicker2', false);
 
-            this.setState({
-                headers: headers,
-                selectedItem: selectedValue,
-                rows: rows,
-                pages: data.pages
-            });
+        loadTableResult(connectionName, result, loadingOptions).then(async data => {
+            if (data) {
+                if (data.records === "0") {
+                    this.setState({
+                        isNullResults: true
+                    });
+                } else {
+                    const db_rows = await Promise.all(data.rows);
+                    const headers = Object.keys(db_rows[0]);
+                    const selectedValue = Object.keys(db_rows[0])[0];
+                    const rows = Object.values(db_rows);
+                    const tableOptions = headers.map((header) => {
+                        return {
+                            column: header,
+                            order: ASC,
+                            search: "",
+                            filter1: "",
+                            filter2: ""
+                        }
+                    });
+
+                    this.setState({
+                        pages: data.pages,
+                        selectedItem: selectedValue,
+                        options: tableOptions,
+                        isNullResults: false,
+                        headers,
+                        rows
+                    });
+                }
+            } else {
+                console.error("ERROR, loadTableResult: ", data);
+            }
         });
     };
 
-    reloadTable = (connectionName, result, options) => {
-        loadTableResult(connectionName, result, options).then(async data => {
-            if (data.rows.length) {
-                const db_rows = await Promise.all(data.rows);
-                const headers = Object.keys(db_rows[0]);
-                const rows = Object.values(db_rows);
+    reloadTable = () => {
+        const { pageNumber, options } = this.state;
+        const result = localStorage.getItem("current_result");
+        const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+        const loadingOptions = {
+            page: pageNumber,
+            pageSize: 10,
+            operationsOptions: options.length ? options : null
+        };
 
-                this.setState({
-                    headers: headers,
-                    rows: rows,
-                    null_results: false
-                });
+        loadTableResult(connectionName, result, loadingOptions).then(async data => {
+            if (data) {
+                if (data.records === "0") {
+                    this.setState({
+                        isNullResults: true
+                    });
+                } else {
+                    const db_rows = await Promise.all(data.rows);
+                    const headers = Object.keys(db_rows[0]);
+                    const selectedValue = Object.keys(db_rows[0])[0];
+                    const rows = Object.values(db_rows);
+
+                    this.setState({
+                        pages: data.pages,
+                        selectedItem: selectedValue,
+                        isNullResults: false,
+                        headers,
+                        rows
+                    });
+                }
             } else {
-                this.setState({
-                    null_results: true
-                });
+                console.error("ERROR, loadTableResult: ", data);
             }
         });
     };
@@ -133,26 +180,16 @@ export default class Result extends React.Component {
     };
 
     save() {
+        const { options } = this.state;
         const result = localStorage.getItem('current_result');
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
-        const options = {
+        const loadingOptions = {
             page: 0,
             pageSize: 1000,
-            search: this.state.searchValue === '' ? undefined
-                : {column: this.state.selectedItem, value: this.state.searchValue},
-            filter: (this.state.filterValue1 === '' || this.state.filterValue2 === '') ? undefined
-                : {
-                    column: this.state.selectedItem,
-                    value1: this.state.filterValue1,
-                    value2: this.state.filterValue2
-                },
-            order: this.state.orderScore === '' ? undefined : {
-                column: this.state.selectedItem,
-                score: this.state.orderScore
-            }
+            operationsOptions: options.length ? options : null
         };
 
-        loadTableResult(connectionName, result, options).then(async data => {
+        loadTableResult(connectionName, result, loadingOptions).then(async data => {
             const db_rows = await Promise.all(data.rows);
             const rows = Object.values(db_rows);
 
@@ -164,60 +201,127 @@ export default class Result extends React.Component {
         });
     }
 
-    processOperations = () => {
-        const result = localStorage.getItem('current_result');
-        const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
-        const options = {
-            page: this.state.pageNumber,
-            pageSize: 1000,
-            search: this.state.searchValue === '' ? undefined
-                : {column: this.state.selectedItem, value: this.state.searchValue},
-            filter: (this.state.filterValue1 === '' || this.state.filterValue2 === '') ? undefined
-                : {
-                    column: this.state.selectedItem,
-                    value1: this.state.filterValue1,
-                    value2: this.state.filterValue2
-                },
-            order: this.state.orderScore === '' ? undefined : {
-                column: this.state.selectedItem,
-                score: this.state.orderScore
-            }
-        };
-
-        this.reloadTable(connectionName, result, options);
-    };
-
-    handleCommonSelectChange(event) {
-        this.setState({
-            selectedItem: event.target.value
+    handleChangeOrder(columnName) {
+        const newOptions = this.state.options.map(option => {
+            if (option.column === columnName) {
+                if (option.order === ASC) {
+                    option.order = DESC;
+                } else {
+                    option.order = ASC;
+                }
+            } return option;
         });
+        this.setState({
+            options: newOptions
+        });
+        this.reloadTable();
     }
 
-    handleOrderSelectChange(event) {
-        this.setState({
-            orderScore: event.target.value
+    handleChangeSearchValue(event, columnName) {
+        const searchedValue = event.target.value;
+        const newOptions = this.state.options.map(option => {
+            if (option.column === columnName) {
+                if (option.search !== searchedValue) {
+                    option.search = searchedValue;
+                }
+            } return option;
         });
+        this.setState({
+            options: newOptions
+        });
+        this.reloadTable();
     }
 
-    handleChangeSearchValue(event) {
-        this.setState({
-            searchValue: event.target.value,
+    handleChangeFilterValue1(event, columnName) {
+        const filteredValue = event.target.value;
+        const newOptions = this.state.options.map(option => {
+            if (option.column === columnName) {
+                if (option.filter1 !== filteredValue) {
+                    option.filter1 = filteredValue;
+                }
+            } return option;
         });
+        this.setState({
+            options: newOptions
+        });
+        this.reloadTable();
     }
 
-    handleChangeFilterValue1(event) {
-        this.setState({
-            filterValue1: event.target.value,
+    handleChangeFilterValue2(event, columnName) {
+        const filteredValue = event.target.value;
+        const newOptions = this.state.options.map(option => {
+            if (option.column === columnName) {
+                if (option.filter2 !== filteredValue) {
+                    option.filter2 = filteredValue;
+                }
+            } return option;
         });
+
+        this.setState({
+            options: newOptions
+        });
+        this.reloadTable();
     }
 
-    handleChangeFilterValue2(event) {
-        this.setState({
-            filterValue2: event.target.value,
+    handleDatePicker1(filteredValue, columnName) {
+        const newOptions = this.state.options.map(option => {
+            if (option.column === columnName) {
+                if (option.filter1 !== filteredValue) {
+                    option.filter1 = filteredValue;
+                    localStorage.setItem('isChangedPicker1', true);
+                }
+            } return option;
         });
+
+        if (JSON.parse(localStorage.getItem('isChangedPicker1'))) {
+            localStorage.setItem('isChangedPicker1', false);
+            this.setState({
+                options: newOptions
+            });
+            this.reloadTable();
+        }
+    }
+
+    handleDatePicker2(filteredValue, columnName) {
+        const newOptions = this.state.options.map(option => {
+            if (option.column === columnName) {
+                if (option.filter2 !== filteredValue) {
+                    option.filter2 = filteredValue;
+                    localStorage.setItem('isChangedPicker2', true);
+                }
+            } return option;
+        });
+
+        if (JSON.parse(localStorage.getItem('isChangedPicker2'))) {
+            localStorage.setItem('isChangedPicker2', false);
+            this.setState({
+                options: newOptions
+            });
+            this.reloadTable();
+        }
+    }
+
+    formatDate(date, format, locale) {
+        return dateFnsFormat(date, format, { locale });
+    }
+
+    clearFilters(columnName) {
+        const newOptions = this.state.options.map(option => {
+            if (option.column === columnName) {
+                option.filter1 = "";
+                option.filter2 = "";
+            } return option;
+        });
+
+        this.setState({
+            options: newOptions
+        });
+        this.reloadTable();
     }
 
     render() {
+        const { options, headers, rows, isNullResults } = this.state;
+
         if (this.state === null) {
             return (
                 <div className={"loading"}>
@@ -229,87 +333,103 @@ export default class Result extends React.Component {
             return (
                 <div className="result">
                     <div className="result-menu">
-                        <div className="result-operations">
-                            <div id="result-left">
-                                <div className="result-select-column">
-                                    <span id="result-select-column-title">Select column:</span>
-                                    <select value={this.state.selectedItem}
-                                                           onChange={this.handleCommonSelectChange}>
-                                    {this.state.headers ? this.state.headers.map((item) => {
-                                            return <option value={item}>{item}</option>
-                                        })
-                                        : null}
-                                </select>
-                                </div>
-                                <div className="result-order">
-                                    <span id="result-order-title">Order:</span>
-                                    <select value={this.state.orderScore} onChange={this.handleOrderSelectChange}>
-                                        <option value={DESC}>{DESC}</option>
-                                        <option value={ASC}>{ASC}</option>
-                                    </select>
-                                </div>
-                            </div>
-
-
-                            <div id="result-right">
-                                <div className="result-search">
-                                    <span id="result-search-title">Search:</span>
-                                    <input id="search-field" placeholder={"value"} value={this.state.searchValue}
-                                           onChange={this.handleChangeSearchValue}/>
-                                </div>
-                                <div className="result-filter">
-                                    <span id="result-filter-title">Filtering:</span>
-                                    <input id="filter-field1" placeholder={"value"} value={this.state.filterValue1}
-                                           onChange={this.handleChangeFilterValue1}/>
-                                    <input id="filter-field2" placeholder={"value"} value={this.state.filterValue2}
-                                           onChange={this.handleChangeFilterValue2}/>
-                                </div>
-                            </div>
-
-                            <button id="load-operations-result-btn" onClick={() => this.processOperations()}>process
-                            </button>
-                        </div>
-
-
                         <div className={"save"}>
                             <button onClick={() => this.save()}>Export excel</button>
                         </div>
                     </div>
-                    {this.state.null_results === true ?
-                        <span>{"-none- results"}</span>
-                        :
-                        <div id="result-tables">
-                            <table>
-                                <tr>
-                                    {this.state.headers ? this.state.headers.map((item) => {
-                                            return <th>{item}</th>
-                                        })
-                                        : null}
-                                </tr>
-                                {this.state.rows ? this.state.rows.map((item, key) => {
-                                        return <tr className={key++ % 2 === 0 ? "column_one" : "column_two"}>{
-                                            Object.values(item).map((get_item, key) => {
-                                                return <td style={key === 0 ? {
-                                                    color: "#3E3E3E",
-                                                    background: "#EFEFEF",
-                                                    border: "1px solid grey",
-                                                } : {color: "#3E3E3E"}}>{get_item}</td>
+                    <div className="result-table">
+                        <table>
+                            <tr>
+                                { // Headers
+                                    headers ? headers.map((header) => {
+                                        const currentOption = options.find(option => option.column === header);
+                                        const firstRow = rows[0];
+                                        let currentHeaderIsDate = false;
+                                        let currentHeaderIsNumber = false;
+                                        for (const [key, value] of Object.entries(firstRow)) {
+                                            if (firstRow) {
+                                                if (key === header) {
+                                                    if (typeof value !== "boolean") {
+                                                        currentHeaderIsDate = (new Date(value) !== "Invalid Date") && !isNaN(new Date(value));
+                                                        currentHeaderIsNumber = /^-?\d+$/.test(value);
+                                                    }
+                                                }
+                                            }
+                                        }
 
-                                            })}
-                                        </tr>
+                                        const FORMAT = 'MM/dd/yyyy';
 
-                                    })
-                                    : null}
-                            </table>
-                        </div>
-
-                    }
-
+                                        return (
+                                            <th key={header}>
+                                                <div className="header">
+                                                    <div className="header-data-ordering" onClick={() => this.handleChangeOrder(header)}>
+                                                        <span id="header-title">{header}</span>
+                                                        <span className={ currentOption.order === ASC ? "arrow-up" : "arrow-down"} id="header-order"></span>
+                                                    </div>
+                                                    <div className="header-data-operations">
+                                                        <input id="header-search"
+                                                               placeholder={"val.."}
+                                                               value={currentOption.search}
+                                                               onChange={(e) => this.handleChangeSearchValue(e, header)}
+                                                        />
+                                                        <div className="header-filters" style={((currentHeaderIsDate && currentHeaderIsNumber) || (!currentHeaderIsDate && currentHeaderIsNumber)) ? {display:"block"} : {display:"none"}}>
+                                                            <input id="filter-field1" placeholder={"filter val1"} value={currentOption.filter1}
+                                                                   onChange={(e) => this.handleChangeFilterValue1(e, header)}/>
+                                                            <input id="filter-field2" placeholder={"filter val2"} value={currentOption.filter2}
+                                                                   onChange={(e) => this.handleChangeFilterValue2(e, header)}/>
+                                                            <btn onClick={() => this.clearFilters(header)}>clear selected values</btn>
+                                                        </div>
+                                                        <div className="header-filters" style={(currentHeaderIsDate && !currentHeaderIsNumber) ? {display:"block"} : {display:"none"}}>
+                                                            <DayPickerInput
+                                                                style={{color: "#3E3E3E"}}
+                                                                formatDate={this.formatDate}
+                                                                format={FORMAT}
+                                                                value={currentOption.filter1}
+                                                                parseDate={(date) => this.handleDatePicker1(date, header)}
+                                                                placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
+                                                            />
+                                                            <DayPickerInput
+                                                                style={{color: "#3E3E3E"}}
+                                                                formatDate={this.formatDate}
+                                                                format={FORMAT}
+                                                                value={currentOption.filter2}
+                                                                parseDate={(date) => this.handleDatePicker2(date, header)}
+                                                                placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
+                                                            />
+                                                            <btn onClick={() => this.clearFilters(header)}>clear selected days</btn>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                        );
+                                    }) : null
+                                }
+                            </tr>
+                                { // Rows
+                                    (rows && !isNullResults) ? rows.map((item, key) => {
+                                        return (
+                                            <tr key={key} className={key++ % 2 === 0 ? "column_one" : "column_two"}>
+                                                {Object.values(item).map((get_item, key) => {
+                                                    return (
+                                                        <td key={key} style={key === 0 ? {
+                                                            color: "#3E3E3E",
+                                                            background: "#EFEFEF",
+                                                            border: "1px solid grey",
+                                                        } : {color: "#3E3E3E"}}>{get_item}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        );
+                                    }) : null
+                                }
+                        </table>
+                    </div>
                     <div id="pages-field">
                         <div id="select-page">
-                            <button id="select-page-btn" onClick={() => this.changePage(-1)} disabled={this.state.pageNumber==0}>Prev</button>
+                            <button id="select-page-btn" onClick={() => this.changePage(-1)} disabled={this.state.pageNumber == 0}>Prev</button>
                             <span>Page: {this.state.pageNumber + 1}</span>
-                            <button id="select-page-btn" onClick={() => this.changePage(1)} disabled={this.state.pageNumber==this.state.pages-1}>Next</button>
+                            <button id="select-page-btn" onClick={() => this.changePage(1)} disabled={this.state.pageNumber == this.state.pages - 1}>Next</button>
                         </div>
                     </div>
                 </div>

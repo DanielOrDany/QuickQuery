@@ -5,6 +5,9 @@ const appDataDirPath = getAppDataPath();
 const adapter = new FileSync(path.join(appDataDirPath, 'database.json'));
 const db = low(adapter);
 
+const MYSQL = "mysql";
+const POSTGRESQL = "postgres";
+
 function getAppDataPath() {
     switch (process.platform) {
         case "darwin": {
@@ -208,7 +211,7 @@ function updateTableQuery(connectionName, alias, query) {
     return queries;
 }
 
-async function loadTableResult(connectionName, alias, options) {
+async function loadTableResult(connectionName, alias, loadingOptions) {
     try {
         const URI = db.read()
             .get('connections')
@@ -225,8 +228,8 @@ async function loadTableResult(connectionName, alias, options) {
             URI.others
         ) : new Sequelize(URI);
 
-        const offset = Number(options.page) * Number(options.pageSize);
-        const limit = Number(options.pageSize);
+        const offset = Number(loadingOptions.page) * Number(loadingOptions.pageSize);
+        const limit = Number(loadingOptions.pageSize);
 
         let dialect;
         if (typeof URI === 'string') {
@@ -249,34 +252,87 @@ async function loadTableResult(connectionName, alias, options) {
             query = query[query.length].replace(';', ' ');
         }
 
-        if (options.search) {
-            const search = options.search;
+        console.log("operationsOptions: ", loadingOptions.operationsOptions);
 
-            if (dialect === 'mysql') {
-                query += ` WHERE '%${search.value}%' LIKE CONCAT('%', CAST(id AS CHAR(50)), '%')`;
-            } else {
-                query += ` WHERE CAST(${search.column} AS VARCHAR(50)) Like '%${search.value}%'`;
-            }
-        }
+        if (loadingOptions.operationsOptions) {
+            // Add searches
+            let searchColumnNum = 0;
 
-        if (options.filter) {
-            const filter = options.filter;
-            if (options.search) {
-                query += ` AND ${filter.column} BETWEEN ${filter.value1} AND ${filter.value2}`;
-            } else {
-                query += ` WHERE ${filter.column} BETWEEN ${filter.value1} AND ${filter.value2}`;
-            }
-        }
+            loadingOptions.operationsOptions.forEach((option) => {
+                const column = option.column;
+                const search = option.search;
 
-        if (options.order) {
-            const order = options.order;
-            query += ` ORDER BY ${order.column} ${order.score}`;
+                if (dialect === MYSQL && searchColumnNum === 0) {
+                    query += ` WHERE '%${search}%' LIKE CONCAT('%', CAST(id AS CHAR(50)), '%')`;
+                    searchColumnNum += 1;
+                } else if (dialect === POSTGRESQL && searchColumnNum === 0) {
+                    query += ` WHERE CAST(${column} AS VARCHAR(50)) Like '%${search}%'`;
+                    searchColumnNum += 1;
+                } else if (dialect === MYSQL && searchColumnNum > 0) {
+                    query += ` AND '%${search}%' LIKE CONCAT('%', CAST(id AS CHAR(50)), '%')`;
+                    searchColumnNum += 1;
+                } else if (dialect === POSTGRESQL && searchColumnNum > 0) {
+                    query += ` AND CAST(${column} AS VARCHAR(50)) Like '%${search}%'`;
+                    searchColumnNum += 1;
+                }
+            });
+
+            // Add filters
+            loadingOptions.operationsOptions.forEach((option) => {
+                const column = option.column;
+                const filter1 = option.filter1;
+                const filter2 = option.filter2;
+
+                if (!isEmpty(filter1) && !isEmpty(filter2)) {
+                    const filter1IsDate = (new Date(filter1) !== "Invalid Date") && !isNaN(new Date(filter1));
+                    const filter1IsNumber = /^-?\d+$/.test(filter1);
+                    const filter2IsDate = (new Date(filter2) !== "Invalid Date") && !isNaN(new Date(filter2));
+                    const filter2IsNumber = /^-?\d+$/.test(filter2);
+
+                    // Date
+                    if (
+                        filter1IsDate &&
+                        filter2IsDate &&
+                        !filter1IsNumber &&
+                        !filter2IsNumber
+                    ) {
+                        const newFilter1 = filter1.split("/");
+                        const newFilter2 = filter2.split("/");
+
+                        if (searchColumnNum > 0) {
+                            query += ` AND ${column} BETWEEN \'${newFilter1[2] + newFilter1[0] + newFilter1[1]}\' AND \'${newFilter2[2] + newFilter2[0] + newFilter2[1]}\'`;
+                        } else {
+                            query += ` WHERE ${column} BETWEEN \'${newFilter1[2] + newFilter1[0] + newFilter1[1]}\' AND \'${newFilter2[2] + newFilter2[0] + newFilter2[1]}\'`;
+                        }
+                    } else {
+                        if (searchColumnNum > 0) {
+                            query += ` AND ${column} BETWEEN ${filter1} AND ${filter2}`;
+                        } else {
+                            query += ` WHERE ${column} BETWEEN ${filter1} AND ${filter2}`;
+                        }
+                    }
+                }
+            });
+
+            // Add orders
+            let orderByNum = 0;
+            loadingOptions.operationsOptions.forEach((option) => {
+                const column = option.column;
+                const order = option.order;
+                // ORDER BY Country ASC, CustomerName DESC;
+                if (orderByNum > 0) {
+                    query += `, ${column} ${order}`;
+                } else {
+                    query += ` ORDER BY ${column} ${order}`;
+                    orderByNum += 1;
+                }
+            });
         }
 
         const countQ = `SELECT COUNT(*) as c FROM (${query}) as c;`;
         const numberOfRecords = await sequelize.query(countQ);
 
-        // if (!options.search)
+        // if (!loadingOptions.search)
         query += ` LIMIT ${limit} OFFSET ${offset}`;
 
         const queryResult = await sequelize.query(query);
@@ -296,7 +352,7 @@ async function loadTableResult(connectionName, alias, options) {
         console.log('pages: ', pages);
         console.log('records: ', records);
 
-        if (dialect === 'postgres') {
+        if (dialect === POSTGRESQL) {
             return {
                 "rows": queryResult[1].rows,
                 "fields": queryResult[1].fields,
@@ -314,6 +370,10 @@ async function loadTableResult(connectionName, alias, options) {
     } catch (e) {
         console.log(e);
     }
+}
+
+function isEmpty(str) {
+    return !str.trim().length;
 }
 
 // Export db's methods

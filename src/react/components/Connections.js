@@ -379,17 +379,16 @@ export default class Connections extends React.Component {
                     <strong>Message!</strong> {this.state.errorMessage}
                 </Modal>
 
-                <div id="menu">
-                    <button type="button" style={localStorage.getItem("theme") ? {color: "white"} : {color: "white"}}
-                            className="add-button" onClick={() => this.openModal()}>Add connection
+                <div className="menu">
+                    <button type="button" id="add-button" onClick={() => this.openModal()}>Add connection
                     </button>
                     <div className="search">
                         <input id="search-field"/>
-                        <button type="button" className="search-button" onClick={() => this.search()}>Search</button>
+                        <button type="button" id="search-button" onClick={() => this.search()}>Search</button>
                     </div>
                 </div>
 
-                <div id="folders">
+                <div className="folders">
                     {this.state.searchedConnections ? this.state.searchedConnections.map(conn => {
                             return (
                                 <div id={conn.name} className="connection-folder" key={conn.name}>
