@@ -359,7 +359,14 @@ export default class Connections extends React.Component {
     };
 
     databaseHost(conn) {
-        const host = conn.URI.split("@")[1].split(":")[0];
+        let host = "";
+
+        if(typeof(conn.URI)=="string") {
+            host = conn.URI.split("@")[1].split(":")[0];
+        } else if(typeof(conn.URI)=="object") {
+            host = conn.URI["others"]["host"];
+        }
+        
         if(host == "localhost" || host == "127.0.0.1") {
             return(
                 <img alt={"internet on"} src={wifi_on} id="wifi-icon"/>
