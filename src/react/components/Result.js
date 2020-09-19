@@ -2,7 +2,7 @@ import React from "react";
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 import dateFnsFormat from 'date-fns/format';
-import { loadTableResult } from "../methods";
+import {loadTableResult} from "../methods";
 import "../styles/Result.scss";
 import XLSX from "xlsx";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
@@ -68,7 +68,7 @@ export default class Result extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { pageNumber } = this.state;
+        const {pageNumber} = this.state;
 
         if (prevState.pageNumber !== pageNumber) {
             this.loadTable();
@@ -81,7 +81,7 @@ export default class Result extends React.Component {
     }
 
     loadTable = () => {
-        const { pageNumber, options } = this.state;
+        const {pageNumber, options} = this.state;
         const result = localStorage.getItem("current_result");
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const loadingOptions = {
@@ -130,7 +130,7 @@ export default class Result extends React.Component {
     };
 
     reloadTable = () => {
-        const { pageNumber, options } = this.state;
+        const {pageNumber, options} = this.state;
         const result = localStorage.getItem("current_result");
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const loadingOptions = {
@@ -178,7 +178,7 @@ export default class Result extends React.Component {
     };
 
     save() {
-        const { options } = this.state;
+        const {options} = this.state;
         const result = localStorage.getItem('current_result');
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const loadingOptions = {
@@ -246,7 +246,8 @@ export default class Result extends React.Component {
                 if (option.search !== searchedValue) {
                     option.search = searchedValue;
                 }
-            } return option;
+            }
+            return option;
         });
         this.setState({
             options: newOptions
@@ -261,7 +262,8 @@ export default class Result extends React.Component {
                 if (option.filter1 !== filteredValue) {
                     option.filter1 = filteredValue;
                 }
-            } return option;
+            }
+            return option;
         });
         this.setState({
             options: newOptions
@@ -276,7 +278,8 @@ export default class Result extends React.Component {
                 if (option.filter2 !== filteredValue) {
                     option.filter2 = filteredValue;
                 }
-            } return option;
+            }
+            return option;
         });
 
         this.setState({
@@ -292,7 +295,8 @@ export default class Result extends React.Component {
                     option.filter1 = filteredValue;
                     localStorage.setItem('isChangedPicker1', true);
                 }
-            } return option;
+            }
+            return option;
         });
 
         if (JSON.parse(localStorage.getItem('isChangedPicker1'))) {
@@ -311,7 +315,8 @@ export default class Result extends React.Component {
                     option.filter2 = filteredValue;
                     localStorage.setItem('isChangedPicker2', true);
                 }
-            } return option;
+            }
+            return option;
         });
 
         if (JSON.parse(localStorage.getItem('isChangedPicker2'))) {
@@ -324,7 +329,7 @@ export default class Result extends React.Component {
     }
 
     formatDate(date, format, locale) {
-        return dateFnsFormat(date, format, { locale });
+        return dateFnsFormat(date, format, {locale});
     }
 
     clearFilters(columnName) {
@@ -332,7 +337,8 @@ export default class Result extends React.Component {
             if (option.column === columnName) {
                 option.filter1 = "";
                 option.filter2 = "";
-            } return option;
+            }
+            return option;
         });
 
         this.setState({
@@ -342,7 +348,7 @@ export default class Result extends React.Component {
     }
 
     render() {
-        const { options, headers, rows, isNullResults } = this.state;
+        const {options, headers, rows, isNullResults} = this.state;
 
         if (this.state === null) {
             return (
@@ -384,17 +390,22 @@ export default class Result extends React.Component {
                                         return (
                                             <th key={header}>
                                                 <div className="header">
-                                                    <div className="header-data-ordering" onClick={() => this.handleChangeOrder(header)}>
+                                                    <div className="header-data-ordering"
+                                                         onClick={() => this.handleChangeOrder(header)}>
                                                         <span id="header-title">{header}</span>
                                                         <div className="header-options">
-                                                            <span className={ currentOption.order === ASC ? "arrow-up" : "arrow-down"} id="header-order"></span>
+                                                            <span
+                                                                className={currentOption.order === ASC ? "arrow-up" : "arrow-down"}
+                                                                id="header-order"></span>
                                                             {
                                                                 ((currentHeaderIsDate && currentHeaderIsNumber) || (!currentHeaderIsDate && currentHeaderIsNumber)) &&
-                                                                <img id="header-filter" src={filterIcon} onClick={() => this.handleOpenFilter(header)}/>
+                                                                <img id="header-filter" src={filterIcon}
+                                                                     onClick={() => this.handleOpenFilter(header)}/>
                                                             }
                                                             {
                                                                 (currentHeaderIsDate && !currentHeaderIsNumber) &&
-                                                                <img id="header-calendar" src={calendarIcon} onClick={() => this.handleOpenFilter(header)}/>
+                                                                <img id="header-calendar" src={calendarIcon}
+                                                                     onClick={() => this.handleOpenFilter(header)}/>
                                                             }
                                                         </div>
                                                     </div>
@@ -407,12 +418,18 @@ export default class Result extends React.Component {
                                                         {
                                                             (((currentHeaderIsDate && currentHeaderIsNumber) || (!currentHeaderIsDate && currentHeaderIsNumber)) && currentOption.isFilterOpened) &&
                                                             <div className="header-filters">
-                                                                <input id="filter-field1" placeholder={"filter val1"}
-                                                                       value={currentOption.filter1}
-                                                                       onChange={(e) => this.handleChangeFilterValue1(e, header)}/>
-                                                                <input id="filter-field2" placeholder={"filter val2"}
-                                                                       value={currentOption.filter2}
-                                                                       onChange={(e) => this.handleChangeFilterValue2(e, header)}/>
+
+                                                                <div id="header-filters-inputs">
+                                                                    <input id="filter-field1"
+                                                                           placeholder={"filter val1"}
+                                                                           value={currentOption.filter1}
+                                                                           onChange={(e) => this.handleChangeFilterValue1(e, header)}/>
+                                                                    <input id="filter-field2"
+                                                                           placeholder={"filter val2"}
+                                                                           value={currentOption.filter2}
+                                                                           onChange={(e) => this.handleChangeFilterValue2(e, header)}/>
+                                                                </div>
+
                                                                 <btn onClick={() => this.clearFilters(header)}>clear
                                                                     selected values
                                                                 </btn>
@@ -421,23 +438,31 @@ export default class Result extends React.Component {
                                                         {
                                                             ((currentHeaderIsDate && !currentHeaderIsNumber) && currentOption.isFilterOpened) &&
                                                             <div className="header-filters">
-                                                                <DayPickerInput
-                                                                    style={{color: "#3E3E3E"}}
-                                                                    formatDate={this.formatDate}
-                                                                    format={FORMAT}
-                                                                    value={currentOption.filter1}
-                                                                    parseDate={(date) => this.handleDatePicker1(date, header)}
-                                                                    placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
-                                                                />
-                                                                <DayPickerInput
-                                                                    style={{color: "#3E3E3E"}}
-                                                                    formatDate={this.formatDate}
-                                                                    format={FORMAT}
-                                                                    value={currentOption.filter2}
-                                                                    parseDate={(date) => this.handleDatePicker2(date, header)}
-                                                                    placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
-                                                                />
-                                                                <btn onClick={() => this.clearFilters(header)}>clear selected days</btn>
+
+                                                                <div id="header-filters-inputs">
+                                                                    <DayPickerInput
+                                                                        style={{color: "#3E3E3E"}}
+                                                                        formatDate={this.formatDate}
+                                                                        format={FORMAT}
+                                                                        value={currentOption.filter1}
+                                                                        parseDate={(date) => this.handleDatePicker1(date, header)}
+                                                                        placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
+                                                                    />
+                                                                    <DayPickerInput
+                                                                        style={{color: "#3E3E3E"}}
+                                                                        formatDate={this.formatDate}
+                                                                        format={FORMAT}
+                                                                        value={currentOption.filter2}
+                                                                        parseDate={(date) => this.handleDatePicker2(date, header)}
+                                                                        placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
+                                                                    />
+                                                                </div>
+
+
+                                                                <btn onClick={() => this.clearFilters(header)}>clear
+                                                                    selected days
+                                                                </btn>
+
                                                             </div>
                                                         }
                                                     </div>
@@ -447,31 +472,35 @@ export default class Result extends React.Component {
                                     }) : null
                                 }
                             </tr>
-                                { // Rows
-                                    (rows && !isNullResults) ? rows.map((item, key) => {
-                                        return (
-                                            <tr key={key} className={key++ % 2 === 0 ? "column_one" : "column_two"}>
-                                                {Object.values(item).map((get_item, key) => {
-                                                    return (
-                                                        <td key={key} style={key === 0 ? {
-                                                            color: "#3E3E3E",
-                                                            background: "#EFEFEF",
-                                                            border: "1px solid grey",
-                                                        } : {color: "#3E3E3E"}}>{get_item}
-                                                        </td>
-                                                    );
-                                                })}
-                                            </tr>
-                                        );
-                                    }) : null
-                                }
+                            { // Rows
+                                (rows && !isNullResults) ? rows.map((item, key) => {
+                                    return (
+                                        <tr key={key} className={key++ % 2 === 0 ? "column_one" : "column_two"}>
+                                            {Object.values(item).map((get_item, key) => {
+                                                return (
+                                                    <td key={key} style={key === 0 ? {
+                                                        color: "#3E3E3E",
+                                                        background: "#EFEFEF",
+                                                        border: "1px solid grey",
+                                                    } : {color: "#3E3E3E"}}>{get_item}
+                                                    </td>
+                                                );
+                                            })}
+                                        </tr>
+                                    );
+                                }) : null
+                            }
                         </table>
                     </div>
                     <div id="pages-field">
                         <div id="select-page">
-                            <button id="select-page-btn" onClick={() => this.changePage(-1)} disabled={this.state.pageNumber == 0}>Prev</button>
+                            <button id="select-page-btn" onClick={() => this.changePage(-1)}
+                                    disabled={this.state.pageNumber == 0}>Prev
+                            </button>
                             <span>Page: {this.state.pageNumber + 1}</span>
-                            <button id="select-page-btn" onClick={() => this.changePage(1)} disabled={this.state.pageNumber == this.state.pages - 1}>Next</button>
+                            <button id="select-page-btn" onClick={() => this.changePage(1)}
+                                    disabled={this.state.pageNumber == this.state.pages - 1}>Next
+                            </button>
                         </div>
                     </div>
                 </div>

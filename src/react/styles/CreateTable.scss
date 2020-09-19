@@ -47,11 +47,11 @@
         border-radius: 5px;
 
 
-        background-color: white;
-        color: #3E3E3E;
+        background-color: #49B96E;
+        color: white;
         font-size: 14px;
 
-        border: 1px solid #3E3E3E;
+        border: 0 solid;
 
 
         text-align: center;
@@ -62,8 +62,7 @@
       }
 
       .runButton:hover {
-        background-color: #3E3E3E;
-        color: white;
+        background-color: #389256;
 
         cursor: pointer;
       }
@@ -78,11 +77,11 @@
 
           padding: 0 32px;
 
-          background-color: white;
-          color: #3E3E3E;
+          background-color: #49B96E;
+          color: white;
           font-size: 14px;
 
-          border: 1px solid #3E3E3E;
+          border: 0 solid;
           border-radius: 5px;
 
           width: 90px;
@@ -94,8 +93,7 @@
         }
 
         .saveButton:hover {
-          background-color: #3E3E3E;
-          color: white;
+          background-color: #389256;
 
           cursor: pointer;
         }

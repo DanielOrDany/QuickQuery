@@ -141,16 +141,15 @@
       min-width: 130px;
       width: 140px;
       height: 30px;
-      border: 1px solid #3E3E3E;
+      border: 0 solid;
       box-sizing: border-box;
       border-radius: 5px;
-      color: $black;
-      background-color: $white;
+      color: white;
+      background-color: #49B96E;
     }
 
     #add-button:hover {
-      color: $black;
-      background-color: $hover-white;
+      background-color: #389256;
       cursor: pointer;
     }
 
@@ -170,20 +169,20 @@
 
       /* SEARCH BUTTON */
       #search-button {
-        color: $black;
+        color: white;
         font-size: 14px;
         font-family: 'Scada', sans-serif;
         width: 70px;
         height: 30px;
         margin-right: 30px;
-        border: 1px solid $border-color;
+        border: 0px solid;
         box-sizing: border-box;
         border-radius: 5px;
-        background-color: $white;
+        background-color: #007FFF;
       }
 
       #search-button:hover {
-        background: $hover-white;
+        background: #0066CD;
         cursor: pointer;
       }
     }

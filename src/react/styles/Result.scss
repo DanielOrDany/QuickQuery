@@ -42,143 +42,31 @@
   border-bottom: .5px solid #EBEBEB;
   background-color: #F9F9F9;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: flex-end;
 
-  .result-operations {
-    display: flex;
 
-    select {
-      font-size: 14px;
-      height: 30px;
-      width: 130px;
-      border-radius: 5px;
-      border: 1px solid #adadad;
-    }
-
-    #result-left {
-      margin-left: 20px;
-    }
-
-    .result-select-column {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-
-      #result-select-column-title {
-        color: #3E3E3E;
-        font-family: 'Scada', sans-serif;
-        font-size: 14px;
-        width: 95px;
-        text-align: left;
-      }
-    }
-
-    .result-order {
-      display: flex;
-      align-items: center;
-
-      #result-order-title {
-        color: #3E3E3E;
-        font-family: 'Scada', sans-serif;
-        font-size: 14px;
-        width: 95px;
-        text-align: left;
-      }
-    }
-
-    #result-right {
-      margin-left: 20px;
-    }
-
-    /* SEARCH */
-    .result-search {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-
-      #result-search-title {
-        font-family: 'Scada', sans-serif;
-        color: #3E3E3E;
-        font-size: 14px;
-        width: 60px;
-        text-align: left;
-      }
-
-      /* SEARCH */
-      #search-field {
-        padding: 0 10px;
-        border: 1px solid #adadad;
-        border-radius: 5px;
-        width: 210px;
-        height: 30px;
-      }
-    }
-
-    /* FILTER */
-    .result-filter {
-      display: flex;
-      align-items: center;
-
-      #result-filter-title {
-        font-family: 'Scada', sans-serif;
-        color: #3E3E3E;
-        font-size: 14px;
-        width: 60px;
-        text-align: left;
-      }
-
-      /* Filter fields */
-      #filter-field1 {
-        padding: 0 10px;
-        border: 1px solid #adadad;
-        border-radius: 5px;
-        width: 210px;
-        height: 30px;
-      }
-
-      #filter-field2 {
-        padding: 0 10px;
-        border: 1px solid #adadad;
-        border-radius: 5px;
-        background-color: red;
-        width: 210px;
-        height: 30px;
-        margin-left: 10px;
-      }
-    }
-
-    #load-operations-result-btn {
-      background-color: #EB6E3B;
-      width: 80px;
-      height: 30px;
-      color: white;
-      margin-right: 5px;
-      font-family: 'Scada', sans-serif;
-      font-size: 14px;
-      border-radius: 5px;
-      border: 0 solid;
-    }
-  }
 
   /* SAVE BTN */
   .save {
     button {
-      width: 160px;
+      margin-right: 30px;
+
+      width: 140px;
       height: 30px;
-      margin-right: 10px;
-      background-color: #535353;
+      background-color: #49B96E;
       color: white;
       font-size: 14px;
       border: 0 solid;
       border-radius: 5px;
+
     }
   }
 
   .save:hover {
     button {
-      background-color: #3E3E3E;
-      color: white;
+      background-color: #389256;
+      cursor: pointer;
     }
   }
 }
@@ -195,8 +83,6 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-left: 20px;
-      padding-right: 20px;
 
       #header-title {
         font-size: 20px;
@@ -222,6 +108,10 @@
           height: 12px;
           margin-left: 10px;
         }
+
+        #header-calendar:hover {
+          cursor: pointer;
+        }
       }
     }
 
@@ -235,15 +125,16 @@
         font-size: 14px;
 
         margin-top: 10px;
-        margin-left: 20px;
-        margin-right: 20px;
         padding-left: 10px;
 
-        width: 240px;
+        min-width: 240px;
         height: 30px;
       }
 
+
+
       .header-filters {
+
         input {
           border: 0 solid;
           border-radius: 5px;
@@ -251,12 +142,18 @@
           height: 30px;
           padding-left: 10px;
           font-size: 14px;
-
-          margin: 10px 10px 5px 10px;
+          margin-top: 10px;
+          margin-bottom: 5px;
 
         }
 
+        #header-filters-inputs {
+          min-width: 240px;
+          display: flex;
+          justify-content: space-between;
+        }
       }
+
     }
   }
 }
@@ -286,7 +183,6 @@ table {
   margin-top: 10px;
   margin-left: 10px;
   margin-bottom: 1px;
-  min-width:800px;
   color:white;
   border-collapse: collapse;
   background: transparent;
@@ -297,8 +193,8 @@ th {
   background: dimgrey;
   border-left: 1px solid gray;
   border-right: 1px solid gray;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px 20px;
+
 }
 
 td {
