@@ -4,12 +4,15 @@ import {
     deleteConnection,
     addConnection
 } from "../methods";
+import { Offline, Online } from "react-detect-offline"
 
 import Button from './Button';
 import Modal from './Modal';
 
 import database_icon from "../icons/software.png";
 import delete_icon from "../icons/delete_icon.png";
+import wifi_on from "../icons/wifi_on-48dp.svg";
+import wifi_off from "../icons/wifi_off-48dp.svg";
 import '../styles/Connections.scss';
 
 
@@ -355,6 +358,19 @@ export default class Connections extends React.Component {
         );
     };
 
+    databaseHost(conn) {
+        const host = conn.URI.split("@")[1].split(":")[0];
+        if(host == "localhost" || host == "127.0.0.1") {
+            return(
+                <img alt={"internet on"} src={wifi_on} id="wifi-icon"/>
+            );
+        } else {
+            return(
+                <><Online><img alt={"internet on"} src={wifi_on} id="wifi-icon"/></Online><Offline><img alt={"internet off"} src={wifi_off} id="wifi-icon"/></Offline></>
+            );
+        }
+    }
+
     render() {
         return (
             <div className="connections-page">
@@ -397,7 +413,7 @@ export default class Connections extends React.Component {
                                             <div id="folders-name">
                                                 <img alt={"icon database"} src={database_icon} id="database-icon"/>
                                                 <div id="link">
-                                                    <p id="folders-n">{conn.name}</p>
+                                                    <p id="folders-n">{conn.name}{this.databaseHost(conn)}</p>
                                                 </div>
                                             </div>
 
