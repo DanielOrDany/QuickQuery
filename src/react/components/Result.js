@@ -5,7 +5,9 @@ import dateFnsFormat from 'date-fns/format';
 import { loadTableResult } from "../methods";
 import "../styles/Result.scss";
 import XLSX from "xlsx";
-import xxx from "../icons/Gear-0.2s-200px (1).svg"
+import xxx from "../icons/Gear-0.2s-200px (1).svg";
+import calendarIcon from "../icons/calendar.svg";
+import filterIcon from "../icons/filter.svg";
 
 const DESC = "DESC";
 const ASC = "ASC";
@@ -19,11 +21,6 @@ export default class Result extends React.Component {
             headers: "",
             rows: "",
             pageNumber: 0,
-            searchValue: '',
-            filterValue1: '',
-            filterValue2: '',
-            orderScore: DESC,
-            selectedItem: '',
             isNullResults: false,
             records: 0,
             pages: 0,
@@ -105,7 +102,6 @@ export default class Result extends React.Component {
                 } else {
                     const db_rows = await Promise.all(data.rows);
                     const headers = Object.keys(db_rows[0]);
-                    const selectedValue = Object.keys(db_rows[0])[0];
                     const rows = Object.values(db_rows);
                     const tableOptions = headers.map((header) => {
                         return {
@@ -113,13 +109,14 @@ export default class Result extends React.Component {
                             order: ASC,
                             search: "",
                             filter1: "",
-                            filter2: ""
+                            filter2: "",
+                            last: false,
+                            isFilterOpened: false
                         }
                     });
 
                     this.setState({
                         pages: data.pages,
-                        selectedItem: selectedValue,
                         options: tableOptions,
                         isNullResults: false,
                         headers,
@@ -150,6 +147,7 @@ export default class Result extends React.Component {
                     });
                 } else {
                     const db_rows = await Promise.all(data.rows);
+                    console.log("db_rows", db_rows);
                     const headers = Object.keys(db_rows[0]);
                     const selectedValue = Object.keys(db_rows[0])[0];
                     const rows = Object.values(db_rows);
@@ -201,15 +199,39 @@ export default class Result extends React.Component {
         });
     }
 
+    handleOpenFilter(columnName) {
+        const newOptions = this.state.options.map(option => {
+            if (option.column === columnName) {
+                if (option.isFilterOpened) {
+                    option.isFilterOpened = false;
+                } else {
+                    option.isFilterOpened = true;
+                }
+            }
+
+            return option;
+        });
+        this.setState({
+            options: newOptions
+        });
+    }
+
     handleChangeOrder(columnName) {
         const newOptions = this.state.options.map(option => {
             if (option.column === columnName) {
+                option.last = true;
+
                 if (option.order === ASC) {
                     option.order = DESC;
                 } else {
                     option.order = ASC;
                 }
-            } return option;
+
+            } else {
+                option.last = false;
+            }
+
+            return option;
         });
         this.setState({
             options: newOptions
@@ -364,7 +386,17 @@ export default class Result extends React.Component {
                                                 <div className="header">
                                                     <div className="header-data-ordering" onClick={() => this.handleChangeOrder(header)}>
                                                         <span id="header-title">{header}</span>
-                                                        <span className={ currentOption.order === ASC ? "arrow-up" : "arrow-down"} id="header-order"></span>
+                                                        <div className="header-options">
+                                                            <span className={ currentOption.order === ASC ? "arrow-up" : "arrow-down"} id="header-order"></span>
+                                                            {
+                                                                ((currentHeaderIsDate && currentHeaderIsNumber) || (!currentHeaderIsDate && currentHeaderIsNumber)) &&
+                                                                <img id="header-filter" src={filterIcon} onClick={() => this.handleOpenFilter(header)}/>
+                                                            }
+                                                            {
+                                                                (currentHeaderIsDate && !currentHeaderIsNumber) &&
+                                                                <img id="header-calendar" src={calendarIcon} onClick={() => this.handleOpenFilter(header)}/>
+                                                            }
+                                                        </div>
                                                     </div>
                                                     <div className="header-data-operations">
                                                         <input id="header-search"
@@ -372,32 +404,42 @@ export default class Result extends React.Component {
                                                                value={currentOption.search}
                                                                onChange={(e) => this.handleChangeSearchValue(e, header)}
                                                         />
-                                                        <div className="header-filters" style={((currentHeaderIsDate && currentHeaderIsNumber) || (!currentHeaderIsDate && currentHeaderIsNumber)) ? {display:"block"} : {display:"none"}}>
-                                                            <input id="filter-field1" placeholder={"filter val1"} value={currentOption.filter1}
-                                                                   onChange={(e) => this.handleChangeFilterValue1(e, header)}/>
-                                                            <input id="filter-field2" placeholder={"filter val2"} value={currentOption.filter2}
-                                                                   onChange={(e) => this.handleChangeFilterValue2(e, header)}/>
-                                                            <btn onClick={() => this.clearFilters(header)}>clear selected values</btn>
-                                                        </div>
-                                                        <div className="header-filters" style={(currentHeaderIsDate && !currentHeaderIsNumber) ? {display:"block"} : {display:"none"}}>
-                                                            <DayPickerInput
-                                                                style={{color: "#3E3E3E"}}
-                                                                formatDate={this.formatDate}
-                                                                format={FORMAT}
-                                                                value={currentOption.filter1}
-                                                                parseDate={(date) => this.handleDatePicker1(date, header)}
-                                                                placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
-                                                            />
-                                                            <DayPickerInput
-                                                                style={{color: "#3E3E3E"}}
-                                                                formatDate={this.formatDate}
-                                                                format={FORMAT}
-                                                                value={currentOption.filter2}
-                                                                parseDate={(date) => this.handleDatePicker2(date, header)}
-                                                                placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
-                                                            />
-                                                            <btn onClick={() => this.clearFilters(header)}>clear selected days</btn>
-                                                        </div>
+                                                        {
+                                                            (((currentHeaderIsDate && currentHeaderIsNumber) || (!currentHeaderIsDate && currentHeaderIsNumber)) && currentOption.isFilterOpened) &&
+                                                            <div className="header-filters">
+                                                                <input id="filter-field1" placeholder={"filter val1"}
+                                                                       value={currentOption.filter1}
+                                                                       onChange={(e) => this.handleChangeFilterValue1(e, header)}/>
+                                                                <input id="filter-field2" placeholder={"filter val2"}
+                                                                       value={currentOption.filter2}
+                                                                       onChange={(e) => this.handleChangeFilterValue2(e, header)}/>
+                                                                <btn onClick={() => this.clearFilters(header)}>clear
+                                                                    selected values
+                                                                </btn>
+                                                            </div>
+                                                        }
+                                                        {
+                                                            ((currentHeaderIsDate && !currentHeaderIsNumber) && currentOption.isFilterOpened) &&
+                                                            <div className="header-filters">
+                                                                <DayPickerInput
+                                                                    style={{color: "#3E3E3E"}}
+                                                                    formatDate={this.formatDate}
+                                                                    format={FORMAT}
+                                                                    value={currentOption.filter1}
+                                                                    parseDate={(date) => this.handleDatePicker1(date, header)}
+                                                                    placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
+                                                                />
+                                                                <DayPickerInput
+                                                                    style={{color: "#3E3E3E"}}
+                                                                    formatDate={this.formatDate}
+                                                                    format={FORMAT}
+                                                                    value={currentOption.filter2}
+                                                                    parseDate={(date) => this.handleDatePicker2(date, header)}
+                                                                    placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
+                                                                />
+                                                                <btn onClick={() => this.clearFilters(header)}>clear selected days</btn>
+                                                            </div>
+                                                        }
                                                     </div>
                                                 </div>
                                             </th>

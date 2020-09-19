@@ -193,14 +193,32 @@
 
     .header-data-ordering {
       display: flex;
+      align-items: center;
+      justify-content: space-between;
 
       #header-title {
         color: $white;
       }
 
-      #header-order {
-        margin-top: 10px;
-        margin-left: 5px;
+      .header-options {
+        display: flex;
+
+        #header-order {
+          margin-top: 5px;
+          margin-left: 5px;
+        }
+
+        #header-filter {
+          width: 15px;
+          height: 12px;
+          margin-left: 5px;
+        }
+
+        #header-calendar {
+          width: 15px;
+          height: 12px;
+          margin-left: 5px;
+        }
       }
     }
 

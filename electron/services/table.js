@@ -262,16 +262,16 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                 const column = option.column;
                 const search = option.search;
 
-                if (dialect === MYSQL && searchColumnNum === 0) {
+                if (dialect === MYSQL && searchColumnNum === 0 && search != "") {
                     query += ` WHERE '%${search}%' LIKE CONCAT('%', CAST(id AS CHAR(50)), '%')`;
                     searchColumnNum += 1;
-                } else if (dialect === POSTGRESQL && searchColumnNum === 0) {
+                } else if (dialect === POSTGRESQL && searchColumnNum === 0 && search != "") {
                     query += ` WHERE CAST(${column} AS VARCHAR(50)) Like '%${search}%'`;
                     searchColumnNum += 1;
-                } else if (dialect === MYSQL && searchColumnNum > 0) {
+                } else if (dialect === MYSQL && searchColumnNum > 0 && search != "") {
                     query += ` AND '%${search}%' LIKE CONCAT('%', CAST(id AS CHAR(50)), '%')`;
                     searchColumnNum += 1;
-                } else if (dialect === POSTGRESQL && searchColumnNum > 0) {
+                } else if (dialect === POSTGRESQL && searchColumnNum > 0 && search != "") {
                     query += ` AND CAST(${column} AS VARCHAR(50)) Like '%${search}%'`;
                     searchColumnNum += 1;
                 }
@@ -300,15 +300,35 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                         const newFilter2 = filter2.split("/");
 
                         if (searchColumnNum > 0) {
-                            query += ` AND ${column} BETWEEN \'${newFilter1[2] + newFilter1[0] + newFilter1[1]}\' AND \'${newFilter2[2] + newFilter2[0] + newFilter2[1]}\'`;
+                            const d1 = newFilter1[2] + newFilter1[0] + newFilter1[1];
+                            const d2 = newFilter2[2] + newFilter2[0] + newFilter2[1];
+                            if (d2 < d1) {
+                                query += ` AND ${column} BETWEEN \'${d2}\' AND \'${d1}\'`;
+                            } else {
+                                query += ` AND ${column} BETWEEN \'${d1}\' AND \'${d2}\'`;
+                            }
                         } else {
-                            query += ` WHERE ${column} BETWEEN \'${newFilter1[2] + newFilter1[0] + newFilter1[1]}\' AND \'${newFilter2[2] + newFilter2[0] + newFilter2[1]}\'`;
+                            const d1 = newFilter1[2] + newFilter1[0] + newFilter1[1];
+                            const d2 = newFilter2[2] + newFilter2[0] + newFilter2[1];
+                            if (d2 < d1) {
+                                query += ` WHERE ${column} BETWEEN \'${d2}\' AND \'${d1}\'`;
+                            } else {
+                                query += ` WHERE ${column} BETWEEN \'${d1}\' AND \'${d2}\'`;
+                            }
                         }
                     } else {
                         if (searchColumnNum > 0) {
-                            query += ` AND ${column} BETWEEN ${filter1} AND ${filter2}`;
+                            if (filter2 < filter1) {
+                                query += ` AND ${column} BETWEEN ${filter2} AND ${filter1}`;
+                            } else {
+                                query += ` AND ${column} BETWEEN ${filter1} AND ${filter2}`;
+                            }
                         } else {
-                            query += ` WHERE ${column} BETWEEN ${filter1} AND ${filter2}`;
+                            if (filter2 < filter1) {
+                                query += ` WHERE ${column} BETWEEN ${filter2} AND ${filter1}`;
+                            } else {
+                                query += ` WHERE ${column} BETWEEN ${filter1} AND ${filter2}`;
+                            }
                         }
                     }
                 }
@@ -316,13 +336,20 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
 
             // Add orders
             let orderByNum = 0;
+
+            const lastChangedOption = loadingOptions.operationsOptions.find((option) => option.last === true);
+            if (lastChangedOption) {
+                query += ` ORDER BY ${lastChangedOption.column} ${lastChangedOption.order}`;
+                orderByNum += 1;
+            }
+
             loadingOptions.operationsOptions.forEach((option) => {
                 const column = option.column;
                 const order = option.order;
-                // ORDER BY Country ASC, CustomerName DESC;
-                if (orderByNum > 0) {
+
+                if (orderByNum > 0 && !option.last) {
                     query += `, ${column} ${order}`;
-                } else {
+                } else if (orderByNum === 0 && !option.last) {
                     query += ` ORDER BY ${column} ${order}`;
                     orderByNum += 1;
                 }
