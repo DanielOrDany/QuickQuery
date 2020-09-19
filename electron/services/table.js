@@ -300,15 +300,35 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                         const newFilter2 = filter2.split("/");
 
                         if (searchColumnNum > 0) {
-                            query += ` AND ${column} BETWEEN \'${newFilter1[2] + newFilter1[0] + newFilter1[1]}\' AND \'${newFilter2[2] + newFilter2[0] + newFilter2[1]}\'`;
+                            const d1 = newFilter1[2] + newFilter1[0] + newFilter1[1];
+                            const d2 = newFilter2[2] + newFilter2[0] + newFilter2[1];
+                            if (d2 < d1) {
+                                query += ` AND ${column} BETWEEN \'${d2}\' AND \'${d1}\'`;
+                            } else {
+                                query += ` AND ${column} BETWEEN \'${d1}\' AND \'${d2}\'`;
+                            }
                         } else {
-                            query += ` WHERE ${column} BETWEEN \'${newFilter1[2] + newFilter1[0] + newFilter1[1]}\' AND \'${newFilter2[2] + newFilter2[0] + newFilter2[1]}\'`;
+                            const d1 = newFilter1[2] + newFilter1[0] + newFilter1[1];
+                            const d2 = newFilter2[2] + newFilter2[0] + newFilter2[1];
+                            if (d2 < d1) {
+                                query += ` WHERE ${column} BETWEEN \'${d2}\' AND \'${d1}\'`;
+                            } else {
+                                query += ` WHERE ${column} BETWEEN \'${d1}\' AND \'${d2}\'`;
+                            }
                         }
                     } else {
                         if (searchColumnNum > 0) {
-                            query += ` AND ${column} BETWEEN ${filter1} AND ${filter2}`;
+                            if (filter2 < filter1) {
+                                query += ` AND ${column} BETWEEN ${filter2} AND ${filter1}`;
+                            } else {
+                                query += ` AND ${column} BETWEEN ${filter1} AND ${filter2}`;
+                            }
                         } else {
-                            query += ` WHERE ${column} BETWEEN ${filter1} AND ${filter2}`;
+                            if (filter2 < filter1) {
+                                query += ` WHERE ${column} BETWEEN ${filter2} AND ${filter1}`;
+                            } else {
+                                query += ` WHERE ${column} BETWEEN ${filter1} AND ${filter2}`;
+                            }
                         }
                     }
                 }
