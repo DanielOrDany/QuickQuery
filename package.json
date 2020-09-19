@@ -42,7 +42,8 @@
     "tedious": "^8.0.1",
     "utf8": "^3.0.0",
     "wait-on": "^3.3.0",
-    "xlsx": "^0.15.6"
+    "xlsx": "^0.15.6",
+    "date-fns": "latest"
   },
   "homepage": "./",
   "scripts": {
