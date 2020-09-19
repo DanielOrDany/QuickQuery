@@ -19,11 +19,6 @@ export default class Result extends React.Component {
             headers: "",
             rows: "",
             pageNumber: 0,
-            searchValue: '',
-            filterValue1: '',
-            filterValue2: '',
-            orderScore: DESC,
-            selectedItem: '',
             isNullResults: false,
             records: 0,
             pages: 0,
@@ -105,7 +100,6 @@ export default class Result extends React.Component {
                 } else {
                     const db_rows = await Promise.all(data.rows);
                     const headers = Object.keys(db_rows[0]);
-                    const selectedValue = Object.keys(db_rows[0])[0];
                     const rows = Object.values(db_rows);
                     const tableOptions = headers.map((header) => {
                         return {
@@ -113,13 +107,13 @@ export default class Result extends React.Component {
                             order: ASC,
                             search: "",
                             filter1: "",
-                            filter2: ""
+                            filter2: "",
+                            last: false
                         }
                     });
 
                     this.setState({
                         pages: data.pages,
-                        selectedItem: selectedValue,
                         options: tableOptions,
                         isNullResults: false,
                         headers,
@@ -204,12 +198,19 @@ export default class Result extends React.Component {
     handleChangeOrder(columnName) {
         const newOptions = this.state.options.map(option => {
             if (option.column === columnName) {
+                option.last = true;
+
                 if (option.order === ASC) {
                     option.order = DESC;
                 } else {
                     option.order = ASC;
                 }
-            } return option;
+
+            } else {
+                option.last = false;
+            }
+
+            return option;
         });
         this.setState({
             options: newOptions

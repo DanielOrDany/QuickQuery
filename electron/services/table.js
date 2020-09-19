@@ -262,16 +262,16 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                 const column = option.column;
                 const search = option.search;
 
-                if (dialect === MYSQL && searchColumnNum === 0) {
+                if (dialect === MYSQL && searchColumnNum === 0 && search != "") {
                     query += ` WHERE '%${search}%' LIKE CONCAT('%', CAST(id AS CHAR(50)), '%')`;
                     searchColumnNum += 1;
-                } else if (dialect === POSTGRESQL && searchColumnNum === 0) {
+                } else if (dialect === POSTGRESQL && searchColumnNum === 0 && search != "") {
                     query += ` WHERE CAST(${column} AS VARCHAR(50)) Like '%${search}%'`;
                     searchColumnNum += 1;
-                } else if (dialect === MYSQL && searchColumnNum > 0) {
+                } else if (dialect === MYSQL && searchColumnNum > 0 && search != "") {
                     query += ` AND '%${search}%' LIKE CONCAT('%', CAST(id AS CHAR(50)), '%')`;
                     searchColumnNum += 1;
-                } else if (dialect === POSTGRESQL && searchColumnNum > 0) {
+                } else if (dialect === POSTGRESQL && searchColumnNum > 0 && search != "") {
                     query += ` AND CAST(${column} AS VARCHAR(50)) Like '%${search}%'`;
                     searchColumnNum += 1;
                 }
@@ -316,13 +316,20 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
 
             // Add orders
             let orderByNum = 0;
+
+            const lastChangedOption = loadingOptions.operationsOptions.find((option) => option.last === true);
+            if (lastChangedOption) {
+                query += ` ORDER BY ${lastChangedOption.column} ${lastChangedOption.order}`;
+                orderByNum += 1;
+            }
+
             loadingOptions.operationsOptions.forEach((option) => {
                 const column = option.column;
                 const order = option.order;
-                // ORDER BY Country ASC, CustomerName DESC;
-                if (orderByNum > 0) {
+
+                if (orderByNum > 0 && !option.last) {
                     query += `, ${column} ${order}`;
-                } else {
+                } else if (orderByNum === 0 && !option.last) {
                     query += ` ORDER BY ${column} ${order}`;
                     orderByNum += 1;
                 }
