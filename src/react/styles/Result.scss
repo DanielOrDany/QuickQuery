@@ -8,8 +8,13 @@
             "table"
             "pages";
   grid-template-rows: 50px auto 50px;
+
   height: calc(100vh - 50px);
+
   font-family: 'Scada', sans-serif;
+
+
+  /* SCROLL */
   ::-webkit-scrollbar {
     height: 5px;
     width: 5px;
@@ -26,12 +31,14 @@
 
 /* LOADING */
 .loading {
-  width: 100%;
-  height: 85vh;
   display: grid;
   justify-content: center;
   align-content: center;
   box-sizing: border-box;
+
+  width: 100%;
+  height: 85vh;
+
   font-size: 20px;
   font-weight: 900;
 }
@@ -39,40 +46,49 @@
 /* RIGHT SIDE - TOP MENU */
 .result-menu {
   grid-area: menu;
-  border-bottom: .5px solid #EBEBEB;
-  background-color: #F9F9F9;
+
   display: flex;
   align-items: center;
   justify-content: flex-end;
 
+  background-color: #F9F9F9;
+
+  border-bottom: .5px solid #EBEBEB;
 
 
   /* SAVE BTN */
   .save {
     button {
-      margin-right: 30px;
-
       width: 140px;
       height: 30px;
-      background-color: #49B96E;
-      color: white;
+
+      margin-right: 30px;
+
       font-size: 14px;
-      border: 0 solid;
+
+      background-color: white;
+      color: #3E3E3E;
+
+      border: 1px solid #3E3E3E;
       border-radius: 5px;
 
+      transition: 0.2s;
     }
   }
 
   .save:hover {
     button {
-      background-color: #389256;
       cursor: pointer;
+
+      background-color: #3E3E3E;
+      color: white;
     }
   }
 }
 
 .result-table {
   grid-area: table;
+
   overflow: auto;
 
   .header {
@@ -86,6 +102,7 @@
 
       #header-title {
         font-size: 20px;
+
         color: $white;
       }
 
@@ -100,12 +117,14 @@
         #header-filter {
           width: 15px;
           height: 12px;
+
           margin-left: 10px;
         }
 
         #header-calendar {
           width: 15px;
           height: 12px;
+
           margin-left: 10px;
         }
 
@@ -120,37 +139,42 @@
       flex-direction: column;
 
       #header-search {
-        border: 0 solid;
-        border-radius: 5px;
-        font-size: 14px;
+        min-width: 240px;
+        height: 30px;
 
         margin-top: 10px;
         padding-left: 10px;
+        padding-right: 10px;
 
-        min-width: 240px;
-        height: 30px;
+        font-size: 14px;
+
+        border: 0 solid;
+        border-radius: 5px;
       }
-
 
 
       .header-filters {
 
         input {
-          border: 0 solid;
-          border-radius: 5px;
           width: 110px;
           height: 30px;
-          padding-left: 10px;
-          font-size: 14px;
+
           margin-top: 10px;
           margin-bottom: 5px;
+          padding-left: 10px;
+          padding-right: 10px;
 
+          font-size: 14px;
+
+          border: 0 solid;
+          border-radius: 5px;
         }
 
         #header-filters-inputs {
-          min-width: 240px;
           display: flex;
           justify-content: space-between;
+
+          min-width: 240px;
         }
       }
 
@@ -162,6 +186,7 @@
 .arrow-up {
   width: 0;
   height: 0;
+
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-bottom: 5px solid $white;
@@ -170,6 +195,7 @@
 .arrow-down {
   width: 0;
   height: 0;
+
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 5px solid $white;
@@ -179,47 +205,57 @@
 /* TABLE */
 
 table {
-  font-family: 'Scada', sans-serif;
   margin-top: 10px;
   margin-left: 10px;
   margin-bottom: 1px;
-  color:white;
-  border-collapse: collapse;
+
+  font-family: 'Scada', sans-serif;
+
+  color: white;
   background: transparent;
+
+  border-collapse: collapse;
 }
 
 th {
-  font-family: 'Scada', sans-serif;
-  background: dimgrey;
-  border-left: 1px solid gray;
-  border-right: 1px solid gray;
   padding: 10px 20px;
 
+  font-family: 'Scada', sans-serif;
+
+  background: dimgrey;
+
+  border-left: 1px solid gray;
+  border-right: 1px solid gray;
 }
 
 td {
-  font-family: 'Scada', sans-serif;
-  background: dimgrey;
-  border-left: 1px solid gray;
-  border-right: 1px solid gray;
   padding: 14px 10px;
 
+  font-family: 'Scada', sans-serif;
+
+  background: dimgrey;
+
+  border-left: 1px solid gray;
+  border-right: 1px solid gray;
 }
 
 tr th {
   font-size: 16px;
   font-family: 'Scada', sans-serif;
+
   background: #252628;
   color: white;
 }
 
 .column_one td {
   background: #EFEFEF;
+
   border: 1px solid gray;
 }
 
 .column_two td {
   background: #EFEFEF;
+
   border: 1px solid gray;
 }
 
@@ -228,11 +264,14 @@ tr th {
   grid-area: pages;
 
   #select-page {
-    margin: 10px auto 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     width: 230px;
+
+    margin: 10px auto 10px;
+
 
     /* PAGE NUMBER */
     span {
@@ -243,12 +282,17 @@ tr th {
     #select-page-btn {
       width: 70px;
       height: 30px;
-      background-color: white;
-      color: #3E3E3E;
+
       font-family: 'Scada', sans-serif;
       font-size: 14px;
+
+      background-color: white;
+      color: #3E3E3E;
+
       border-radius: 5px;
       border: 1px solid #3E3E3E;
+
+      transition: 0.2s;
     }
 
     #select-page-btn:hover {
@@ -259,6 +303,7 @@ tr th {
     #select-page-btn:disabled {
       background-color: white;
       color: #8A8A8A;
+
       border: 1px solid #8A8A8A;
     }
   }

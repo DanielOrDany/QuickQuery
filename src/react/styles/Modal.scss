@@ -1,24 +1,30 @@
 .modalOverlay {
-    background-color: rgba(0, 0, 0, 0.5);
-    overflow: scroll;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+  overflow: scroll;
+  position: fixed;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background-color: rgba(0, 0, 0, 0.5);
 }
-  
+
 .modalWindow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #FFF;
-  min-height: 200px;
-  width: 500px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: absolute;
+
+  min-height: 200px;
+  width: 500px;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  background-color: #FFF;
 
   border-radius: 5px;
   border: 0 solid;
@@ -31,12 +37,14 @@
 }
 
 .modalHeader {
-  min-height: 60px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: space-between;
   box-sizing: border-box;
   align-items: center;
+
+  min-height: 60px;
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .modalTitle {
@@ -67,35 +75,39 @@
 }
 
 #subBtn {
-  color: white;
   font-size: 14px;
   font-family: 'Scada', sans-serif;
   text-transform: none;
 
+  color: white;
   background-color: #EB6E3B;
+
   border-radius: 5px;
   border: 0 solid;
 }
 
 #simplified-connection-btn {
-  color: white;
   font-size: 14px;
   font-family: 'Scada', sans-serif;
   text-transform: none;
 
+  color: white;
   background-color: #EB6E3B;
+
   border-radius: 5px;
   border: 0 solid;
 }
 
 #configure-manually-btn {
-  color: white;
+  margin-top: 10px;
+
   font-size: 14px;
   font-family: 'Scada', sans-serif;
   text-transform: none;
 
-  margin-top: 10px;
+  color: white;
   background-color: #EB6E3B;
+
   border-radius: 5px;
   border: 0 solid;
 }

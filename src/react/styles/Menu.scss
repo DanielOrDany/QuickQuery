@@ -1,191 +1,194 @@
-.sharing-buttons{
+.sharing-buttons {
 
-    /* EXPORT-BUTTON */
-    #import-div, #export-div {
-        font-family: 'Scada', sans-serif;
-        display: flex;
-        justify-content: left;
-        font-size: 15px;
-    }
+  /* EXPORT-BUTTON */
+  #import-div, #export-div {
+    display: flex;
+    justify-content: left;
 
-    p {
-        margin-top: 4px;
-    }
+    font-family: 'Scada', sans-serif;
+    font-size: 15px;
+  }
 
-    #export-button {
-        font-family: 'Scada', sans-serif;
+  p {
+    margin-top: 4px;
+  }
 
-        width: 70px;
+  #export-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 70px;
+    height: 30px;
+
+    margin-right: 10px;
+
+    font-family: 'Scada', sans-serif;
+    font-size: 14px;
+
+    color: white;
+    background: #EB6E3B;
+
+    border-radius: 5px;
+  }
+
+  #export-button:hover {
+    cursor: pointer;
+
+    background: #c1562b;
+  }
+
+
+  /* IMPORT-BUTTON */
+  #import-button::-webkit-file-upload-button {
+    visibility: hidden;
+  }
+
+  #import-button::before {
+    display: flex;
+    justify-content: center;
+    content: "Import";
+
+    padding-top: 4px;
+
+    font-size: 14px;
+
+    color: white;
+  }
+
+  #import-button {
+    width: 70px;
+    height: 30px;
+
+    margin-right: 10px;
+
+    font-family: 'Scada', sans-serif;
+
+    background: #EB6E3B;
+
+    border-radius: 5px;
+  }
+
+  #import-button:hover {
+    cursor: pointer;
+
+    background: #c1562b;
+  }
+}
+
+
+/* HEADER */
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+
+  height: 50px;
+
+  background: #252628;
+
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+
+
+  /* LOGO */
+  #l-icon {
+    width: 150px;
+    height: 50px;
+
+    margin-left: 30px;
+  }
+
+
+  /* MENU-BOX */
+  .menu-box {
+    display: flex;
+
+
+    /* SETTINGS BUTTONS */
+    .settings-buttons {
+      display: flex;
+
+      #settings-btn {
+        width: 80px;
         height: 30px;
-        margin-right: 10px;
+
+        margin-right: 30px;
+
+        font-family: 'Scada', sans-serif;
         font-size: 14px;
 
+        background: #EB6E3B;
         color: white;
+
+        border: 0;
+        border-radius: 5px;
+      }
+
+      #settings-btn:hover {
+        cursor: pointer;
+
+        background: #c1562b;
+      }
+
+
+      /* EXPORT-BUTTON */
+      #settings-button {
         display: flex;
         align-items: center;
         justify-content: center;
 
-        background: #EB6E3B;
-        border-radius: 5px;
-    }
-
-    #export-button:hover
-    {
-        background: #c1562b;
-        cursor: pointer;
-    }
-
-
-
-    /* IMPORT-BUTTON */
-    #import-button::-webkit-file-upload-button {
-        visibility: hidden;
-    }
-
-    #import-button::before {
-        font-size: 14px;
-        padding-top: 4px;
-
-        content: "Import";
-        color: white;
-
-        display: flex;
-        justify-content: center;
-
-    }
-
-    #import-button {
-        font-family: 'Scada', sans-serif;
-
-        width: 70px;
+        width: 80px;
         height: 30px;
-        margin-right: 10px;
 
+        margin-right: 30px;
 
+        font-family: 'Scada', sans-serif;
+        font-size: 14px;
+
+        color: white;
         background: #EB6E3B;
+
         border-radius: 5px;
-    }
 
-    #import-button:hover
-    {
-        background: #c1562b;
+        transition: 0.2s;
+      }
+
+      #settings-button:hover {
         cursor: pointer;
+
+        background: #c1562b;
+      }
     }
+
+
+    /* ICONS */
+    #open-tables {
+      width: 30px;
+      height: 30px;
+
+      margin-right: 30px;
+    }
+
+    #open-tables:hover {
+      cursor: pointer;
+    }
+
+    #open-connections {
+      width: 30px;
+      height: 30px;
+
+      margin-right: 30px;
+    }
+
+    #open-connections:hover {
+      cursor: pointer;
+    }
+  }
 }
-
-/* HEADER */
-.menu-header {
-    height: 50px;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-
-    background: #252628;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-
-
-
-    /* LOGO */
-    #l-icon {
-        margin-left: 30px;
-        width: 150px;
-        height: 50px;
-    }
-
-
-
-    /* MENU-BOX */
-    .menu-box {
-        display: flex;
-
-
-
-        /* settings-BUTTONS */
-        .settings-buttons{
-            display: flex;
-
-            #settings-btn {
-                font-family: 'Scada', sans-serif;
-
-                width: 80px;
-                height: 30px;
-                margin-right: 30px;
-                font-size: 14px;
-
-                background: #EB6E3B;
-                color: white;
-                border: 0;
-                border-radius: 5px;
-            }
-
-            #settings-btn:hover {
-                background: #c1562b;
-                cursor: pointer;
-            }
-
-
-
-            /* EXPORT-BUTTON */
-            #settings-button {
-                font-family: 'Scada', sans-serif;
-
-                width: 80px;
-                height: 30px;
-                margin-right: 30px;
-                font-size: 14px;
-
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                background: #EB6E3B;
-                border-radius: 5px;
-            }
-
-            #settings-button:hover
-            {
-                background: #c1562b;
-                cursor: pointer;
-            }
-        }
-
-
-
-        /* ICONS */
-        #open-tables {
-            width: 30px;
-            height: 30px;
-            margin-right: 30px;
-        }
-
-        #open-tables:hover {
-            cursor: pointer;
-        }
-
-        #open-connections {
-            width: 30px;
-            height: 30px;
-            margin-right: 30px;
-        }
-
-        #open-connections:hover {
-            cursor: pointer;
-        }
-    }
-}
-
-
-
-
-
-
 
 
 /* СТАРИЙ КОД */
-
 
 
 /*.menu-header {
