@@ -369,11 +369,23 @@ export default class Connections extends React.Component {
         
         if(host == "localhost" || host == "127.0.0.1") {
             return(
-                <img alt={"internet on"} src={wifi_on} id="wifi-icon"/>
+                <>
+                    <img alt={"internet on"} src={wifi_on} id="wifi-icon"/>
+                    <p className="tip-info">Connection with local database established.</p>
+                </>
             );
         } else {
             return(
-                <><Online><img alt={"internet on"} src={wifi_on} id="wifi-icon"/></Online><Offline><img alt={"internet off"} src={wifi_off} id="wifi-icon"/></Offline></>
+                <>
+                    <Online>
+                        <img alt={"internet on"} src={wifi_on} id="wifi-icon"/>
+                        <p className="tip-info">Connection with remote database established.</p>
+                    </Online>
+                    <Offline>
+                        <img alt={"internet off"} src={wifi_off} id="wifi-icon"/>
+                        <p className="tip-info">Connection with remote database lost.</p>
+                    </Offline>
+                </>
             );
         }
     }
@@ -420,7 +432,7 @@ export default class Connections extends React.Component {
                                             <div id="folders-name">
                                                 <img alt={"icon database"} src={database_icon} id="database-icon"/>
                                                 <div id="link">
-                                                    <p id="folders-n">{conn.name}{this.databaseHost(conn)}</p>
+                                                    <p id="folders-n" className="network-tip">{conn.name}{this.databaseHost(conn)}</p>
                                                 </div>
                                             </div>
 
