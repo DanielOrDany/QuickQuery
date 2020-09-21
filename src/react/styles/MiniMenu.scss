@@ -5,12 +5,16 @@
 }
 
 .dropdown {
-    width: 96px;
-    transform: translateX(30%) translateY(10%);;
-    background-color: #FFFFFF;
-    border: 0.2px solid #3a3a3a;
-    overflow: hidden;
     z-index: 999;
+    overflow: hidden;
+
+    width: 96px;
+
+    transform: translateX(30%) translateY(10%);;
+
+    background-color: #FFFFFF;
+
+    border: 0.2px solid #3a3a3a;
 }
 
 .menu {
@@ -19,6 +23,7 @@
 
 .menu-item {
     height: 20px;
+
     text-align: center;
 }
 .menu-item:hover {

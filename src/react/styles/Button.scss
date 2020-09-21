@@ -1,14 +1,18 @@
 .btn {
-    position: relative;
-    padding: 10px 15px;
-    background-color: #7CC6fE;
-    border: none;
-    color: #FFF;
-    font-weight: 600;
-    cursor: pointer;
-    text-transform: uppercase;
     display: inline-block;
+    position: relative;
+    cursor: pointer;
+
+    padding: 10px 15px;
+
+    font-weight: 600;
+    text-transform: uppercase;
     text-decoration: none;
+
+    background-color: #7CC6fE;
+    color: #FFF;
+
+    border: none;
 }
 
 .btn:hover {
@@ -22,6 +26,7 @@
 
 .btn.active {
     background-color: #23C9FF;
+
     border: 1px solid #5EB2F2;
     box-shadow: 0px 0 2px 0px #C0C0C0;
 }
@@ -29,6 +34,7 @@
 .btn.invert {
     background-color: #FFF;
     color: #000;
+
     border: 1px solid rgba(0, 0, 0, 0.2);
 }
 

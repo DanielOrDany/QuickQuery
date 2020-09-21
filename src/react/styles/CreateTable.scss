@@ -1,16 +1,19 @@
 @import "./variables";
 
+
+/* CREATE TABLE PAGE */
 .create_edit_table {
   display: grid;
-
-  height: calc(100vh - 50px);
-
   grid-template-areas:
             "miniMenu"
             "queryText"
             "newTable";
   grid-template-rows: 50px 45vh auto;
 
+  height: calc(100vh - 50px);
+
+
+  /* SCROLL */
   ::-webkit-scrollbar {
     height: 5px;
     width: 5px;
@@ -25,125 +28,148 @@
     background: #4A4A4A;
   }
 
+
+  /* MINI MENU */
   #mini-menu {
     grid-area: miniMenu;
-    font-family: 'Scada', sans-serif;
 
-    border-bottom: .5px solid #EBEBEB;
+    height: 50px;
+
+    font-family: 'Scada', sans-serif;
 
     background-color: #F9F9F9;
 
-    height: 50px;
+    border-bottom: .5px solid #EBEBEB;
+
 
     .actions {
       display: flex;
       justify-content: space-between;
 
       .runButton {
+        display: inline-block;
+        cursor: pointer;
+
+        min-width: 90px;
+        height: 30px;
+
         margin-top: 10px;
         margin-left: 10px;
-        vertical-align: middle;
-        display: inline-block;
-        border-radius: 5px;
 
+        font-size: 14px;
+        vertical-align: middle;
+        text-align: center;
 
         background-color: white;
         color: #3E3E3E;
-        font-size: 14px;
 
+        border-radius: 5px;
         border: 1px solid #3E3E3E;
 
-
-        text-align: center;
-        min-width: 90px;
-        height: 30px;
-        cursor: pointer;
-
+        transition: 0.2s;
       }
 
       .runButton:hover {
-        background-color: #3E3E3E;
-        color: white;
-
         cursor: pointer;
+
+        color: white;
+        background-color: #3E3E3E;
       }
 
       .saving-result {
         display: flex;
 
         .saveButton {
+          display: inline-block;
+          cursor: pointer;
+
+          width: 90px;
+          height: 30px;
+
           margin-top: 10px;
           margin-right: 10px;
-
-
           padding: 0 32px;
+
+          font-size: 14px;
+          text-align: center;
+          text-decoration: none;
 
           background-color: white;
           color: #3E3E3E;
-          font-size: 14px;
 
           border: 1px solid #3E3E3E;
           border-radius: 5px;
 
-          width: 90px;
-          height: 30px;
-          text-align: center;
-          text-decoration: none;
-          display: inline-block;
-          cursor: pointer;
+          transition: 0.2s;
         }
 
         .saveButton:hover {
-          background-color: #3E3E3E;
-          color: white;
-
           cursor: pointer;
+
+          color: white;
+          background-color: #3E3E3E;
         }
 
         #aliasText {
+          height: 30px;
+          min-width: 110px;
+
           margin-top: 10px;
           margin-right: 20px;
           margin-left: 20px;
-          height: 30px;
-          min-width: 110px;
         }
       }
     }
   }
 
+
+  /* TABLE */
   table {
+    width: calc(100% - 20px);
+
     margin-left: 10px;
     margin-right: 100px;
-    width: calc(100% - 20px);
   }
 
+
+  /* INPUT CODE*/
   #queryText {
     grid-area: queryText;
-    margin-top: 5.4%;
-    margin-left: 10px;
+
     width: calc(100% - 25px);
     height: 78.4%;
+
+    margin-top: 5.4%;
+    margin-left: 10px;
+
     resize: none;
+
     border: 0.5px solid #989898;
   }
 
   .alert {
+    width: calc(100% - 20px);
+
     margin-left: 15px;
     margin-top: 10px;
-    width: calc(100% - 20px);
     padding: 20px;
-    background-color: #f44336;
+
     color: white;
+    background-color: #f44336;
   }
 
   .closebtn {
+    cursor: pointer;
+
     margin-left: 15px;
-    color: white;
-    font-weight: bold;
     float: right;
+
+
+    font-weight: bold;
     font-size: 22px;
     line-height: 20px;
-    cursor: pointer;
+
+    color: white;
     transition: 0.3s;
   }
 
@@ -155,10 +181,11 @@
 
 #add-btn-table {
   grid-area: newTable;
-  margin-bottom: 10px;
   overflow: auto;
+
   max-height: 340px;
 
+  margin-bottom: 10px;
 }
 
 #your-new-table {

@@ -1,16 +1,18 @@
 @import "./variables";
 
 .all-page-tables {
-  padding: 0 !important;
-  margin: 0 !important;
   display: grid;
   grid-template-areas: "left line right";
   grid-template-columns: 300px 1px auto;
 
+  padding: 0 !important;
+  margin: 0 !important;
+
+
   /* LEFT SIDE */
   .left-side {
-    font-family: 'Scada', sans-serif;
     grid-area: left;
+
     display: grid;
     grid-template-areas:
             "miniMenu"
@@ -18,18 +20,27 @@
             "lineUp"
             "tables"
             "addBtn";
-    grid-template-rows: 50px 30px 1px auto 55px;
+    grid-template-rows: 50px 50px 1px auto 55px;
+
     width: 300px;
     height: calc(100vh - 50px);
+
+    font-family: 'Scada', sans-serif;
+
     background: #EFEFEF;
 
     #mini-menu {
       grid-area: miniMenu;
-      font-family: 'Scada', sans-serif;
+
       display: flex;
       align-items: center;
+
       height: 50px;
+
+      font-family: 'Scada', sans-serif;
+
       background-color: #E3E3E3;
+
       border-bottom: .1px solid #9d9d9d;
 
       .search {
@@ -37,11 +48,16 @@
         align-items: center;
 
         #search-field {
-          // margin-left: 150px;
-          padding-left: 10px;
-          margin-left: 20px;
           width: 190px;
           height: 30px;
+
+          // margin-left: 150px;
+          padding-left: 10px;
+          padding-right: 10px;
+          margin-left: 20px;
+
+          font-size: 14px;
+          font-family: 'Scada', sans-serif;
 
           border: .4px solid #818181;
           border-radius: 5px;
@@ -50,74 +66,98 @@
 
       /* SEARCH BUTTON */
       .search-button {
-        color: $black;
-        font-family: 'Scada', sans-serif;
-        font-size: 12px;
         width: 60px;
         height: 30px;
+
         margin-left: 10px;
-        border: 1px solid $border-color;
+
+        font-family: 'Scada', sans-serif;
+        font-size: 14px;
+
+        color: white;
+        background-color: #007FFF;
+
         box-sizing: border-box;
         border-radius: 5px;
-        background-color: $white;
+        border: 0 solid;
+
+        transition: 0.2s;
       }
 
       .search-button:hover {
-        background-color: $hover-white;
         cursor: pointer;
+
+        background-color: #0066CD;
       }
     }
 
     #list {
       grid-area: queries;
-      font-family: 'Scada', sans-serif;
-      color: #3E3E3E;
-      font-size: 19px;
+
       display: flex;
-      margin: 0px auto;
       align-items: center;
+
+      margin: 0 auto;
+
+      font-family: 'Scada', sans-serif;
+      font-size: 20px;
+
+      color: #3E3E3E;
     }
 
     #lineUp {
       grid-area: lineUp;
+
       height: 1px;
       width: 280px;
-      margin: 0px auto;
+
+      margin: 0 auto;
+
       background-color: #ABABAB;
     }
 
     /* TABLES */
     #tables {
       grid-area: tables;
-      margin-top: 10px;
       overflow: scroll;
+
+      margin-top: 10px;
+
       font-family: 'Scada', sans-serif;
 
       .table {
         width: 260px;
+
         margin-left: 20px;
         margin-bottom: 10px;
 
         .container {
-          padding-left: 5px;
-          padding-right: 0px;
-          border-bottom: .2px solid #adadad;
           display: flex;
           justify-content: space-between;
 
+          padding-left: 5px;
+          padding-right: 0px;
+
+          border-bottom: .2px solid #adadad;
+
           #table-name {
             display: flex;
+
             width: 200px;
 
             #name {
               margin-left: 15px;
-              font-size: 14px;
               margin-bottom: 10px;
 
+              font-size: 14px;
+
+              color: #3E3E3E;
+
               #folder-n, p {
-                font-size: 14px;
                 margin: 0;
                 padding: 0;
+
+                font-size: 14px;
               }
             }
           }
@@ -127,9 +167,10 @@
           }
 
           #table_menu {
-            margin-right: 0px;
             height: 23px;
             width: 23px;
+
+            margin-right: 0px;
           }
 
           #table_menu:hover {
@@ -146,6 +187,7 @@
       .add-button {
         width: 40px;
         height: 40px;
+
         margin: 0 auto 10px;
       }
 
@@ -158,8 +200,10 @@
   /* VERTICAL LINE */
   .line-tables-page {
     grid-area: line;
+
     width: 1px;
     height: calc(100vh - 50px);
+
     background-color: #818181;
     filter: blur(1px);
   }
