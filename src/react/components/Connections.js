@@ -432,7 +432,8 @@ export default class Connections extends React.Component {
                                             <div id="folders-name">
                                                 <img alt={"icon database"} src={database_icon} id="database-icon"/>
                                                 <div id="link">
-                                                    <p id="folders-n" className="network-tip">{conn.name}{this.databaseHost(conn)}</p>
+                                                    <p id="folders-n">{conn.name}</p>
+                                                    <div className="network-tip">{this.databaseHost(conn)}</div>
                                                 </div>
                                             </div>
 
