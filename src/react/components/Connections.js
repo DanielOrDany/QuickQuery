@@ -248,34 +248,34 @@ export default class Connections extends React.Component {
             <div>
                 <div className="information-field">
                     <span className="input-title">Name:</span>
-                    <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda"
+                    <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda" type="search"
                         onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">Host:</span>
-                    <input id="input-field-host" ref="host" className="form-control" type="text" placeholder="127.0.0.1"
+                    <input id="input-field-host" ref="host" className="form-control" type="text" placeholder="127.0.0.1" type="search"
                         onChange={this.hostOnChange} onKeyPress={this.hostKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">Port:</span>
-                    <input id="input-field-port" ref="port" className="form-control" type="text" placeholder="5432"
+                    <input id="input-field-port" ref="port" className="form-control" type="text" placeholder="5432" type="search"
                         onChange={this.portOnChange} onKeyPress={this.portKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">User name:</span>
-                    <input id="input-field-user" ref="user" className="form-control" type="text" placeholder="root"
+                    <input id="input-field-user" ref="user" className="form-control" type="text" placeholder="root" type="search"
                         onChange={this.userOnChange} onKeyPress={this.userKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">Password:</span>
                     <input id="input-field-password" ref="password" className="form-control" type="text"
-                        placeholder="pass1234"
+                        placeholder="pass1234" type="search"
                         onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">Database:</span>
                     <input id="input-field-database" ref="database" className="form-control" type="text"
-                        placeholder="flightradar24"
+                        placeholder="flightradar24" type="search"
                         onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
                 </div>
                 <div className="information-field">
@@ -285,7 +285,7 @@ export default class Connections extends React.Component {
                         </div>
                     </span>
                     <input id="input-field-schema" ref="schema" className="form-control" type="text"
-                        placeholder="public"
+                        placeholder="public" type="search"
                         onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                 </div>
                 <div className="choose-db-field">
@@ -324,12 +324,12 @@ export default class Connections extends React.Component {
             <div>
                 <div className="information-field">
                     <span className="input-title">Name:</span>
-                    <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda"
+                    <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda" type="search"
                            onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">URI:</span>
-                    <input id="input-field-uri" ref="uri" className="form-control" type="text"
+                    <input id="input-field-uri" ref="uri" className="form-control" type="text" type="search"
                            placeholder="databaseType://username:password@host:port/databaseName"
                            onChange={this.uriOnChange} onKeyPress={this.uriKeyPress}
                     />
@@ -342,6 +342,7 @@ export default class Connections extends React.Component {
                     </span>
                     <input id="input-field-schema" ref="schema" className="form-control" type="text"
                         placeholder="public"
+                        type="search"
                         onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                 </div>
                 <hr/>
@@ -418,7 +419,7 @@ export default class Connections extends React.Component {
                     <button type="button" id="add-button" onClick={() => this.openModal()}>Add connection
                     </button>
                     <div className="search">
-                        <input id="search-field"/>
+                        <input id="search-field" type="search"/>
                         <button type="button" id="search-button" onClick={() => this.search()}>Search</button>
                     </div>
                 </div>

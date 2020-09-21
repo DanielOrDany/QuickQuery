@@ -135,7 +135,7 @@ export default class Tables extends React.Component {
                     <div id="mini-menu">
 
                         <div className="search">
-                            <input id="search-field"/>
+                            <input id="search-field" type="search"/>
                             <button type="button" className="search-button" onClick={() => this.search()}>Search
                             </button>
                         </div>

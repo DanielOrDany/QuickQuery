@@ -1,12 +1,13 @@
 import React from "react";
 import 'react-day-picker/lib/style.css';
 import dateFnsFormat from 'date-fns/format';
-import {loadTableResult} from "../methods";
+import { loadTableResult } from "../methods";
 import "../styles/Result.scss";
 import XLSX from "xlsx";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
 import calendarIcon from "../icons/calendar.svg";
 import filterIcon from "../icons/filter.svg";
+import DayPickerInput from "react-day-picker/DayPickerInput";
 
 const DESC = "DESC";
 const ASC = "ASC";
@@ -414,6 +415,7 @@ export default class Result extends React.Component {
                                                     </div>
                                                     <div className="header-data-operations">
                                                         <input id="header-search"
+                                                               type="search"
                                                                placeholder={"val.."}
                                                                value={currentOption.search}
                                                                onChange={(e) => this.handleChangeSearchValue(e, header)}
@@ -424,10 +426,12 @@ export default class Result extends React.Component {
 
                                                                 <div id="header-filters-inputs">
                                                                     <input id="filter-field1"
+                                                                           type="search"
                                                                            placeholder={"filter val1"}
                                                                            value={currentOption.filter1}
                                                                            onChange={(e) => this.handleChangeFilterValue1(e, header)}/>
                                                                     <input id="filter-field2"
+                                                                           type="search"
                                                                            placeholder={"filter val2"}
                                                                            value={currentOption.filter2}
                                                                            onChange={(e) => this.handleChangeFilterValue2(e, header)}/>
