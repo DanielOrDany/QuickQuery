@@ -266,22 +266,108 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-
         width: 940px;
-
         border-bottom: .2px solid #adadad;
 
-        #database-icon {
-          width: 40px;
-          height: 40px;
+        .folders-name {
+          display: flex;
+          align-items: center;
+
+          #database-icon {
+            width: 40px;
+            height: 40px;
+          }
+
+          .link {
+            display: flex;
+            margin-left: 10px;
+            font-size: 14px;
+
+            #wifi-icon {
+              width: 20px;
+              height: 20px;
+              margin-left: 5px;
+            }
+
+            .network-tip:hover .tip-info {
+              display: block;
+              z-index: 999;
+
+              transform-origin: 100% 0%;
+              -webkit-animation: fadeIn 0.3s ease-in-out;
+              animation: fadeIn 0.3s ease-in-out;
+            }
+
+
+            /* The tooltip */
+            .network-tip .tip-info {
+              display: none;
+              position: absolute;
+
+              padding: 8px;
+
+              text-align: left;
+              font-size: 13px;
+              line-height: 1.4;
+
+              background-color: #1E2021;
+              color: $white;
+
+              transform: translateX(35px) translateY(-29px);
+
+              border-radius: 3px;
+              box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+            }
+
+            .network-tip .tip-info:before {
+              position: absolute;
+              content: '';
+
+              width: 0;
+              height: 0;
+
+              left: -14px;
+              top: 9px;
+
+              border: 8px solid transparent;
+              border-right-color: #1E2021;
+            }
+
+            .network-tip .tip-info:after {
+              content: '';
+              position: absolute;
+
+              width: 100%;
+              height: 40px;
+
+              top: -40px;
+              left: 0;
+            }
+          }
         }
 
-        #link {
-          margin-left: 10px;
-
-          font-size: 14px;
-
+        .functional {
           display: flex;
+          align-items: center;
+
+          #time {
+            margin-right: 10px;
+
+            font-size: 14px;
+
+            color: #8D8D8D;
+          }
+
+          #pin-icon {
+            width: 20px;
+            height: 20px;
+            margin-left: 5px;
+          }
+
+          #delete-icon {
+            width: 20px;
+            height: 20px;
+          }
         }
       }
 
@@ -299,111 +385,8 @@
 
       color: #3E3E3E;
     }
-
-    #wifi-icon {
-      width: 20px;
-      height: 20px;
-
-      margin-left: 5px;
-      margin-bottom: 4px;
-    }
-
-    .network-tip:hover .tip-info {
-      display: block;
-      z-index: 999;
-    
-      transform-origin: 100% 0%;
-      -webkit-animation: fadeIn 0.3s ease-in-out;
-      animation: fadeIn 0.3s ease-in-out;
-    }
-    
-    
-    /* The tooltip */
-    .network-tip .tip-info {
-      display: none;
-      position: absolute;
-    
-      padding: 8px;
-    
-      text-align: left;
-      font-size: 13px;
-      line-height: 1.4;
-    
-      background-color: #1E2021;
-      color: $white;
-
-      transform: translateX(35px) translateY(-29px);
-    
-      border-radius: 3px;
-      box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-    }
-    
-    .network-tip .tip-info:before {
-      position: absolute;
-      content: '';
-    
-      width: 0;
-      height: 0;
-    
-      left: -14px;
-      top: 9px;
-    
-      border: 8px solid transparent;
-      border-right-color: #1E2021;
-    }
-    
-    .network-tip .tip-info:after {
-      content: '';
-      position: absolute;
-    
-      width: 100%;
-      height: 40px;
-    
-      top: -40px;
-      left: 0;
-    }
-
-    #folders-name {
-      display: flex;
-      align-items: center;
-    }
-
-    #functional {
-      display: flex;
-      align-items: center;
-
-      #time {
-        margin-right: 10px;
-
-        font-size: 14px;
-
-        color: #8D8D8D;
-      }
-
-      #pin-icon {
-        width: 20px;
-        height: 20px;
-
-        margin-right: 10px;
-      }
-
-      #delete-icon {
-        width: 20px;
-        height: 20px;
-      }
-    }
   }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
