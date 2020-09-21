@@ -154,6 +154,8 @@
 
 
       .header-filters {
+        display: flex;
+        flex-direction: column;
 
         input {
           width: 110px;
@@ -175,6 +177,22 @@
           justify-content: space-between;
 
           min-width: 240px;
+        }
+
+        #clear-filters-btn {
+          margin-top: 5px;
+          color: $white;
+          border: 1px solid;
+          border-radius: 5px;
+          padding: 3px 5px;
+          transition: 0.2s;
+        }
+
+        #clear-filters-btn:hover {
+          color: $orange;
+          border: 1px solid;
+          border-radius: 5px;
+          cursor: pointer;
         }
       }
 
