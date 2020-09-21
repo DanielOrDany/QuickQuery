@@ -75,7 +75,7 @@
         font-size: 14px;
 
         color: white;
-        background-color: #007FFF;
+        background-color: $blue;
 
         box-sizing: border-box;
         border-radius: 5px;
@@ -87,7 +87,7 @@
       .search-button:hover {
         cursor: pointer;
 
-        background-color: #0066CD;
+        background-color: $hover-blue;
       }
     }
 
@@ -187,12 +187,14 @@
       .add-button {
         width: 40px;
         height: 40px;
-
+        transition: 0.2s;
         margin: 0 auto 10px;
       }
 
       .add-button:hover {
         cursor: pointer;
+        background: $hover-white;
+        border-radius: 100%;
       }
     }
   }
