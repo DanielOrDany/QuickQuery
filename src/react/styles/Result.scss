@@ -109,6 +109,11 @@
       .header-options {
         display: flex;
 
+        .selected-filter {
+          background: $orange;
+          border-radius: 5px;
+        }
+
         #header-order {
           margin-top: 5px;
           margin-left: 5px;

@@ -404,11 +404,12 @@ export default class Result extends React.Component {
                                                             </span>
                                                             {
                                                                 ((!currentHeaderIsDate && currentHeaderIsNumber)) &&
-                                                                <img id="header-filter" src={filterIcon} onClick={() => this.handleOpenFilter(header)}/>
+                                                                <img id="header-filter" src={filterIcon} className={currentOption.isFilterOpened ? "selected-filter" : null}
+                                                                     onClick={() => this.handleOpenFilter(header)}/>
                                                             }
                                                             {
                                                                 (currentHeaderIsDate && !currentHeaderIsNumber) &&
-                                                                <img id="header-calendar" src={calendarIcon}
+                                                                <img id="header-calendar" src={calendarIcon} className={currentOption.isFilterOpened ? "selected-filter" : null}
                                                                      onClick={() => this.handleOpenFilter(header)}/>
                                                             }
                                                         </div>
