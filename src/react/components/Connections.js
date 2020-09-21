@@ -430,17 +430,16 @@ export default class Connections extends React.Component {
                                 <div id={conn.name} className="connection-folder" key={conn.name}>
                                         <div className="link-container"
                                              onDoubleClick={() => this.openConnection(conn.name)}>
-                                            <div id="folders-name">
+                                            <div className="folders-name">
                                                 <img alt={"icon database"} src={database_icon} id="database-icon"/>
-                                                <div id="link">
+                                                <div className="link">
                                                     <p id="folders-n">{conn.name}</p>
                                                     <div className="network-tip">{this.databaseHost(conn)}</div>
                                                 </div>
                                             </div>
 
-                                            <div id="functional">
-                                                <div
-                                                    onClick={() => this.deleteConnection(conn.name)}>
+                                            <div className="functional">
+                                                <div onClick={() => this.deleteConnection(conn.name)}>
                                                     <img alt={"delete icon"} src={delete_icon} id="delete-icon"/>
                                                 </div>
                                             </div>
