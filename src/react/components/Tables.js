@@ -85,7 +85,12 @@ export default class Tables extends React.Component {
             }
 
             return `#/tables/result/${alias}`;
-        }).then(url => window.location.hash = url);
+        }).then(url => {
+            window.location.hash = url;
+            this.setState({
+                currentOpenedTable: alias
+            });
+        });
     }
 
     createTable() {
@@ -109,7 +114,9 @@ export default class Tables extends React.Component {
     };
 
     render() {
-        if (!this.state.tables) {
+        const { currentOpenedTable, tables, isOpen, searchedTables } = this.state;
+
+        if (!tables) {
             return (
                 <div className={"loading"}>
                     <img src={xxx}/>
@@ -118,10 +125,9 @@ export default class Tables extends React.Component {
             );
         } else return (
             <div className="all-page-tables">
-
                 <Modal
                     title="Error"
-                    isOpen={this.state.isOpen}
+                    isOpen={isOpen}
                     onCancel={this.handleCancel}
                     onSubmit={this.handleSubmit}
                     submitTitle="OK"
@@ -133,51 +139,42 @@ export default class Tables extends React.Component {
 
                 <div className="left-side">
                     <div id="mini-menu">
-
                         <div className="search">
                             <input id="search-field" type="search"/>
                             <button type="button" className="search-button" onClick={() => this.search()}>Search
                             </button>
                         </div>
-
                     </div>
 
                     <div id="list">List of queries:</div>
                     <div id="lineUp"></div>
 
                     <div id="tables">
-                        {this.state.searchedTables
-                            .map(table => {
-                                    return (
-                                        <div id={table.alias} className="table" key={table.alias}>
-                                            <div className="container">
-                                                <div id="table-name" onClick={() => this.openTable(table.alias)}>
-                                                    <span>&#11044;</span>
-                                                    <div id="name">
-                                                        <p id="table-n">{table.alias}</p>
-                                                    </div>
+                        {
+                            searchedTables.map(table => {
+                                return (
+                                    <div id={table.alias} className="table" key={table.alias}>
+                                        <div className="container">
+                                            <div id="table-name" onClick={() => this.openTable(table.alias)}>
+                                                <span style={table.alias === currentOpenedTable ? {color: "#eb6e3b"} : null}>&#11044;</span>
+                                                <div id="name">
+                                                    <p id="table-n">{table.alias}</p>
                                                 </div>
-                                                <MiniMenu icon={<MiniMenuIcon/>} table={table}/>
                                             </div>
+                                            <MiniMenu icon={<MiniMenuIcon/>} table={table}/>
                                         </div>
-                                    );
-                                }
-                            )}
-
+                                    </div>
+                                );
+                            }
+                        )}
                     </div>
+
                     <div id="add-btn-field">
-
                         <img className="add-button" src={plus} onClick={() => this.createTable()}/>
-
                     </div>
-
-
-
                 </div>
 
-
                 <div className="line-tables-page"></div>
-
 
                 <div className="right-side-tables-page">
                     <Route path="/tables/create-table" component={CreateTable}/>
