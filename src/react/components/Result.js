@@ -380,7 +380,7 @@ export default class Result extends React.Component {
                                                     if (typeof value !== "boolean") {
                                                         if (typeof value === "string") {
                                                             const dateFormat = value.split("T")[0];
-                                                            currentHeaderIsDate = /^\d{4}(\-)(((0)[0-9])|((1)[0-2]))(\-)([0-2][0-9]|(3)[0-1])$/.test(dateFormat);
+                                                            currentHeaderIsDate = /^\d{4}(\-|\/)(((0)[0-9])|((1)[0-2]))(\-|\/)([0-2][0-9]|(3)[0-1])$/.test(dateFormat);
 
                                                         } else {
                                                             currentHeaderIsNumber = /^-?\d+$/.test(value);
@@ -422,12 +422,12 @@ export default class Result extends React.Component {
                                                         />
                                                         {
                                                             (((!currentHeaderIsDate && currentHeaderIsNumber)) && currentOption.isFilterOpened) &&
-                                                            <div className="header-filters">
+                                                            <div className="header-filters" key={header}>
 
                                                                 <div id="header-filters-inputs">
                                                                     <input id="filter-field1"
                                                                            type="search"
-                                                                           placeholder={"from"}
+                                                                           placeholder={"filter from"}
                                                                            value={currentOption.filter1}
                                                                            onChange={(e) => this.handleChangeFilterValue1(e, header)}/>
                                                                     <input id="filter-field2"
@@ -437,14 +437,12 @@ export default class Result extends React.Component {
                                                                            onChange={(e) => this.handleChangeFilterValue2(e, header)}/>
                                                                 </div>
 
-                                                                <btn onClick={() => this.clearFilters(header)}>clear
-                                                                    selected values
-                                                                </btn>
+                                                                <btn id="clear-filters-btn" onClick={() => this.clearFilters(header)}>clear filter</btn>
                                                             </div>
                                                         }
                                                         {
                                                             ((currentHeaderIsDate && !currentHeaderIsNumber) && currentOption.isFilterOpened) &&
-                                                            <div className="header-filters">
+                                                            <div className="header-filters" key={header}>
 
                                                                 <div id="header-filters-inputs">
                                                                     <DayPickerInput
@@ -465,10 +463,7 @@ export default class Result extends React.Component {
                                                                     />
                                                                 </div>
 
-
-                                                                <btn onClick={() => this.clearFilters(header)}>clear
-                                                                    selected days
-                                                                </btn>
+                                                                <btn id="clear-filters-btn" onClick={() => this.clearFilters(header)}>clear date</btn>
 
                                                             </div>
                                                         }
