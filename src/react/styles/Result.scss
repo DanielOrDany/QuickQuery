@@ -118,11 +118,19 @@
           margin-left: 5px;
         }
 
+        #header-order {
+          cursor: pointer;
+        }
+
         #header-filter {
           width: 15px;
           height: 12px;
 
           margin-left: 10px;
+        }
+
+        #header-filter {
+          cursor: pointer;
         }
 
         #header-calendar {

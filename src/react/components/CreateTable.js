@@ -149,7 +149,7 @@ export default class CreateTable extends React.Component {
                         <div className="actions">
                             <button type="button" className="runButton" onClick={() => this.run()}><span>Run </span></button>
                             <div className="saving-result">
-                                <input type="text" id="aliasText" placeholder="Table name" className="form-control" type="search"/>
+                                <input type="text" id="aliasText" placeholder="query name" className="form-control" type="search"/>
                                 <button type="button" className="saveButton" onClick={() => this.save()}>Save</button>
                             </div>
                         </div>
