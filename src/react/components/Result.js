@@ -416,7 +416,7 @@ export default class Result extends React.Component {
                                                     <div className="header-data-operations">
                                                         <input id="header-search"
                                                                type="search"
-                                                               placeholder={"val.."}
+                                                               placeholder={"search.."}
                                                                value={currentOption.search}
                                                                onChange={(e) => this.handleChangeSearchValue(e, header)}
                                                         />
@@ -427,12 +427,12 @@ export default class Result extends React.Component {
                                                                 <div id="header-filters-inputs">
                                                                     <input id="filter-field1"
                                                                            type="search"
-                                                                           placeholder={"filter val1"}
+                                                                           placeholder={"from"}
                                                                            value={currentOption.filter1}
                                                                            onChange={(e) => this.handleChangeFilterValue1(e, header)}/>
                                                                     <input id="filter-field2"
                                                                            type="search"
-                                                                           placeholder={"filter val2"}
+                                                                           placeholder={"to"}
                                                                            value={currentOption.filter2}
                                                                            onChange={(e) => this.handleChangeFilterValue2(e, header)}/>
                                                                 </div>

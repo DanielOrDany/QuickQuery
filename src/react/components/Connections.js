@@ -419,7 +419,7 @@ export default class Connections extends React.Component {
                     <button type="button" id="add-button" onClick={() => this.openModal()}>Add connection
                     </button>
                     <div className="search">
-                        <input id="search-field" type="search"/>
+                        <input id="search-field" type="search" placeholder={"search.."}/>
                         <button type="button" id="search-button" onClick={() => this.search()}>Search</button>
                     </div>
                 </div>
