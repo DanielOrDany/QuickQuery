@@ -86,8 +86,7 @@ export default class Result extends React.Component {
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const loadingOptions = {
             page: pageNumber,
-            pageSize: 10,
-            operationsOptions: options.length ? options : null
+            pageSize: 10
         };
 
         localStorage.setItem('isChangedPicker1', false);
@@ -95,7 +94,7 @@ export default class Result extends React.Component {
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
             if (data) {
-                if (data.records === "0") {
+                if (data.records == 0) {
                     this.setState({
                         isNullResults: true
                     });
@@ -141,7 +140,8 @@ export default class Result extends React.Component {
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
             if (data) {
-                if (data.records === "0") {
+                console.log("loaded res: ", data);
+                if (data.records == 0) {
                     this.setState({
                         isNullResults: true
                     });
@@ -372,8 +372,13 @@ export default class Result extends React.Component {
                                             if (firstRow) {
                                                 if (key === header) {
                                                     if (typeof value !== "boolean") {
-                                                        currentHeaderIsDate = (new Date(value) !== "Invalid Date") && !isNaN(new Date(value));
-                                                        currentHeaderIsNumber = /^-?\d+$/.test(value);
+                                                        if (typeof value === "string") {
+                                                            const dateFormat = value.split("T")[0];
+                                                            currentHeaderIsDate = /^\d{4}(\-)(((0)[0-9])|((1)[0-2]))(\-)([0-2][0-9]|(3)[0-1])$/.test(dateFormat);
+
+                                                        } else {
+                                                            currentHeaderIsNumber = /^-?\d+$/.test(value);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -384,12 +389,15 @@ export default class Result extends React.Component {
                                         return (
                                             <th key={header}>
                                                 <div className="header">
-                                                    <div className="header-data-ordering" onClick={() => this.handleChangeOrder(header)}>
+                                                    <div className="header-data-ordering">
                                                         <span id="header-title">{header}</span>
                                                         <div className="header-options">
-                                                            <span className={ currentOption.order === ASC ? "arrow-up" : "arrow-down"} id="header-order"></span>
+                                                            <span className={ currentOption.order === ASC ? "arrow-up" : "arrow-down"}
+                                                                  id="header-order"
+                                                                  onClick={() => this.handleChangeOrder(header)}>
+                                                            </span>
                                                             {
-                                                                ((currentHeaderIsDate && currentHeaderIsNumber) || (!currentHeaderIsDate && currentHeaderIsNumber)) &&
+                                                                ((!currentHeaderIsDate && currentHeaderIsNumber)) &&
                                                                 <img id="header-filter" src={filterIcon} onClick={() => this.handleOpenFilter(header)}/>
                                                             }
                                                             {
@@ -405,7 +413,7 @@ export default class Result extends React.Component {
                                                                onChange={(e) => this.handleChangeSearchValue(e, header)}
                                                         />
                                                         {
-                                                            (((currentHeaderIsDate && currentHeaderIsNumber) || (!currentHeaderIsDate && currentHeaderIsNumber)) && currentOption.isFilterOpened) &&
+                                                            (((!currentHeaderIsDate && currentHeaderIsNumber)) && currentOption.isFilterOpened) &&
                                                             <div className="header-filters">
                                                                 <input id="filter-field1" placeholder={"filter val1"}
                                                                        value={currentOption.filter1}

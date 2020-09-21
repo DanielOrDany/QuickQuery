@@ -263,13 +263,13 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                 const search = option.search;
 
                 if (dialect === MYSQL && searchColumnNum === 0 && search != "") {
-                    query += ` WHERE '%${search}%' LIKE CONCAT('%', CAST(id AS CHAR(50)), '%')`;
+                    query += ` WHERE CONCAT('%', CAST(${column} AS CHAR(50)), '%') LIKE '%${search}%'`;
                     searchColumnNum += 1;
                 } else if (dialect === POSTGRESQL && searchColumnNum === 0 && search != "") {
                     query += ` WHERE CAST(${column} AS VARCHAR(50)) Like '%${search}%'`;
                     searchColumnNum += 1;
                 } else if (dialect === MYSQL && searchColumnNum > 0 && search != "") {
-                    query += ` AND '%${search}%' LIKE CONCAT('%', CAST(id AS CHAR(50)), '%')`;
+                    query += ` AND CONCAT('%', CAST(${column} AS CHAR(50)), '%') LIKE '%${search}%'`;
                     searchColumnNum += 1;
                 } else if (dialect === POSTGRESQL && searchColumnNum > 0 && search != "") {
                     query += ` AND CAST(${column} AS VARCHAR(50)) Like '%${search}%'`;
@@ -298,33 +298,37 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                     ) {
                         const newFilter1 = filter1.split("/");
                         const newFilter2 = filter2.split("/");
+                        const d1 = newFilter1[2] + newFilter1[0] + newFilter1[1];
+                        const d2 = newFilter2[2] + newFilter2[0] + newFilter2[1];
 
                         if (searchColumnNum > 0) {
-                            const d1 = newFilter1[2] + newFilter1[0] + newFilter1[1];
-                            const d2 = newFilter2[2] + newFilter2[0] + newFilter2[1];
                             if (d2 < d1) {
                                 query += ` AND ${column} BETWEEN \'${d2}\' AND \'${d1}\'`;
                             } else {
                                 query += ` AND ${column} BETWEEN \'${d1}\' AND \'${d2}\'`;
                             }
                         } else {
-                            const d1 = newFilter1[2] + newFilter1[0] + newFilter1[1];
-                            const d2 = newFilter2[2] + newFilter2[0] + newFilter2[1];
                             if (d2 < d1) {
                                 query += ` WHERE ${column} BETWEEN \'${d2}\' AND \'${d1}\'`;
                             } else {
                                 query += ` WHERE ${column} BETWEEN \'${d1}\' AND \'${d2}\'`;
                             }
                         }
+
+                    // numbers
                     } else {
+                        const n1 = parseInt(filter1);
+                        const n2 = parseInt(filter2);
+                        console.log(n1,n2, n2 < n1);
+
                         if (searchColumnNum > 0) {
-                            if (filter2 < filter1) {
+                            if (n2 < n1) {
                                 query += ` AND ${column} BETWEEN ${filter2} AND ${filter1}`;
                             } else {
                                 query += ` AND ${column} BETWEEN ${filter1} AND ${filter2}`;
                             }
                         } else {
-                            if (filter2 < filter1) {
+                            if (n2 < n1) {
                                 query += ` WHERE ${column} BETWEEN ${filter2} AND ${filter1}`;
                             } else {
                                 query += ` WHERE ${column} BETWEEN ${filter1} AND ${filter2}`;
