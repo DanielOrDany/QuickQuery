@@ -32,12 +32,12 @@ class Menu extends React.Component {
             });
         }
 
-        if(!(window.location.href.split("/")[3] == "" || window.location.href.split("/")[3] == "#connections")) {
+        if(!(window.location.hash == "" || window.location.hash == "#connections")) {
             this.setState({toTables: false});
         }
 
         window.onhashchange = () => {
-            if(!(window.location.href.split("/")[3] == "" || window.location.href.split("/")[3] == "#connections") && this.state.toTables) {
+            if(!(window.location.hash == "" || window.location.hash == "#connections") && this.state.toTables) {
                 this.setState({toTables: false});
             }
         }

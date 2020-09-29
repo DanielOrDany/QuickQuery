@@ -48,11 +48,21 @@ export default class CreateTable extends React.Component {
         const query = document.getElementById("queryText").value;
 
         if(localStorage.getItem("current_result_info") && inputVerify(query) > 0) {
-            console.log(connectionName, alias, query);
-            updateTableQuery(connectionName, alias, query).then((tables) => {
-                localStorage.setItem("need_update", JSON.stringify(true));
-                window.location.hash = "#/tables";
-            });
+            testTableQuery(connectionName, query).then(data => {
+                if (data) {
+                    updateTableQuery(connectionName, alias, query).then((tables) => {
+                        localStorage.setItem("need_update", JSON.stringify(true));
+                        window.location.hash = "#/tables";
+                    });
+                } else {
+                    this.setState({
+                        header: "",
+                        rows: "",
+                        badQuery: 1,
+                        errorMessage: "Query is not valid."
+                    });
+                }
+            })
         } else if (
             inputVerify(alias) > 0 &&
             inputVerify(query) > 0
@@ -65,9 +75,12 @@ export default class CreateTable extends React.Component {
                     errorMessage: "Please, remove any spaces in alias."
                 });
             } else {
-                addTable(connectionName, query,"new", alias).then((data) => {
+                testTableQuery(connectionName, query).then(data => {
                     if (data) {
-                        return "#/tables";
+                        addTable(connectionName, query, "new", alias).then(() => {
+                                localStorage.setItem("new_table", JSON.stringify(true));
+                                window.location.hash = "#tables";
+                        });
                     } else {
                         this.setState({
                             header: "",
@@ -76,9 +89,6 @@ export default class CreateTable extends React.Component {
                             errorMessage: "Query is not valid."
                         });
                     }
-                }).then((url) => {
-                    localStorage.setItem("new_table", JSON.stringify(true));
-                    window.location.hash = url;
                 });
             }
         } else {
