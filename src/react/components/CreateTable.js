@@ -62,7 +62,7 @@ export default class CreateTable extends React.Component {
                         errorMessage: "Query is not valid."
                     });
                 }
-            })
+            });
         } else if (
             inputVerify(alias) > 0 &&
             inputVerify(query) > 0
@@ -78,8 +78,8 @@ export default class CreateTable extends React.Component {
                 testTableQuery(connectionName, query).then(data => {
                     if (data) {
                         addTable(connectionName, query, "new", alias).then(() => {
-                                localStorage.setItem("new_table", JSON.stringify(true));
-                                window.location.hash = "#tables";
+                            localStorage.setItem("new_table", JSON.stringify(true));
+                            window.location.hash = "#tables";
                         });
                     } else {
                         this.setState({
