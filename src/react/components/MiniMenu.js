@@ -32,7 +32,7 @@ function removeTable(alias) {
 
 function editTable(table) {
     localStorage.setItem("current_result_info", JSON.stringify(table));
-    window.location.hash = `#/tables/edit-table/${table.alias}`;
+    window.location.hash = `#/tables/${window.location.hash.split('/')[1]}/edit-table/${table.alias}`;
 }
 
 function MiniMenu(props) {

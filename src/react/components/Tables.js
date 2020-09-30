@@ -21,7 +21,8 @@ export default class Tables extends React.Component {
         this.state = {
             tables: [],
             searchedTables: [],
-            isOpen: false
+            isOpen: false,
+            currentConnection: ""
         };
     }
 
@@ -84,7 +85,7 @@ export default class Tables extends React.Component {
                 localStorage.setItem("results", JSON.stringify([result]));
             }
 
-            return `#/tables/result/${alias}`;
+            return `#/tables/${window.location.hash.split('/')[1]}/result/${alias}`;
         }).then(url => {
             window.location.hash = url;
             this.setState({
@@ -97,7 +98,7 @@ export default class Tables extends React.Component {
         if (localStorage.getItem("current_result_info")) {
             localStorage.removeItem("current_result_info");
         }
-        window.location.hash = "#/tables/create-table"
+        window.location.hash = `#/tables/${window.location.hash.split('/')[1]}/create-table`;
     }
 
     search = () => {
@@ -145,7 +146,7 @@ export default class Tables extends React.Component {
                             </button>
                         </div>
                     </div>
-
+                    
                     <div id="list">List of queries:</div>
                     <div id="lineUp"></div>
 
@@ -177,9 +178,9 @@ export default class Tables extends React.Component {
                 <div className="line-tables-page"></div>
 
                 <div className="right-side-tables-page">
-                    <Route path="/tables/create-table" component={CreateTable}/>
-                    <Route path={`/tables/edit-table/:tableAlias`} component={CreateTable}/>
-                    <Route path={`/tables/result/:tableAlias`} component={Result}/>
+                    <Route path={`/tables/:connectionAlias/create-table`} component={CreateTable}/>
+                    <Route path={`/tables/:connectionAlias/edit-table/:tableAlias`} component={CreateTable}/>
+                    <Route path={`/tables/:connectionAlias/result/:tableAlias`} component={Result}/>
                 </div>
             </div>
         );

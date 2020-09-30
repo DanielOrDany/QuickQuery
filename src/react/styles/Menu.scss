@@ -3,10 +3,21 @@
   height: 30px;
 
   margin-left: 130px;
+  margin-top: 10px;
 }
 
 #arrow-back:hover {
   cursor: pointer;
+}
+
+.logo-box {
+  display: flex;
+}
+
+#connection-name {
+  margin-left: 5px;
+  margin-top: 12px;
+  color: white;
 }
 
 .sharing-buttons {

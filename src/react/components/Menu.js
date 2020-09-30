@@ -109,7 +109,7 @@ class Menu extends React.Component {
 
     render() {
         return (
-            <div>
+            <>
                 {
                     this.state.error &&
                     <Modal
@@ -150,7 +150,10 @@ class Menu extends React.Component {
                         <div className="logo-box">
                             <img src={logo_icon} id="l-icon" onClick={() => this.openConnections()} />
                             {!this.state.toTables &&
-                                <img src={arrow_back} id="arrow-back" onClick={() => this.openConnections()} />
+                                <>
+                                    <img src={arrow_back} id="arrow-back" onClick={() => this.openConnections()} />
+                                    <div id="connection-name"><div>{window.location.hash.split('/')[1]}</div></div>
+                                </>
                             }
                         </div>
                         <div className="menu-box">
@@ -168,7 +171,7 @@ class Menu extends React.Component {
                         </Switch>
                     </div>
                 </Router>
-            </div>
+            </>
         );
     }
 }
