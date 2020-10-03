@@ -12,6 +12,7 @@ import arrow_back from "../icons/arrow_back.svg";
 import tables_icon from "../icons/tables.png";
 import logo_icon from "../icons/logo.png";
 import { importConfig, exportConfig } from "../methods";
+import top_menu_settings from "../icons/top-menu-settings.png"
 
 import Modal from './Modal';
 
@@ -158,7 +159,7 @@ class Menu extends React.Component {
                         </div>
                         <div className="menu-box">
                             <div className="settings-buttons">
-                                <span id="settings-button" onClick={() => this.setState({error: false, isOpen: true})}>Settings</span>
+                                <img src={top_menu_settings} id="settings-button" onClick={() => this.setState({error: false, isOpen: true})} />
                             </div>
                         </div>
                     </div>
