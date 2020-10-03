@@ -131,6 +131,51 @@
         margin-left: 20px;
         margin-bottom: 10px;
 
+        .btn-container {
+          display: flex;
+          justify-content: space-between;
+          height: 31px;
+
+          border-bottom: .2px solid #adadad;
+
+          /* ADD BUTTON */
+          #add-btn-field {
+            display: flex;
+
+            .add-button {
+              margin-top: 2px;
+              margin-left: 2px;
+              color: black;
+              width: 20px;
+              height: 20px;
+              transition: 0.2s;
+            }
+
+            .add-button:hover {
+              cursor: pointer;
+              
+            }
+
+            .button-text {
+              margin-top: 1px;
+              margin-left: 9px;
+
+              font-weight: 900;
+              font-size: 14px;
+            }
+          }
+
+          &:hover {
+            cursor: pointer;
+
+            #add-btn-field {
+              .button-text {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+
         .container {
           display: flex;
           justify-content: space-between;
@@ -177,24 +222,6 @@
             cursor: pointer;
           }
         }
-      }
-    }
-
-    /* ADD BUTTON */
-    #add-btn-field {
-      grid-area: addBtn;
-
-      .add-button {
-        width: 40px;
-        height: 40px;
-        transition: 0.2s;
-        margin: 0 auto 10px;
-      }
-
-      .add-button:hover {
-        cursor: pointer;
-        background: $hover-white;
-        border-radius: 100%;
       }
     }
   }

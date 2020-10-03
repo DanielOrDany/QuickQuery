@@ -162,14 +162,12 @@ class Menu extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <Switch>
-                            <Route path="/tables" component={Tables} />
-                            <Route path="/connections" component={Connections} />
-                            <Route path="/settings" component={Settings} />
-                            <Route path="/" component={Connections} />
-                        </Switch>
-                    </div>
+                    <Switch>
+                        <Route path="/tables" component={Tables} />
+                        <Route path="/connections" component={Connections} />
+                        <Route path="/settings" component={Settings} />
+                        <Route path="/" component={Connections} />
+                    </Switch>
                 </Router>
             </>
         );

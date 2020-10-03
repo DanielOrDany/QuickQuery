@@ -8,7 +8,9 @@ import Result from "./Result";
 import {getAllTables, getTable} from "../methods";
 import {ReactComponent as MiniMenuIcon} from "../icons/open-menu.svg";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
-import plus from "../icons/plus.png";
+import plus from "../icons/plus.svg";
+import table from "../icons/table.svg";
+import add from "../icons/add.svg";
 
 import MiniMenu from "./MiniMenu";
 import Modal from './Modal';
@@ -151,6 +153,15 @@ export default class Tables extends React.Component {
                     <div id="lineUp"></div>
 
                     <div id="tables">
+                        <div className="table">
+                            <div className="btn-container" onClick={() => this.createTable()}>
+                                <div id="add-btn-field">
+                                    <img className="add-button" src={plus}/>
+                                    {/* <span>&#11044;</span> */}
+                                    <div className="button-text">Add new query</div>
+                                </div>
+                            </div>
+                        </div>
                         {
                             searchedTables.map(table => {
                                 return (
@@ -168,10 +179,6 @@ export default class Tables extends React.Component {
                                 );
                             }
                         )}
-                    </div>
-
-                    <div id="add-btn-field">
-                        <img className="add-button" src={plus} onClick={() => this.createTable()}/>
                     </div>
                 </div>
 
