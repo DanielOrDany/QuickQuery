@@ -4,15 +4,13 @@ import {
     deleteConnection,
     addConnection
 } from "../methods";
-import { Offline, Online } from "react-detect-offline"
+import { Offline } from "react-detect-offline"
 
 import Button from './Button';
 import Modal from './Modal';
 
 import database_icon from "../icons/software.png";
 import delete_icon from "../icons/delete_icon.png";
-import wifi_on from "../icons/wifi_on-48dp.svg";
-import wifi_off from "../icons/wifi_off-48dp.svg";
 import '../styles/Connections.scss';
 
 
@@ -188,7 +186,7 @@ export default class Connections extends React.Component {
         const currentConnection = this.getConnectionData(name);
         localStorage.setItem('current_connection', JSON.stringify(currentConnection));
 
-        window.location.hash = '#/tables';
+        window.location.hash = `#/tables/${name}`;
     };
 
     nameOnChange = (e) => {
@@ -368,25 +366,11 @@ export default class Connections extends React.Component {
             host = conn.URI["others"]["host"];
         }
         
-        if(host == "localhost" || host == "127.0.0.1") {
+        if(!(host == "localhost" || host == "127.0.0.1")) {
             return(
-                <>
-                    <img alt={"internet on"} src={wifi_on} id="wifi-icon"/>
-                    <p className="tip-info">Connection with local database established.</p>
-                </>
-            );
-        } else {
-            return(
-                <>
-                    <Online>
-                        <img alt={"internet on"} src={wifi_on} id="wifi-icon"/>
-                        <p className="tip-info">Connection with remote database established.</p>
-                    </Online>
-                    <Offline>
-                        <img alt={"internet off"} src={wifi_off} id="wifi-icon"/>
-                        <p className="tip-info">Connection with remote database lost.</p>
-                    </Offline>
-                </>
+                <Offline>
+                    <>| <b>connection is lost</b></>
+                </Offline>
             );
         }
     }
@@ -433,8 +417,7 @@ export default class Connections extends React.Component {
                                             <div className="folders-name">
                                                 <img alt={"icon database"} src={database_icon} id="database-icon"/>
                                                 <div className="link">
-                                                    <p id="folders-n">{conn.name}</p>
-                                                    <div className="network-tip">{this.databaseHost(conn)}</div>
+                                                    <p id="folders-n">{conn.name} {this.databaseHost(conn)}</p>
                                                 </div>
                                             </div>
 

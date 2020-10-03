@@ -8,7 +8,7 @@ import Tables from './Tables';
 import Connections from './Connections';
 import Settings from './Settings';
 import '../styles/Menu.scss';
-import connections_icon from "../icons/connections.svg";
+import arrow_back from "../icons/arrow_back.svg";
 import tables_icon from "../icons/tables.png";
 import logo_icon from "../icons/logo.png";
 import { importConfig, exportConfig } from "../methods";
@@ -32,12 +32,12 @@ class Menu extends React.Component {
             });
         }
 
-        if(!(window.location.href.split("/")[3] == "" || window.location.href.split("/")[3] == "#connections")) {
+        if(!(window.location.hash == "" || window.location.hash == "#connections")) {
             this.setState({toTables: false});
         }
 
         window.onhashchange = () => {
-            if(!(window.location.href.split("/")[3] == "" || window.location.href.split("/")[3] == "#connections") && this.state.toTables) {
+            if(!(window.location.hash == "" || window.location.hash == "#connections") && this.state.toTables) {
                 this.setState({toTables: false});
             }
         }
@@ -109,7 +109,7 @@ class Menu extends React.Component {
 
     render() {
         return (
-            <div>
+            <>
                 {
                     this.state.error &&
                     <Modal
@@ -148,33 +148,28 @@ class Menu extends React.Component {
                 <Router hashType="noslash">
                     <div className="menu-header" expand="md">
                         <div className="logo-box">
-                            <img src={logo_icon} id="l-icon" onClick={() => this.openConnections()}></img>
-
+                            <img src={logo_icon} id="l-icon" onClick={() => this.openConnections()} />
+                            {!this.state.toTables &&
+                                <>
+                                    <img src={arrow_back} id="arrow-back" onClick={() => this.openConnections()} />
+                                    <div id="connection-name"><div>{window.location.hash.split('/')[1]}</div></div>
+                                </>
+                            }
                         </div>
                         <div className="menu-box">
                             <div className="settings-buttons">
                                 <span id="settings-button" onClick={() => this.setState({error: false, isOpen: true})}>Settings</span>
-
                             </div>
-
-                            {this.state.toTables &&
-                                <img src={tables_icon} id="open-tables" onClick={() => this.openTables()}></img>
-                            }
-                            {!this.state.toTables &&
-                                <img src={connections_icon} id="open-connections" onClick={() => this.openConnections()}></img>
-                            }
                         </div>
                     </div>
-                    <div>
-                        <Switch>
-                            <Route path="/tables" component={Tables} />
-                            <Route path="/connections" component={Connections} />
-                            <Route path="/settings" component={Settings} />
-                            <Route path="/" component={Connections} />
-                        </Switch>
-                    </div>
+                    <Switch>
+                        <Route path="/tables" component={Tables} />
+                        <Route path="/connections" component={Connections} />
+                        <Route path="/settings" component={Settings} />
+                        <Route path="/" component={Connections} />
+                    </Switch>
                 </Router>
-            </div>
+            </>
         );
     }
 }

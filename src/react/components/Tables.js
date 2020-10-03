@@ -8,7 +8,9 @@ import Result from "./Result";
 import {getAllTables, getTable} from "../methods";
 import {ReactComponent as MiniMenuIcon} from "../icons/open-menu.svg";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
-import plus from "../icons/plus.png";
+import plus from "../icons/plus.svg";
+import table from "../icons/table.svg";
+import add from "../icons/add.svg";
 
 import MiniMenu from "./MiniMenu";
 import Modal from './Modal';
@@ -21,7 +23,8 @@ export default class Tables extends React.Component {
         this.state = {
             tables: [],
             searchedTables: [],
-            isOpen: false
+            isOpen: false,
+            currentConnection: ""
         };
     }
 
@@ -84,7 +87,7 @@ export default class Tables extends React.Component {
                 localStorage.setItem("results", JSON.stringify([result]));
             }
 
-            return `#/tables/result/${alias}`;
+            return `#/tables/${window.location.hash.split('/')[1]}/result/${alias}`;
         }).then(url => {
             window.location.hash = url;
             this.setState({
@@ -97,7 +100,7 @@ export default class Tables extends React.Component {
         if (localStorage.getItem("current_result_info")) {
             localStorage.removeItem("current_result_info");
         }
-        window.location.hash = "#/tables/create-table"
+        window.location.hash = `#/tables/${window.location.hash.split('/')[1]}/create-table`;
     }
 
     search = () => {
@@ -145,11 +148,20 @@ export default class Tables extends React.Component {
                             </button>
                         </div>
                     </div>
-
+                    
                     <div id="list">List of queries:</div>
                     <div id="lineUp"></div>
 
                     <div id="tables">
+                        <div className="table">
+                            <div className="btn-container" onClick={() => this.createTable()}>
+                                <div id="add-btn-field">
+                                    <img className="add-button" src={plus}/>
+                                    {/* <span>&#11044;</span> */}
+                                    <div className="button-text">Add new query</div>
+                                </div>
+                            </div>
+                        </div>
                         {
                             searchedTables.map(table => {
                                 return (
@@ -168,18 +180,14 @@ export default class Tables extends React.Component {
                             }
                         )}
                     </div>
-
-                    <div id="add-btn-field">
-                        <img className="add-button" src={plus} onClick={() => this.createTable()}/>
-                    </div>
                 </div>
 
                 <div className="line-tables-page"></div>
 
                 <div className="right-side-tables-page">
-                    <Route path="/tables/create-table" component={CreateTable}/>
-                    <Route path={`/tables/edit-table/:tableAlias`} component={CreateTable}/>
-                    <Route path={`/tables/result/:tableAlias`} component={Result}/>
+                    <Route path={`/tables/:connectionAlias/create-table`} component={CreateTable}/>
+                    <Route path={`/tables/:connectionAlias/edit-table/:tableAlias`} component={CreateTable}/>
+                    <Route path={`/tables/:connectionAlias/result/:tableAlias`} component={Result}/>
                 </div>
             </div>
         );
