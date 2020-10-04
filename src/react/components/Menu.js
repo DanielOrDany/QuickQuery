@@ -131,8 +131,7 @@ class Menu extends React.Component {
                         title="Settings"
                         isOpen={this.state.isOpen}
                         onCancel={this.handleCancel}
-                        onSubmit={this.handleCancel}
-                        submitTitle="Close"
+                        submitButton={false}
                     >
                         <div className="sharing-buttons">
                             <div id="import-div">
