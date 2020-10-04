@@ -9,6 +9,7 @@ import {getAllTables, getTable} from "../methods";
 import {ReactComponent as MiniMenuIcon} from "../icons/open-menu.svg";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
 import plus from "../icons/plus.svg";
+import emptyBox from "../icons/empty-box-open.svg";
 import table from "../icons/table.svg";
 import add from "../icons/add.svg";
 
@@ -80,6 +81,7 @@ export default class Tables extends React.Component {
         getTable(connectionName, alias).then(result => {
             localStorage.setItem("current_result_info", JSON.stringify(result));
             const results = JSON.parse(localStorage.getItem("results"));
+
             if (results) {
                 results.push(result);
                 localStorage.setItem("results", JSON.stringify(results));
@@ -185,6 +187,16 @@ export default class Tables extends React.Component {
                 <div className="line-tables-page"></div>
 
                 <div className="right-side-tables-page">
+                    {
+                        (localStorage.getItem("current_result_info") !== null && !currentOpenedTable) &&
+                            <div className="empty-result-row">
+                                <div className="empty-result-column">
+                                    <img className="empty-result-box" src={emptyBox}/>
+                                    <span>Query is not selected.</span>
+                                    <span>Please select a query from queries list.</span>
+                                </div>
+                            </div>
+                    }
                     <Route path={`/tables/:connectionAlias/create-table`} component={CreateTable}/>
                     <Route path={`/tables/:connectionAlias/edit-table/:tableAlias`} component={CreateTable}/>
                     <Route path={`/tables/:connectionAlias/result/:tableAlias`} component={Result}/>

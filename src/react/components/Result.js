@@ -349,7 +349,7 @@ export default class Result extends React.Component {
 
     render() {
         const {options, headers, rows, isNullResults} = this.state;
-
+        console.log(headers);
         if (this.state === null) {
             return (
                 <div className={"loading"}>
@@ -360,11 +360,6 @@ export default class Result extends React.Component {
         } else {
             return (
                 <div className="result">
-                    <div className="result-menu">
-                        <div className={"save"}>
-                            <button onClick={() => this.save()}>Export excel</button>
-                        </div>
-                    </div>
                     <div className="result-table">
                         <table>
                             <tr>
@@ -378,6 +373,7 @@ export default class Result extends React.Component {
                                             if (firstRow) {
                                                 if (key === header) {
                                                     if (typeof value !== "boolean") {
+
                                                         if (typeof value === "string") {
                                                             const dateFormat = value.split("T")[0];
                                                             currentHeaderIsDate = /^\d{4}(\-|\/)(((0)[0-9])|((1)[0-2]))(\-|\/)([0-2][0-9]|(3)[0-1])$/.test(dateFormat);
@@ -398,7 +394,7 @@ export default class Result extends React.Component {
                                                     <div className="header-data-ordering">
                                                         <span id="header-title">{header}</span>
                                                         <div className="header-options">
-                                                            <span className={ currentOption.order === ASC ? "arrow-up" : "arrow-down"}
+                                                            <span className={currentOption.order === ASC ? "arrow-up" : "arrow-down"}
                                                                   id="header-order"
                                                                   onClick={() => this.handleChangeOrder(header)}>
                                                             </span>
@@ -415,25 +411,27 @@ export default class Result extends React.Component {
                                                         </div>
                                                     </div>
                                                     <div className="header-data-operations">
-                                                        <input id="header-search"
-                                                               type="search"
-                                                               placeholder={"search.."}
-                                                               value={currentOption.search}
-                                                               onChange={(e) => this.handleChangeSearchValue(e, header)}
-                                                        />
+                                                        { !currentOption.isFilterOpened &&
+                                                            <input id="header-search"
+                                                                   type="search"
+                                                                   placeholder={"Search"}
+                                                                   value={currentOption.search}
+                                                                   onChange={(e) => this.handleChangeSearchValue(e, header)}
+                                                            />
+                                                        }
                                                         {
                                                             (((!currentHeaderIsDate && currentHeaderIsNumber)) && currentOption.isFilterOpened) &&
                                                             <div className="header-filters" key={header}>
 
-                                                                <div id="header-filters-inputs">
-                                                                    <input id="filter-field1"
+                                                                <div className="header-filters-inputs">
+                                                                    <input className="filter-field1"
                                                                            type="search"
-                                                                           placeholder={"filter from"}
+                                                                           placeholder={"From"}
                                                                            value={currentOption.filter1}
                                                                            onChange={(e) => this.handleChangeFilterValue1(e, header)}/>
-                                                                    <input id="filter-field2"
+                                                                    <input className="filter-field2"
                                                                            type="search"
-                                                                           placeholder={"to"}
+                                                                           placeholder={"To"}
                                                                            value={currentOption.filter2}
                                                                            onChange={(e) => this.handleChangeFilterValue2(e, header)}/>
                                                                 </div>
@@ -445,23 +443,27 @@ export default class Result extends React.Component {
                                                             ((currentHeaderIsDate && !currentHeaderIsNumber) && currentOption.isFilterOpened) &&
                                                             <div className="header-filters" key={header}>
 
-                                                                <div id="header-filters-inputs">
-                                                                    <DayPickerInput
-                                                                        style={{color: "#3E3E3E"}}
-                                                                        formatDate={this.formatDate}
-                                                                        format={FORMAT}
-                                                                        value={currentOption.filter1}
-                                                                        parseDate={(date) => this.handleDatePicker1(date, header)}
-                                                                        placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
-                                                                    />
-                                                                    <DayPickerInput
-                                                                        style={{color: "#3E3E3E"}}
-                                                                        formatDate={this.formatDate}
-                                                                        format={FORMAT}
-                                                                        value={currentOption.filter2}
-                                                                        parseDate={(date) => this.handleDatePicker2(date, header)}
-                                                                        placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
-                                                                    />
+                                                                <div className="header-filters-inputs">
+                                                                    <div className="filter-field1">
+                                                                        <DayPickerInput
+                                                                            style={{color: "#3E3E3E"}}
+                                                                            formatDate={this.formatDate}
+                                                                            format={FORMAT}
+                                                                            value={currentOption.filter1}
+                                                                            parseDate={(date) => this.handleDatePicker1(date, header)}
+                                                                            placeholder={`From date`}
+                                                                        />
+                                                                    </div>
+                                                                    <div className="filter-field2">
+                                                                        <DayPickerInput
+                                                                            style={{color: "#3E3E3E"}}
+                                                                            formatDate={this.formatDate}
+                                                                            format={FORMAT}
+                                                                            value={currentOption.filter2}
+                                                                            parseDate={(date) => this.handleDatePicker2(date, header)}
+                                                                            placeholder={`To date`}
+                                                                        />
+                                                                    </div>
                                                                 </div>
 
                                                                 <btn id="clear-filters-btn" onClick={() => this.clearFilters(header)}>clear date</btn>
@@ -495,8 +497,8 @@ export default class Result extends React.Component {
                             }
                         </table>
                     </div>
-                    <div id="pages-field">
-                        <div id="select-page">
+                    <div className="pages-field">
+                        <div className="select-page">
                             <button id="select-page-btn" onClick={() => this.changePage(-1)}
                                     disabled={this.state.pageNumber == 0}>Prev
                             </button>
@@ -504,6 +506,11 @@ export default class Result extends React.Component {
                             <button id="select-page-btn" onClick={() => this.changePage(1)}
                                     disabled={this.state.pageNumber == this.state.pages - 1}>Next
                             </button>
+                        </div>
+                        <div className="result-menu">
+                            <div className={"save"}>
+                                <button onClick={() => this.save()}>Export excel</button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -239,7 +239,29 @@
   /* RIGHT SIDE */
   .right-side-tables-page {
     grid-area: right;
-    // height: calc(100vh - 50px);
+
+    .empty-result-row {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+
+      .empty-result-column {
+        display: flex;
+        margin-top: 20%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .empty-result-box {
+          width: 200px;
+        }
+
+        span {
+          font-size: 14px;
+          font-family: 'Scada', sans-serif;
+        }
+      }
+    }
   }
 }
 
