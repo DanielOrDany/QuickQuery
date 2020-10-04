@@ -451,7 +451,7 @@ export default class Result extends React.Component {
                                                                             format={FORMAT}
                                                                             value={currentOption.filter1}
                                                                             parseDate={(date) => this.handleDatePicker1(date, header)}
-                                                                            placeholder={`From date`}
+                                                                            placeholder={`01/01/2020`}
                                                                         />
                                                                     </div>
                                                                     <div className="filter-field2">
@@ -461,7 +461,7 @@ export default class Result extends React.Component {
                                                                             format={FORMAT}
                                                                             value={currentOption.filter2}
                                                                             parseDate={(date) => this.handleDatePicker2(date, header)}
-                                                                            placeholder={`To date`}
+                                                                            placeholder={`31/12/2020`}
                                                                         />
                                                                     </div>
                                                                 </div>
