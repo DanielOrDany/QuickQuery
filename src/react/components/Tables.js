@@ -1,12 +1,10 @@
 import React from 'react';
 import '../styles/Tables.scss';
-import {
-    Route
-} from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import CreateTable from "./CreateTable";
 import Result from "./Result";
-import {getAllTables, getTable} from "../methods";
-import {ReactComponent as MiniMenuIcon} from "../icons/open-menu.svg";
+import { getAllTables, getTable } from "../methods";
+import { ReactComponent as MiniMenuIcon } from "../icons/open-menu.svg";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
 import plus from "../icons/plus.svg";
 import emptyBox from "../icons/empty-box-open.svg";
@@ -188,7 +186,9 @@ export default class Tables extends React.Component {
 
                 <div className="right-side-tables-page">
                     {
-                        (localStorage.getItem("current_result_info") !== null && !currentOpenedTable) &&
+                        (!window.location.hash.includes("edit-table") &&
+                            !window.location.hash.includes("result") &&
+                            !window.location.hash.includes("create-table")) &&
                             <div className="empty-result-row">
                                 <div className="empty-result-column">
                                     <img className="empty-result-box" src={emptyBox}/>
