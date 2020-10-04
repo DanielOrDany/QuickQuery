@@ -90,6 +90,7 @@ export default class Tables extends React.Component {
             return `#/tables/${window.location.hash.split('/')[1]}/result/${alias}`;
         }).then(url => {
             window.location.hash = url;
+            localStorage.removeItem("openedTable");
             this.setState({
                 currentOpenedTable: alias
             });
@@ -100,6 +101,17 @@ export default class Tables extends React.Component {
         if (localStorage.getItem("current_result_info")) {
             localStorage.removeItem("current_result_info");
         }
+
+        if(localStorage.getItem("openedTable")) {
+            localStorage.removeItem("openedTable");
+        }
+
+        if(this.state.currentOpenedTable != "") {
+            this.setState({
+                currentOpenedTable: ""
+            });
+        }
+
         window.location.hash = `#/tables/${window.location.hash.split('/')[1]}/create-table`;
     }
 
@@ -157,7 +169,6 @@ export default class Tables extends React.Component {
                             <div className="btn-container" onClick={() => this.createTable()}>
                                 <div id="add-btn-field">
                                     <img className="add-button" src={plus}/>
-                                    {/* <span>&#11044;</span> */}
                                     <div className="button-text">Add new query</div>
                                 </div>
                             </div>
@@ -168,8 +179,8 @@ export default class Tables extends React.Component {
                                     <div id={table.alias} className="table" key={table.alias}>
                                         <div className="container">
                                             <div id="table-name" onClick={() => this.openTable(table.alias)}>
-                                                <span style={table.alias === currentOpenedTable ? {color: "#eb6e3b"} : null}>&#11044;</span>
-                                                <div id="name">
+                                                <span style={localStorage.getItem("openedTable") ? table.alias === localStorage.getItem("openedTable") ? {color: "#eb6e3b"} : null : table.alias === currentOpenedTable ? {color: "#eb6e3b"} : null}>&#11044;</span>
+                                                <div id="name">{}
                                                     <p id="table-n">{table.alias}</p>
                                                 </div>
                                             </div>

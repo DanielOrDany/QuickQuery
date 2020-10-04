@@ -9,6 +9,7 @@ function openTable(alias) {
     getTable(connectionName, alias).then(result => {
         localStorage.setItem("current_result_info", JSON.stringify(result));
         const results = JSON.parse(localStorage.getItem("results"));
+
         if (results) {
             results.push(result);
             localStorage.setItem("results", JSON.stringify(results));
@@ -16,8 +17,11 @@ function openTable(alias) {
             localStorage.setItem("results", JSON.stringify([result]));
         }
 
-        return `#/tables/result/${alias}`; 
-    }).then(url => window.location.hash = url);
+        return `#/tables/${window.location.hash.split('/')[1]}/result/${alias}`;
+    }).then(url => {
+        window.location.hash = url;
+        localStorage.setItem("openedTable", alias);
+    });
 }
 
 function removeTable(alias) {
@@ -32,6 +36,7 @@ function removeTable(alias) {
 
 function editTable(table) {
     localStorage.setItem("current_result_info", JSON.stringify(table));
+    localStorage.setItem("openedTable", table.alias);
     window.location.hash = `#/tables/${window.location.hash.split('/')[1]}/edit-table/${table.alias}`;
 }
 
