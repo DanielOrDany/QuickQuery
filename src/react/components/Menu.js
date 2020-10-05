@@ -151,8 +151,10 @@ class Menu extends React.Component {
                             <img src={logo_icon} id="l-icon" onClick={() => this.openConnections()} />
                             {!this.state.toTables &&
                                 <>
-                                    <img src={arrow_back} id="arrow-back" onClick={() => this.openConnections()} />
-                                    <div id="connection-name"><div>{window.location.hash.split('/')[1]}</div></div>
+                                    <img src={arrow_back} id="arrow-back" onClick={() => this.openConnections()}/>
+                                    <div id="connection-name" onClick={() => this.openConnections()}>
+                                        <div>{window.location.hash.split('/')[1]}</div>
+                                    </div>
                                 </>
                             }
                         </div>

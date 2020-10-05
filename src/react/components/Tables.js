@@ -7,9 +7,10 @@ import { getAllTables, getTable } from "../methods";
 import { ReactComponent as MiniMenuIcon } from "../icons/open-menu.svg";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
 import plus from "../icons/plus.svg";
-import emptyBox from "../icons/empty-box-open.svg";
+import empty from "../icons/empty.svg";
 import table from "../icons/table.svg";
 import add from "../icons/add.svg";
+import upArrow from "../icons/up-arrow.svg";
 
 import MiniMenu from "./MiniMenu";
 import Modal from './Modal';
@@ -131,7 +132,7 @@ export default class Tables extends React.Component {
     render() {
         const { currentOpenedTable, tables, isOpen, searchedTables } = this.state;
 
-        if (!tables) {
+        if (!tables || !searchedTables) {
             return (
                 <div className={"loading"}>
                     <img src={xxx}/>
@@ -153,43 +154,50 @@ export default class Tables extends React.Component {
                 </Modal>
 
                 <div className="left-side">
-                    <div id="mini-menu">
-                        <div className="search">
-                            <input id="search-field" type="search" placeholder={"search.."}/>
-                            <button type="button" className="search-button" onClick={() => this.search()}>Search
-                            </button>
-                        </div>
+                    <div className="mini-menu">
+                        <input className="search" id="search-field" type="search" placeholder={"Search"} onChange={() => this.search()}/>
                     </div>
-                    
-                    <div id="list">List of queries:</div>
-                    <div id="lineUp"></div>
 
-                    <div id="tables">
+                    <div className="tables">
                         <div className="table">
                             <div className="btn-container" onClick={() => this.createTable()}>
                                 <div id="add-btn-field">
                                     <img className="add-button" src={plus}/>
-                                    <div className="button-text">Add new query</div>
+                                    <div className="button-text">Add Query</div>
                                 </div>
                             </div>
                         </div>
                         {
-                            searchedTables.map(table => {
+                            searchedTables.length ? searchedTables.map(table => {
+                                let evenConn = searchedTables.indexOf(table) % 2 === 0;
+
                                 return (
-                                    <div id={table.alias} className="table" key={table.alias}>
+                                    <div id={table.alias} className={`table ${evenConn ? "dark-row" : "white-row"}`} key={table.alias}>
                                         <div className="container">
                                             <div id="table-name" onClick={() => this.openTable(table.alias)}>
-                                                <span style={localStorage.getItem("openedTable") ? table.alias === localStorage.getItem("openedTable") ? {color: "#eb6e3b"} : null : table.alias === currentOpenedTable ? {color: "#eb6e3b"} : null}>&#11044;</span>
+                                                <span style={ localStorage.getItem("openedTable") ?
+                                                    table.alias === localStorage.getItem("openedTable") ?
+                                                        { color: "#eb6e3b" } : null
+                                                    : table.alias === currentOpenedTable ?
+                                                        { color: "#eb6e3b" } : null
+                                                    }>&#11044;</span>
                                                 <div id="name">{}
                                                     <p id="table-n">{table.alias}</p>
                                                 </div>
                                             </div>
                                             <MiniMenu icon={<MiniMenuIcon/>} table={table}/>
-                                        </div>
+                                        </div >
                                     </div>
                                 );
                             }
-                        )}
+                        ) : <div className="empty-rows">
+                                <div className="empty-rows-column">
+                                    <img className="empty-rows-box" src={upArrow}/>
+                                    <span>You don't have a query yet.</span>
+                                    <span>Please create it on the "Add Query" button.</span>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
 
@@ -202,9 +210,9 @@ export default class Tables extends React.Component {
                             !window.location.hash.includes("create-table")) &&
                             <div className="empty-result-row">
                                 <div className="empty-result-column">
-                                    <img className="empty-result-box" src={emptyBox}/>
+                                    <img className="empty-result-box" src={empty}/>
                                     <span>Query is not selected.</span>
-                                    <span>Please select a query from queries list.</span>
+                                    <span>Please select it from left list.</span>
                                 </div>
                             </div>
                     }

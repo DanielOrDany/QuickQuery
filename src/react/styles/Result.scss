@@ -44,7 +44,6 @@
 
 .result-table {
   grid-area: table;
-
   overflow: auto;
 
   .header {
@@ -328,82 +327,6 @@ tr th {
     }
   }
 }
-
-
-/*
-@media (max-height: 765px) {
-
-  #result-tables {
-    grid-area: table;
-
-    overflow: auto;
-    max-height: 600px;
-
-  }
-
-}
-
-@media (max-height: 700px) {
-
-  #result-tables {
-    grid-area: table;
-
-    overflow: auto;
-    max-height: 560px;
-
-  }
-
-}
-
-@media (max-height: 660px) {
-
-  #result-tables {
-    grid-area: table;
-
-    overflow: auto;
-    max-height: 500px;
-
-  }
-
-}
-
-@media (max-height: 600px) {
-
-  #result-tables {
-    grid-area: table;
-
-    overflow: auto;
-    max-height: 440px;
-
-  }
-
-}
-
-@media (max-height: 540px) {
-
-  #result-tables {
-    grid-area: table;
-
-    overflow: auto;
-    max-height: 380px;
-
-  }
-
-}
-
-@media (max-height: 480px) {
-
-  #result-tables {
-    grid-area: table;
-
-    overflow: auto;
-    max-height: 320px;
-
-  }
-
-}
-
-*/
 
 @media (max-width: 900px) {
 

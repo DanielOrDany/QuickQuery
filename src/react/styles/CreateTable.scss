@@ -125,26 +125,19 @@
 
   /* TABLE */
   table {
-    width: calc(100% - 20px);
-
-    margin-left: 10px;
-    margin-right: 100px;
+    width: 100%;
   }
 
 
   /* INPUT CODE*/
   #queryText {
     grid-area: queryText;
-
-    width: calc(100% - 25px);
-    height: 78.4%;
-
-    margin-top: 5.4%;
-    margin-left: 10px;
-
+    width: 100%;
+    height: 100%;
     resize: none;
-
-    border: 0.5px solid #989898;
+    border-top: 1.5px $black;
+    border-left: 1.5px $black;
+    border-right: 1.5px $black;
   }
 
   .alert {
@@ -183,13 +176,5 @@
 #add-btn-table {
   grid-area: newTable;
   overflow: auto;
-
-  max-height: 340px;
-
-  margin-bottom: 10px;
-}
-
-#your-new-table {
-  margin-top: 10px;
 }
 

@@ -22,6 +22,11 @@
   color: white;
 }
 
+#connection-name:hover {
+  cursor: pointer;
+  color: $orange;
+}
+
 .sharing-buttons {
 
   /* EXPORT-BUTTON */
