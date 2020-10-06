@@ -161,7 +161,7 @@ export default class Tables extends React.Component {
                     </div>
 
                     <div className="tables">
-                        <div className="table">
+                        <div className="add-container">
                             <div className="btn-container" onClick={() => this.createTable()}>
                                 <div id="add-btn-field">
                                     <img className="add-button" src={plus}/>
@@ -187,10 +187,10 @@ export default class Tables extends React.Component {
                                                     <p id="table-n">{table.alias}</p>
                                                 </div>
                                             </div>
-                                            <div className="m-menu">
-                                            <MiniMenu icon={<MiniMenuIcon/>} table={table}/>
-                                            </div>
                                         </div >
+                                        <div className="m-menu">
+                                            <MiniMenu icon={<MiniMenuIcon/>} table={table}/>
+                                        </div>
                                     </div>
                                 );
                             }

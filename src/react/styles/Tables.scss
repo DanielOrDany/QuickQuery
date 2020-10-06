@@ -63,6 +63,7 @@
       grid-area: tables;
       overflow: scroll;
       font-family: 'Scada', sans-serif;
+      cursor: pointer;
 
       .dark-row {
         transition: 0.2s;
@@ -110,9 +111,57 @@
         }
       }
 
+      .add-container {
+        width: 100%;
+        margin: 0px 0px;
+
+        .btn-container {
+          display: flex;
+          justify-content: space-between;
+          background: $row-white;
+          padding: 15px 8px;
+
+          /* ADD BUTTON */
+          #add-btn-field {
+            display: flex;
+            align-items: center;
+
+            .add-button {
+              margin-top: 2px;
+              margin-left: 2px;
+
+              color: $black;
+              width: 20px;
+              height: 20px;
+              transition: 0.2s;
+            }
+
+            .add-button:hover {
+              cursor: pointer;
+            }
+
+            .button-text {
+              margin-top: 5px;
+              margin-left: 15px;
+              font-weight: 600;
+              font-size: 16px;
+              font-family: 'Scada', sans-serif;
+            }
+          }
+
+          &:hover {
+            transition: 0.2s;
+            cursor: pointer;
+            background: $hover-row-white;
+          }
+        }
+      }
+
       .table {
         width: 100%;
         margin: 0px 0px;
+
+        display: flex;
 
         .btn-container {
           display: flex;
@@ -176,20 +225,17 @@
               }
             }
           }
+        }
 
-          #table-name:hover {
-            cursor: pointer;
-          }
+        #table_menu {
+          height: 23px;
+          width: 23px;
+          margin-top: 10px;
+          margin-right: 5px;
+        }
 
-          #table_menu {
-            height: 23px;
-            width: 23px;
-            margin-right: 0px;
-          }
-
-          #table_menu:hover {
-            cursor: pointer;
-          }
+        #table_menu:hover {
+          cursor: pointer;
         }
       }
     }

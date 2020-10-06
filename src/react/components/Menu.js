@@ -150,12 +150,12 @@ class Menu extends React.Component {
                         <div className="logo-box">
                             <img src={logo_icon} id="l-icon" onClick={() => this.openConnections()} />
                             {!this.state.toTables &&
-                                <>
+                                <div id="back-section">
                                     <img src={arrow_back} id="arrow-back" onClick={() => this.openConnections()}/>
                                     <div id="connection-name" onClick={() => this.openConnections()}>
                                         <div>{window.location.hash.split('/')[1]}</div>
                                     </div>
-                                </>
+                                </div>
                             }
                         </div>
                         <div className="menu-box">

@@ -34,7 +34,9 @@ export default class Connections extends React.Component {
             errorMessage: '',
             isOpen: false,
             isErrorOpen: false,
-            bigInput: false
+            isDeleteOpen: false,
+            bigInput: false,
+            choosedConnetion: ''
         };
     };
 
@@ -56,6 +58,22 @@ export default class Connections extends React.Component {
     
     handleErrorCancel = () => {
         this.setState({ isErrorOpen: false });
+    };
+
+    openDelete = (alias) => {
+        this.setState({ choosedConnetion: alias});
+        this.setState({ isDeleteOpen: true });
+    };
+
+    handleDeleteSubmit = () => {
+        this.deleteConnection(this.state.choosedConnetion);
+        this.setState({ choosedConnetion: ''});
+        this.setState({ isDeleteOpen: false });
+    };
+
+    handleDeleteCancel = () => {
+        this.setState({ choosedConnetion: ''});
+        this.setState({ isDeleteOpen: false });
     };
 
     componentDidMount() {
@@ -377,7 +395,7 @@ export default class Connections extends React.Component {
     }
 
     render() {
-        const { searchedConnections, isOpen, bigInput, isErrorOpen, errorMessage } = this.state;
+        const { searchedConnections, isOpen, bigInput, isErrorOpen, isDeleteOpen, errorMessage } = this.state;
 
         return (
             <div className="connections-page">
@@ -402,6 +420,21 @@ export default class Connections extends React.Component {
                     <strong>Message!</strong> {errorMessage}
                 </Modal>
 
+                <Modal
+                    title="Delete connection"
+                    isOpen={isDeleteOpen}
+                    onCancel={this.handleDeleteCancel}
+                    onSubmit={this.handleDeleteSubmit}
+                    cancelButton={true}
+                    cancelTitle="No"
+                    submitTitle="Yes"
+                    noCross={true}
+                >
+                    <div>
+                        <strong>Are you sure?</strong>
+                    </div>
+                </Modal>
+
                 <div className="menu">
                     <input className="search" id="search-field" type="search" placeholder={"Search"} onChange={() => this.search()}/>
                     <button type="button" id="add-button" onClick={() => this.openModal()}>Add Connection</button>
@@ -424,7 +457,7 @@ export default class Connections extends React.Component {
                                         </div>
 
                                         <div className="functional">
-                                            <div onClick={() => this.deleteConnection(conn.name)}>
+                                            <div onClick={() => this.openDelete(conn.name)}>
                                                 <img alt={"delete icon"} src={delete_icon} id="delete-icon"/>
                                             </div>
                                         </div>

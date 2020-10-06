@@ -1,31 +1,35 @@
 @import "./variables";
 
-#arrow-back {
-  width: 30px;
-  height: 30px;
+#back-section {
+  display: flex;
+  margin-left: 110px;
+  padding: 0 20px;
 
-  margin-left: 130px;
-  margin-top: 10px;
-}
+  #arrow-back {
+    width: 30px;
+    height: 30px;
+  
+    margin-top: 10px;
+  }
+  
+  #connection-name {
+    margin-left: 5px;
+    margin-top: 12px;
+    color: white;
+    transition: 0.2s;
+  }
 
-#arrow-back:hover {
-  cursor: pointer;
+  &:hover {
+    cursor: pointer;
+
+    #connection-name {
+      color: $orange;
+    }
+  }
 }
 
 .logo-box {
   display: flex;
-}
-
-#connection-name {
-  margin-left: 5px;
-  margin-top: 12px;
-  color: white;
-  transition: 0.2s;
-}
-
-#connection-name:hover {
-  cursor: pointer;
-  color: $orange;
 }
 
 .sharing-buttons {
