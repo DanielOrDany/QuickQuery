@@ -24,6 +24,7 @@ export default class Result extends React.Component {
             isNullResults: false,
             records: 0,
             pages: 0,
+            isLoading: false,
             options: []
         };
 
@@ -81,7 +82,7 @@ export default class Result extends React.Component {
     }
 
     loadTable = () => {
-        const {pageNumber, options} = this.state;
+        const { pageNumber, options } = this.state;
         const result = localStorage.getItem("current_result");
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const loadingOptions = {
@@ -140,14 +141,12 @@ export default class Result extends React.Component {
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
             if (data) {
-                console.log("loaded res: ", data);
                 if (data.records == 0) {
                     this.setState({
                         isNullResults: true
                     });
                 } else {
                     const db_rows = await Promise.all(data.rows);
-                    console.log("db_rows", db_rows);
                     const headers = Object.keys(db_rows[0]);
                     const selectedValue = Object.keys(db_rows[0])[0];
                     const rows = Object.values(db_rows);
@@ -348,9 +347,9 @@ export default class Result extends React.Component {
     }
 
     render() {
-        const {options, headers, rows, isNullResults} = this.state;
-        console.log(headers);
-        if (this.state === null) {
+        const { options, headers, rows, isNullResults } = this.state;
+
+        if (!headers) {
             return (
                 <div className={"loading"}>
                     <img src={xxx}/>
@@ -451,7 +450,7 @@ export default class Result extends React.Component {
                                                                             format={FORMAT}
                                                                             value={currentOption.filter1}
                                                                             parseDate={(date) => this.handleDatePicker1(date, header)}
-                                                                            placeholder={`01/01/2020`}
+                                                                            placeholder={`Start`}
                                                                         />
                                                                     </div>
                                                                     <div className="filter-field2">
@@ -461,7 +460,7 @@ export default class Result extends React.Component {
                                                                             format={FORMAT}
                                                                             value={currentOption.filter2}
                                                                             parseDate={(date) => this.handleDatePicker2(date, header)}
-                                                                            placeholder={`31/12/2020`}
+                                                                            placeholder={`End`}
                                                                         />
                                                                     </div>
                                                                 </div>

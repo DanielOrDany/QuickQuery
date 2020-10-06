@@ -20,6 +20,12 @@
   margin-left: 5px;
   margin-top: 12px;
   color: white;
+  transition: 0.2s;
+}
+
+#connection-name:hover {
+  cursor: pointer;
+  color: $orange;
 }
 
 .sharing-buttons {

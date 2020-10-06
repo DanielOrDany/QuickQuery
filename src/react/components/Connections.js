@@ -9,6 +9,7 @@ import { Offline } from "react-detect-offline"
 import Button from './Button';
 import Modal from './Modal';
 
+import empty from "../icons/empty.svg";
 import database_icon from "../icons/software.png";
 import delete_icon from "../icons/delete_icon.png";
 import '../styles/Connections.scss';
@@ -376,61 +377,70 @@ export default class Connections extends React.Component {
     }
 
     render() {
+        const { searchedConnections, isOpen, bigInput, isErrorOpen, errorMessage } = this.state;
+
         return (
             <div className="connections-page">
                 <Modal
                     title="Creating a connection"
-                    isOpen={this.state.isOpen}
+                    isOpen={isOpen}
                     onCancel={this.handleCancel}
                     onSubmit={this.handleSubmit}
                     cancelButton={true}
                 >
-                    {this.state.bigInput && this.bigInput()}
-                    {!this.state.bigInput && this.smallInput()}
+                    {bigInput && this.bigInput()}
+                    {!bigInput && this.smallInput()}
                 </Modal>
 
                 <Modal
                     title="Error"
-                    isOpen={this.state.isErrorOpen}
+                    isOpen={isErrorOpen}
                     onCancel={this.handleErrorCancel}
                     onSubmit={this.handleErrorCancel}
                     submitTitle="Ok"
                 >
-                    <strong>Message!</strong> {this.state.errorMessage}
+                    <strong>Message!</strong> {errorMessage}
                 </Modal>
 
                 <div className="menu">
-                    <div className="search">
-                        <input id="search-field" type="search" placeholder={"search.."}/>
-                        <button type="button" id="search-button" onClick={() => this.search()}>Search</button>
-                    </div>
-                    <button type="button" id="add-button" onClick={() => this.openModal()}>Add connection
-                    </button>
+                    <input className="search" id="search-field" type="search" placeholder={"Search"} onChange={() => this.search()}/>
+                    <button type="button" id="add-button" onClick={() => this.openModal()}>Add Connection</button>
                 </div>
 
                 <div className="folders">
-                    {this.state.searchedConnections ? this.state.searchedConnections.map(conn => {
-                            return (
-                                <div id={conn.name} className="connection-folder" key={conn.name}>
-                                        <div className="link-container"
-                                             onDoubleClick={() => this.openConnection(conn.name)}>
-                                            <div className="folders-name">
-                                                <img alt={"icon database"} src={database_icon} id="database-icon"/>
-                                                <div className="link">
-                                                    <p id="folders-n">{conn.name} {this.databaseHost(conn)}</p>
-                                                </div>
-                                            </div>
+                    {
+                        searchedConnections.length ? searchedConnections.map(conn => {
+                            let evenConn = searchedConnections.indexOf(conn) % 2 === 0;
 
-                                            <div className="functional">
-                                                <div onClick={() => this.deleteConnection(conn.name)}>
-                                                    <img alt={"delete icon"} src={delete_icon} id="delete-icon"/>
-                                                </div>
+                            return (
+                                <div id={conn.name} className={`connection-folder ${evenConn ? "dark-row" : "white-row"}`} key={conn.name}>
+                                    <div className="link-container"
+                                         onDoubleClick={() => this.openConnection(conn.name)}>
+                                        <div className="folders-name">
+                                            <img alt={"icon database"} src={database_icon} id="database-icon"/>
+                                            <div className="link">
+                                                <p id="folders-n">{conn.name} {this.databaseHost(conn)}</p>
                                             </div>
                                         </div>
+
+                                        <div className="functional">
+                                            <div onClick={() => this.deleteConnection(conn.name)}>
+                                                <img alt={"delete icon"} src={delete_icon} id="delete-icon"/>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            )
+                            );
                         }
-                    ) : null}
+                    ) :
+                        <div className="empty-result-row">
+                            <div className="empty-result-column">
+                                <img className="empty-result-box" src={empty}/>
+                                <span>You don't have a connection yet.</span>
+                                <span>Please create it on the "Add Connection" button.</span>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         );
