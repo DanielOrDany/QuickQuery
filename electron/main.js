@@ -41,9 +41,13 @@ function createWindow () {
 
   mainWindow.loadURL(startUrl);
 
-  // mainWindow.webContents.on("devtools-opened", () => {
-  //     mainWindow.closeDevTools();
-  // });
+  // Set/Remove devtools
+  mainWindow.webContents.on("devtools-opened", () => {
+      mainWindow.closeDevTools();
+  });
+
+  // Set/Remove MENU
+  mainWindow.removeMenu();
 
   mainWindow.on('closed', function () {
       app.quit();

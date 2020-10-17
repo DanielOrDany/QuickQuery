@@ -10,7 +10,7 @@ import Button from './Button';
 import Modal from './Modal';
 
 import empty from "../icons/empty.svg";
-import database_icon from "../icons/software.png";
+import database_icon from "../icons/database.svg";
 import delete_icon from "../icons/delete_icon.png";
 import '../styles/Connections.scss';
 
