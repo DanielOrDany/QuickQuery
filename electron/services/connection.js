@@ -81,7 +81,8 @@ async function addConnection(params) {
                     connection.queries.push({
                         query: ` SELECT * FROM ${table.table_name}`,
                         type: 'default_query',
-                        alias: table.table_name
+                        alias: table.table_name,
+                        table: table.table_name
                     });
                 });
             } else {
@@ -89,7 +90,8 @@ async function addConnection(params) {
                     connection.queries.push({
                         query: ` SELECT * FROM ${table.TABLE_NAME}`,
                         type: 'default_query',
-                        alias: table.TABLE_NAME
+                        alias: table.TABLE_NAME,
+                        table: table.TABLE_NAME
                     });
                 });
             }

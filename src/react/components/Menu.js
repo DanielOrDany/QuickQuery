@@ -109,6 +109,8 @@ class Menu extends React.Component {
     }
 
     render() {
+        const currentConnection = JSON.parse(localStorage.getItem("current_connection"));
+
         return (
             <>
                 {
@@ -153,7 +155,7 @@ class Menu extends React.Component {
                                 <div id="back-section">
                                     <img src={arrow_back} id="arrow-back" onClick={() => this.openConnections()}/>
                                     <div id="connection-name" onClick={() => this.openConnections()}>
-                                        <div>{window.location.hash.split('/')[1]}</div>
+                                        <div>{currentConnection.name}</div>
                                     </div>
                                 </div>
                             }

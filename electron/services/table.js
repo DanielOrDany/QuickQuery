@@ -407,6 +407,42 @@ function isEmpty(str) {
     return !str.trim().length;
 }
 
+async function getTableColumns(connectionName, table) {
+    console.log(connectionName, table);
+    try {
+        const URI = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .get('URI')
+            .value();
+
+        const sequelize = URI.database ? new Sequelize(
+            URI.database,
+            URI.user,
+            URI.password,
+            URI.others
+        ) : new Sequelize(URI);
+
+        const query = `select column_name from information_schema.columns where table_name='${table}';`;
+
+        const result = await sequelize.query(query);
+        return result[0];
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+async function joinTables(connectionName, tableOne, tableTwo, whereStatement) {
+    const queryLimit = query += ' LIMIT 1 OFFSET 0';
+    const [results, metadata] = await sequelize.query(queryLimit);
+
+    return {
+        "query": query,
+        "rows": results,
+        "fields": metadata.fields
+    };
+}
+
 // Export db's methods
 module.exports = {
     runQuery,
@@ -416,5 +452,7 @@ module.exports = {
     getTable,
     getAllTables,
     updateTableQuery,
-    loadTableResult
+    loadTableResult,
+    joinTables,
+    getTableColumns
 };

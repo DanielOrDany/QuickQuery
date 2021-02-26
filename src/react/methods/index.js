@@ -13,6 +13,15 @@ export const
         });
     },
 
+    getTableColumns = async (connectionName, table) => {
+        return new Promise(resolve => {
+            ipcRenderer.send(channels.GET_TABLE_COLUMNS, connectionName, table);
+            ipcRenderer.on(channels.GET_TABLE_COLUMNS, (event, result) => {
+                resolve(result.data);
+            });
+        });
+    },
+
     exportConfig = async () => {
         return new Promise(resolve => {
             ipcRenderer.send(channels.SHARE_DB);

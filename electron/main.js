@@ -42,9 +42,9 @@ function createWindow () {
   mainWindow.loadURL(startUrl);
 
   // Set/Remove devtools
-  mainWindow.webContents.on("devtools-opened", () => {
-      mainWindow.closeDevTools();
-  });
+  // mainWindow.webContents.on("devtools-opened", () => {
+  //     mainWindow.closeDevTools();
+  // });
 
   // Set/Remove MENU
   mainWindow.removeMenu();
@@ -267,5 +267,16 @@ ipcMain.on(channels.TEST_QUERY, async (event, connectionName, query) => {
   } catch (e) {
     unsuccessful.message = e;
     await event.sender.send(channels.TEST_QUERY, unsuccessful);
+  }
+});
+
+ipcMain.on(channels.GET_TABLE_COLUMNS, async (event, connectionName, table) => {
+  try {
+    const result = await Table.getTableColumns(connectionName, table);
+    successful.data = result;
+    await event.sender.send(channels.GET_TABLE_COLUMNS, successful);
+  } catch (e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.GET_TABLE_COLUMNS, unsuccessful);
   }
 });

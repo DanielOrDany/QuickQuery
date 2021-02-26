@@ -128,6 +128,81 @@
     width: 100%;
   }
 
+  /* QUERY CONSTRUCTOR */
+
+  .query-constructor {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    padding: 10px;
+    align-items: center;
+
+    .constructor-table {
+      display: flex;
+      flex-direction: row;
+
+      #link-icon {
+        width: 30px;
+      }
+
+      .constructor-table-data {
+        display: flex;
+        flex-direction: column;
+        height: max-content;
+        width: max-content;
+        min-width: 200px;
+        min-height: 50px;
+        padding: 10px;
+        margin: 5px;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+
+        span {
+          font-size: 16px;
+          font-weight: bold;
+          margin-right: 10px;
+        }
+
+        select {
+          border: none;
+        }
+
+        .table-data {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          #remove-icon {
+            margin-left: 20px;
+          }
+        }
+
+        .table-column {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-right: 50px;
+          margin-top: 10px;
+        }
+      }
+    }
+
+    .add-table {
+      width: 50px;
+      height: 50px;
+      padding: 5px;
+      margin: 5px;
+
+      img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    .add-table:hover {
+      background-color: $hover-white;
+    }
+  }
 
   /* INPUT CODE*/
   #queryText {
