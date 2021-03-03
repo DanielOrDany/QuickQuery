@@ -259,8 +259,13 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
             let searchColumnNum = 0;
 
             loadingOptions.operationsOptions.forEach((option) => {
-                const column = option.column;
+                let column = option.column;
                 const search = option.search;
+
+                // Join cases
+                if (column.match('_')) {
+                    column = column.replace('_', '.');
+                }
 
                 if (dialect === MYSQL && searchColumnNum === 0 && search != "") {
                     query += ` WHERE CONCAT('%', CAST(${column} AS CHAR(50)), '%') LIKE '%${search}%'`;

@@ -165,7 +165,7 @@ export default class Tables extends React.Component {
                             <div className="btn-container" onClick={() => this.createTable()}>
                                 <div id="add-btn-field">
                                     <img className="add-button" src={plus}/>
-                                    <div className="button-text">Add Query</div>
+                                    <div className="button-text">Join Tables</div>
                                 </div>
                             </div>
                         </div>
