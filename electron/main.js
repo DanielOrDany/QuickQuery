@@ -237,9 +237,10 @@ ipcMain.on(channels.RENAME_TABLE, async (event, connectionName, alias, newAlias)
   }
 });
 
-ipcMain.on(channels.UPDATE_QUERY, async (event, connectionName, alias, query) => {
+ipcMain.on(channels.UPDATE_QUERY, async (event, connectionName, alias, newQuery, newAlias) => {
   try {
-    const result = await Table.updateTableQuery(connectionName, alias, query);
+    const result = await Table.updateTableQuery(connectionName, alias, newQuery, newAlias);
+    console.log(result);
     successful.data = result;
     await event.sender.send(channels.UPDATE_QUERY, successful);
   } catch (e) {

@@ -481,12 +481,18 @@ export default class Result extends React.Component {
                                     return (
                                         <tr key={key} className={key++ % 2 === 0 ? "column_one" : "column_two"}>
                                             {Object.values(item).map((get_item, key) => {
+                                                let renderItem;
+                                                if (typeof get_item === 'object') {
+                                                    renderItem = JSON.stringify(get_item);
+                                                } else {
+                                                    renderItem = get_item;
+                                                }
                                                 return (
                                                     <td key={key} style={key === 0 ? {
                                                         color: "#3E3E3E",
                                                         background: "#EFEFEF",
                                                         border: "1px solid grey",
-                                                    } : {color: "#3E3E3E"}}>{get_item}
+                                                    } : {color: "#3E3E3E"}}>{renderItem}
                                                     </td>
                                                 );
                                             })}

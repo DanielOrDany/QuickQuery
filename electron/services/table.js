@@ -186,10 +186,11 @@ function verifyQuery(query) {
     })
 }
 
-function updateTableQuery(connectionName, alias, query) {
+function updateTableQuery(connectionName, alias, newQuery, newAlias) {
     // verify that query have select character
-    verifyQuery(query);
+    verifyQuery(newQuery);
 
+    console.log("alias", alias, "newAlias", newAlias);
     // Get queries
     const queries = db.read()
         .get('connections')
@@ -199,8 +200,9 @@ function updateTableQuery(connectionName, alias, query) {
 
     // Add new one
     const index = queries.findIndex(query => query.alias === alias);
-    queries[index].query = query;
-
+    queries[index].query = newQuery;
+    queries[index].alias = newAlias;
+    console.log("query = ", queries[index]);
     // Update queries
     db.get('connections')
         .find({name: connectionName})

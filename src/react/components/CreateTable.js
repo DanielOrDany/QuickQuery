@@ -10,6 +10,9 @@ import xxx from "../icons/Gear-0.2s-200px (1).svg";
 import addIcon from "../icons/add-icon.svg";
 import linkIcon from "../icons/link-icon.svg";
 import removeIcon from "../icons/remove.svg";
+import westIcon from "../icons/west-arrow.svg";
+import eastIcon from "../icons/east-arrow.svg";
+
 
 export default class CreateTable extends React.Component {
 
@@ -22,7 +25,9 @@ export default class CreateTable extends React.Component {
             isLoading: true,
             tables: ['select table'],
             columns: ['select column'],
+            secondColumns: ['select column'],
             options: [],
+            alias: ""
         };
     }
 
@@ -71,42 +76,64 @@ export default class CreateTable extends React.Component {
     }
 
     renderFields() {
-        let result = JSON.parse(localStorage.getItem("current_result_info"));
-        let name = document.getElementById("aliasText");
-        name.value = result.alias;
-        name.disabled = true;
-
-        const query = result.query;
-        const fromIndex = query.indexOf("JOIN");
-        const selectedQueryColumns = query.slice(fromIndex, query.length).split('JOIN');
         let tables = [];
         let columns = [];
+        let secondColumns = [];
 
-        selectedQueryColumns.forEach(selectedQueryColumn => {
-            if (selectedQueryColumn.match("ON")) {
-                const onQuery = selectedQueryColumn.split('ON');
-                const tablesAndColumns = onQuery[1].replace(/ /g, "").split('=');
+        let result = JSON.parse(localStorage.getItem("current_result_info"));
+        let name = document.getElementById("aliasText");
 
-                tablesAndColumns.forEach(tableAndColumn => {
-                    const table = tableAndColumn.split('.')[0];
-                    const column = tableAndColumn.split('.')[1];
+        name.value = result.alias;
+        //name.disabled = true;
 
-                    const prevTable = tables[tables.length - 1];
+        const query = result.query;
+        const joinIndex = query.indexOf("JOIN");
 
-                    if (prevTable) {
-                        if (prevTable !== table) {
+        if (joinIndex >= 0) {
+            const selectedQueryColumns = query.slice(joinIndex, query.length).split('JOIN');
+
+            selectedQueryColumns.forEach((selectedQueryColumn, index) => {
+                if (selectedQueryColumn.match("ON")) {
+                    const onQuery = selectedQueryColumn.split('ON');
+                    const tablesAndColumns = onQuery[1].replace(/ /g, "").split('=');
+
+                    tablesAndColumns.forEach((tableAndColumn, tAndCIndex) => {
+                        const table = tableAndColumn.split('.')[0];
+                        const column = tableAndColumn.split('.')[1];
+
+                        const prevTable = tables[tables.length - 1];
+
+                        if (prevTable) {
+                            if (prevTable !== table) {
+                                tables.push(table);
+                                columns.push(column);
+                            }
+                        } else {
                             tables.push(table);
                             columns.push(column);
                         }
-                    } else {
-                        tables.push(table);
-                        columns.push(column);
-                    }
-                });
-            }
-        });
 
-        this.setState({ tables, columns });
+                        if (index > 0) {
+                            if (tAndCIndex === 0) {
+                                secondColumns.push(column);
+                            }
+                        } else {
+                            secondColumns.push("select column");
+                        }
+                    });
+                }
+            });
+        } else {
+            const fromIndex = query.indexOf("FROM");
+            const selectedQueryColumns = query.slice(fromIndex, query.length).split('FROM');
+            const table = selectedQueryColumns[1].replace(/ /g, "");
+
+            tables.push(table);
+            columns.push("select column");
+            secondColumns.push("select column");
+        }
+
+        this.setState({ tables, columns, secondColumns, alias: (result && result.alias) ? result.alias : "" });
     }
 
     save() {
@@ -118,7 +145,7 @@ export default class CreateTable extends React.Component {
             isLoading: true
         });
 
-        const { tables, columns, options } = this.state;
+        const { tables, columns, options, secondColumns, alias } = this.state;
 
         if (tables.length < 1 && columns.length < 1) {
             this.setState({
@@ -127,37 +154,42 @@ export default class CreateTable extends React.Component {
                 isLoading: false
             });
         } else {
+            let newQuery = "";
             const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
-            const alias = document.getElementById("aliasText").value;
-            let query = "";
+            const newAlias = document.getElementById("aliasText").value;
 
-            const columnNames = tables.map(table => {
-                const tableOption = options.filter(option => option.alias === table);
-                const tableColumns = tableOption.length !== 0 ? tableOption[0].columns : [];
-                const columnNames = tableColumns.map((column) => column.column_name);
-                return columnNames;
-            });
-
-            const selectedColumns = columnNames.map((names, index) => {
-                return names.map(name => {
-                   return `${tables[index]}.${name} AS ${tables[index]}_${name}`
+            if (tables.length === 1) {
+                newQuery += `SELECT * FROM ${tables[0]}`;
+            } else {
+                const columnNames = tables.map(table => {
+                    const tableOption = options.filter(option => option.alias === table);
+                    const tableColumns = tableOption.length !== 0 ? tableOption[0].columns : [];
+                    const columnNames = tableColumns.map((column) => column.column_name);
+                    return columnNames;
                 });
-            });
 
-            const mergedColumns = [].concat.apply([], selectedColumns);
+                const selectedColumns = columnNames.map((names, index) => {
+                    return names.map(name => {
+                        return `${tables[index]}.${name} AS ${tables[index]}_${name}`
+                    });
+                });
 
-            tables.forEach((table, index) => {
-                if (index === 0) {
-                    query += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}.${columns[index]} = ${tables[index + 1]}.${columns[index + 1]}`;
-                } else if (index < tables.length - 1) {
-                    query += ` JOIN ${tables[index + 1]} ON ${table}.${columns[index]} = ${tables[index + 1]}.${columns[index + 1]}`;
-                }
-            });
+                const mergedColumns = [].concat.apply([], selectedColumns);
+
+                tables.forEach((table, index) => {
+                    if (index === 0) {
+                        newQuery += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}.${columns[index]} = ${tables[index + 1]}.${columns[index + 1]}`;
+                    } else if (index < tables.length - 1) {
+                        newQuery += ` JOIN ${tables[index + 1]} ON ${table}.${secondColumns[index]} = ${tables[index + 1]}.${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}`;
+                    }
+                });
+            }
 
             if(localStorage.getItem("current_result_info")) {
-                testTableQuery(connectionName, query).then(data => {
+                console.log("alias", alias, "new", newAlias);
+                testTableQuery(connectionName, newQuery).then(data => {
                     if (data) {
-                        updateTableQuery(connectionName, alias, query).then((tables) => {
+                        updateTableQuery(connectionName, alias, newQuery, newAlias).then((tables) => {
                             localStorage.setItem("need_update", JSON.stringify(true));
                             window.location.hash = "#/tables";
                         });
@@ -170,18 +202,18 @@ export default class CreateTable extends React.Component {
                     }
                 });
             } else if (
-                inputVerify(alias) > 0
+                inputVerify(newAlias) > 0
             ) {
-                if (alias.indexOf(' ') !== -1) {
+                if (newAlias.indexOf(' ') !== -1) {
                     this.setState({
                         badQuery: 1,
                         errorMessage: "Please, remove any spaces in alias.",
                         isLoading: false
                     });
                 } else {
-                    testTableQuery(connectionName, query).then(data => {
+                    testTableQuery(connectionName, newQuery).then(data => {
                         if (data) {
-                            addTable(connectionName, query, "new", alias).then(() => {
+                            addTable(connectionName, newQuery, "new", newAlias).then(() => {
                                 localStorage.setItem("new_table", JSON.stringify(true));
                                 window.location.hash = "#tables";
                             });
@@ -205,7 +237,7 @@ export default class CreateTable extends React.Component {
     }
 
     run() {
-        const { tables, columns, options } = this.state;
+        const { tables, columns, options, secondColumns } = this.state;
 
         if (tables.length < 1 && columns.length < 1) {
             this.setState({
@@ -214,31 +246,35 @@ export default class CreateTable extends React.Component {
                 isLoading: false
             });
         } else {
-            const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
             let query = "";
+            const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
 
-            const columnNames = tables.map(table => {
-                const tableOption = options.filter(option => option.alias === table);
-                const tableColumns = tableOption.length !== 0 ? tableOption[0].columns : [];
-                const columnNames = tableColumns.map((column) => column.column_name);
-                return columnNames;
-            });
-
-            const selectedColumns = columnNames.map((names, index) => {
-                return names.map(name => {
-                    return `${tables[index]}.${name} AS ${tables[index]}_${name}`
+            if (tables.length === 1) {
+                query += `SELECT * FROM ${tables[0]}`;
+            } else {
+                const columnNames = tables.map(table => {
+                    const tableOption = options.filter(option => option.alias === table);
+                    const tableColumns = tableOption.length !== 0 ? tableOption[0].columns : [];
+                    const columnNames = tableColumns.map((column) => column.column_name);
+                    return columnNames;
                 });
-            });
 
-            const mergedColumns = [].concat.apply([], selectedColumns);
+                const selectedColumns = columnNames.map((names, index) => {
+                    return names.map(name => {
+                        return `${tables[index]}.${name} AS ${tables[index]}_${name}`
+                    });
+                });
 
-            tables.forEach((table, index) => {
-                if (index === 0) {
-                    query += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}.${columns[index]} = ${tables[index + 1]}.${columns[index + 1]}`;
-                } else if (index < tables.length - 1) {
-                    query += ` JOIN ${tables[index + 1]} ON ${table}.${columns[index]} = ${tables[index + 1]}.${columns[index + 1]}`;
-                }
-            });
+                const mergedColumns = [].concat.apply([], selectedColumns);
+
+                tables.forEach((table, index) => {
+                    if (index === 0) {
+                        query += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}.${columns[index]} = ${tables[index + 1]}.${columns[index + 1]}`;
+                    } else if (index < tables.length - 1) {
+                        query += ` JOIN ${tables[index + 1]} ON ${table}.${secondColumns[index]} = ${tables[index + 1]}.${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}`;
+                    }
+                });
+            }
 
             try {
                 testTableQuery(connectionName, query).then(async data => {
@@ -278,41 +314,51 @@ export default class CreateTable extends React.Component {
         this.setState({columns});
     }
 
+    handleSecondColumnChange(e, index) {
+        let { secondColumns } = this.state;
+        secondColumns[index] = e.target.value;
+        this.setState({secondColumns});
+    }
+
     addNewTable() {
-        let { tables, columns } = this.state;
+        let { tables, columns, secondColumns } = this.state;
         const tableIndex = tables.indexOf('select table');
-        const columnIndex = tables.indexOf('select column');
+        const columnIndex = columns.indexOf('select column');
 
         if (tableIndex < 0 && columnIndex < 0) {
             tables.push('select table');
             columns.push('select column');
+            secondColumns.push('select column');
 
-            this.setState({tables, columns});
+            this.setState({tables, columns, secondColumns});
         } else {
             this.setState({errorMessage: "Please, select the previous table or table column before adding a new one."});
         }
     }
 
     removeTable(index) {
-        let { tables, columns } = this.state;
+        let { tables, columns, secondColumns } = this.state;
         tables.splice(index, 1);
         columns.splice(index, 1);
-        this.setState({ tables, columns });
+        secondColumns.splice(index, 1);
+        this.setState({ tables, columns, secondColumns });
     }
 
     renderTable(table, index) {
-        const { options, tables, columns } = this.state;
+        const { options, tables, columns, secondColumns } = this.state;
         const showLink = index < tables.length && index > 0;
         const tableOption = options.filter(option => option.alias === table);
         const tableColumns = tableOption.length !== 0 ? tableOption[0].columns : [];
+        const tableSecondColumns = tableOption.length !== 0 ? tableOption[0].columns : [];
         const tableColumn = columns[index];
+        const tableSecondColumn = secondColumns[index];
 
         return (
             <div className="constructor-table" key={index}>
                 { showLink && <img id="link-icon" src={linkIcon}/> }
                 <div className="constructor-table-data">
                     <div className="table-data">
-                        <span>{table}</span>
+                        <span><b>Table:</b> {table === "select table" ? <span style={{color: "#f4cb4c"}}>select table</span> : <span>{table}</span>}</span>
                         <select className="select-table" value="" onChange={(e) => this.handleTableChange(e, index)}>
                             <option value="" selected disabled hidden>Choose here</option>
                             {
@@ -323,15 +369,32 @@ export default class CreateTable extends React.Component {
                     </div>
                     { table !== 'select table' &&
                         <div className="table-column">
-                            <span>{tableColumn}</span>
-                            <select className="select-table" value="" onChange={(e) => this.handleColumnChange(e, index)}>
-                                <option value="" selected disabled hidden>Choose here</option>
-                                {
-                                    tableColumns && tableColumns.map((column, i) => {
-                                        return <option key={i} value={column.column_name}>{column.column_name}</option>
-                                    })
-                                }
-                            </select>
+                            <div className="column-name">
+                                { ( index !== 0 && (tables.length - 1) !== index )  && <img className="column-arrows" src={westIcon}/> }
+                                <span><b>Column:</b> {tableColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableColumn}</span>}</span>
+                                <select className="select-column" value="" onChange={(e) => this.handleColumnChange(e, index)}>
+                                    <option value="" selected disabled hidden>Choose here</option>
+                                    {
+                                        tableColumns && tableColumns.map((column, i) => {
+                                            return <option key={i} value={column.column_name}>{column.column_name}</option>
+                                        })
+                                    }
+                                </select>
+                            </div>
+                            { ( index !== 0 && (tables.length - 1) !== index )  &&
+                                <div className="column-name">
+                                    <img className="column-arrows" src={eastIcon}/>
+                                    <span><b>Column:</b> {tableSecondColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableSecondColumn}</span>}</span>
+                                    <select className="select-column" value="" onChange={(e) => this.handleSecondColumnChange(e, index)}>
+                                        <option value="" selected disabled hidden>Choose here</option>
+                                        {
+                                            tableSecondColumns && tableSecondColumns.map((column, i) => {
+                                                return <option key={i} value={column.column_name}>{column.column_name}</option>
+                                            })
+                                        }
+                                    </select>
+                                </div>
+                            }
                         </div>
                     }
                 </div>
@@ -359,8 +422,7 @@ export default class CreateTable extends React.Component {
                             </button>
 
                             <div className="saving-result">
-                                <input type="text" id="aliasText" placeholder="Query Name" className="form-control"
-                                       type="search"/>
+                                <input type="text" id="aliasText" placeholder="Query Name" className="form-control"/>
                                 <button type="button" className="saveButton" onClick={() => this.save()}>
                                     Save
                                 </button>

@@ -131,9 +131,9 @@ export const
         });
     },
 
-    updateTableQuery = async (connectionName, alias, query) => {
+    updateTableQuery = async (connectionName, alias, query, newAlias) => {
         return new Promise(resolve => {
-            ipcRenderer.send(channels.UPDATE_QUERY, connectionName, alias, query);
+            ipcRenderer.send(channels.UPDATE_QUERY, connectionName, alias, query, newAlias);
             ipcRenderer.on(channels.UPDATE_QUERY, (event, result) => {
                 resolve(result.data);
             });

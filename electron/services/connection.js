@@ -48,7 +48,16 @@ async function addConnection(params) {
             database,
             user,
             password,
-            { host: host, dialect: dtype }
+            {
+                host: host,
+                dialect: dtype,
+                ssl: true,
+                dialectOptions: {
+                    ssl: {
+                        require: true,
+                        rejectUnauthorized: true // <<<<<< YOU NEED THIS
+                    }
+                }}
         );
 
         const selectAllTables = `
