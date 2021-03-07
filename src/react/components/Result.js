@@ -72,7 +72,7 @@ export default class Result extends React.Component {
         const {pageNumber} = this.state;
 
         if (prevState.pageNumber !== pageNumber) {
-            this.loadTable();
+            this.reloadTable();
         }
 
         if (window.location.href.split('/')[window.location.href.split('/').length - 1] != localStorage.getItem("current_result")) {
@@ -85,9 +85,13 @@ export default class Result extends React.Component {
         const { pageNumber, options } = this.state;
         const result = localStorage.getItem("current_result");
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+        const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
+        const tableColumns = connectionInfo.queries.filter(query => !!query.table).map(query => query.table);
+
         const loadingOptions = {
             page: pageNumber,
-            pageSize: 10
+            pageSize: 10,
+            columns: tableColumns
         };
 
         localStorage.setItem('isChangedPicker1', false);
@@ -130,13 +134,17 @@ export default class Result extends React.Component {
     };
 
     reloadTable = () => {
-        const {pageNumber, options} = this.state;
+        const { pageNumber, options } = this.state;
         const result = localStorage.getItem("current_result");
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+        const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
+        const tableColumns = connectionInfo.queries.filter(query => !!query.table).map(query => query.table);
+
         const loadingOptions = {
             page: pageNumber,
             pageSize: 10,
-            operationsOptions: options.length ? options : null
+            operationsOptions: options.length ? options : null,
+            columns: tableColumns
         };
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
@@ -187,14 +195,21 @@ export default class Result extends React.Component {
         };
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
-            const db_rows = await Promise.all(data.rows);
-            const rows = Object.values(db_rows);
+            if (data) {
+                const db_rows = await Promise.all(data.rows);
+                const rows = db_rows.length !== 0 ? Object.values(db_rows) : [];
 
-            let binaryWS = XLSX.utils.json_to_sheet(rows);
-            let wb = XLSX.utils.book_new();
+                let binaryWS = XLSX.utils.json_to_sheet(rows);
+                let wb = XLSX.utils.book_new();
 
-            XLSX.utils.book_append_sheet(wb, binaryWS, `${result}`);
-            XLSX.writeFile(wb, `${result}.xlsx`);
+                XLSX.utils.book_append_sheet(wb, binaryWS, `${result}`);
+                XLSX.writeFile(wb, `${result}.xlsx`);
+            } else {
+                this.setState({
+                    errorMessage: "Query is not valid.",
+                    isLoading: false
+                });
+            }
         });
     }
 
@@ -480,13 +495,16 @@ export default class Result extends React.Component {
                                 (rows && !isNullResults) ? rows.map((item, key) => {
                                     return (
                                         <tr key={key} className={key++ % 2 === 0 ? "column_one" : "column_two"}>
-                                            {Object.values(item).map((get_item, key) => {
+                                            { Object.values(item).map((get_item, key) => {
+
                                                 let renderItem;
+
                                                 if (typeof get_item === 'object') {
                                                     renderItem = JSON.stringify(get_item);
                                                 } else {
                                                     renderItem = get_item;
                                                 }
+
                                                 return (
                                                     <td key={key} style={key === 0 ? {
                                                         color: "#3E3E3E",

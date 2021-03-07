@@ -221,8 +221,6 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
             .get('URI')
             .value();
 
-        console.log(URI);
-
         const sequelize = URI.database ? new Sequelize(
             URI.database,
             URI.user,
@@ -230,8 +228,11 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
             URI.others
         ) : new Sequelize(URI);
 
+        console.log("loadingOptions", loadingOptions);
+
         const offset = Number(loadingOptions.page) * Number(loadingOptions.pageSize);
         const limit = Number(loadingOptions.pageSize);
+        const tableColumns = loadingOptions.columns ? loadingOptions.columns : [];
 
         let dialect;
         if (typeof URI === 'string') {
@@ -239,8 +240,6 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
         } else {
             dialect = URI.others.dialect;
         }
-
-        console.log('dialect: ', dialect);
 
         // Get table result
         let query = db.read()
@@ -254,8 +253,6 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
             query = query[query.length].replace(';', ' ');
         }
 
-        console.log("operationsOptions: ", loadingOptions.operationsOptions);
-
         if (loadingOptions.operationsOptions) {
             // Add searches
             let searchColumnNum = 0;
@@ -265,9 +262,11 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                 const search = option.search;
 
                 // Join cases
-                if (column.match('_')) {
-                    column = column.replace('_', '.');
-                }
+                tableColumns.forEach(tableColumn => {
+                    if (column.match(tableColumn)) {
+                        column = column.replace(`${tableColumn}_`, `${tableColumn}.`);
+                    }
+                });
 
                 if (dialect === MYSQL && searchColumnNum === 0 && search != "") {
                     query += ` WHERE CONCAT('%', CAST(${column} AS CHAR(50)), '%') LIKE '%${search}%'`;
@@ -286,9 +285,16 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
 
             // Add filters
             loadingOptions.operationsOptions.forEach((option) => {
-                const column = option.column;
+                let column = option.column;
                 const filter1 = option.filter1;
                 const filter2 = option.filter2;
+
+                // Join cases
+                tableColumns.forEach(tableColumn => {
+                    if (column.match(tableColumn)) {
+                        column = column.replace(`${tableColumn}_`, `${tableColumn}.`);
+                    }
+                });
 
                 if (!isEmpty(filter1) && !isEmpty(filter2)) {
                     const filter1IsDate = (new Date(filter1) !== "Invalid Date") && !isNaN(new Date(filter1));
@@ -349,14 +355,22 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
             let orderByNum = 0;
 
             const lastChangedOption = loadingOptions.operationsOptions.find((option) => option.last === true);
+
             if (lastChangedOption) {
                 query += ` ORDER BY ${lastChangedOption.column} ${lastChangedOption.order}`;
                 orderByNum += 1;
             }
 
             loadingOptions.operationsOptions.forEach((option) => {
-                const column = option.column;
+                let column = option.column;
                 const order = option.order;
+
+                // Join cases
+                tableColumns.forEach(tableColumn => {
+                    if (column.match(tableColumn)) {
+                        column = column.replace(`${tableColumn}_`, `${tableColumn}.`);
+                    }
+                });
 
                 if (orderByNum > 0 && !option.last) {
                     query += `, ${column} ${order}`;
@@ -376,8 +390,8 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
         const queryResult = await sequelize.query(query);
 
         const number = numberOfRecords[0][0].c/limit;
-        const one_as_string = String(number).charAt(0);
-        const one = Number(one_as_string);
+        const one = Number(number).toFixed(0);
+
         let pages = 0;
         const records = numberOfRecords[0][0].c;
 
@@ -394,14 +408,14 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
             return {
                 "rows": queryResult[1].rows,
                 "fields": queryResult[1].fields,
-                "pages": pages,
+                "pages": Math.ceil(pages),
                 "records": records
             };
         } else {
             return {
                 "rows": queryResult[0],
                 "fields": queryResult[0],
-                "pages": pages,
+                "pages": Math.ceil(pages),
                 "records": records
             };
         }
@@ -430,7 +444,7 @@ async function getTableColumns(connectionName, table) {
             URI.others
         ) : new Sequelize(URI);
 
-        const query = `select column_name from information_schema.columns where table_name='${table}';`;
+        let query = `select column_name from information_schema.columns where table_name='${table}'`;
 
         const result = await sequelize.query(query);
         return result[0];

@@ -13,6 +13,10 @@ import removeIcon from "../icons/remove.svg";
 import westIcon from "../icons/west-arrow.svg";
 import eastIcon from "../icons/east-arrow.svg";
 
+function arraysEqual(a1,a2) {
+    /* WARNING: arrays must not contain {objects} or behavior may be undefined */
+    return JSON.stringify(a1)==JSON.stringify(a2);
+}
 
 export default class CreateTable extends React.Component {
 
@@ -36,22 +40,60 @@ export default class CreateTable extends React.Component {
 
         if (currentConnection) {
             let newOptions = [];
-
             const queries = currentConnection.queries.filter(query => !!query.table);
-            for (const query in queries) {
-                const queryData = currentConnection.queries[query];
-                const columns = await getTableColumns(currentConnection.name, queryData.table);
 
-                newOptions.push({
-                    ...queryData,
-                    columns: columns
+            if (!localStorage.getItem("current_result_options") || JSON.parse(localStorage.getItem("current_result_options")).connectionName !== currentConnection.name) {
+                for (const query in queries) {
+                    const queryData = currentConnection.queries[query];
+                    const columns = await getTableColumns(currentConnection.name, queryData.table);
+
+                    newOptions.push({
+                        ...queryData,
+                        columns: columns
+                    });
+                }
+
+                localStorage.setItem("current_result_options", JSON.stringify({
+                    connectionName: currentConnection.name,
+                    options: newOptions
+                }));
+
+                this.setState({
+                    options: newOptions,
+                    isLoading: false
                 });
-            }
+            } else {
+                newOptions = JSON.parse(localStorage.getItem("current_result_options")).options;
 
-            this.setState({
-                options: newOptions,
-                isLoading: false
-            })
+                this.setState({
+                    options: newOptions,
+                    isLoading: false
+                });
+
+                let checkOptions = [];
+
+                for (const query in queries) {
+                    const queryData = currentConnection.queries[query];
+                    const columns = await getTableColumns(currentConnection.name, queryData.table);
+
+                    checkOptions.push({
+                        ...queryData,
+                        columns: columns
+                    });
+                }
+
+                if (!arraysEqual(checkOptions, newOptions)) {
+                    localStorage.setItem("current_result_options", JSON.stringify({
+                        connectionName: currentConnection.name,
+                        options: checkOptions
+                    }));
+
+                    this.setState({
+                        options: checkOptions,
+                        isLoading: false
+                    });
+                }
+            }
         }
 
         if (localStorage.getItem("current_result_info")) {
@@ -83,57 +125,59 @@ export default class CreateTable extends React.Component {
         let result = JSON.parse(localStorage.getItem("current_result_info"));
         let name = document.getElementById("aliasText");
 
-        name.value = result.alias;
-        //name.disabled = true;
+        if (name && result) {
+            name.value = result.alias;
+            //name.disabled = true;
 
-        const query = result.query;
-        const joinIndex = query.indexOf("JOIN");
+            const query = result.query;
+            const joinIndex = query.indexOf("JOIN");
 
-        if (joinIndex >= 0) {
-            const selectedQueryColumns = query.slice(joinIndex, query.length).split('JOIN');
+            if (joinIndex >= 0) {
+                const selectedQueryColumns = query.slice(joinIndex, query.length).split('JOIN');
 
-            selectedQueryColumns.forEach((selectedQueryColumn, index) => {
-                if (selectedQueryColumn.match("ON")) {
-                    const onQuery = selectedQueryColumn.split('ON');
-                    const tablesAndColumns = onQuery[1].replace(/ /g, "").split('=');
+                selectedQueryColumns.forEach((selectedQueryColumn, index) => {
+                    if (selectedQueryColumn.match("ON")) {
+                        const onQuery = selectedQueryColumn.split('ON');
+                        const tablesAndColumns = onQuery[1].replace(/ /g, "").split('=');
 
-                    tablesAndColumns.forEach((tableAndColumn, tAndCIndex) => {
-                        const table = tableAndColumn.split('.')[0];
-                        const column = tableAndColumn.split('.')[1];
+                        tablesAndColumns.forEach((tableAndColumn, tAndCIndex) => {
+                            const table = tableAndColumn.split('.')[0];
+                            const column = tableAndColumn.split('.')[1];
 
-                        const prevTable = tables[tables.length - 1];
+                            const prevTable = tables[tables.length - 1];
 
-                        if (prevTable) {
-                            if (prevTable !== table) {
+                            if (prevTable) {
+                                if (prevTable !== table) {
+                                    tables.push(table);
+                                    columns.push(column);
+                                }
+                            } else {
                                 tables.push(table);
                                 columns.push(column);
                             }
-                        } else {
-                            tables.push(table);
-                            columns.push(column);
-                        }
 
-                        if (index > 0) {
-                            if (tAndCIndex === 0) {
-                                secondColumns.push(column);
+                            if (index > 0) {
+                                if (tAndCIndex === 0) {
+                                    secondColumns.push(column);
+                                }
+                            } else {
+                                secondColumns.push("select column");
                             }
-                        } else {
-                            secondColumns.push("select column");
-                        }
-                    });
-                }
-            });
-        } else {
-            const fromIndex = query.indexOf("FROM");
-            const selectedQueryColumns = query.slice(fromIndex, query.length).split('FROM');
-            const table = selectedQueryColumns[1].replace(/ /g, "");
+                        });
+                    }
+                });
+            } else {
+                const fromIndex = query.indexOf("FROM");
+                const selectedQueryColumns = query.slice(fromIndex, query.length).split('FROM');
+                const table = selectedQueryColumns[1].replace(/ /g, "");
 
-            tables.push(table);
-            columns.push("select column");
-            secondColumns.push("select column");
+                tables.push(table);
+                columns.push("select column");
+                secondColumns.push("select column");
+            }
+
+            this.setState({ tables, columns, secondColumns, alias: (result && result.alias) ? result.alias : "" });
         }
-
-        this.setState({ tables, columns, secondColumns, alias: (result && result.alias) ? result.alias : "" });
     }
 
     save() {
@@ -158,23 +202,24 @@ export default class CreateTable extends React.Component {
             const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
             const newAlias = document.getElementById("aliasText").value;
 
+            const columnNames = tables.map(table => {
+                const tableOption = options.filter(option => option.alias === table);
+                const tableColumns = tableOption.length !== 0 ? tableOption[0].columns : [];
+                const columnNames = tableColumns.map((column) => column.column_name);
+                return columnNames;
+            });
+
+            const selectedColumns = columnNames.map((names, index) => {
+                return names.map(name => {
+                    return `${tables[index]}.${name} AS ${tables[index]}_${name}`
+                });
+            });
+
+            const mergedColumns = [].concat.apply([], selectedColumns);
+
             if (tables.length === 1) {
-                newQuery += `SELECT * FROM ${tables[0]}`;
+                newQuery += `SELECT ${mergedColumns.join(',')} FROM ${tables[0]}`;
             } else {
-                const columnNames = tables.map(table => {
-                    const tableOption = options.filter(option => option.alias === table);
-                    const tableColumns = tableOption.length !== 0 ? tableOption[0].columns : [];
-                    const columnNames = tableColumns.map((column) => column.column_name);
-                    return columnNames;
-                });
-
-                const selectedColumns = columnNames.map((names, index) => {
-                    return names.map(name => {
-                        return `${tables[index]}.${name} AS ${tables[index]}_${name}`
-                    });
-                });
-
-                const mergedColumns = [].concat.apply([], selectedColumns);
 
                 tables.forEach((table, index) => {
                     if (index === 0) {
@@ -186,7 +231,6 @@ export default class CreateTable extends React.Component {
             }
 
             if(localStorage.getItem("current_result_info")) {
-                console.log("alias", alias, "new", newAlias);
                 testTableQuery(connectionName, newQuery).then(data => {
                     if (data) {
                         updateTableQuery(connectionName, alias, newQuery, newAlias).then((tables) => {
@@ -249,24 +293,24 @@ export default class CreateTable extends React.Component {
             let query = "";
             const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
 
+            const columnNames = tables.map(table => {
+                const tableOption = options.filter(option => option.alias === table);
+                const tableColumns = tableOption.length !== 0 ? tableOption[0].columns : [];
+                const columnNames = tableColumns.map((column) => column.column_name);
+                return columnNames;
+            });
+
+            const selectedColumns = columnNames.map((names, index) => {
+                return names.map(name => {
+                    return `${tables[index]}.${name} AS ${tables[index]}_${name}`
+                });
+            });
+
+            const mergedColumns = [].concat.apply([], selectedColumns);
+
             if (tables.length === 1) {
-                query += `SELECT * FROM ${tables[0]}`;
+                query += `SELECT ${mergedColumns.join(',')} FROM ${tables[0]}`;
             } else {
-                const columnNames = tables.map(table => {
-                    const tableOption = options.filter(option => option.alias === table);
-                    const tableColumns = tableOption.length !== 0 ? tableOption[0].columns : [];
-                    const columnNames = tableColumns.map((column) => column.column_name);
-                    return columnNames;
-                });
-
-                const selectedColumns = columnNames.map((names, index) => {
-                    return names.map(name => {
-                        return `${tables[index]}.${name} AS ${tables[index]}_${name}`
-                    });
-                });
-
-                const mergedColumns = [].concat.apply([], selectedColumns);
-
                 tables.forEach((table, index) => {
                     if (index === 0) {
                         query += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}.${columns[index]} = ${tables[index + 1]}.${columns[index + 1]}`;
