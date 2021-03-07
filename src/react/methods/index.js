@@ -147,6 +147,15 @@ export const
                 resolve(result.data);
             });
         });
+    },
+
+    saveTableResult = async (connectionName, alias, options) => {
+        return new Promise(resolve => {
+            ipcRenderer.send(channels.SAVE_QUERY, connectionName, alias, options);
+            ipcRenderer.on(channels.SAVE_QUERY, (event, result) => {
+                resolve(result.data);
+            });
+        });
     }
 
 ; //END

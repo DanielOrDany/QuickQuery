@@ -1,7 +1,7 @@
 import React from "react";
 import 'react-day-picker/lib/style.css';
 import dateFnsFormat from 'date-fns/format';
-import { loadTableResult } from "../methods";
+import { loadTableResult, saveTableResult } from "../methods";
 import "../styles/Result.scss";
 import XLSX from "xlsx";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
@@ -94,6 +94,8 @@ export default class Result extends React.Component {
             columns: tableColumns
         };
 
+        console.log(loadingOptions);
+
         localStorage.setItem('isChangedPicker1', false);
         localStorage.setItem('isChangedPicker2', false);
 
@@ -147,6 +149,8 @@ export default class Result extends React.Component {
             columns: tableColumns
         };
 
+        console.log(loadingOptions);
+
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
             if (data) {
                 if (data.records == 0) {
@@ -188,13 +192,17 @@ export default class Result extends React.Component {
         const {options} = this.state;
         const result = localStorage.getItem('current_result');
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+        const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
+        const tableColumns = connectionInfo.queries.filter(query => !!query.table).map(query => query.table);
+
         const loadingOptions = {
             page: 0,
-            pageSize: 1000,
+            pageSize: 10,
+            columns: tableColumns,
             operationsOptions: options.length ? options : null
         };
 
-        loadTableResult(connectionName, result, loadingOptions).then(async data => {
+        saveTableResult(connectionName, result, loadingOptions).then(async data => {
             if (data) {
                 const db_rows = await Promise.all(data.rows);
                 const rows = db_rows.length !== 0 ? Object.values(db_rows) : [];
@@ -203,7 +211,7 @@ export default class Result extends React.Component {
                 let wb = XLSX.utils.book_new();
 
                 XLSX.utils.book_append_sheet(wb, binaryWS, `${result}`);
-                XLSX.writeFile(wb, `${result}.xlsx`);
+                XLSX.writeFile(wb, `${result}.xlsx`, { bookSST: true, compression: true });
             } else {
                 this.setState({
                     errorMessage: "Query is not valid.",

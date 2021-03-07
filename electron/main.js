@@ -260,6 +260,17 @@ ipcMain.on(channels.LOAD_QUERY, async (event, connectionName, alias, options) =>
   }
 });
 
+ipcMain.on(channels.SAVE_QUERY, async (event, connectionName, alias, options) => {
+  try {
+    const result = await Table.saveTableResult(connectionName, alias, options);
+    successful.data = result;
+    await event.sender.send(channels.SAVE_QUERY, successful);
+  } catch (e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.SAVE_QUERY, unsuccessful);
+  }
+});
+
 ipcMain.on(channels.TEST_QUERY, async (event, connectionName, query) => {
   try {
     const result = await Table.runQuery(connectionName, query);
