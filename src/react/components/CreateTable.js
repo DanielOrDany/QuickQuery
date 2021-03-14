@@ -1,7 +1,25 @@
 import React from 'react';
 
 // Styles
+import {
+    addTable,
+    testTableQuery,
+    updateTableQuery,
+    getTableColumns
+} from "../methods";
+
 import '../styles/CreateTable.scss';
+import xxx from "../icons/Gear-0.2s-200px (1).svg";
+import addIcon from "../icons/add-icon.svg";
+import linkIcon from "../icons/link-icon.svg";
+import removeIcon from "../icons/remove.svg";
+import westIcon from "../icons/west-arrow.svg";
+import eastIcon from "../icons/east-arrow.svg";
+
+function arraysEqual(a1,a2) {
+    /* WARNING: arrays must not contain {objects} or behavior may be undefined */
+    return JSON.stringify(a1)==JSON.stringify(a2);
+}
 
 // Methods
 import {
@@ -246,6 +264,7 @@ export default class CreateTable extends React.Component {
         if (result) {
             const query = result.query;
             console.log("query", query);
+
             const joinIndex = query.indexOf("JOIN");
 
             if (joinIndex >= 0) {
@@ -293,7 +312,6 @@ export default class CreateTable extends React.Component {
                 secondColumns.push("select column");
             }
 
-
             let { options } = this.state;
 
             const connection = JSON.parse(localStorage.getItem("current_connection"));
@@ -328,6 +346,7 @@ export default class CreateTable extends React.Component {
         this.setState({
             isLoading: true
         });
+
 
         const { tables, columns, options, secondColumns, alias, queryName } = this.state;
 
@@ -600,7 +619,6 @@ export default class CreateTable extends React.Component {
                                             } else {
                                                 renderItem = get_item;
                                             }
-
                                             return <td style={key === 0 ? {
                                                 color: "#3E3E3E",
                                                 background: "#EFEFEF",

@@ -370,8 +370,8 @@ export default class Connections extends React.Component {
         } else if(typeof(conn.URI)=="object") {
             host = conn.URI["others"]["host"];
         }
-        
-        if(!(host === "localhost" || host === "127.0.0.1")) {
+
+        if(!(host == "localhost" || host == "127.0.0.1")) {
             return(
                 <Offline>
                     <>| <b>connection is lost</b></>
