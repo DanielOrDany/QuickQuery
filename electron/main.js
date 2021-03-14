@@ -41,9 +41,13 @@ function createWindow () {
 
   mainWindow.loadURL(startUrl);
 
+  // Set/Remove devtools
   // mainWindow.webContents.on("devtools-opened", () => {
   //     mainWindow.closeDevTools();
   // });
+
+  // Set/Remove MENU
+  mainWindow.removeMenu();
 
   mainWindow.on('closed', function () {
       app.quit();
@@ -233,9 +237,9 @@ ipcMain.on(channels.RENAME_TABLE, async (event, connectionName, alias, newAlias)
   }
 });
 
-ipcMain.on(channels.UPDATE_QUERY, async (event, connectionName, alias, query) => {
+ipcMain.on(channels.UPDATE_QUERY, async (event, connectionName, alias, newQuery, newAlias) => {
   try {
-    const result = await Table.updateTableQuery(connectionName, alias, query);
+    const result = await Table.updateTableQuery(connectionName, alias, newQuery, newAlias);
     successful.data = result;
     await event.sender.send(channels.UPDATE_QUERY, successful);
   } catch (e) {
@@ -255,6 +259,17 @@ ipcMain.on(channels.LOAD_QUERY, async (event, connectionName, alias, options) =>
   }
 });
 
+ipcMain.on(channels.SAVE_QUERY, async (event, connectionName, alias, options) => {
+  try {
+    const result = await Table.saveTableResult(connectionName, alias, options);
+    successful.data = result;
+    await event.sender.send(channels.SAVE_QUERY, successful);
+  } catch (e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.SAVE_QUERY, unsuccessful);
+  }
+});
+
 ipcMain.on(channels.TEST_QUERY, async (event, connectionName, query) => {
   try {
     const result = await Table.runQuery(connectionName, query);
@@ -263,5 +278,16 @@ ipcMain.on(channels.TEST_QUERY, async (event, connectionName, query) => {
   } catch (e) {
     unsuccessful.message = e;
     await event.sender.send(channels.TEST_QUERY, unsuccessful);
+  }
+});
+
+ipcMain.on(channels.GET_TABLE_COLUMNS, async (event, connectionName, table) => {
+  try {
+    const result = await Table.getTableColumns(connectionName, table);
+    successful.data = result;
+    await event.sender.send(channels.GET_TABLE_COLUMNS, successful);
+  } catch (e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.GET_TABLE_COLUMNS, unsuccessful);
   }
 });

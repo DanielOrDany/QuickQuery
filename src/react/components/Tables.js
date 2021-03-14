@@ -1,14 +1,16 @@
 import React from 'react';
 import '../styles/Tables.scss';
-import {
-    Route
-} from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import CreateTable from "./CreateTable";
 import Result from "./Result";
-import {getAllTables, getTable} from "../methods";
-import {ReactComponent as MiniMenuIcon} from "../icons/open-menu.svg";
+import { getAllTables, getTable } from "../methods";
+import { ReactComponent as MiniMenuIcon } from "../icons/open-menu.svg";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
-import plus from "../icons/plus.png";
+import plus from "../icons/plus.svg";
+import empty from "../icons/empty.svg";
+import table from "../icons/table.svg";
+import add from "../icons/add.svg";
+import upArrow from "../icons/up-arrow.svg";
 
 import MiniMenu from "./MiniMenu";
 import Modal from './Modal';
@@ -21,11 +23,12 @@ export default class Tables extends React.Component {
         this.state = {
             tables: [],
             searchedTables: [],
-            isOpen: false
+            isOpen: false,
+            currentConnection: ""
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         if (
             !localStorage.getItem('current_connection')
         ) {
@@ -34,18 +37,18 @@ export default class Tables extends React.Component {
         }
 
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
-        this.loadTables(connectionName);
+        await this.loadTables(connectionName);
     }
 
-    componentDidUpdate() {
+    async componentDidUpdate() {
         if (localStorage.getItem("need_update")) {
             localStorage.removeItem("need_update");
-            this.loadTables(JSON.parse(localStorage.getItem('current_connection')).name);
+            await this.loadTables(JSON.parse(localStorage.getItem('current_connection')).name);
         }
 
         if (localStorage.getItem("new_table")) {
             localStorage.removeItem("new_table");
-            this.loadTables(JSON.parse(localStorage.getItem('current_connection')).name);
+            await this.loadTables(JSON.parse(localStorage.getItem('current_connection')).name);
         }
     }
 
@@ -63,8 +66,8 @@ export default class Tables extends React.Component {
         window.location.hash = '#/connections';
     };
 
-    loadTables(connectionName) {
-        getAllTables(connectionName).then(tables => {
+    async loadTables(connectionName) {
+        await getAllTables(connectionName).then(tables => {
             this.setState({
                 tables: tables,
                 searchedTables: tables
@@ -77,6 +80,7 @@ export default class Tables extends React.Component {
         getTable(connectionName, alias).then(result => {
             localStorage.setItem("current_result_info", JSON.stringify(result));
             const results = JSON.parse(localStorage.getItem("results"));
+
             if (results) {
                 results.push(result);
                 localStorage.setItem("results", JSON.stringify(results));
@@ -84,15 +88,32 @@ export default class Tables extends React.Component {
                 localStorage.setItem("results", JSON.stringify([result]));
             }
 
-            return `#/tables/result/${alias}`;
-        }).then(url => window.location.hash = url);
+            return `#/tables/${window.location.hash.split('/')[1]}/result/${alias}`;
+        }).then(url => {
+            window.location.hash = url;
+            localStorage.removeItem("openedTable");
+            this.setState({
+                currentOpenedTable: alias
+            });
+        });
     }
 
     createTable() {
         if (localStorage.getItem("current_result_info")) {
             localStorage.removeItem("current_result_info");
         }
-        window.location.hash = "#/tables/create-table"
+
+        if(localStorage.getItem("openedTable")) {
+            localStorage.removeItem("openedTable");
+        }
+
+        if(this.state.currentOpenedTable != "") {
+            this.setState({
+                currentOpenedTable: ""
+            });
+        }
+
+        window.location.hash = `#/tables/${window.location.hash.split('/')[1]}/create-table`;
     }
 
     search = () => {
@@ -109,7 +130,9 @@ export default class Tables extends React.Component {
     };
 
     render() {
-        if (!this.state.tables) {
+        const { currentOpenedTable, tables, isOpen, searchedTables } = this.state;
+
+        if (!tables || !searchedTables) {
             return (
                 <div className={"loading"}>
                     <img src={xxx}/>
@@ -118,10 +141,9 @@ export default class Tables extends React.Component {
             );
         } else return (
             <div className="all-page-tables">
-
                 <Modal
                     title="Error"
-                    isOpen={this.state.isOpen}
+                    isOpen={isOpen}
                     onCancel={this.handleCancel}
                     onSubmit={this.handleSubmit}
                     submitTitle="OK"
@@ -132,57 +154,75 @@ export default class Tables extends React.Component {
                 </Modal>
 
                 <div className="left-side">
-                    <div id="mini-menu">
 
-                        <div className="search">
-                            <input id="search-field"/>
-                            <button type="button" className="search-button" onClick={() => this.search()}>Search
-                            </button>
+                    <div className="mini-menu">
+                        <input className="search" id="search-field" type="search" placeholder={"Search"} onChange={() => this.search()}/>
+
+                    </div>
+
+                    <div className="tables">
+                        <div className="add-container">
+                            <div className="btn-container" onClick={() => this.createTable()}>
+                                <div id="add-btn-field">
+                                    <img className="add-button" src={plus}/>
+                                    <div className="button-text">Join Tables</div>
+                                </div>
+                            </div>
                         </div>
+                        {
+                            searchedTables.length ? searchedTables.map(table => {
+                                let evenConn = searchedTables.indexOf(table) % 2 === 0;
 
-                    </div>
-
-                    <div id="list">List of queries:</div>
-                    <div id="lineUp"></div>
-
-                    <div id="tables">
-                        {this.state.searchedTables
-                            .map(table => {
-                                    return (
-                                        <div id={table.alias} className="table" key={table.alias}>
-                                            <div className="container">
-                                                <div id="table-name" onClick={() => this.openTable(table.alias)}>
-                                                    <span>&#11044;</span>
-                                                    <div id="name">
-                                                        <p id="table-n">{table.alias}</p>
-                                                    </div>
+                                return (
+                                    <div id={table.alias} className={`table ${evenConn ? "dark-row" : "white-row"}`} key={table.alias}>
+                                        <div className="container" onClick={() => this.openTable(table.alias)}>
+                                            <div id="table-name">
+                                                <span style={ localStorage.getItem("openedTable") ?
+                                                    table.alias === localStorage.getItem("openedTable") ?
+                                                        { color: "#eb6e3b" } : null
+                                                    : table.alias === currentOpenedTable ?
+                                                        { color: "#eb6e3b" } : null
+                                                    }>&#11044;</span>
+                                                <div id="name">{}
+                                                    <p id="table-n">{table.alias}</p>
                                                 </div>
-                                                <MiniMenu icon={<MiniMenuIcon/>} table={table}/>
                                             </div>
+                                        </div >
+                                        <div className="m-menu">
+                                            <MiniMenu icon={<MiniMenuIcon/>} table={table}/>
                                         </div>
-                                    );
-                                }
-                            )}
-
+                                    </div>
+                                );
+                            }
+                        ) : <div className="empty-rows">
+                                <div className="empty-rows-column">
+                                    <img className="empty-rows-box" src={upArrow}/>
+                                    <span>You don't have a query yet.</span>
+                                    <span>Please create it on the "Add Query" button.</span>
+                                </div>
+                            </div>
+                        }
                     </div>
-                    <div id="add-btn-field">
-
-                        <img className="add-button" src={plus} onClick={() => this.createTable()}/>
-
-                    </div>
-
-
-
                 </div>
-
 
                 <div className="line-tables-page"></div>
 
-
                 <div className="right-side-tables-page">
-                    <Route path="/tables/create-table" component={CreateTable}/>
-                    <Route path={`/tables/edit-table/:tableAlias`} component={CreateTable}/>
-                    <Route path={`/tables/result/:tableAlias`} component={Result}/>
+                    {
+                        (!window.location.hash.includes("edit-table") &&
+                            !window.location.hash.includes("result") &&
+                            !window.location.hash.includes("create-table")) &&
+                            <div className="empty-result-row">
+                                <div className="empty-result-column">
+                                    <img className="empty-result-box" src={empty}/>
+                                    <span>Query is not selected.</span>
+                                    <span>Please select it from left list.</span>
+                                </div>
+                            </div>
+                    }
+                    <Route path={`/tables/:connectionAlias/create-table`} component={CreateTable}/>
+                    <Route path={`/tables/:connectionAlias/edit-table/:tableAlias`} component={CreateTable}/>
+                    <Route path={`/tables/:connectionAlias/result/:tableAlias`} component={Result}/>
                 </div>
             </div>
         );

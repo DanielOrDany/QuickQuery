@@ -1,12 +1,13 @@
 import React from "react";
 import 'react-day-picker/lib/style.css';
 import dateFnsFormat from 'date-fns/format';
-import {loadTableResult} from "../methods";
+import { loadTableResult, saveTableResult } from "../methods";
 import "../styles/Result.scss";
 import XLSX from "xlsx";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
 import calendarIcon from "../icons/calendar.svg";
 import filterIcon from "../icons/filter.svg";
+import DayPickerInput from "react-day-picker/DayPickerInput";
 
 const DESC = "DESC";
 const ASC = "ASC";
@@ -23,6 +24,7 @@ export default class Result extends React.Component {
             isNullResults: false,
             records: 0,
             pages: 0,
+            isLoading: false,
             options: []
         };
 
@@ -70,7 +72,7 @@ export default class Result extends React.Component {
         const {pageNumber} = this.state;
 
         if (prevState.pageNumber !== pageNumber) {
-            this.loadTable();
+            this.reloadTable();
         }
 
         if (window.location.href.split('/')[window.location.href.split('/').length - 1] != localStorage.getItem("current_result")) {
@@ -80,13 +82,19 @@ export default class Result extends React.Component {
     }
 
     loadTable = () => {
-        const {pageNumber, options} = this.state;
+        const { pageNumber, options } = this.state;
         const result = localStorage.getItem("current_result");
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+        const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
+        const tableColumns = connectionInfo.queries.filter(query => !!query.table).map(query => query.table);
+
         const loadingOptions = {
             page: pageNumber,
-            pageSize: 10
+            pageSize: 10,
+            columns: tableColumns
         };
+
+        console.log(loadingOptions);
 
         localStorage.setItem('isChangedPicker1', false);
         localStorage.setItem('isChangedPicker2', false);
@@ -128,25 +136,29 @@ export default class Result extends React.Component {
     };
 
     reloadTable = () => {
-        const {pageNumber, options} = this.state;
+        const { pageNumber, options } = this.state;
         const result = localStorage.getItem("current_result");
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+        const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
+        const tableColumns = connectionInfo.queries.filter(query => !!query.table).map(query => query.table);
+
         const loadingOptions = {
             page: pageNumber,
             pageSize: 10,
-            operationsOptions: options.length ? options : null
+            operationsOptions: options.length ? options : null,
+            columns: tableColumns
         };
+
+        console.log(loadingOptions);
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
             if (data) {
-                console.log("loaded res: ", data);
                 if (data.records == 0) {
                     this.setState({
                         isNullResults: true
                     });
                 } else {
                     const db_rows = await Promise.all(data.rows);
-                    console.log("db_rows", db_rows);
                     const headers = Object.keys(db_rows[0]);
                     const selectedValue = Object.keys(db_rows[0])[0];
                     const rows = Object.values(db_rows);
@@ -180,21 +192,32 @@ export default class Result extends React.Component {
         const {options} = this.state;
         const result = localStorage.getItem('current_result');
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+        const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
+        const tableColumns = connectionInfo.queries.filter(query => !!query.table).map(query => query.table);
+
         const loadingOptions = {
             page: 0,
-            pageSize: 1000,
+            pageSize: 10,
+            columns: tableColumns,
             operationsOptions: options.length ? options : null
         };
 
-        loadTableResult(connectionName, result, loadingOptions).then(async data => {
-            const db_rows = await Promise.all(data.rows);
-            const rows = Object.values(db_rows);
+        saveTableResult(connectionName, result, loadingOptions).then(async data => {
+            if (data) {
+                const db_rows = await Promise.all(data.rows);
+                const rows = db_rows.length !== 0 ? Object.values(db_rows) : [];
 
-            let binaryWS = XLSX.utils.json_to_sheet(rows);
-            let wb = XLSX.utils.book_new();
+                let binaryWS = XLSX.utils.json_to_sheet(rows);
+                let wb = XLSX.utils.book_new();
 
-            XLSX.utils.book_append_sheet(wb, binaryWS, `${result}`);
-            XLSX.writeFile(wb, `${result}.xlsx`);
+                XLSX.utils.book_append_sheet(wb, binaryWS, `${result}`);
+                XLSX.writeFile(wb, `${result}.xlsx`, { bookSST: true, compression: true });
+            } else {
+                this.setState({
+                    errorMessage: "Query is not valid.",
+                    isLoading: false
+                });
+            }
         });
     }
 
@@ -347,9 +370,9 @@ export default class Result extends React.Component {
     }
 
     render() {
-        const {options, headers, rows, isNullResults} = this.state;
+        const { options, headers, rows, isNullResults } = this.state;
 
-        if (this.state === null) {
+        if (!headers) {
             return (
                 <div className={"loading"}>
                     <img src={xxx}/>
@@ -359,11 +382,6 @@ export default class Result extends React.Component {
         } else {
             return (
                 <div className="result">
-                    <div className="result-menu">
-                        <div className={"save"}>
-                            <button onClick={() => this.save()}>Export excel</button>
-                        </div>
-                    </div>
                     <div className="result-table">
                         <table>
                             <tr>
@@ -377,9 +395,10 @@ export default class Result extends React.Component {
                                             if (firstRow) {
                                                 if (key === header) {
                                                     if (typeof value !== "boolean") {
+
                                                         if (typeof value === "string") {
                                                             const dateFormat = value.split("T")[0];
-                                                            currentHeaderIsDate = /^\d{4}(\-)(((0)[0-9])|((1)[0-2]))(\-)([0-2][0-9]|(3)[0-1])$/.test(dateFormat);
+                                                            currentHeaderIsDate = /^\d{4}(\-|\/)(((0)[0-9])|((1)[0-2]))(\-|\/)([0-2][0-9]|(3)[0-1])$/.test(dateFormat);
 
                                                         } else {
                                                             currentHeaderIsNumber = /^-?\d+$/.test(value);
@@ -397,74 +416,79 @@ export default class Result extends React.Component {
                                                     <div className="header-data-ordering">
                                                         <span id="header-title">{header}</span>
                                                         <div className="header-options">
-                                                            <span className={ currentOption.order === ASC ? "arrow-up" : "arrow-down"}
+                                                            <span className={currentOption.order === ASC ? "arrow-up" : "arrow-down"}
                                                                   id="header-order"
                                                                   onClick={() => this.handleChangeOrder(header)}>
                                                             </span>
                                                             {
                                                                 ((!currentHeaderIsDate && currentHeaderIsNumber)) &&
-                                                                <img id="header-filter" src={filterIcon} onClick={() => this.handleOpenFilter(header)}/>
+                                                                <img id="header-filter" src={filterIcon} className={currentOption.isFilterOpened ? "selected-filter" : null}
+                                                                     onClick={() => this.handleOpenFilter(header)}/>
                                                             }
                                                             {
                                                                 (currentHeaderIsDate && !currentHeaderIsNumber) &&
-                                                                <img id="header-calendar" src={calendarIcon}
+                                                                <img id="header-calendar" src={calendarIcon} className={currentOption.isFilterOpened ? "selected-filter" : null}
                                                                      onClick={() => this.handleOpenFilter(header)}/>
                                                             }
                                                         </div>
                                                     </div>
                                                     <div className="header-data-operations">
-                                                        <input id="header-search"
-                                                               placeholder={"val.."}
-                                                               value={currentOption.search}
-                                                               onChange={(e) => this.handleChangeSearchValue(e, header)}
-                                                        />
+                                                        { !currentOption.isFilterOpened &&
+                                                            <input id="header-search"
+                                                                   type="search"
+                                                                   placeholder={"Search"}
+                                                                   value={currentOption.search}
+                                                                   onChange={(e) => this.handleChangeSearchValue(e, header)}
+                                                            />
+                                                        }
                                                         {
                                                             (((!currentHeaderIsDate && currentHeaderIsNumber)) && currentOption.isFilterOpened) &&
-                                                            <div className="header-filters">
+                                                            <div className="header-filters" key={header}>
 
-                                                                <div id="header-filters-inputs">
-                                                                    <input id="filter-field1"
-                                                                           placeholder={"filter val1"}
+                                                                <div className="header-filters-inputs">
+                                                                    <input className="filter-field1"
+                                                                           type="search"
+                                                                           placeholder={"From"}
                                                                            value={currentOption.filter1}
                                                                            onChange={(e) => this.handleChangeFilterValue1(e, header)}/>
-                                                                    <input id="filter-field2"
-                                                                           placeholder={"filter val2"}
+                                                                    <input className="filter-field2"
+                                                                           type="search"
+                                                                           placeholder={"To"}
                                                                            value={currentOption.filter2}
                                                                            onChange={(e) => this.handleChangeFilterValue2(e, header)}/>
                                                                 </div>
 
-                                                                <btn onClick={() => this.clearFilters(header)}>clear
-                                                                    selected values
-                                                                </btn>
+                                                                <btn id="clear-filters-btn" onClick={() => this.clearFilters(header)}>clear filter</btn>
                                                             </div>
                                                         }
                                                         {
                                                             ((currentHeaderIsDate && !currentHeaderIsNumber) && currentOption.isFilterOpened) &&
-                                                            <div className="header-filters">
+                                                            <div className="header-filters" key={header}>
 
-                                                                <div id="header-filters-inputs">
-                                                                    <DayPickerInput
-                                                                        style={{color: "#3E3E3E"}}
-                                                                        formatDate={this.formatDate}
-                                                                        format={FORMAT}
-                                                                        value={currentOption.filter1}
-                                                                        parseDate={(date) => this.handleDatePicker1(date, header)}
-                                                                        placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
-                                                                    />
-                                                                    <DayPickerInput
-                                                                        style={{color: "#3E3E3E"}}
-                                                                        formatDate={this.formatDate}
-                                                                        format={FORMAT}
-                                                                        value={currentOption.filter2}
-                                                                        parseDate={(date) => this.handleDatePicker2(date, header)}
-                                                                        placeholder={`${dateFnsFormat(new Date(), FORMAT)}`}
-                                                                    />
+                                                                <div className="header-filters-inputs">
+                                                                    <div className="filter-field1">
+                                                                        <DayPickerInput
+                                                                            style={{color: "#3E3E3E"}}
+                                                                            formatDate={this.formatDate}
+                                                                            format={FORMAT}
+                                                                            value={currentOption.filter1}
+                                                                            parseDate={(date) => this.handleDatePicker1(date, header)}
+                                                                            placeholder={`Start`}
+                                                                        />
+                                                                    </div>
+                                                                    <div className="filter-field2">
+                                                                        <DayPickerInput
+                                                                            style={{color: "#3E3E3E"}}
+                                                                            formatDate={this.formatDate}
+                                                                            format={FORMAT}
+                                                                            value={currentOption.filter2}
+                                                                            parseDate={(date) => this.handleDatePicker2(date, header)}
+                                                                            placeholder={`End`}
+                                                                        />
+                                                                    </div>
                                                                 </div>
 
-
-                                                                <btn onClick={() => this.clearFilters(header)}>clear
-                                                                    selected days
-                                                                </btn>
+                                                                <btn id="clear-filters-btn" onClick={() => this.clearFilters(header)}>clear date</btn>
 
                                                             </div>
                                                         }
@@ -479,13 +503,22 @@ export default class Result extends React.Component {
                                 (rows && !isNullResults) ? rows.map((item, key) => {
                                     return (
                                         <tr key={key} className={key++ % 2 === 0 ? "column_one" : "column_two"}>
-                                            {Object.values(item).map((get_item, key) => {
+                                            { Object.values(item).map((get_item, key) => {
+
+                                                let renderItem;
+
+                                                if (typeof get_item === 'object') {
+                                                    renderItem = JSON.stringify(get_item);
+                                                } else {
+                                                    renderItem = get_item;
+                                                }
+
                                                 return (
                                                     <td key={key} style={key === 0 ? {
                                                         color: "#3E3E3E",
                                                         background: "#EFEFEF",
                                                         border: "1px solid grey",
-                                                    } : {color: "#3E3E3E"}}>{get_item}
+                                                    } : {color: "#3E3E3E"}}>{renderItem}
                                                     </td>
                                                 );
                                             })}
@@ -495,8 +528,8 @@ export default class Result extends React.Component {
                             }
                         </table>
                     </div>
-                    <div id="pages-field">
-                        <div id="select-page">
+                    <div className="pages-field">
+                        <div className="select-page">
                             <button id="select-page-btn" onClick={() => this.changePage(-1)}
                                     disabled={this.state.pageNumber == 0}>Prev
                             </button>
@@ -504,6 +537,11 @@ export default class Result extends React.Component {
                             <button id="select-page-btn" onClick={() => this.changePage(1)}
                                     disabled={this.state.pageNumber == this.state.pages - 1}>Next
                             </button>
+                        </div>
+                        <div className="result-menu">
+                            <div className={"save"}>
+                                <button onClick={() => this.save()}>Export excel</button>
+                            </div>
                         </div>
                     </div>
                 </div>

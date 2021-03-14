@@ -8,6 +8,10 @@ const db = low(adapter);
 const MYSQL = "mysql";
 const POSTGRESQL = "postgres";
 
+function sortByLength (array) {
+    return array.sort((x,y) => x.length - y.length);
+}
+
 function getAppDataPath() {
     switch (process.platform) {
         case "darwin": {
@@ -186,9 +190,10 @@ function verifyQuery(query) {
     })
 }
 
-function updateTableQuery(connectionName, alias, query) {
+function updateTableQuery(connectionName, alias, newQuery, newAlias) {
+
     // verify that query have select character
-    verifyQuery(query);
+    verifyQuery(newQuery);
 
     // Get queries
     const queries = db.read()
@@ -199,7 +204,8 @@ function updateTableQuery(connectionName, alias, query) {
 
     // Add new one
     const index = queries.findIndex(query => query.alias === alias);
-    queries[index].query = query;
+    queries[index].query = newQuery;
+    queries[index].alias = newAlias;
 
     // Update queries
     db.get('connections')
@@ -219,8 +225,6 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
             .get('URI')
             .value();
 
-        console.log(URI);
-
         const sequelize = URI.database ? new Sequelize(
             URI.database,
             URI.user,
@@ -230,15 +234,15 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
 
         const offset = Number(loadingOptions.page) * Number(loadingOptions.pageSize);
         const limit = Number(loadingOptions.pageSize);
+        const tableColumns = loadingOptions.columns ? loadingOptions.columns : [];
 
         let dialect;
+
         if (typeof URI === 'string') {
             dialect = URI.split('://')[0];
         } else {
             dialect = URI.others.dialect;
         }
-
-        console.log('dialect: ', dialect);
 
         // Get table result
         let query = db.read()
@@ -252,15 +256,21 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
             query = query[query.length].replace(';', ' ');
         }
 
-        console.log("operationsOptions: ", loadingOptions.operationsOptions);
-
         if (loadingOptions.operationsOptions) {
             // Add searches
             let searchColumnNum = 0;
 
             loadingOptions.operationsOptions.forEach((option) => {
-                const column = option.column;
+                let column = option.column;
                 const search = option.search;
+
+                // Join cases
+                tableColumns.forEach(tableColumn => {
+                    if (column.match(tableColumn)) {
+                        column = column.replace(`${tableColumn}_`, `${tableColumn}.`);
+                        console.log(column);
+                    }
+                });
 
                 if (dialect === MYSQL && searchColumnNum === 0 && search != "") {
                     query += ` WHERE CONCAT('%', CAST(${column} AS CHAR(50)), '%') LIKE '%${search}%'`;
@@ -279,9 +289,19 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
 
             // Add filters
             loadingOptions.operationsOptions.forEach((option) => {
-                const column = option.column;
+                let column = option.column;
+
                 const filter1 = option.filter1;
                 const filter2 = option.filter2;
+
+                // Join cases
+                const sortedColumns = sortByLength(tableColumns);
+                console.log("sortedColumns", sortedColumns);
+                sortedColumns.forEach(tableColumn => {
+                    if (column.match(tableColumn)) {
+                        column = column.replace(`${tableColumn}_`, `${tableColumn}.`);
+                    }
+                });
 
                 if (!isEmpty(filter1) && !isEmpty(filter2)) {
                     const filter1IsDate = (new Date(filter1) !== "Invalid Date") && !isNaN(new Date(filter1));
@@ -319,7 +339,6 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                     } else {
                         const n1 = parseInt(filter1);
                         const n2 = parseInt(filter2);
-                        console.log(n1,n2, n2 < n1);
 
                         if (searchColumnNum > 0) {
                             if (n2 < n1) {
@@ -342,14 +361,31 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
             let orderByNum = 0;
 
             const lastChangedOption = loadingOptions.operationsOptions.find((option) => option.last === true);
+
             if (lastChangedOption) {
-                query += ` ORDER BY ${lastChangedOption.column} ${lastChangedOption.order}`;
+                let lastTableColumn = lastChangedOption.column;
+
+                tableColumns.forEach(tableColumn => {
+                    if (lastChangedOption.column.match(tableColumn)) {
+                        lastTableColumn = lastChangedOption.column.replace(`${tableColumn}_`, `${tableColumn}.`);
+                    }
+                });
+
+                query += ` ORDER BY ${lastTableColumn} ${lastChangedOption.order}`;
                 orderByNum += 1;
             }
 
             loadingOptions.operationsOptions.forEach((option) => {
-                const column = option.column;
+                let column = option.column;
+
                 const order = option.order;
+
+                // Join cases
+                tableColumns.forEach(tableColumn => {
+                    if (column.match(tableColumn)) {
+                        column = column.replace(`${tableColumn}_`, `${tableColumn}.`);
+                    }
+                });
 
                 if (orderByNum > 0 && !option.last) {
                     query += `, ${column} ${order}`;
@@ -369,8 +405,8 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
         const queryResult = await sequelize.query(query);
 
         const number = numberOfRecords[0][0].c/limit;
-        const one_as_string = String(number).charAt(0);
-        const one = Number(one_as_string);
+        const one = Number(number).toFixed(0);
+
         let pages = 0;
         const records = numberOfRecords[0][0].c;
 
@@ -387,14 +423,14 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
             return {
                 "rows": queryResult[1].rows,
                 "fields": queryResult[1].fields,
-                "pages": pages,
+                "pages": Math.ceil(pages),
                 "records": records
             };
         } else {
             return {
                 "rows": queryResult[0],
                 "fields": queryResult[0],
-                "pages": pages,
+                "pages": Math.ceil(pages),
                 "records": records
             };
         }
@@ -407,14 +443,265 @@ function isEmpty(str) {
     return !str.trim().length;
 }
 
+async function getTableColumns(connectionName, table) {
+    console.log(connectionName, table);
+    try {
+        const URI = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .get('URI')
+            .value();
+
+        const sequelize = URI.database ? new Sequelize(
+            URI.database,
+            URI.user,
+            URI.password,
+            URI.others
+        ) : new Sequelize(URI);
+
+        let query = `select column_name from information_schema.columns where table_name='${table}'`;
+
+        const result = await sequelize.query(query);
+        return result[0];
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+async function saveTableResult(connectionName, alias, loadingOptions) {
+    try {
+        const URI = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .get('URI')
+            .value();
+
+        const sequelize = URI.database ? new Sequelize(
+            URI.database,
+            URI.user,
+            URI.password,
+            URI.others
+        ) : new Sequelize(URI);
+
+        const offset = Number(loadingOptions.page) * Number(loadingOptions.pageSize);
+        const limit = Number(loadingOptions.pageSize);
+        const tableColumns = loadingOptions.columns ? sortByLength(loadingOptions.columns) : [];
+        console.log(tableColumns);
+        let dialect;
+
+        if (typeof URI === 'string') {
+            dialect = URI.split('://')[0];
+        } else {
+            dialect = URI.others.dialect;
+        }
+
+        // Get table result
+        let query = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .get('queries')
+            .find({alias: alias})
+            .value().query;
+
+        if (query[query.length] === ';') {
+            query = query[query.length].replace(';', ' ');
+        }
+
+        if (loadingOptions.operationsOptions) {
+            // Add searches
+            let searchColumnNum = 0;
+
+            loadingOptions.operationsOptions.forEach((option) => {
+                let column = option.column;
+                const search = option.search;
+
+                // Join cases
+                tableColumns.forEach(tableColumn => {
+                    if (column.match(tableColumn)) {
+                        const flag = tableColumns.filter(tableC => !tableC.match(tableColumn));
+                        console.log(flag);
+                        if (flag.length === 1) {
+                            column = column.replace(`${flag}_`, `${flag}.`);
+                        }
+                    }
+                });
+
+                if (dialect === MYSQL && searchColumnNum === 0 && search != "") {
+                    query += ` WHERE CONCAT('%', CAST(${column} AS CHAR(50)), '%') LIKE '%${search}%'`;
+                    searchColumnNum += 1;
+                } else if (dialect === POSTGRESQL && searchColumnNum === 0 && search != "") {
+                    query += ` WHERE CAST(${column} AS VARCHAR(50)) Like '%${search}%'`;
+                    searchColumnNum += 1;
+                } else if (dialect === MYSQL && searchColumnNum > 0 && search != "") {
+                    query += ` AND CONCAT('%', CAST(${column} AS CHAR(50)), '%') LIKE '%${search}%'`;
+                    searchColumnNum += 1;
+                } else if (dialect === POSTGRESQL && searchColumnNum > 0 && search != "") {
+                    query += ` AND CAST(${column} AS VARCHAR(50)) Like '%${search}%'`;
+                    searchColumnNum += 1;
+                }
+            });
+
+            // Add filters
+            loadingOptions.operationsOptions.forEach((option) => {
+                let column = option.column;
+
+                const filter1 = option.filter1;
+                const filter2 = option.filter2;
+
+                // Join cases
+                // TODO: bug companies.services & companies
+                tableColumns.forEach(tableColumn => {
+                    if (column.match(tableColumn)) {
+                        column = column.replace(`${tableColumn}_`, `${tableColumn}.`);
+                    }
+                });
+
+                if (!isEmpty(filter1) && !isEmpty(filter2)) {
+                    const filter1IsDate = (new Date(filter1) !== "Invalid Date") && !isNaN(new Date(filter1));
+                    const filter1IsNumber = /^-?\d+$/.test(filter1);
+                    const filter2IsDate = (new Date(filter2) !== "Invalid Date") && !isNaN(new Date(filter2));
+                    const filter2IsNumber = /^-?\d+$/.test(filter2);
+
+                    // Date
+                    if (
+                        filter1IsDate &&
+                        filter2IsDate &&
+                        !filter1IsNumber &&
+                        !filter2IsNumber
+                    ) {
+                        const newFilter1 = filter1.split("/");
+                        const newFilter2 = filter2.split("/");
+                        const d1 = newFilter1[2] + newFilter1[0] + newFilter1[1];
+                        const d2 = newFilter2[2] + newFilter2[0] + newFilter2[1];
+
+                        if (searchColumnNum > 0) {
+                            if (d2 < d1) {
+                                query += ` AND ${column} BETWEEN \'${d2}\' AND \'${d1}\'`;
+                            } else {
+                                query += ` AND ${column} BETWEEN \'${d1}\' AND \'${d2}\'`;
+                            }
+                        } else {
+                            if (d2 < d1) {
+                                query += ` WHERE ${column} BETWEEN \'${d2}\' AND \'${d1}\'`;
+                            } else {
+                                query += ` WHERE ${column} BETWEEN \'${d1}\' AND \'${d2}\'`;
+                            }
+                        }
+
+                        // numbers
+                    } else {
+                        const n1 = parseInt(filter1);
+                        const n2 = parseInt(filter2);
+
+                        if (searchColumnNum > 0) {
+                            if (n2 < n1) {
+                                query += ` AND ${column} BETWEEN ${filter2} AND ${filter1}`;
+                            } else {
+                                query += ` AND ${column} BETWEEN ${filter1} AND ${filter2}`;
+                            }
+                        } else {
+                            if (n2 < n1) {
+                                query += ` WHERE ${column} BETWEEN ${filter2} AND ${filter1}`;
+                            } else {
+                                query += ` WHERE ${column} BETWEEN ${filter1} AND ${filter2}`;
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Add orders
+            let orderByNum = 0;
+
+            const lastChangedOption = loadingOptions.operationsOptions.find((option) => option.last === true);
+
+            if (lastChangedOption) {
+                let lastTableColumn = lastChangedOption.column;
+
+                tableColumns.forEach(tableColumn => {
+                    if (lastChangedOption.column.match(tableColumn)) {
+                        lastTableColumn = lastChangedOption.column.replace(`${tableColumn}_`, `${tableColumn}.`);
+                    }
+                });
+
+                query += ` ORDER BY ${lastTableColumn} ${lastChangedOption.order}`;
+                orderByNum += 1;
+            }
+
+            loadingOptions.operationsOptions.forEach((option) => {
+                let column = option.column;
+
+                const order = option.order;
+
+                // Join cases
+                tableColumns.forEach(tableColumn => {
+                    if (column.match(tableColumn)) {
+                        column = column.replace(`${tableColumn}_`, `${tableColumn}.`);
+                    }
+                });
+
+                if (orderByNum > 0 && !option.last) {
+                    query += `, ${column} ${order}`;
+                } else if (orderByNum === 0 && !option.last) {
+                    query += ` ORDER BY ${column} ${order}`;
+                    orderByNum += 1;
+                }
+            });
+        }
+
+        const countQ = `SELECT COUNT(*) as c FROM (${query}) as c;`;
+        const numberOfRecords = await sequelize.query(countQ);
+
+        const number = numberOfRecords[0][0].c/limit;
+        const one = Number(number).toFixed(0);
+
+        let pages = 0;
+        const records = numberOfRecords[0][0].c;
+
+        if (number > one) {
+            pages = one + 1;
+        } else {
+            pages = number;
+        }
+
+        // if (!loadingOptions.search)
+        query += ` LIMIT ${records} OFFSET 0`;
+
+        const queryResult = await sequelize.query(query);
+
+        console.log('pages: ', pages);
+        console.log('records: ', records);
+
+        if (dialect === POSTGRESQL) {
+            return {
+                "rows": queryResult[1].rows,
+                "fields": queryResult[1].fields,
+                "pages": Math.ceil(pages),
+                "records": records
+            };
+        } else {
+            return {
+                "rows": queryResult[0],
+                "fields": queryResult[0],
+                "pages": Math.ceil(pages),
+                "records": records
+            };
+        }
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 // Export db's methods
 module.exports = {
     runQuery,
     deleteTable,
     addTable,
+    saveTableResult,
     renameTable,
     getTable,
     getAllTables,
     updateTableQuery,
-    loadTableResult
+    loadTableResult,
+    getTableColumns
 };

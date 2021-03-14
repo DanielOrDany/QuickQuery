@@ -4,15 +4,14 @@ import {
     deleteConnection,
     addConnection
 } from "../methods";
-import { Offline, Online } from "react-detect-offline"
+import { Offline } from "react-detect-offline"
 
 import Button from './Button';
 import Modal from './Modal';
 
-import database_icon from "../icons/software.png";
+import empty from "../icons/empty.svg";
+import database_icon from "../icons/database.svg";
 import delete_icon from "../icons/delete_icon.png";
-import wifi_on from "../icons/wifi_on-48dp.svg";
-import wifi_off from "../icons/wifi_off-48dp.svg";
 import '../styles/Connections.scss';
 
 
@@ -35,7 +34,9 @@ export default class Connections extends React.Component {
             errorMessage: '',
             isOpen: false,
             isErrorOpen: false,
-            bigInput: false
+            isDeleteOpen: false,
+            bigInput: false,
+            choosedConnetion: ''
         };
     };
 
@@ -59,15 +60,31 @@ export default class Connections extends React.Component {
         this.setState({ isErrorOpen: false });
     };
 
+    openDelete = (alias) => {
+        this.setState({ choosedConnetion: alias});
+        this.setState({ isDeleteOpen: true });
+    };
+
+    handleDeleteSubmit = () => {
+        this.deleteConnection(this.state.choosedConnetion);
+        this.setState({ choosedConnetion: ''});
+        this.setState({ isDeleteOpen: false });
+    };
+
+    handleDeleteCancel = () => {
+        this.setState({ choosedConnetion: ''});
+        this.setState({ isDeleteOpen: false });
+    };
+
     componentDidMount() {
         getDataFromDatabase()
             .then(data => {
-                console.log("DATA", data);
                 this.setState({
                     connections: data.connections,
                     searchedConnections: data.connections,
-                    isOpen: data.connections.length ? false : true //show popup without any conns
+                    isOpen: data.connections.length ? false : true // show popup if none connections in the app
                 });
+
                 localStorage.setItem("connections", JSON.stringify(data.connections));
                 localStorage.setItem("data", JSON.stringify(data));
             });
@@ -94,20 +111,7 @@ export default class Connections extends React.Component {
         let schemaInput = this.state.schemaInput;
         let dtypeInput = this.state.dtypeInput;
         let uriInput = this.state.uriInput;
-        
         let successfullVerify = false;
-
-        console.log({
-            nameInput,
-            hostInput,
-            portInput,
-            userInput,
-            passwordInput,
-            databaseInput,
-            schemaInput,
-            dtypeInput,
-            uriInput
-        });
 
         // Check valid inputs
         if (this.state.bigInput) {
@@ -188,7 +192,7 @@ export default class Connections extends React.Component {
         const currentConnection = this.getConnectionData(name);
         localStorage.setItem('current_connection', JSON.stringify(currentConnection));
 
-        window.location.hash = '#/tables';
+        window.location.hash = `#/tables/${name}`;
     };
 
     nameOnChange = (e) => {
@@ -234,7 +238,6 @@ export default class Connections extends React.Component {
       let searchedConnections = [];
 
       this.state.connections.forEach(connection => {
-          console.log(connection);
           if (connection.name.includes(searchValue)) {
               searchedConnections.push(connection);
           }
@@ -248,34 +251,34 @@ export default class Connections extends React.Component {
             <div>
                 <div className="information-field">
                     <span className="input-title">Name:</span>
-                    <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda"
+                    <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda" type="search"
                         onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">Host:</span>
-                    <input id="input-field-host" ref="host" className="form-control" type="text" placeholder="127.0.0.1"
+                    <input id="input-field-host" ref="host" className="form-control" type="text" placeholder="127.0.0.1" type="search"
                         onChange={this.hostOnChange} onKeyPress={this.hostKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">Port:</span>
-                    <input id="input-field-port" ref="port" className="form-control" type="text" placeholder="5432"
+                    <input id="input-field-port" ref="port" className="form-control" type="text" placeholder="5432" type="search"
                         onChange={this.portOnChange} onKeyPress={this.portKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">User name:</span>
-                    <input id="input-field-user" ref="user" className="form-control" type="text" placeholder="root"
+                    <input id="input-field-user" ref="user" className="form-control" type="text" placeholder="root" type="search"
                         onChange={this.userOnChange} onKeyPress={this.userKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">Password:</span>
                     <input id="input-field-password" ref="password" className="form-control" type="text"
-                        placeholder="pass1234"
+                        placeholder="pass1234" type="search"
                         onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">Database:</span>
                     <input id="input-field-database" ref="database" className="form-control" type="text"
-                        placeholder="flightradar24"
+                        placeholder="flightradar24" type="search"
                         onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
                 </div>
                 <div className="information-field">
@@ -285,7 +288,7 @@ export default class Connections extends React.Component {
                         </div>
                     </span>
                     <input id="input-field-schema" ref="schema" className="form-control" type="text"
-                        placeholder="public"
+                        placeholder="public" type="search"
                         onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                 </div>
                 <div className="choose-db-field">
@@ -324,12 +327,12 @@ export default class Connections extends React.Component {
             <div>
                 <div className="information-field">
                     <span className="input-title">Name:</span>
-                    <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda"
+                    <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda" type="search"
                            onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">URI:</span>
-                    <input id="input-field-uri" ref="uri" className="form-control" type="text"
+                    <input id="input-field-uri" ref="uri" className="form-control" type="text" type="search"
                            placeholder="databaseType://username:password@host:port/databaseName"
                            onChange={this.uriOnChange} onKeyPress={this.uriKeyPress}
                     />
@@ -342,6 +345,7 @@ export default class Connections extends React.Component {
                     </span>
                     <input id="input-field-schema" ref="schema" className="form-control" type="text"
                         placeholder="public"
+                        type="search"
                         onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                 </div>
                 <hr/>
@@ -367,87 +371,95 @@ export default class Connections extends React.Component {
             host = conn.URI["others"]["host"];
         }
         
-        if(host == "localhost" || host == "127.0.0.1") {
+        if(!(host === "localhost" || host === "127.0.0.1")) {
             return(
-                <>
-                    <img alt={"internet on"} src={wifi_on} id="wifi-icon"/>
-                    <p className="tip-info">Connection with local database established.</p>
-                </>
-            );
-        } else {
-            return(
-                <>
-                    <Online>
-                        <img alt={"internet on"} src={wifi_on} id="wifi-icon"/>
-                        <p className="tip-info">Connection with remote database established.</p>
-                    </Online>
-                    <Offline>
-                        <img alt={"internet off"} src={wifi_off} id="wifi-icon"/>
-                        <p className="tip-info">Connection with remote database lost.</p>
-                    </Offline>
-                </>
+                <Offline>
+                    <>| <b>connection is lost</b></>
+                </Offline>
             );
         }
     }
 
     render() {
+        const { searchedConnections, isOpen, bigInput, isErrorOpen, isDeleteOpen, errorMessage } = this.state;
+
         return (
             <div className="connections-page">
                 <Modal
                     title="Creating a connection"
-                    isOpen={this.state.isOpen}
+                    isOpen={isOpen}
                     onCancel={this.handleCancel}
                     onSubmit={this.handleSubmit}
                     cancelButton={true}
                 >
-                    {this.state.bigInput && this.bigInput()}
-                    {!this.state.bigInput && this.smallInput()}
+                    {bigInput && this.bigInput()}
+                    {!bigInput && this.smallInput()}
                 </Modal>
 
                 <Modal
                     title="Error"
-                    isOpen={this.state.isErrorOpen}
+                    isOpen={isErrorOpen}
                     onCancel={this.handleErrorCancel}
                     onSubmit={this.handleErrorCancel}
                     submitTitle="Ok"
                 >
-                    <strong>Message!</strong> {this.state.errorMessage}
+                    <strong>Message!</strong> {errorMessage}
+                </Modal>
+
+                <Modal
+                    title="Delete connection"
+                    isOpen={isDeleteOpen}
+                    onCancel={this.handleDeleteCancel}
+                    onSubmit={this.handleDeleteSubmit}
+                    cancelButton={true}
+                    cancelTitle="No"
+                    submitTitle="Yes"
+                    noCross={true}
+                >
+                    <div>
+                        <strong>Are you sure?</strong>
+                    </div>
                 </Modal>
 
                 <div className="menu">
-                    <button type="button" id="add-button" onClick={() => this.openModal()}>Add connection
-                    </button>
-                    <div className="search">
-                        <input id="search-field"/>
-                        <button type="button" id="search-button" onClick={() => this.search()}>Search</button>
-                    </div>
+                    <input className="search" id="search-field" type="search" placeholder={"Search"} onChange={() => this.search()}/>
+                    <button type="button" id="add-button" onClick={() => this.openModal()}>Add Connection</button>
                 </div>
 
                 <div className="folders">
-                    {this.state.searchedConnections ? this.state.searchedConnections.map(conn => {
-                            return (
-                                <div id={conn.name} className="connection-folder" key={conn.name}>
-                                        <div className="link-container"
-                                             onDoubleClick={() => this.openConnection(conn.name)}>
-                                            <div id="folders-name">
-                                                <img alt={"icon database"} src={database_icon} id="database-icon"/>
-                                                <div id="link">
-                                                    <p id="folders-n">{conn.name}</p>
-                                                    <div className="network-tip">{this.databaseHost(conn)}</div>
-                                                </div>
-                                            </div>
+                    {
+                        searchedConnections.length ? searchedConnections.map(conn => {
+                            let evenConn = searchedConnections.indexOf(conn) % 2 === 0;
 
-                                            <div id="functional">
-                                                <div
-                                                    onClick={() => this.deleteConnection(conn.name)}>
-                                                    <img alt={"delete icon"} src={delete_icon} id="delete-icon"/>
-                                                </div>
+                            return (
+                                <div id={conn.name} className={`connection-folder ${evenConn ? "dark-row" : "white-row"}`} key={conn.name}>
+                                    <div className="link-container"
+                                         onDoubleClick={() => this.openConnection(conn.name)}>
+                                        <div className="folders-name">
+                                            <img alt={"icon database"} src={database_icon} id="database-icon"/>
+                                            <div className="link">
+                                                <p id="folders-n">{conn.name} {this.databaseHost(conn)}</p>
                                             </div>
                                         </div>
+
+                                        <div className="functional">
+                                            <div onClick={() => this.openDelete(conn.name)}>
+                                                <img alt={"delete icon"} src={delete_icon} id="delete-icon"/>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            )
+                            );
                         }
-                    ) : null}
+                    ) :
+                        <div className="empty-result-row">
+                            <div className="empty-result-column">
+                                <img className="empty-result-box" src={empty}/>
+                                <span>You don't have a connection yet.</span>
+                                <span>Please create it on the "Add Connection" button.</span>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         );

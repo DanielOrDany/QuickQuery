@@ -4,6 +4,7 @@ import Menu from './components/Menu';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends React.Component {
+
   componentDidMount() {
     let body = document.getElementsByTagName("body");
     const theme = localStorage.getItem("theme");

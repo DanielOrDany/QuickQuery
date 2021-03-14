@@ -27,11 +27,14 @@ const Sequelize = require('sequelize');
 const pg = require('pg');
 pg.defaults.ssl = true;
 
+
+
 async function verifyConnection (name) {
     const connectionInDatabase = await db.get('connections').find({name: name}).value();
     if (connectionInDatabase)
         throw "Connection with this name already exist!";
 }
+
 
 async function addConnection(params) {
     let { name, host, port, user, password, database, schema, dtype, uri } = params;
@@ -48,18 +51,27 @@ async function addConnection(params) {
             database,
             user,
             password,
-            { host: host, dialect: dtype }
+            {
+                host: host,
+                dialect: dtype,
+                ssl: true,
+                dialectOptions: {
+                    ssl: {
+                        require: true,
+                        rejectUnauthorized: true // <<<<<< YOU NEED THIS
+                    }
+                }}
         );
 
-        const selectAllTables = `
+        const selectAllTablesQuery = `
         SELECT table_name 
         FROM information_schema.tables
         WHERE table_type='BASE TABLE'
         AND table_schema='${schema}';`;
 
         const connection = {
-            name: name,
-            URI: uri ? uri : {
+            name: name, // connection alias
+            URI: uri ? uri : { // connection credentials
                 database: database,
                 user: user,
                 password: password,
@@ -70,67 +82,88 @@ async function addConnection(params) {
                     dialect: dtype
                 }
             },
-            queries: []
+            queries: [], // saved constructor queries
+            native_tables: [] // native db names of tables
         };
 
-        await sequelize.query(selectAllTables).then(tables => {
+        /** Select All Tables */
+        /* Select all names of tables in database and creating default queries */
 
-            // Generate default tables
+        await sequelize.query(selectAllTablesQuery).then(tables => {
+
+            // Generate default queries
             if (dtype === 'postgres') {
                 tables[0].forEach(table => {
+
+                    // save native table name
+                    connection.native_tables.push(table.table_name);
+
+                    // save default query
                     connection.queries.push({
                         query: ` SELECT * FROM ${table.table_name}`,
                         type: 'default_query',
-                        alias: table.table_name
+                        alias: table.table_name,
+                        table: table.table_name
                     });
                 });
             } else {
                 tables[0].forEach(table => {
+
+                    // save native table name
+                    connection.native_tables.push(table.table_name);
+
+                    // save default query
                     connection.queries.push({
                         query: ` SELECT * FROM ${table.TABLE_NAME}`,
                         type: 'default_query',
-                        alias: table.TABLE_NAME
+                        alias: table.TABLE_NAME,
+                        table: table.TABLE_NAME
                     });
                 });
             }
 
-            // Get connections
-            const connections = db
-                .get('connections')
-                .value();
+            // Get all connections from the app storage
+            const connections = db.get('connections').value();
 
-            // Add new one
+            // Add new one to them
             connections.push(connection);
 
-            // Update connections
-            db.get('connections')
-                .assign({ connections })
-                .write();
+            // & update connections after
+            db.get('connections').assign({ connections }).write();
         });
 
-        console.log('connection added!');
         return connection;
+
     } catch (e) {
-        console.log(e);
+
+        console.error(e);
     }
 }
 
+
 async function deleteConnection(name) {
-    // Get connections
-    const connections = await db
-        .get('connections')
-        .value();
+    try {
 
-    // Add new one
-    connections.splice(
-        connections.findIndex(connection => connection.name === name), 1);
+        // Get all connections from the app storage
+        const connections = await db
+            .get('connections')
+            .value();
 
-    // Update connections
-    db.get('connections')
-        .assign({ connections })
-        .write();
+        // Remove one of them by name
+        connections.splice(
+            connections.findIndex(connection => connection.name === name), 1);
 
-    return connections;
+        // & update connections after
+        db.get('connections')
+            .assign({ connections })
+            .write();
+
+        return connections;
+
+    } catch (e) {
+
+        console.error(e);
+    }
 }
 
 // Export db's methods

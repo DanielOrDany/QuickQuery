@@ -13,6 +13,15 @@ export const
         });
     },
 
+    getTableColumns = async (connectionName, table) => {
+        return new Promise(resolve => {
+            ipcRenderer.send(channels.GET_TABLE_COLUMNS, connectionName, table);
+            ipcRenderer.on(channels.GET_TABLE_COLUMNS, (event, result) => {
+                resolve(result.data);
+            });
+        });
+    },
+
     exportConfig = async () => {
         return new Promise(resolve => {
             ipcRenderer.send(channels.SHARE_DB);
@@ -122,9 +131,9 @@ export const
         });
     },
 
-    updateTableQuery = async (connectionName, alias, query) => {
+    updateTableQuery = async (connectionName, alias, query, newAlias) => {
         return new Promise(resolve => {
-            ipcRenderer.send(channels.UPDATE_QUERY, connectionName, alias, query);
+            ipcRenderer.send(channels.UPDATE_QUERY, connectionName, alias, query, newAlias);
             ipcRenderer.on(channels.UPDATE_QUERY, (event, result) => {
                 resolve(result.data);
             });
@@ -135,6 +144,15 @@ export const
         return new Promise(resolve => {
             ipcRenderer.send(channels.LOAD_QUERY, connectionName, alias, options);
             ipcRenderer.on(channels.LOAD_QUERY, (event, result) => {
+                resolve(result.data);
+            });
+        });
+    },
+
+    saveTableResult = async (connectionName, alias, options) => {
+        return new Promise(resolve => {
+            ipcRenderer.send(channels.SAVE_QUERY, connectionName, alias, options);
+            ipcRenderer.on(channels.SAVE_QUERY, (event, result) => {
                 resolve(result.data);
             });
         });

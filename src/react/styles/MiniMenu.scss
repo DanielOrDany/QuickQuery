@@ -1,5 +1,6 @@
-/* Dropdown Menu */
+@import "./variables";
 
+/* Dropdown Menu */
 #dropdown {
     position: absolute;
 }
@@ -15,17 +16,20 @@
     background-color: #FFFFFF;
 
     border: 0.2px solid #3a3a3a;
+    border-radius: 5px;
 }
 
 .menu {
-    width: 100%;   
+    width: 100%;
+    height: max-content;
+    padding: 10px;
 }
 
 .menu-item {
-    height: 20px;
-
+    padding: 5px;
+    border-left: 0.05px solid #3a3a3a;
     text-align: center;
 }
 .menu-item:hover {
-    background-color: gray;
+    background-color: $hover-white;
 }
