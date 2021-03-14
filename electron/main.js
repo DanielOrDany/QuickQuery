@@ -50,7 +50,7 @@ function createWindow () {
   mainWindow.removeMenu();
 
   mainWindow.on('closed', function () {
-      app.quit();
+    app.quit();
   });
 }
 

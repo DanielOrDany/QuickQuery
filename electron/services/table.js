@@ -195,7 +195,6 @@ function updateTableQuery(connectionName, alias, newQuery, newAlias) {
     // verify that query have select character
     verifyQuery(newQuery);
 
-    console.log("alias", alias, "newAlias", newAlias);
     // Get queries
     const queries = db.read()
         .get('connections')
@@ -296,11 +295,9 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                 const filter2 = option.filter2;
 
                 // Join cases
-
                 const sortedColumns = sortByLength(tableColumns);
                 console.log("sortedColumns", sortedColumns);
                 sortedColumns.forEach(tableColumn => {
-
                     if (column.match(tableColumn)) {
                         column = column.replace(`${tableColumn}_`, `${tableColumn}.`);
                     }
@@ -338,7 +335,7 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                             }
                         }
 
-                    // numbers
+                        // numbers
                     } else {
                         const n1 = parseInt(filter1);
                         const n2 = parseInt(filter2);
@@ -488,10 +485,8 @@ async function saveTableResult(connectionName, alias, loadingOptions) {
 
         const offset = Number(loadingOptions.page) * Number(loadingOptions.pageSize);
         const limit = Number(loadingOptions.pageSize);
-
         const tableColumns = loadingOptions.columns ? sortByLength(loadingOptions.columns) : [];
         console.log(tableColumns);
-
         let dialect;
 
         if (typeof URI === 'string') {
@@ -555,7 +550,6 @@ async function saveTableResult(connectionName, alias, loadingOptions) {
 
                 // Join cases
                 // TODO: bug companies.services & companies
-
                 tableColumns.forEach(tableColumn => {
                     if (column.match(tableColumn)) {
                         column = column.replace(`${tableColumn}_`, `${tableColumn}.`);

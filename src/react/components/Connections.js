@@ -43,11 +43,11 @@ export default class Connections extends React.Component {
     openModal = () => {
         this.setState({ isOpen: true });
     };
-    
+
     handleSubmit = () => {
         this.addConnection();
     };
-    
+
     handleCancel = () => {
         this.setState({ isOpen: false });
     };
@@ -55,7 +55,7 @@ export default class Connections extends React.Component {
     openErrorModal = () => {
         this.setState({ isErrorOpen: true });
     };
-    
+
     handleErrorCancel = () => {
         this.setState({ isErrorOpen: false });
     };
@@ -115,7 +115,7 @@ export default class Connections extends React.Component {
 
         // Check valid inputs
         if (this.state.bigInput) {
-            successfullVerify = 
+            successfullVerify =
                 this.inputVirify(nameInput) &&
                 this.inputVirify(hostInput) &&
                 this.inputVirify(portInput) &&
@@ -125,7 +125,7 @@ export default class Connections extends React.Component {
                 this.inputVirify(schemaInput) &&
                 this.inputVirify(dtypeInput);
         } else {
-            successfullVerify = 
+            successfullVerify =
                 this.inputVirify(nameInput) &&
                 this.inputVirify(uriInput) &&
                 this.inputVirify(schemaInput);
@@ -234,16 +234,16 @@ export default class Connections extends React.Component {
     };
 
     search = () => {
-      const searchValue = document.getElementById('search-field').value;
-      let searchedConnections = [];
+        const searchValue = document.getElementById('search-field').value;
+        let searchedConnections = [];
 
-      this.state.connections.forEach(connection => {
-          if (connection.name.includes(searchValue)) {
-              searchedConnections.push(connection);
-          }
-      });
+        this.state.connections.forEach(connection => {
+            if (connection.name.includes(searchValue)) {
+                searchedConnections.push(connection);
+            }
+        });
 
-      this.setState({ searchedConnections: searchedConnections });
+        this.setState({ searchedConnections: searchedConnections });
     };
 
     bigInput = () => {
@@ -252,34 +252,34 @@ export default class Connections extends React.Component {
                 <div className="information-field">
                     <span className="input-title">Name:</span>
                     <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda" type="search"
-                        onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
+                           onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">Host:</span>
                     <input id="input-field-host" ref="host" className="form-control" type="text" placeholder="127.0.0.1" type="search"
-                        onChange={this.hostOnChange} onKeyPress={this.hostKeyPress}/>
+                           onChange={this.hostOnChange} onKeyPress={this.hostKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">Port:</span>
                     <input id="input-field-port" ref="port" className="form-control" type="text" placeholder="5432" type="search"
-                        onChange={this.portOnChange} onKeyPress={this.portKeyPress}/>
+                           onChange={this.portOnChange} onKeyPress={this.portKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">User name:</span>
                     <input id="input-field-user" ref="user" className="form-control" type="text" placeholder="root" type="search"
-                        onChange={this.userOnChange} onKeyPress={this.userKeyPress}/>
+                           onChange={this.userOnChange} onKeyPress={this.userKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">Password:</span>
                     <input id="input-field-password" ref="password" className="form-control" type="text"
-                        placeholder="pass1234" type="search"
-                        onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
+                           placeholder="pass1234" type="search"
+                           onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">Database:</span>
                     <input id="input-field-database" ref="database" className="form-control" type="text"
-                        placeholder="flightradar24" type="search"
-                        onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
+                           placeholder="flightradar24" type="search"
+                           onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
                 </div>
                 <div className="information-field">
                     <span className="input-title">Schema name:
@@ -288,8 +288,8 @@ export default class Connections extends React.Component {
                         </div>
                     </span>
                     <input id="input-field-schema" ref="schema" className="form-control" type="text"
-                        placeholder="public" type="search"
-                        onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
+                           placeholder="public" type="search"
+                           onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                 </div>
                 <div className="choose-db-field">
                     <span id="choose-db-title">Choose database: </span>
@@ -304,18 +304,18 @@ export default class Connections extends React.Component {
                     </select>
                 </div>
                 <hr/>
-                <Button id="simplified-connection-btn" 
-                    onClick={()=>this.setState({
-                                    bigInput: false,
-                                    nameInput: '',
-                                    hostInput: '',
-                                    portInput: '',
-                                    userInput: '',
-                                    passwordInput: '',
-                                    databaseInput: '',
-                                    schemaInput: '',
-                                    dtypeInput: 'mysql'
-                                })} invert>
+                <Button id="simplified-connection-btn"
+                        onClick={()=>this.setState({
+                            bigInput: false,
+                            nameInput: '',
+                            hostInput: '',
+                            portInput: '',
+                            userInput: '',
+                            passwordInput: '',
+                            databaseInput: '',
+                            schemaInput: '',
+                            dtypeInput: 'mysql'
+                        })} invert>
                     Simplified connection
                 </Button>
             </div>
@@ -344,18 +344,18 @@ export default class Connections extends React.Component {
                         </div>
                     </span>
                     <input id="input-field-schema" ref="schema" className="form-control" type="text"
-                        placeholder="public"
-                        type="search"
-                        onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
+                           placeholder="public"
+                           type="search"
+                           onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                 </div>
                 <hr/>
-                <Button id="configure-manually-btn" 
-                    onClick={()=>this.setState({
-                                    bigInput: true,
-                                    nameInput: '',
-                                    uriInput: '',
-                                    schemaInput: ''
-                                })} invert>
+                <Button id="configure-manually-btn"
+                        onClick={()=>this.setState({
+                            bigInput: true,
+                            nameInput: '',
+                            uriInput: '',
+                            schemaInput: ''
+                        })} invert>
                     Configure manually
                 </Button>
             </div>
@@ -371,7 +371,7 @@ export default class Connections extends React.Component {
             host = conn.URI["others"]["host"];
         }
 
-        if(!(host == "localhost" || host == "127.0.0.1")) {
+        if(!(host === "localhost" || host === "127.0.0.1")) {
             return(
                 <Offline>
                     <>| <b>connection is lost</b></>
@@ -429,36 +429,36 @@ export default class Connections extends React.Component {
                 <div className="folders">
                     {
                         searchedConnections.length ? searchedConnections.map(conn => {
-                            let evenConn = searchedConnections.indexOf(conn) % 2 === 0;
+                                let evenConn = searchedConnections.indexOf(conn) % 2 === 0;
 
-                            return (
-                                <div id={conn.name} className={`connection-folder ${evenConn ? "dark-row" : "white-row"}`} key={conn.name}>
-                                    <div className="link-container"
-                                         onDoubleClick={() => this.openConnection(conn.name)}>
-                                        <div className="folders-name">
-                                            <img alt={"icon database"} src={database_icon} id="database-icon"/>
-                                            <div className="link">
-                                                <p id="folders-n">{conn.name} {this.databaseHost(conn)}</p>
+                                return (
+                                    <div id={conn.name} className={`connection-folder ${evenConn ? "dark-row" : "white-row"}`} key={conn.name}>
+                                        <div className="link-container"
+                                             onDoubleClick={() => this.openConnection(conn.name)}>
+                                            <div className="folders-name">
+                                                <img alt={"icon database"} src={database_icon} id="database-icon"/>
+                                                <div className="link">
+                                                    <p id="folders-n">{conn.name} {this.databaseHost(conn)}</p>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div className="functional">
-                                            <div onClick={() => this.openDelete(conn.name)}>
-                                                <img alt={"delete icon"} src={delete_icon} id="delete-icon"/>
+                                            <div className="functional">
+                                                <div onClick={() => this.openDelete(conn.name)}>
+                                                    <img alt={"delete icon"} src={delete_icon} id="delete-icon"/>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                );
+                            }
+                            ) :
+                            <div className="empty-result-row">
+                                <div className="empty-result-column">
+                                    <img className="empty-result-box" src={empty}/>
+                                    <span>You don't have a connection yet.</span>
+                                    <span>Please create it on the "Add Connection" button.</span>
                                 </div>
-                            );
-                        }
-                    ) :
-                        <div className="empty-result-row">
-                            <div className="empty-result-column">
-                                <img className="empty-result-box" src={empty}/>
-                                <span>You don't have a connection yet.</span>
-                                <span>Please create it on the "Add Connection" button.</span>
                             </div>
-                        </div>
                     }
                 </div>
             </div>

@@ -47,7 +47,7 @@ class Menu extends React.Component {
     handleSubmit = () => {
         this.setState({message: "", isOpen: false });
     };
-    
+
     handleCancel = () => {
         this.setState({message: "", isOpen: false });
     };
@@ -152,12 +152,12 @@ class Menu extends React.Component {
                         <div className="logo-box">
                             <img src={logo_icon} id="l-icon" onClick={() => this.openConnections()} />
                             {!this.state.toTables &&
-                                <div id="back-section">
-                                    <img src={arrow_back} id="arrow-back" onClick={() => this.openConnections()}/>
-                                    <div id="connection-name" onClick={() => this.openConnections()}>
-                                        <div>{currentConnection.name}</div>
-                                    </div>
+                            <div id="back-section">
+                                <img src={arrow_back} id="arrow-back" onClick={() => this.openConnections()}/>
+                                <div id="connection-name" onClick={() => this.openConnections()}>
+                                    <div>{currentConnection.name}</div>
                                 </div>
+                            </div>
                             }
                         </div>
                         <div className="menu-box">

@@ -4,8 +4,8 @@
 .result {
   display: grid;
   grid-template-areas:
-            "table"
-            "pages";
+          "table"
+          "pages";
   grid-template-rows: calc(100vh - 100px) auto 100vh;
 
   height: calc(100vh - 50px);

@@ -434,12 +434,12 @@ export default class Result extends React.Component {
                                                     </div>
                                                     <div className="header-data-operations">
                                                         { !currentOption.isFilterOpened &&
-                                                            <input id="header-search"
-                                                                   type="search"
-                                                                   placeholder={"Search"}
-                                                                   value={currentOption.search}
-                                                                   onChange={(e) => this.handleChangeSearchValue(e, header)}
-                                                            />
+                                                        <input id="header-search"
+                                                               type="search"
+                                                               placeholder={"Search"}
+                                                               value={currentOption.search}
+                                                               onChange={(e) => this.handleChangeSearchValue(e, header)}
+                                                        />
                                                         }
                                                         {
                                                             (((!currentHeaderIsDate && currentHeaderIsNumber)) && currentOption.isFilterOpened) &&

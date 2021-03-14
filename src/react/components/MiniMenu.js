@@ -64,12 +64,12 @@ function MiniMenu(props) {
         setTable(alias);
         openPopup(true);
     };
-    
+
     function handleSubmit() {
         removeTable(table);
         openPopup(false);
     };
-    
+
     function handleCancel() {
         openPopup(false);
     };

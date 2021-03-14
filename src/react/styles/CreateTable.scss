@@ -5,9 +5,9 @@
 .create_edit_table {
   display: grid;
   grid-template-areas:
-            "miniMenu"
-            "queryText"
-            "newTable";
+          "miniMenu"
+          "queryText"
+          "newTable";
   grid-template-rows: 50px 45vh auto;
 
   height: calc(100vh - 50px);

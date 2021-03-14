@@ -171,30 +171,30 @@ export default class Tables extends React.Component {
                         </div>
                         {
                             searchedTables.length ? searchedTables.map(table => {
-                                let evenConn = searchedTables.indexOf(table) % 2 === 0;
+                                    let evenConn = searchedTables.indexOf(table) % 2 === 0;
 
-                                return (
-                                    <div id={table.alias} className={`table ${evenConn ? "dark-row" : "white-row"}`} key={table.alias}>
-                                        <div className="container" onClick={() => this.openTable(table.alias)}>
-                                            <div id="table-name">
+                                    return (
+                                        <div id={table.alias} className={`table ${evenConn ? "dark-row" : "white-row"}`} key={table.alias}>
+                                            <div className="container" onClick={() => this.openTable(table.alias)}>
+                                                <div id="table-name">
                                                 <span style={ localStorage.getItem("openedTable") ?
                                                     table.alias === localStorage.getItem("openedTable") ?
                                                         { color: "#eb6e3b" } : null
                                                     : table.alias === currentOpenedTable ?
                                                         { color: "#eb6e3b" } : null
-                                                    }>&#11044;</span>
-                                                <div id="name">{}
-                                                    <p id="table-n">{table.alias}</p>
+                                                }>&#11044;</span>
+                                                    <div id="name">{}
+                                                        <p id="table-n">{table.alias}</p>
+                                                    </div>
                                                 </div>
+                                            </div >
+                                            <div className="m-menu">
+                                                <MiniMenu icon={<MiniMenuIcon/>} table={table}/>
                                             </div>
-                                        </div >
-                                        <div className="m-menu">
-                                            <MiniMenu icon={<MiniMenuIcon/>} table={table}/>
                                         </div>
-                                    </div>
-                                );
-                            }
-                        ) : <div className="empty-rows">
+                                    );
+                                }
+                            ) : <div className="empty-rows">
                                 <div className="empty-rows-column">
                                     <img className="empty-rows-box" src={upArrow}/>
                                     <span>You don't have a query yet.</span>
@@ -212,13 +212,13 @@ export default class Tables extends React.Component {
                         (!window.location.hash.includes("edit-table") &&
                             !window.location.hash.includes("result") &&
                             !window.location.hash.includes("create-table")) &&
-                            <div className="empty-result-row">
-                                <div className="empty-result-column">
-                                    <img className="empty-result-box" src={empty}/>
-                                    <span>Query is not selected.</span>
-                                    <span>Please select it from left list.</span>
-                                </div>
+                        <div className="empty-result-row">
+                            <div className="empty-result-column">
+                                <img className="empty-result-box" src={empty}/>
+                                <span>Query is not selected.</span>
+                                <span>Please select it from left list.</span>
                             </div>
+                        </div>
                     }
                     <Route path={`/tables/:connectionAlias/create-table`} component={CreateTable}/>
                     <Route path={`/tables/:connectionAlias/edit-table/:tableAlias`} component={CreateTable}/>

@@ -1,25 +1,7 @@
 import React from 'react';
 
 // Styles
-import {
-    addTable,
-    testTableQuery,
-    updateTableQuery,
-    getTableColumns
-} from "../methods";
-
 import '../styles/CreateTable.scss';
-import xxx from "../icons/Gear-0.2s-200px (1).svg";
-import addIcon from "../icons/add-icon.svg";
-import linkIcon from "../icons/link-icon.svg";
-import removeIcon from "../icons/remove.svg";
-import westIcon from "../icons/west-arrow.svg";
-import eastIcon from "../icons/east-arrow.svg";
-
-function arraysEqual(a1,a2) {
-    /* WARNING: arrays must not contain {objects} or behavior may be undefined */
-    return JSON.stringify(a1)==JSON.stringify(a2);
-}
 
 // Methods
 import {
@@ -39,7 +21,7 @@ import eastIcon from "../icons/east-arrow.svg";
 
 function arraysEqual(a1,a2) {
     /**
-        WARNING: arrays must not contain {objects} or behavior may be undefined
+     WARNING: arrays must not contain {objects} or behavior may be undefined
      */ return JSON.stringify(a1) === JSON.stringify(a2);
 }
 
@@ -264,7 +246,6 @@ export default class CreateTable extends React.Component {
         if (result) {
             const query = result.query;
             console.log("query", query);
-
             const joinIndex = query.indexOf("JOIN");
 
             if (joinIndex >= 0) {
@@ -312,6 +293,7 @@ export default class CreateTable extends React.Component {
                 secondColumns.push("select column");
             }
 
+
             let { options } = this.state;
 
             const connection = JSON.parse(localStorage.getItem("current_connection"));
@@ -346,7 +328,6 @@ export default class CreateTable extends React.Component {
         this.setState({
             isLoading: true
         });
-
 
         const { tables, columns, options, secondColumns, alias, queryName } = this.state;
 
@@ -515,40 +496,40 @@ export default class CreateTable extends React.Component {
                         <select className="select-table" value="" onChange={(e) => this.handleTableChange(e, index)}>
                             <option value="" selected disabled hidden>Choose here</option>
                             {
-                               options.map((option, i) => <option key={i} value={option.table}>{option.alias}</option>)
+                                options.map((option, i) => <option key={i} value={option.table}>{option.alias}</option>)
                             }
                         </select>
                         <img id="remove-icon" onClick={() => {this.removeTable(index)}} src={removeIcon}/>
                     </div>
                     { table !== 'select table' &&
-                        <div className="table-column">
-                            <div className="column-name">
-                                { ( index !== 0 && (tables.length - 1) !== index )  && <img className="column-arrows" src={westIcon}/> }
-                                <span><b>Column:</b> {tableColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableColumn}</span>}</span>
-                                <select className="select-column" value="" onChange={(e) => this.handleColumnChange(e, index)}>
-                                    <option value="" selected disabled hidden>Choose here</option>
-                                    {
-                                        tableColumns && tableColumns.map((column, i) => {
-                                            return <option key={i} value={column.column_name}>{column.column_name}</option>
-                                        })
-                                    }
-                                </select>
-                            </div>
-                            { ( index !== 0 && (tables.length - 1) !== index )  &&
-                                <div className="column-name">
-                                    <img className="column-arrows" src={eastIcon}/>
-                                    <span><b>Column:</b> {tableSecondColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableSecondColumn}</span>}</span>
-                                    <select className="select-column" value="" onChange={(e) => this.handleSecondColumnChange(e, index)}>
-                                        <option value="" selected disabled hidden>Choose here</option>
-                                        {
-                                            tableSecondColumns && tableSecondColumns.map((column, i) => {
-                                                return <option key={i} value={column.column_name}>{column.column_name}</option>
-                                            })
-                                        }
-                                    </select>
-                                </div>
-                            }
+                    <div className="table-column">
+                        <div className="column-name">
+                            { ( index !== 0 && (tables.length - 1) !== index )  && <img className="column-arrows" src={westIcon}/> }
+                            <span><b>Column:</b> {tableColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableColumn}</span>}</span>
+                            <select className="select-column" value="" onChange={(e) => this.handleColumnChange(e, index)}>
+                                <option value="" selected disabled hidden>Choose here</option>
+                                {
+                                    tableColumns && tableColumns.map((column, i) => {
+                                        return <option key={i} value={column.column_name}>{column.column_name}</option>
+                                    })
+                                }
+                            </select>
                         </div>
+                        { ( index !== 0 && (tables.length - 1) !== index )  &&
+                        <div className="column-name">
+                            <img className="column-arrows" src={eastIcon}/>
+                            <span><b>Column:</b> {tableSecondColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableSecondColumn}</span>}</span>
+                            <select className="select-column" value="" onChange={(e) => this.handleSecondColumnChange(e, index)}>
+                                <option value="" selected disabled hidden>Choose here</option>
+                                {
+                                    tableSecondColumns && tableSecondColumns.map((column, i) => {
+                                        return <option key={i} value={column.column_name}>{column.column_name}</option>
+                                    })
+                                }
+                            </select>
+                        </div>
+                        }
+                    </div>
                     }
                 </div>
             </div>
@@ -594,41 +575,42 @@ export default class CreateTable extends React.Component {
 
 
                     { errorMessage &&
-                        <div id="errorMessage" className="alert">
-                            <strong>Message!</strong> {errorMessage}
-                        </div>
+                    <div id="errorMessage" className="alert">
+                        <strong>Message!</strong> {errorMessage}
+                    </div>
                     }
 
 
                     {(headers && rows) &&
-                        <div id="add-btn-table">
-                            <table id="your-new-table">
-                                <tr>
-                                    {headers ? headers.map((item) => {
-                                        return <th>{item}</th>
-                                    }) : null}
-                                </tr>
-                                {rows ? rows.map((item, key) => {
-                                    return <tr className={key++ % 2 === 0 ? "column_one" : "column_two"}>{
-                                        Object.values(item).map((get_item, key) => {
-
-                                            let renderItem;
-
-                                            if (typeof get_item === 'object') {
-                                                renderItem = JSON.stringify(get_item);
-                                            } else {
-                                                renderItem = get_item;
-                                            }
-                                            return <td style={key === 0 ? {
-                                                color: "#3E3E3E",
-                                                background: "#EFEFEF",
-                                                border: "1px solid grey"
-                                            } : {color: "#3E3E3E"}}>{renderItem}</td>
-                                        })}
-                                    </tr>
+                    <div id="add-btn-table">
+                        <table id="your-new-table">
+                            <tr>
+                                {headers ? headers.map((item) => {
+                                    return <th>{item}</th>
                                 }) : null}
-                            </table>
-                        </div>
+                            </tr>
+                            {rows ? rows.map((item, key) => {
+                                return <tr className={key++ % 2 === 0 ? "column_one" : "column_two"}>{
+                                    Object.values(item).map((get_item, key) => {
+
+                                        let renderItem;
+
+                                        if (typeof get_item === 'object') {
+                                            renderItem = JSON.stringify(get_item);
+                                        } else {
+                                            renderItem = get_item;
+                                        }
+
+                                        return <td style={key === 0 ? {
+                                            color: "#3E3E3E",
+                                            background: "#EFEFEF",
+                                            border: "1px solid grey"
+                                        } : {color: "#3E3E3E"}}>{renderItem}</td>
+                                    })}
+                                </tr>
+                            }) : null}
+                        </table>
+                    </div>
                     }
                 </div>
             );
