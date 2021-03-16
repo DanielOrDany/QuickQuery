@@ -38,7 +38,7 @@ async function createDefaultDatabase() {
                 "language": "en",
                 "theme": "white"
             },
-        "licenseKey": "d(J@$1z#$!dgdf$%2fd"
+        "licenseKey": "ZChKQCQxeiMkIWRnZGYkJTJmZA=="
     }).write();
 }
 
@@ -73,36 +73,46 @@ async function loadDatabase(encodedDatabase) {
 }
 
 async function checkLicense() {
-    const databaseInJSON = await database.read().value();
+    const databaseInJSON = await database.get('licenseKey').value();
     let key = databaseInJSON["licenseKey"];
     let bytes = await base64.decode(key);
     let string = await utf8.decode(bytes);
 
+    if(string === "d(J@$1z#$!dgdf$%2fd") {
+        return "no-license";
+    }
+
     let dates = string.split("~");
 
-    if(dates.length > 1) {
-        if(Date.now() <= parseInt(dates[0]) + parseInt(dates[1])) {
-            return "good-license";
-        } else {
-            return "update-license";
-        }
+    if(Date.now() <= parseInt(dates[0]) + parseInt(dates[1])) {
+        return "good-license";
     } else {
-        if(string === "d(J@$1z#$!dgdf$%2fd") {
-            let trialTime = "\x36\x30\x34\x38\x30\x30\x30\x30\x30\x7e";
-            let currentDate = await utf8.encode(Date.now());
-            let trialBytes = trialTime + currentDate.toString();
-            let trialKey = await base64.encode(trialBytes);
-            await updateKey(trialKey);
-            return "trial-license";
-        } else {
-            return "error-license";
-        }
+        return "update-license";
     }
     
 }
 
-async function updateKey(key) {
-    await database.set("licenseKey", key).write();
+async function setTrial() {
+    const key = await database.get('licenseKey').value();
+    let bytes = await base64.decode(key);
+    let string = await utf8.decode(bytes);
+
+    if(string === "d(J@$1z#$!dgdf$%2fd") {
+        let trialTime = "604800000~";
+        let currentDate = Date.now().toString();
+        let trialKey = trialTime + currentDate;
+        updateKey(trialKey);
+        
+        return "trial-license";
+    } else {
+        return "error-license";
+    }
+}
+
+function updateKey(key) {
+    let bytes = utf8.encode(key);
+    let encodedKey = base64.encode(bytes);
+    database.get('licenseKey').assign({encodedKey}).write();
 }
 
 // Export database's methods
@@ -112,5 +122,6 @@ module.exports = {
     getDatabaseForTransport,
     loadDatabase,
     checkLicense,
+    setTrial,
     updateKey
 };

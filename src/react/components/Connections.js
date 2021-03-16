@@ -2,7 +2,10 @@ import React from 'react';
 import {
     getDataFromDatabase,
     deleteConnection,
-    addConnection
+    addConnection,
+    setTrial,
+    updateKey,
+    checkLicense
 } from "../methods";
 import { Offline } from "react-detect-offline"
 
@@ -31,15 +34,18 @@ export default class Connections extends React.Component {
             schemaInput: '',
             dtypeInput: 'mysql',
             uriInput: '',
+            keyInput: '',
             errorMessage: '',
             isOpen: false,
-            isKeyOpen: true,
+            isKeyOpen: false,
             isErrorOpen: false,
             isDeleteOpen: false,
             bigInput: false,
             choosedConnetion: '',
             trialWindow: true,
-            trialAvailable: true
+            trialAvailable: false,
+            trialError: false,
+            licenseError: false
         };
     };
 
@@ -52,7 +58,22 @@ export default class Connections extends React.Component {
     };
 
     handleKeySubmit = () => {
-        this.setState({ isKeyOpen: false });
+        updateKey(this.state.keyInput)
+            .then(() => {
+                checkLicense()
+                    .then(data => {
+                        if(data === "good-license") {
+                            this.setState({ isKeyOpen: false });
+                        } else if(data === "update-license") {
+                            this.setState({
+                                errorMessage: "Key is not valid. Please check it and try again.",
+                                licenseError: true,
+                                isErrorOpen: true,
+                                isKeyOpen: false
+                            });
+                        }
+                    })
+            });
     };
 
     handleCancel = () => {
@@ -64,7 +85,21 @@ export default class Connections extends React.Component {
     };
 
     handleErrorCancel = () => {
-        this.setState({ isErrorOpen: false });
+        if(this.state.trialError) {
+            this.setState({
+                trialError: false,
+                licenseError: false,
+                isErrorOpen: false,
+                trialWindow: true
+            });
+        } else if(this.state.licenseError) {
+            this.setState({
+                trialError: false,
+                licenseError: false,
+                isErrorOpen: false,
+                isKeyOpen: true
+            });
+        }
     };
 
     openDelete = (alias) => {
@@ -88,12 +123,34 @@ export default class Connections extends React.Component {
             .then(data => {
                 this.setState({
                     connections: data.connections,
-                    searchedConnections: data.connections,
-                    isOpen: data.connections.length ? false : true // show popup if none connections in the app
+                    searchedConnections: data.connections
                 });
 
                 localStorage.setItem("connections", JSON.stringify(data.connections));
                 localStorage.setItem("data", JSON.stringify(data));
+            })
+            .then(() => {
+                checkLicense()
+                    .then(data => {
+                        if(data === "no-license") {
+                            this.setState({ 
+                                isKeyOpen: true,
+                                trialAvailable: true,
+                                trialWindow: true
+                             });
+                        } else if(data === "good-license") {
+                            this.setState({
+                                isOpen: data.connections.length ? false : true // show popup if none connections in the app
+                            });
+                        } else if(data === "update-license") {
+                            this.setState({
+                                errorMessage: "Your license has expired.",
+                                licenseError: true,
+                                isErrorOpen: true,
+                                isKeyOpen: false
+                            });
+                        }
+                    })
             });
     };
 
@@ -229,6 +286,9 @@ export default class Connections extends React.Component {
     uriOnChange = (e) => {
         this.setState({uriInput: e.target.value})
     };
+    keyOnChange = (e) => {
+        this.setState({keyInput: e.target.value})
+    }
 
     nameKeyPress = (e) => {
         if (e.key === "Enter") {
@@ -369,11 +429,32 @@ export default class Connections extends React.Component {
         );
     };
 
+    addFreeTrial = () => {
+        setTrial()
+            .then(data => {
+                if(data === "trial-license") {
+                    this.setState({ 
+                        isKeyOpen: false,
+                        isOpen: data.connections.length ? false : true // show popup if none connections in the app
+                     });
+                } else if (data === "error-license") {
+                    this.setState({
+                        errorMessage: "Oops! Something gone wrong. Please try again later.",
+                        trialError: true,
+                        isErrorOpen: true,
+                        isKeyOpen: false,
+                    });
+                }
+                    
+            });
+    }
+
     keyInput = () => {
         return(
             <div>
                 <div className="license-key-text">Enter license key:</div>
-                <input placeholder="00000000-00000000-00000000-00000000" className="form-control"/>
+                <input placeholder="00000000-00000000-00000000-00000000" className="form-control"
+                        onChange={this.keyOnChange}/>
             </div>
         );
     };
@@ -383,12 +464,9 @@ export default class Connections extends React.Component {
             <div>
                 <div className="free-trial-text">You have 7 days free trial!</div>
 
-                <button className="free-trial-btn">Get free trial</button>
+                <button className="free-trial-btn" onClick={() => this.addFreeTrial()}>Get free trial</button>
 
-                <Button id="license-key-btn"
-                        onClick={()=>this.setState({
-                            trialWindow: false
-                        })} invert>
+                <Button id="license-key-btn" onClick={() => this.setState({ trialWindow: false })} invert>
                     Enter license key
                 </Button>
             </div>
@@ -441,7 +519,6 @@ export default class Connections extends React.Component {
                     {(!trialAvailable || !trialWindow) && this.keyInput()}
 
                 </Modal>
-
 
                 <Modal
                     title="Error"

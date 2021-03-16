@@ -136,7 +136,7 @@ ipcMain.on(channels.GET_DB, async (event) => {
     }
 
     successful.data = result;
-    console.log("DATA: ", result);
+    console.log("DATA: ", successful.data);
     await event.sender.send(channels.GET_DB, successful);
   } catch (e) {
     unsuccessful.message = e;
@@ -183,7 +183,7 @@ ipcMain.on(channels.UPDATE_THEME, async (event, theme) => {
  * Key
  */
 
-ipcMain.on(channels.CHECK_KEY, async (event) => {
+ipcMain.on(channels.CHECK_LICENSE, async (event) => {
   try {
     const result = await Database.checkLicense();
     successful.data = result;
@@ -192,7 +192,19 @@ ipcMain.on(channels.CHECK_KEY, async (event) => {
     unsuccessful.message = e;
     await event.sender.send(channels.CHECK_KEY, unsuccessful);
   }
-})
+});
+
+ipcMain.on(channels.SET_TRIAL, async (event) => {
+  try {
+    const result = await Database.setTrial();
+    successful.data = result;
+    console.log("TRIAL: ", result);
+    await event.sender.send(channels.SET_TRIAL, successful);
+  } catch (e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.SET_TRIAL, unsuccessful);
+  }
+});
 
 ipcMain.on(channels.UPDATE_KEY, async(event, key) => {
   try {
@@ -202,7 +214,7 @@ ipcMain.on(channels.UPDATE_KEY, async(event, key) => {
     unsuccessful.message = e;
     await event.sender.send(channels.UPDATE_KEY, unsuccessful);
   }
-})
+});
 
 /**
  *  Tables
