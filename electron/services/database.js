@@ -37,7 +37,8 @@ async function createDefaultDatabase() {
             {
                 "language": "en",
                 "theme": "white"
-            }
+            },
+        "licenseKey": "d(J@$1z#$!dgdf$%2fd"
     }).write();
 }
 
@@ -57,7 +58,7 @@ async function loadDatabase(encodedDatabase) {
     let bytes = await base64.decode(encodedDatabase);
     let databaseInString = await utf8.decode(bytes);
 
-    if (databaseInString.includes("connections" && "settings")) {
+    if (databaseInString.includes("connections" && "settings" && "licenseKey")) {
         fs.writeFile('database.json', '', () => {
             fs.writeFile('database.json', databaseInString, function () {
                 console.log('done')
@@ -71,10 +72,45 @@ async function loadDatabase(encodedDatabase) {
 
 }
 
+async function checkLicense() {
+    const databaseInJSON = await database.read().value();
+    let key = databaseInJSON["licenseKey"];
+    let bytes = await base64.decode(key);
+    let string = await utf8.decode(bytes);
+
+    let dates = string.split("~");
+
+    if(dates.length > 1) {
+        if(Date.now() <= parseInt(dates[0]) + parseInt(dates[1])) {
+            return "good-license";
+        } else {
+            return "update-license";
+        }
+    } else {
+        if(string === "d(J@$1z#$!dgdf$%2fd") {
+            let trialTime = "\x36\x30\x34\x38\x30\x30\x30\x30\x30\x7e";
+            let currentDate = await utf8.encode(Date.now());
+            let trialBytes = trialTime + currentDate.toString();
+            let trialKey = await base64.encode(trialBytes);
+            await updateKey(trialKey);
+            return "trial-license";
+        } else {
+            return "error-license";
+        }
+    }
+    
+}
+
+async function updateKey(key) {
+    await database.set("licenseKey", key).write();
+}
+
 // Export database's methods
 module.exports = {
     createDefaultDatabase,
     getDataFromDatabase,
     getDatabaseForTransport,
-    loadDatabase
+    loadDatabase,
+    checkLicense,
+    updateKey
 };

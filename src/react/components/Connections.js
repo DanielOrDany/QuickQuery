@@ -178,7 +178,7 @@ export default class Connections extends React.Component {
                 this.setState({ connections: connections });
             }
 
-            if(localStorage.getItem("current_connection") && JSON.parse(localStorage.getItem("current_connection")).name == name) {
+            if(localStorage.getItem("current_connection") && JSON.parse(localStorage.getItem("current_connection")).name === name) {
                 localStorage.removeItem("current_connection");
             }
         });

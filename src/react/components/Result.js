@@ -75,14 +75,14 @@ export default class Result extends React.Component {
             this.reloadTable();
         }
 
-        if (window.location.href.split('/')[window.location.href.split('/').length - 1] != localStorage.getItem("current_result")) {
+        if (window.location.href.split('/')[window.location.href.split('/').length - 1] !== localStorage.getItem("current_result")) {
             localStorage.setItem("current_result", window.location.href.split('/')[window.location.href.split('/').length - 1]);
             this.loadTable();
         }
     }
 
     loadTable = () => {
-        const { pageNumber, options } = this.state;
+        const { pageNumber } = this.state;
         const result = localStorage.getItem("current_result");
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
@@ -101,7 +101,7 @@ export default class Result extends React.Component {
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
             if (data) {
-                if (data.records == 0) {
+                if (data.records === 0) {
                     this.setState({
                         isNullResults: true
                     });
@@ -153,7 +153,7 @@ export default class Result extends React.Component {
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
             if (data) {
-                if (data.records == 0) {
+                if (data.records === 0) {
                     this.setState({
                         isNullResults: true
                     });
@@ -531,11 +531,11 @@ export default class Result extends React.Component {
                     <div className="pages-field">
                         <div className="select-page">
                             <button id="select-page-btn" onClick={() => this.changePage(-1)}
-                                    disabled={this.state.pageNumber == 0}>Prev
+                                    disabled={this.state.pageNumber === 0}>Prev
                             </button>
                             <span>Page: {this.state.pageNumber + 1}</span>
                             <button id="select-page-btn" onClick={() => this.changePage(1)}
-                                    disabled={this.state.pageNumber == this.state.pages - 1}>Next
+                                    disabled={this.state.pageNumber === this.state.pages - 1}>Next
                             </button>
                         </div>
                         <div className="result-menu">

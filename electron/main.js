@@ -180,6 +180,31 @@ ipcMain.on(channels.UPDATE_THEME, async (event, theme) => {
 });
 
 /**
+ * Key
+ */
+
+ipcMain.on(channels.CHECK_KEY, async (event) => {
+  try {
+    const result = await Database.checkLicense();
+    successful.data = result;
+    await event.sender.send(channels.CHECK_KEY, successful);
+  } catch (e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.CHECK_KEY, unsuccessful);
+  }
+})
+
+ipcMain.on(channels.UPDATE_KEY, async(event, key) => {
+  try {
+    await Database.updateKey(key);
+    await event.sender.send(channels.UPDATE_KEY, successful);
+  } catch(e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.UPDATE_KEY, unsuccessful);
+  }
+})
+
+/**
  *  Tables
  */
 
