@@ -33,10 +33,13 @@ export default class Connections extends React.Component {
             uriInput: '',
             errorMessage: '',
             isOpen: false,
+            isKeyOpen: true,
             isErrorOpen: false,
             isDeleteOpen: false,
             bigInput: false,
-            choosedConnetion: ''
+            choosedConnetion: '',
+            trialWindow: true,
+            trialAvailable: true
         };
     };
 
@@ -46,6 +49,10 @@ export default class Connections extends React.Component {
 
     handleSubmit = () => {
         this.addConnection();
+    };
+
+    handleKeySubmit = () => {
+        this.setState({ isKeyOpen: false });
     };
 
     handleCancel = () => {
@@ -362,6 +369,33 @@ export default class Connections extends React.Component {
         );
     };
 
+    keyInput = () => {
+        return(
+            <div>
+                <div className="license-key-text">Enter license key:</div>
+                <input placeholder="00000000-00000000-00000000-00000000" className="form-control"/>
+            </div>
+        );
+    };
+
+    freeTrial = () => {
+        return(
+            <div>
+                <div className="free-trial-text">You have 7 days free trial!</div>
+
+                <button className="free-trial-btn">Get free trial</button>
+
+                <Button id="license-key-btn"
+                        onClick={()=>this.setState({
+                            trialWindow: false
+                        })} invert>
+                    Enter license key
+                </Button>
+            </div>
+        );
+    };
+
+
     databaseHost(conn) {
         let host = "";
 
@@ -381,7 +415,7 @@ export default class Connections extends React.Component {
     }
 
     render() {
-        const { searchedConnections, isOpen, bigInput, isErrorOpen, isDeleteOpen, errorMessage } = this.state;
+        const { searchedConnections, isOpen, isKeyOpen, bigInput, isErrorOpen, isDeleteOpen, errorMessage, trialWindow, trialAvailable } = this.state;
 
         return (
             <div className="connections-page">
@@ -395,6 +429,19 @@ export default class Connections extends React.Component {
                     {bigInput && this.bigInput()}
                     {!bigInput && this.smallInput()}
                 </Modal>
+
+                <Modal
+                    title="License Authentication"
+                    isOpen={isKeyOpen}
+                    onSubmit={this.handleKeySubmit}
+                    noCross={true}
+                    submitButton={trialWindow ? false : true}
+                >
+                    {(trialWindow && trialAvailable) && this.freeTrial()}
+                    {(!trialAvailable || !trialWindow) && this.keyInput()}
+
+                </Modal>
+
 
                 <Modal
                     title="Error"
