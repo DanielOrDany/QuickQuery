@@ -70,6 +70,7 @@
   .header {
     display: flex;
     flex-direction: column;
+    width: max-content;
 
     .header-data-ordering {
       display: flex;
@@ -260,11 +261,22 @@ td {
 }
 
 tr th {
+  width: max-content;
   font-size: 16px;
   font-family: 'Scada', sans-serif;
 
   background: #252628;
   color: white;
+}
+
+td {
+  max-width: 100px;
+  word-wrap: break-word;
+
+  input {
+    background: #EFEFEF;
+    border: none;
+  }
 }
 
 .column_one td {

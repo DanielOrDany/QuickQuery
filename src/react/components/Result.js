@@ -1,7 +1,7 @@
 import React from "react";
 import 'react-day-picker/lib/style.css';
 import dateFnsFormat from 'date-fns/format';
-import { loadTableResult, saveTableResult } from "../methods";
+import { loadTableResult, saveTableResult, getTableSize } from "../methods";
 import "../styles/Result.scss";
 import XLSX from "xlsx";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
@@ -12,6 +12,68 @@ import DayPickerInput from "react-day-picker/DayPickerInput";
 
 const DESC = "DESC";
 const ASC = "ASC";
+
+const isEqual = function (value, other) {
+
+    // Get the value type
+    let type = Object.prototype.toString.call(value);
+
+    // If the two objects are not the same type, return false
+    if (type !== Object.prototype.toString.call(other)) return false;
+
+    // If items are not an object or array, return false
+    if (['[object Array]', '[object Object]'].indexOf(type) < 0) return false;
+
+    // Compare the length of the length of the two items
+    let valueLen = type === '[object Array]' ? value.length : Object.keys(value).length;
+    let otherLen = type === '[object Array]' ? other.length : Object.keys(other).length;
+    if (valueLen !== otherLen) return false;
+
+    // Compare two items
+    let compare = function (item1, item2) {
+
+        // Get the object type
+        let itemType = Object.prototype.toString.call(item1);
+
+        // If an object or array, compare recursively
+        if (['[object Array]', '[object Object]'].indexOf(itemType) >= 0) {
+            if (!isEqual(item1, item2)) return false;
+        }
+
+        // Otherwise, do a simple comparison
+        else {
+
+            // If the two items are not the same type, return false
+            if (itemType !== Object.prototype.toString.call(item2)) return false;
+
+            // Else if it's a function, convert to a string and compare
+            // Otherwise, just compare
+            if (itemType === '[object Function]') {
+                if (item1.toString() !== item2.toString()) return false;
+            } else {
+                if (item1 !== item2) return false;
+            }
+
+        }
+    };
+
+    // Compare properties
+    if (type === '[object Array]') {
+        for (let i = 0; i < valueLen; i++) {
+            if (compare(value[i], other[i]) === false) return false;
+        }
+    } else {
+        for (let key in value) {
+            if (value.hasOwnProperty(key)) {
+                if (compare(value[key], other[key]) === false) return false;
+            }
+        }
+    }
+
+    // If nothing failed, return true
+    return true;
+
+};
 
 export default class Result extends React.Component {
 
@@ -36,7 +98,7 @@ export default class Result extends React.Component {
         this.handleChangeSearchValue = this.handleChangeSearchValue.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         let button = document.getElementsByTagName("button");
         let span = document.getElementsByTagName("span");
         localStorage.setItem("current_result", window.location.href.split('/')[window.location.href.split('/').length - 1]);
@@ -68,31 +130,34 @@ export default class Result extends React.Component {
             }
         }
 
-        this.loadTable();
+        await this.loadTable();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const { pageNumber, isSaving, removedColumns } = this.state;
+        const { pageNumber, isSaving, options } = this.state;
 
         if (prevState.pageNumber !== pageNumber) {
             this.reloadTable();
         }
 
-        if (prevState.removedColumns.length !== removedColumns.length) {
-            this.reloadTable();
-        }
+        // console.log(!isEqual(prevState.options, options));
+        // if (!isEqual(prevState.options, options)) {
+        //     this.reloadTable();
+        // }
 
         if (isSaving) {
-            const { options } = this.state;
+            const { options, removedColumns } = this.state;
             const result = localStorage.getItem('current_result');
             const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
             const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
             const tableColumns = connectionInfo.queries.filter(query => !!query.table).map(query => query.table);
+            const tableSize = localStorage.getItem('tableSize');
 
             const loadingOptions = {
                 page: 0,
-                pageSize: 10,
+                pageSize: 80,
                 columns: tableColumns,
+                numberOfRecords: tableSize,
                 operationsOptions: options.length ? options : null
             };
 
@@ -100,6 +165,12 @@ export default class Result extends React.Component {
                 if (data) {
                     const db_rows = await Promise.all(data.rows);
                     const rows = db_rows.length !== 0 ? Object.values(db_rows) : [];
+
+                    removedColumns.forEach(removedColumn => {
+                        rows.forEach(row => {
+                            delete row[removedColumn];
+                        });
+                    });
 
                     let binaryWS = XLSX.utils.json_to_sheet(rows);
                     let wb = XLSX.utils.book_new();
@@ -127,19 +198,22 @@ export default class Result extends React.Component {
         }
     }
 
-    loadTable = () => {
-        const { pageNumber, options } = this.state;
+    loadTable = async () => {
+        const {pageNumber} = this.state;
         const result = localStorage.getItem("current_result");
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
         const tableColumns = connectionInfo.queries.filter(query => !!query.table).map(query => query.table);
+        const tableSize = await getTableSize(connectionName, result);
 
         const loadingOptions = {
             page: pageNumber,
-            pageSize: 10,
-            columns: tableColumns
+            pageSize: 80,
+            columns: tableColumns,
+            numberOfRecords: tableSize
         };
 
+        localStorage.setItem('tableSize', tableSize);
         localStorage.setItem('isChangedPicker1', false);
         localStorage.setItem('isChangedPicker2', false);
 
@@ -153,6 +227,7 @@ export default class Result extends React.Component {
                     const db_rows = await Promise.all(data.rows);
                     const headers = Object.keys(db_rows[0]);
                     const rows = Object.values(db_rows);
+
                     const tableOptions = headers.map((header) => {
                         return {
                             column: header,
@@ -169,6 +244,7 @@ export default class Result extends React.Component {
                         pages: data.pages,
                         options: tableOptions,
                         isNullResults: false,
+                        isLoading: false,
                         headers,
                         rows
                     });
@@ -180,39 +256,48 @@ export default class Result extends React.Component {
     };
 
     reloadTable = () => {
-        const { pageNumber, options, removedColumns } = this.state;
+        const { pageNumber, options } = this.state;
         const result = localStorage.getItem("current_result");
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
         const tableColumns = connectionInfo.queries.filter(query => !!query.table).map(query => query.table);
+        const tableSize = localStorage.getItem('tableSize');
 
         const loadingOptions = {
             page: pageNumber,
-            pageSize: 10,
+            pageSize: 80,
             operationsOptions: options.length ? options : null,
             columns: tableColumns,
-            removedColumns: removedColumns
+            numberOfRecords: tableSize
         };
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
             if (data) {
+                console.log("data", data.records);
                 if (data.records == 0) {
                     this.setState({
                         isNullResults: true
                     });
                 } else {
                     const db_rows = await Promise.all(data.rows);
-                    const headers = Object.keys(db_rows[0]);
-                    const selectedValue = Object.keys(db_rows[0])[0];
-                    const rows = Object.values(db_rows);
+                    if (db_rows.length) {
+                        let headers = Object.keys(db_rows[0]);
+                        const selectedValue = Object.keys(db_rows[0])[0];
+                        const rows = Object.values(db_rows);
 
-                    this.setState({
-                        pages: data.pages,
-                        selectedItem: selectedValue,
-                        isNullResults: false,
-                        headers,
-                        rows
-                    });
+                        this.setState({
+                            pages: data.pages,
+                            selectedItem: selectedValue,
+                            isNullResults: false,
+                            isLoading: false,
+                            headers,
+                            rows
+                        });
+                    } else {
+                        this.setState({
+                            isNullResults: true
+                        });
+                    }
                 }
             } else {
                 console.error("ERROR, loadTableResult: ", data);
@@ -223,11 +308,12 @@ export default class Result extends React.Component {
     removeColumn = (column) => {
         const { removedColumns } = this.state;
         removedColumns.push(column);
-        console.log(removedColumns);
         this.setState({ removedColumns });
+        this.reloadTable();
     };
 
     changePage = (operation) => {
+        this.setState({ isLoading: true });
         let n = this.state.pageNumber + operation;
 
         if (n === 0) n += 1;
@@ -254,6 +340,7 @@ export default class Result extends React.Component {
 
             return option;
         });
+
         this.setState({
             options: newOptions
         });
@@ -276,9 +363,11 @@ export default class Result extends React.Component {
 
             return option;
         });
+
         this.setState({
             options: newOptions
         });
+
         this.reloadTable();
     }
 
@@ -292,9 +381,11 @@ export default class Result extends React.Component {
             }
             return option;
         });
+
         this.setState({
             options: newOptions
         });
+
         this.reloadTable();
     }
 
@@ -308,9 +399,11 @@ export default class Result extends React.Component {
             }
             return option;
         });
+
         this.setState({
             options: newOptions
         });
+
         this.reloadTable();
     }
 
@@ -328,6 +421,7 @@ export default class Result extends React.Component {
         this.setState({
             options: newOptions
         });
+
         this.reloadTable();
     }
 
@@ -344,9 +438,11 @@ export default class Result extends React.Component {
 
         if (JSON.parse(localStorage.getItem('isChangedPicker1'))) {
             localStorage.setItem('isChangedPicker1', false);
+
             this.setState({
                 options: newOptions
             });
+
             this.reloadTable();
         }
     }
@@ -364,9 +460,11 @@ export default class Result extends React.Component {
 
         if (JSON.parse(localStorage.getItem('isChangedPicker2'))) {
             localStorage.setItem('isChangedPicker2', false);
+
             this.setState({
                 options: newOptions
             });
+
             this.reloadTable();
         }
     }
@@ -387,17 +485,25 @@ export default class Result extends React.Component {
         this.setState({
             options: newOptions
         });
+
         this.reloadTable();
     }
 
     render() {
-        const { options, headers, rows, isNullResults, isSaving } = this.state;
+        let { options, headers, rows, isNullResults, isSaving, removedColumns, isLoading } = this.state;
 
-        if (!headers || isSaving) {
+        removedColumns.forEach(removedColumn => {
+            headers = headers.filter((header) => header !== removedColumn);
+            rows.forEach(row => {
+                delete row[removedColumn];
+            });
+        });
+
+        if (!headers || isSaving || isLoading) {
             return (
                 <div className={"loading"}>
                     <img src={xxx}/>
-                    {!headers && "Loading..."}
+                    {(!headers || isLoading) && "Loading..."}
                     {isSaving && "Saving..."}
                 </div>
             );
@@ -545,7 +651,8 @@ export default class Result extends React.Component {
                                                         color: "#3E3E3E",
                                                         background: "#EFEFEF",
                                                         border: "1px solid grey",
-                                                    } : {color: "#3E3E3E"}}>{renderItem}
+                                                    } : {color: "#3E3E3E"}}>
+                                                        <input value={renderItem}/>
                                                     </td>
                                                 );
                                             })}

@@ -140,6 +140,15 @@ export const
         });
     },
 
+    getTableSize = async (connectionName, alias) => {
+        return new Promise(resolve => {
+            ipcRenderer.send(channels.GET_TABLE_SIZE, connectionName, alias);
+            ipcRenderer.on(channels.GET_TABLE_SIZE, (event, result) => {
+                resolve(result.data);
+            });
+        });
+    },
+
     loadTableResult = async (connectionName, alias, options) => {
         return new Promise(resolve => {
             ipcRenderer.send(channels.LOAD_QUERY, connectionName, alias, options);

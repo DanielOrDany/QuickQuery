@@ -248,6 +248,17 @@ ipcMain.on(channels.UPDATE_QUERY, async (event, connectionName, alias, newQuery,
   }
 });
 
+ipcMain.on(channels.GET_TABLE_SIZE, async (event, connectionName, alias) => {
+  try {
+    const result = await Table.getTableSize(connectionName, alias);
+    successful.data = result;
+    await event.sender.send(channels.GET_TABLE_SIZE, successful);
+  } catch (e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.GET_TABLE_SIZE, unsuccessful);
+  }
+});
+
 ipcMain.on(channels.LOAD_QUERY, async (event, connectionName, alias, options) => {
   try {
     const result = await Table.loadTableResult(connectionName, alias, options);

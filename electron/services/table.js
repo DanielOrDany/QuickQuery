@@ -80,7 +80,7 @@ async function addTable (connectionName, query, type, alias) {
         // if (query.length < replaced.length) query = replaced;
 
         query = query.replace(';', ' ');
-        query += ' LIMIT 10 OFFSET 0';
+        query += ' LIMIT 3 OFFSET 0';
 
         const [results, metadata] = await sequelize.query(query);
 
@@ -109,7 +109,7 @@ async function runQuery (connectionName, query) {
         ) : new Sequelize(URI);
 
         query = query.replace(';', ' ');
-        query += ' LIMIT 10 OFFSET 0';
+        query += ' LIMIT 3 OFFSET 0';
 
         const [results, metadata] = await sequelize.query(query);
 
@@ -154,8 +154,6 @@ function deleteTable (connectionName, alias) {
     // Add new one
     queries.splice(
         queries.findIndex(query => query.alias === alias), 1);
-
-    console.log(queries);
 
     // Update queries
     db.get('connections')
@@ -228,12 +226,6 @@ async function updateTableQuery(connectionName, alias, newQuery, newAlias) {
     }
 }
 
-function locations(substring,string){
-    let a=[],i=-1;
-    while((i=string.indexOf(substring,i+1)) >= 0) a.push(i);
-    return a;
-}
-
 async function loadTableResult(connectionName, alias, loadingOptions) {
     try {
         const URI = db.read()
@@ -251,7 +243,7 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
 
         const offset = Number(loadingOptions.page) * Number(loadingOptions.pageSize);
         const limit = Number(loadingOptions.pageSize);
-        //const removedColumns = loadingOptions.removedColumns ? loadingOptions.removedColumns : [];
+        const numberOfRecords = Number(loadingOptions.numberOfRecords);
         const tableColumns = loadingOptions.columns ? sortByLength(loadingOptions.columns) : [];
 
         let dialect;
@@ -273,21 +265,6 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
         if (query[query.length] === ';') {
             query = query[query.length].replace(';', ' ');
         }
-
-        // removedColumns.forEach(removedColumn => { //employees_id
-        //     const lowerspaceIndexes = locations("_", removedColumn);
-        //     query = query.replace(' ' + removedColumn, '|');
-        //     lowerspaceIndexes.forEach(i => {
-        //         const a = removedColumn.replaceAt(i, ".");
-        //         console.log("removedColumn:", a);
-        //         if (query.match(a)){
-        //             query = query.replace(a, '|');
-        //         }
-        //     });
-        // });
-        //
-        // query = query.replace(/\| AS\|,/g, "");
-        //
 
         if (loadingOptions.operationsOptions) {
             // Add searches
@@ -360,14 +337,18 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                         if (searchColumnNum > 0) {
                             if (d2 < d1) {
                                 query += ` AND ${column} BETWEEN \'${d2}\' AND \'${d1}\'`;
+                                searchColumnNum += 1;
                             } else {
                                 query += ` AND ${column} BETWEEN \'${d1}\' AND \'${d2}\'`;
+                                searchColumnNum += 1;
                             }
                         } else {
                             if (d2 < d1) {
                                 query += ` WHERE ${column} BETWEEN \'${d2}\' AND \'${d1}\'`;
+                                searchColumnNum += 1;
                             } else {
                                 query += ` WHERE ${column} BETWEEN \'${d1}\' AND \'${d2}\'`;
+                                searchColumnNum += 1;
                             }
                         }
 
@@ -379,14 +360,18 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                         if (searchColumnNum > 0) {
                             if (n2 < n1) {
                                 query += ` AND ${column} BETWEEN ${filter2} AND ${filter1}`;
+                                searchColumnNum += 1;
                             } else {
                                 query += ` AND ${column} BETWEEN ${filter1} AND ${filter2}`;
+                                searchColumnNum += 1;
                             }
                         } else {
                             if (n2 < n1) {
                                 query += ` WHERE ${column} BETWEEN ${filter2} AND ${filter1}`;
+                                searchColumnNum += 1;
                             } else {
                                 query += ` WHERE ${column} BETWEEN ${filter1} AND ${filter2}`;
+                                searchColumnNum += 1;
                             }
                         }
                     }
@@ -435,19 +420,15 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
             });
         }
 
-        const countQ = `SELECT COUNT(*) as c FROM (${query}) as c;`;
-        const numberOfRecords = await sequelize.query(countQ);
-
-        // if (!loadingOptions.search)
         query += ` LIMIT ${limit} OFFSET ${offset}`;
 
         const queryResult = await sequelize.query(query);
 
-        const number = numberOfRecords[0][0].c/limit;
+        const number = numberOfRecords/limit;
         const one = Number(number).toFixed(0);
 
         let pages = 0;
-        const records = numberOfRecords[0][0].c;
+        const records = numberOfRecords;
 
         if (number > one) {
             pages = one + 1;
@@ -482,8 +463,39 @@ function isEmpty(str) {
     return !str.trim().length;
 }
 
+async function getTableSize(connectionName, alias) {
+    try {
+        const URI = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .get('URI')
+            .value();
+
+        const sequelize = URI.database ? new Sequelize(
+            URI.database,
+            URI.user,
+            URI.password,
+            URI.others
+        ) : new Sequelize(URI);
+
+        // Get table result
+        const query = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .get('queries')
+            .find({alias: alias})
+            .value().query;
+
+        const countQ = `SELECT COUNT(*) as c FROM (${query}) as c;`;
+        const numberOfRecords = await sequelize.query(countQ);
+
+        return numberOfRecords[0][0].c;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 async function getTableColumns(connectionName, table) {
-    console.log(connectionName, table);
     try {
         const URI = db.read()
             .get('connections')
@@ -524,6 +536,7 @@ async function saveTableResult(connectionName, alias, loadingOptions) {
 
         const offset = Number(loadingOptions.page) * Number(loadingOptions.pageSize);
         const limit = Number(loadingOptions.pageSize);
+        const numberOfRecords = Number(loadingOptions.numberOfRecords);
         const tableColumns = loadingOptions.columns ? sortByLength(loadingOptions.columns) : [];
         let dialect;
 
@@ -696,20 +709,17 @@ async function saveTableResult(connectionName, alias, loadingOptions) {
         }
 
         /** Full table */
-        // const countQ = `SELECT COUNT(*) as c FROM (${query}) as c;`;
-        // const numberOfRecords = await sequelize.query(countQ);
-        //
-        // const number = numberOfRecords[0][0].c/limit;
-        // const one = Number(number).toFixed(0);
-        //
-        // let pages = 0;
-        // const records = numberOfRecords[0][0].c;
-        //
-        // if (number > one) {
-        //     pages = one + 1;
-        // } else {
-        //     pages = number;
-        // }
+        const number = numberOfRecords/limit;
+        const one = Number(number).toFixed(0);
+
+        let pages = 0;
+        const records = numberOfRecords;
+
+        if (number > one) {
+            pages = one + 1;
+        } else {
+            pages = number;
+        }
 
         query += ` LIMIT 3000 OFFSET 0`; // Trial limit
 
@@ -742,5 +752,6 @@ module.exports = {
     getAllTables,
     updateTableQuery,
     loadTableResult,
-    getTableColumns
+    getTableColumns,
+    getTableSize
 };

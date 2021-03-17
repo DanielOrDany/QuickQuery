@@ -15,6 +15,7 @@ module.exports = {
     ADD_TABLE: 'add-table',
     RENAME_TABLE: 'rename-table',
     UPDATE_QUERY: 'update-table-query',
+    GET_TABLE_SIZE: 'get-table-size',
     LOAD_QUERY: 'load-result',
     SAVE_QUERY: 'save-result',
     TEST_QUERY: 'test-query',
