@@ -37,13 +37,13 @@ export default class Connections extends React.Component {
             keyInput: '',
             errorMessage: '',
             isOpen: false,
-            isKeyOpen: true,
+            isKeyOpen: false,
             isErrorOpen: false,
             isDeleteOpen: false,
             bigInput: false,
             choosedConnetion: '',
-            trialWindow: true,
-            trialAvailable: true,
+            trialWindow: false,
+            trialAvailable: false,
             trialError: false,
             licenseError: false
         };
@@ -63,7 +63,10 @@ export default class Connections extends React.Component {
                 checkLicense()
                     .then(data => {
                         if(data === "good-license") {
-                            this.setState({ isKeyOpen: false });
+                            this.setState({ 
+                                isKeyOpen: false,
+                                isOpen: data.connections.length ? false : true // show popup if none connections in the app
+                             });
                         } else if(data === "update-license") {
                             this.setState({
                                 errorMessage: "Key is not valid. Please check it and try again.",
@@ -124,7 +127,7 @@ export default class Connections extends React.Component {
                 this.setState({
                     connections: data.connections,
                     searchedConnections: data.connections,
-                    isOpen: data.connections.length ? false : true // show popup if none connections in the app
+                    // isOpen: data.connections.length ? false : true // show popup if none connections in the app
                 });
 
                 localStorage.setItem("connections", JSON.stringify(data.connections));
@@ -139,13 +142,16 @@ export default class Connections extends React.Component {
                                 trialAvailable: true,
                                 trialWindow: true
                              });
-                        } else if(data === "good-license") {
                         } else if(data === "update-license") {
                             this.setState({
                                 errorMessage: "Your license has expired.",
                                 licenseError: true,
                                 isErrorOpen: true,
                                 isKeyOpen: false
+                            });
+                        } else if(data === "good-license") {
+                            this.setState({
+                                isOpen: data.connections.length ? false : true // show popup if none connections in the app
                             });
                         }
                     })
@@ -432,14 +438,15 @@ export default class Connections extends React.Component {
             .then(data => {
                 if(data === "trial-license") {
                     this.setState({ 
-                        // isKeyOpen: false,
+                        isKeyOpen: false,
+                        isOpen: data.connections.length ? false : true // show popup if none connections in the app
                      });
                 } else if (data === "error-license") {
                     this.setState({
-                        // errorMessage: "Oops! Something gone wrong. Please try again later.",
-                        // trialError: true,
-                        // isErrorOpen: true,
-                        // isKeyOpen: false,
+                        errorMessage: "Oops! Something gone wrong. Please try again later.",
+                        trialError: true,
+                        isErrorOpen: true,
+                        isKeyOpen: false,
                     });
                 }
                     

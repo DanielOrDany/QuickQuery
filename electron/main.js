@@ -187,10 +187,10 @@ ipcMain.on(channels.CHECK_LICENSE, async (event) => {
   try {
     const result = await Database.checkLicense();
     successful.data = result;
-    await event.sender.send(channels.CHECK_KEY, successful);
+    await event.sender.send(channels.CHECK_LICENSE, successful);
   } catch (e) {
     unsuccessful.message = e;
-    await event.sender.send(channels.CHECK_KEY, unsuccessful);
+    await event.sender.send(channels.CHECK_LICENSE, unsuccessful);
   }
 });
 

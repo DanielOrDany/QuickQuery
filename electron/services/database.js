@@ -103,8 +103,6 @@ async function setTrial() {
             let currentDate = Date.now().toString();
             let trialKey = trialTime + currentDate;
             await updateKey(trialKey);
-            // let x = database.get('licenseKey').value();
-            // return await base64.decode(x);
             return "trial-license";
         } else {
             return "error-license";
