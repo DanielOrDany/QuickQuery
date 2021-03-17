@@ -19,12 +19,6 @@ import removeIcon from "../icons/remove.svg";
 import westIcon from "../icons/west-arrow.svg";
 import eastIcon from "../icons/east-arrow.svg";
 
-function arraysEqual(a1,a2) {
-    /**
-     WARNING: arrays must not contain {objects} or behavior may be undefined
-     */ return JSON.stringify(a1) === JSON.stringify(a2);
-}
-
 export default class CreateTable extends React.Component {
 
     constructor(props) {
@@ -37,6 +31,7 @@ export default class CreateTable extends React.Component {
             secondColumns: ['select column'],
             errorMessage: "",
             isLoading: true,
+            isTableLoading: false,
             alias: "",
             queryName: ""
         };
@@ -104,6 +99,7 @@ export default class CreateTable extends React.Component {
     /* Method for loading names of tables */
 
     async loadTableNames(connection) {
+
         let optionsOfTables = [];
 
         if (!localStorage.getItem("current_result_options") ||
@@ -176,13 +172,15 @@ export default class CreateTable extends React.Component {
             this.setState({
                 tables,
                 columns,
-                secondColumns
+                secondColumns,
+                isTableLoading: true
             });
 
         } else {
 
             this.setState({
-                errorMessage: "Please, select the previous table or table column before adding a new one."
+                errorMessage: "Please, select the previous table or table column before adding a new one.",
+                isTableLoading: false
             });
         }
     }
@@ -196,7 +194,6 @@ export default class CreateTable extends React.Component {
     }
 
     async handleTableChange(e, index) {
-
         const tableName = e.target.value;
 
         // Getting connection data
@@ -214,7 +211,7 @@ export default class CreateTable extends React.Component {
 
         tables[index] = tableName;
 
-        this.setState({ options, tables });
+        this.setState({ options, tables, isTableLoading: false });
     }
 
     handleColumnChange(e, index) {
@@ -234,6 +231,7 @@ export default class CreateTable extends React.Component {
     }
 
     async renderFields() {
+        this.setState({ isLoading: true });
 
         // default options of tables
         let tables = [];
@@ -245,7 +243,6 @@ export default class CreateTable extends React.Component {
 
         if (result) {
             const query = result.query;
-            console.log("query", query);
             const joinIndex = query.indexOf("JOIN");
 
             if (joinIndex >= 0) {
@@ -479,13 +476,14 @@ export default class CreateTable extends React.Component {
     }
 
     renderTable(table, index) {
-        const { options, tables, columns, secondColumns } = this.state;
+        const { options, tables, columns, secondColumns, isTableLoading } = this.state;
         const showLink = index < tables.length && index > 0;
         const tableOption = options.filter(option => option.alias === table);
         const tableColumns = tableOption.length !== 0 ? tableOption[0].columns : [];
         const tableSecondColumns = tableOption.length !== 0 ? tableOption[0].columns : [];
         const tableColumn = columns[index];
         const tableSecondColumn = secondColumns[index];
+        const isLastTable = tables.length === index + 1;
 
         return (
             <div className="constructor-table" key={index}>
@@ -503,31 +501,48 @@ export default class CreateTable extends React.Component {
                     </div>
                     { table !== 'select table' &&
                     <div className="table-column">
-                        <div className="column-name">
-                            { ( index !== 0 && (tables.length - 1) !== index )  && <img className="column-arrows" src={westIcon}/> }
-                            <span><b>Column:</b> {tableColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableColumn}</span>}</span>
-                            <select className="select-column" value="" onChange={(e) => this.handleColumnChange(e, index)}>
-                                <option value="" selected disabled hidden>Choose here</option>
-                                {
-                                    tableColumns && tableColumns.map((column, i) => {
-                                        return <option key={i} value={column.column_name}>{column.column_name}</option>
-                                    })
+
+                        { (isLastTable && isTableLoading) &&
+                            <div className="table-loading">
+                                <img src={xxx}/>
+                                Loading...
+                            </div>
+                        }
+
+                        { (isLastTable && !isTableLoading) &&
+                            <>
+                                <div className="column-name">
+                                    { ( index !== 0 && (tables.length - 1) !== index )  &&
+                                        <img className="column-arrows" src={westIcon}/>
+                                    }
+
+                                    <span><b>Column:</b> {tableColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableColumn}</span>}</span>
+
+                                    <select className="select-column" value="" onChange={(e) => this.handleColumnChange(e, index)}>
+                                        <option value="" selected disabled hidden>Choose here</option>
+                                        {
+                                            tableColumns && tableColumns.map((column, i) => {
+                                                return <option key={i} value={column.column_name}>{column.column_name}</option>
+                                            })
+                                        }
+                                    </select>
+                                </div>
+
+                                { ( index !== 0 && (tables.length - 1) !== index )  &&
+                                    <div className="column-name">
+                                        <img className="column-arrows" src={eastIcon}/>
+                                        <span><b>Column:</b> {tableSecondColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableSecondColumn}</span>}</span>
+                                        <select className="select-column" value="" onChange={(e) => this.handleSecondColumnChange(e, index)}>
+                                            <option value="" selected disabled hidden>Choose here</option>
+                                            {
+                                                tableSecondColumns && tableSecondColumns.map((column, i) => {
+                                                    return <option key={i} value={column.column_name}>{column.column_name}</option>
+                                                })
+                                            }
+                                        </select>
+                                    </div>
                                 }
-                            </select>
-                        </div>
-                        { ( index !== 0 && (tables.length - 1) !== index )  &&
-                        <div className="column-name">
-                            <img className="column-arrows" src={eastIcon}/>
-                            <span><b>Column:</b> {tableSecondColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableSecondColumn}</span>}</span>
-                            <select className="select-column" value="" onChange={(e) => this.handleSecondColumnChange(e, index)}>
-                                <option value="" selected disabled hidden>Choose here</option>
-                                {
-                                    tableSecondColumns && tableSecondColumns.map((column, i) => {
-                                        return <option key={i} value={column.column_name}>{column.column_name}</option>
-                                    })
-                                }
-                            </select>
-                        </div>
+                            </>
                         }
                     </div>
                     }
@@ -596,7 +611,11 @@ export default class CreateTable extends React.Component {
                                         let renderItem;
 
                                         if (typeof get_item === 'object') {
-                                            renderItem = JSON.stringify(get_item);
+                                            if (get_item === null) {
+                                                renderItem = "";
+                                            } else {
+                                                renderItem = JSON.stringify(get_item);
+                                            }
                                         } else {
                                             renderItem = get_item;
                                         }

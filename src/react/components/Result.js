@@ -7,6 +7,7 @@ import XLSX from "xlsx";
 import xxx from "../icons/Gear-0.2s-200px (1).svg";
 import calendarIcon from "../icons/calendar.svg";
 import filterIcon from "../icons/filter.svg";
+import deleteForeverIcon from "../icons/delete_forever_icon.svg";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 
 const DESC = "DESC";
@@ -25,7 +26,9 @@ export default class Result extends React.Component {
             records: 0,
             pages: 0,
             isLoading: false,
-            options: []
+            isSaving: false,
+            options: [],
+            removedColumns: []
         };
 
         this.handleChangeFilterValue1 = this.handleChangeFilterValue1.bind(this);
@@ -69,10 +72,53 @@ export default class Result extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        const {pageNumber} = this.state;
+        const { pageNumber, isSaving, removedColumns } = this.state;
 
         if (prevState.pageNumber !== pageNumber) {
             this.reloadTable();
+        }
+
+        if (prevState.removedColumns.length !== removedColumns.length) {
+            this.reloadTable();
+        }
+
+        if (isSaving) {
+            const { options } = this.state;
+            const result = localStorage.getItem('current_result');
+            const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+            const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
+            const tableColumns = connectionInfo.queries.filter(query => !!query.table).map(query => query.table);
+
+            const loadingOptions = {
+                page: 0,
+                pageSize: 10,
+                columns: tableColumns,
+                operationsOptions: options.length ? options : null
+            };
+
+            saveTableResult(connectionName, result, loadingOptions).then(async data => {
+                if (data) {
+                    const db_rows = await Promise.all(data.rows);
+                    const rows = db_rows.length !== 0 ? Object.values(db_rows) : [];
+
+                    let binaryWS = XLSX.utils.json_to_sheet(rows);
+                    let wb = XLSX.utils.book_new();
+
+                    XLSX.utils.book_append_sheet(wb, binaryWS, `${result}`);
+                    XLSX.writeFile(wb, `${result}.xlsx`, { bookSST: true, compression: true });
+
+                    this.setState({
+                        isLoading: false,
+                        isSaving: false
+                    });
+                } else {
+                    this.setState({
+                        errorMessage: "Query is not valid.",
+                        isLoading: false,
+                        isSaving: false
+                    });
+                }
+            });
         }
 
         if (window.location.href.split('/')[window.location.href.split('/').length - 1] != localStorage.getItem("current_result")) {
@@ -93,8 +139,6 @@ export default class Result extends React.Component {
             pageSize: 10,
             columns: tableColumns
         };
-
-        console.log(loadingOptions);
 
         localStorage.setItem('isChangedPicker1', false);
         localStorage.setItem('isChangedPicker2', false);
@@ -136,7 +180,7 @@ export default class Result extends React.Component {
     };
 
     reloadTable = () => {
-        const { pageNumber, options } = this.state;
+        const { pageNumber, options, removedColumns } = this.state;
         const result = localStorage.getItem("current_result");
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
@@ -146,10 +190,9 @@ export default class Result extends React.Component {
             page: pageNumber,
             pageSize: 10,
             operationsOptions: options.length ? options : null,
-            columns: tableColumns
+            columns: tableColumns,
+            removedColumns: removedColumns
         };
-
-        console.log(loadingOptions);
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
             if (data) {
@@ -177,6 +220,13 @@ export default class Result extends React.Component {
         });
     };
 
+    removeColumn = (column) => {
+        const { removedColumns } = this.state;
+        removedColumns.push(column);
+        console.log(removedColumns);
+        this.setState({ removedColumns });
+    };
+
     changePage = (operation) => {
         let n = this.state.pageNumber + operation;
 
@@ -189,36 +239,7 @@ export default class Result extends React.Component {
     };
 
     save() {
-        const {options} = this.state;
-        const result = localStorage.getItem('current_result');
-        const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
-        const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
-        const tableColumns = connectionInfo.queries.filter(query => !!query.table).map(query => query.table);
-
-        const loadingOptions = {
-            page: 0,
-            pageSize: 10,
-            columns: tableColumns,
-            operationsOptions: options.length ? options : null
-        };
-
-        saveTableResult(connectionName, result, loadingOptions).then(async data => {
-            if (data) {
-                const db_rows = await Promise.all(data.rows);
-                const rows = db_rows.length !== 0 ? Object.values(db_rows) : [];
-
-                let binaryWS = XLSX.utils.json_to_sheet(rows);
-                let wb = XLSX.utils.book_new();
-
-                XLSX.utils.book_append_sheet(wb, binaryWS, `${result}`);
-                XLSX.writeFile(wb, `${result}.xlsx`, { bookSST: true, compression: true });
-            } else {
-                this.setState({
-                    errorMessage: "Query is not valid.",
-                    isLoading: false
-                });
-            }
-        });
+        this.setState({isLoading: true, isSaving: true});
     }
 
     handleOpenFilter(columnName) {
@@ -370,13 +391,14 @@ export default class Result extends React.Component {
     }
 
     render() {
-        const { options, headers, rows, isNullResults } = this.state;
+        const { options, headers, rows, isNullResults, isSaving } = this.state;
 
-        if (!headers) {
+        if (!headers || isSaving) {
             return (
                 <div className={"loading"}>
                     <img src={xxx}/>
-                    Loading...
+                    {!headers && "Loading..."}
+                    {isSaving && "Saving..."}
                 </div>
             );
         } else {
@@ -414,6 +436,7 @@ export default class Result extends React.Component {
                                             <th key={header}>
                                                 <div className="header">
                                                     <div className="header-data-ordering">
+                                                        <img src={deleteForeverIcon} className="delete-forever-icon" onClick={() => this.removeColumn(header)}/>
                                                         <span id="header-title">{header}</span>
                                                         <div className="header-options">
                                                             <span className={currentOption.order === ASC ? "arrow-up" : "arrow-down"}
@@ -508,7 +531,11 @@ export default class Result extends React.Component {
                                                 let renderItem;
 
                                                 if (typeof get_item === 'object') {
-                                                    renderItem = JSON.stringify(get_item);
+                                                    if (get_item === null) {
+                                                        renderItem = "";
+                                                    } else {
+                                                        renderItem = JSON.stringify(get_item);
+                                                    }
                                                 } else {
                                                     renderItem = get_item;
                                                 }
@@ -539,7 +566,7 @@ export default class Result extends React.Component {
                             </button>
                         </div>
                         <div className="result-menu">
-                            <div className={"save"}>
+                            <div className="save" title="Limited to 3000 rows!">
                                 <button onClick={() => this.save()}>Export excel</button>
                             </div>
                         </div>

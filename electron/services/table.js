@@ -12,6 +12,12 @@ function sortByLength (array) {
     return array.sort((x,y) => x.length - y.length);
 }
 
+String.prototype.replaceAt=function(index, char) {
+    let a = this.split("");
+    a[index] = char;
+    return a.join("");
+}
+
 function getAppDataPath() {
     switch (process.platform) {
         case "darwin": {
@@ -181,7 +187,7 @@ function getAllTables(connectionName) {
 }
 
 function verifyQuery(query) {
-    const exceptions = ['delete', 'update'];
+    const exceptions = [' delete ', ' update '];
 
     exceptions.forEach(exception => {
         if (query.includes(exception)) {
@@ -190,31 +196,42 @@ function verifyQuery(query) {
     })
 }
 
-function updateTableQuery(connectionName, alias, newQuery, newAlias) {
+async function updateTableQuery(connectionName, alias, newQuery, newAlias) {
+    try {
+        // verify that query have select character
+        verifyQuery(newQuery);
 
-    // verify that query have select character
-    verifyQuery(newQuery);
+        // Get queries
+        const queries = await db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .get('queries')
+            .value();
 
-    // Get queries
-    const queries = db.read()
-        .get('connections')
-        .find({name: connectionName})
-        .get('queries')
-        .value();
+        // Add new one
+        const index = queries.findIndex(query => query.alias === alias);
+        queries[index].query = newQuery;
+        queries[index].alias = newAlias;
 
-    // Add new one
-    const index = queries.findIndex(query => query.alias === alias);
-    queries[index].query = newQuery;
-    queries[index].alias = newAlias;
+        // Update queries
+        await db.get('connections')
+            .find({name: connectionName})
+            .get('queries')
+            .assign({ queries })
+            .write();
 
-    // Update queries
-    db.get('connections')
-        .find({name: connectionName})
-        .get('queries')
-        .assign({ queries })
-        .write();
+        return queries;
 
-    return queries;
+    } catch (e) {
+
+        console.error(e);
+    }
+}
+
+function locations(substring,string){
+    let a=[],i=-1;
+    while((i=string.indexOf(substring,i+1)) >= 0) a.push(i);
+    return a;
 }
 
 async function loadTableResult(connectionName, alias, loadingOptions) {
@@ -234,7 +251,8 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
 
         const offset = Number(loadingOptions.page) * Number(loadingOptions.pageSize);
         const limit = Number(loadingOptions.pageSize);
-        const tableColumns = loadingOptions.columns ? loadingOptions.columns : [];
+        //const removedColumns = loadingOptions.removedColumns ? loadingOptions.removedColumns : [];
+        const tableColumns = loadingOptions.columns ? sortByLength(loadingOptions.columns) : [];
 
         let dialect;
 
@@ -256,6 +274,21 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
             query = query[query.length].replace(';', ' ');
         }
 
+        // removedColumns.forEach(removedColumn => { //employees_id
+        //     const lowerspaceIndexes = locations("_", removedColumn);
+        //     query = query.replace(' ' + removedColumn, '|');
+        //     lowerspaceIndexes.forEach(i => {
+        //         const a = removedColumn.replaceAt(i, ".");
+        //         console.log("removedColumn:", a);
+        //         if (query.match(a)){
+        //             query = query.replace(a, '|');
+        //         }
+        //     });
+        // });
+        //
+        // query = query.replace(/\| AS\|,/g, "");
+        //
+
         if (loadingOptions.operationsOptions) {
             // Add searches
             let searchColumnNum = 0;
@@ -266,9 +299,11 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
 
                 // Join cases
                 tableColumns.forEach(tableColumn => {
-                    if (column.match(tableColumn)) {
-                        column = column.replace(`${tableColumn}_`, `${tableColumn}.`);
-                        console.log(column);
+                    const regex = /\./g;
+                    const fullColumn = column.replace(regex, '_');
+
+                    if (fullColumn.match(tableColumn)) {
+                        column = fullColumn.replace(`${tableColumn}_`, `${tableColumn}.`);
                     }
                 });
 
@@ -295,11 +330,12 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                 const filter2 = option.filter2;
 
                 // Join cases
-                const sortedColumns = sortByLength(tableColumns);
-                console.log("sortedColumns", sortedColumns);
-                sortedColumns.forEach(tableColumn => {
-                    if (column.match(tableColumn)) {
-                        column = column.replace(`${tableColumn}_`, `${tableColumn}.`);
+                tableColumns.forEach(tableColumn => {
+                    const regex = /\./g;
+                    const fullColumn = column.replace(regex, '_');
+
+                    if (fullColumn.match(tableColumn)) {
+                        column = fullColumn.replace(`${tableColumn}_`, `${tableColumn}.`);
                     }
                 });
 
@@ -382,8 +418,11 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
 
                 // Join cases
                 tableColumns.forEach(tableColumn => {
-                    if (column.match(tableColumn)) {
-                        column = column.replace(`${tableColumn}_`, `${tableColumn}.`);
+                    const regex = /\./g;
+                    const fullColumn = column.replace(regex, '_');
+
+                    if (fullColumn.match(tableColumn)) {
+                        column = fullColumn.replace(`${tableColumn}_`, `${tableColumn}.`);
                     }
                 });
 
@@ -486,7 +525,6 @@ async function saveTableResult(connectionName, alias, loadingOptions) {
         const offset = Number(loadingOptions.page) * Number(loadingOptions.pageSize);
         const limit = Number(loadingOptions.pageSize);
         const tableColumns = loadingOptions.columns ? sortByLength(loadingOptions.columns) : [];
-        console.log(tableColumns);
         let dialect;
 
         if (typeof URI === 'string') {
@@ -517,12 +555,11 @@ async function saveTableResult(connectionName, alias, loadingOptions) {
 
                 // Join cases
                 tableColumns.forEach(tableColumn => {
-                    if (column.match(tableColumn)) {
-                        const flag = tableColumns.filter(tableC => !tableC.match(tableColumn));
-                        console.log(flag);
-                        if (flag.length === 1) {
-                            column = column.replace(`${flag}_`, `${flag}.`);
-                        }
+                    const regex = /\./g;
+                    const fullColumn = column.replace(regex, '_');
+
+                    if (fullColumn.match(tableColumn)) {
+                        column = fullColumn.replace(`${tableColumn}_`, `${tableColumn}.`);
                     }
                 });
 
@@ -550,9 +587,15 @@ async function saveTableResult(connectionName, alias, loadingOptions) {
 
                 // Join cases
                 // TODO: bug companies.services & companies
+
+                // employees.schedule_date vs employees_restored_at | employees_schedule vs employees
+
                 tableColumns.forEach(tableColumn => {
-                    if (column.match(tableColumn)) {
-                        column = column.replace(`${tableColumn}_`, `${tableColumn}.`);
+                    const regex = /\./g;
+                    const fullColumn = column.replace(regex, '_');
+
+                    if (fullColumn.match(tableColumn)) {
+                        column = fullColumn.replace(`${tableColumn}_`, `${tableColumn}.`);
                     }
                 });
 
@@ -635,8 +678,11 @@ async function saveTableResult(connectionName, alias, loadingOptions) {
 
                 // Join cases
                 tableColumns.forEach(tableColumn => {
-                    if (column.match(tableColumn)) {
-                        column = column.replace(`${tableColumn}_`, `${tableColumn}.`);
+                    const regex = /\./g;
+                    const fullColumn = column.replace(regex, '_');
+
+                    if (fullColumn.match(tableColumn)) {
+                        column = fullColumn.replace(`${tableColumn}_`, `${tableColumn}.`);
                     }
                 });
 
@@ -649,42 +695,35 @@ async function saveTableResult(connectionName, alias, loadingOptions) {
             });
         }
 
-        const countQ = `SELECT COUNT(*) as c FROM (${query}) as c;`;
-        const numberOfRecords = await sequelize.query(countQ);
+        /** Full table */
+        // const countQ = `SELECT COUNT(*) as c FROM (${query}) as c;`;
+        // const numberOfRecords = await sequelize.query(countQ);
+        //
+        // const number = numberOfRecords[0][0].c/limit;
+        // const one = Number(number).toFixed(0);
+        //
+        // let pages = 0;
+        // const records = numberOfRecords[0][0].c;
+        //
+        // if (number > one) {
+        //     pages = one + 1;
+        // } else {
+        //     pages = number;
+        // }
 
-        const number = numberOfRecords[0][0].c/limit;
-        const one = Number(number).toFixed(0);
-
-        let pages = 0;
-        const records = numberOfRecords[0][0].c;
-
-        if (number > one) {
-            pages = one + 1;
-        } else {
-            pages = number;
-        }
-
-        // if (!loadingOptions.search)
-        query += ` LIMIT ${records} OFFSET 0`;
+        query += ` LIMIT 3000 OFFSET 0`; // Trial limit
 
         const queryResult = await sequelize.query(query);
-
-        console.log('pages: ', pages);
-        console.log('records: ', records);
 
         if (dialect === POSTGRESQL) {
             return {
                 "rows": queryResult[1].rows,
-                "fields": queryResult[1].fields,
-                "pages": Math.ceil(pages),
-                "records": records
+                "fields": queryResult[1].fields
             };
         } else {
             return {
                 "rows": queryResult[0],
-                "fields": queryResult[0],
-                "pages": Math.ceil(pages),
-                "records": records
+                "fields": queryResult[0]
             };
         }
     } catch (e) {
