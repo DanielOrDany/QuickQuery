@@ -93,26 +93,35 @@ async function checkLicense() {
 }
 
 async function setTrial() {
-    const key = await database.get('licenseKey').value();
-    let bytes = await base64.decode(key);
-    let string = await utf8.decode(bytes);
+    try {
+        const key = await database.get('licenseKey').value();
+        let bytes = await base64.decode(key);
+        let string = await utf8.decode(bytes);
 
-    if(string === "d(J@$1z#$!dgdf$%2fd") {
-        let trialTime = "604800000~";
-        let currentDate = Date.now().toString();
-        let trialKey = trialTime + currentDate;
-        updateKey(trialKey);
-        
-        return "trial-license";
-    } else {
-        return "error-license";
+        if(string === "d(J@$1z#$!dgdf$%2fd") {
+            let trialTime = "604800000~";
+            let currentDate = Date.now().toString();
+            let trialKey = trialTime + currentDate;
+            await updateKey(trialKey);
+            // let x = database.get('licenseKey').value();
+            // return await base64.decode(x);
+            return "trial-license";
+        } else {
+            return "error-license";
+        }
+    } catch(e) {
+        console.error(e);
     }
 }
 
-function updateKey(key) {
-    let bytes = utf8.encode(key);
-    let encodedKey = base64.encode(bytes);
-    database.get('licenseKey').assign({encodedKey}).write();
+async function updateKey(key) {
+    try {
+        let bytes = utf8.encode(key);
+        let encodedKey = base64.encode(bytes);
+        database.get('licenseKey').assign({licenseKey: encodedKey}).write();
+    } catch(e) {
+        console.error(e);
+    }
 }
 
 // Export database's methods
