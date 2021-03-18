@@ -3,7 +3,7 @@ const path = require('path');
 const FileSync = require('lowdb/adapters/FileSync');
 const appDataDirPath = getAppDataPath();
 const adapter = new FileSync(path.join(appDataDirPath, 'database.json'));
-console.log(adapter);
+
 const database = low(adapter);
 
 function getAppDataPath() {
@@ -45,7 +45,7 @@ async function createDefaultDatabase() {
 
 async function getDataFromDatabase() {
     const databaseData = await database.read().value();
-    console.log("databaseData", databaseData);
+
     if (databaseData) {
         return databaseData;
     } else {
@@ -93,8 +93,6 @@ async function checkLicense() {
 
     let dates = string.split("~");
 
-    console.log(dates);
-
     if(Date.now() <= parseInt(dates[0]) + parseInt(dates[1])) {
         return "good-license";
     } else {
@@ -124,12 +122,15 @@ async function setTrial() {
 
 async function updateKey(key) {
     try {
-        console.log("updated key", key);
+        console.log("works..");
+        console.log("updated key 2", await database.get('licenseKey').value());
         let bytes = utf8.encode(key);
-        let encodedKey = base64.encode(bytes);
-        console.log("encodedKey", encodedKey);
-        console.log(getAppDataPath());
-        //database.write();
+        let licenseKey = base64.encode(bytes);
+        console.log("encodedKey", licenseKey);
+        database.set('licenseKey', licenseKey).write();
+
+        //database.update('licenseKey', encodedKey).write();
+        //database.get('licenseKey').assign(encodedKey).write();
     } catch(e) {
         console.error(e);
     }
