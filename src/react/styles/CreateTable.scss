@@ -46,34 +46,40 @@
       display: flex;
       justify-content: space-between;
 
-      .runButton {
-        display: inline-block;
-        cursor: pointer;
+      .options-buttons {
+        display: flex;
+        width: max-content;
 
-        min-width: 90px;
-        height: 30px;
+        .runButton {
+          display: inline-block;
+          cursor: pointer;
 
-        margin-top: 10px;
-        margin-left: 20px;
+          min-width: 90px;
+          width: max-content;
+          height: 30px;
 
-        font-size: 14px;
-        vertical-align: middle;
-        text-align: center;
+          margin-top: 10px;
+          margin-left: 20px;
 
-        background-color: white;
-        color: #3E3E3E;
+          font-size: 14px;
+          vertical-align: middle;
+          text-align: center;
 
-        border-radius: 5px;
-        border: 1px solid #3E3E3E;
+          background-color: white;
+          color: #3E3E3E;
 
-        transition: 0.2s;
-      }
+          border-radius: 5px;
+          border: 1px solid #3E3E3E;
 
-      .runButton:hover {
-        cursor: pointer;
+          transition: 0.2s;
+        }
 
-        color: white;
-        background-color: #3E3E3E;
+        .runButton:hover {
+          cursor: pointer;
+
+          color: white;
+          background-color: #3E3E3E;
+        }
       }
 
       .saving-result {
@@ -276,4 +282,3 @@
   grid-area: newTable;
   overflow: auto;
 }
-

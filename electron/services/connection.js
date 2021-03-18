@@ -1,8 +1,32 @@
 const low = require('lowdb');
 const path = require('path');
+const fs = require('fs');
 const FileSync = require('lowdb/adapters/FileSync');
 const appDataDirPath = getAppDataPath();
 const adapter = new FileSync(path.join(appDataDirPath, 'database.json'));
+
+if(fs.existsSync(adapter.source)) {
+    console.log("The file exists.");
+} else {
+    console.log('The file does not exist.');
+    fs.mkdirSync(appDataDirPath);
+    fs.writeFileSync(adapter.source, JSON.stringify({
+        "connections": [],
+        "settings":
+            {
+                "language": "en",
+                "theme": "white"
+            },
+        "licenseKey": "ZChKQCQxeiMkIWRnZGYkJTJmZA=="
+    }));
+
+    if(fs.existsSync(adapter.source)) {
+        console.log("The file exists.");
+    } else {
+        console.log('The file does not exist. 2');
+    }
+}
+
 const db = low(adapter);
 
 function getAppDataPath() {
@@ -26,7 +50,6 @@ function getAppDataPath() {
 const Sequelize = require('sequelize');
 const pg = require('pg');
 pg.defaults.ssl = true;
-
 
 
 async function verifyConnection (name) {

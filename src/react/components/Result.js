@@ -329,7 +329,7 @@ export default class Result extends React.Component {
     };
 
     save() {
-        this.setState({isLoading: true, isSaving: true});
+        this.setState({isLoading: false, isSaving: true});
     }
 
     handleOpenFilter(columnName) {

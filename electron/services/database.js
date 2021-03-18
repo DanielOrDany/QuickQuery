@@ -3,12 +3,13 @@ const path = require('path');
 const FileSync = require('lowdb/adapters/FileSync');
 const appDataDirPath = getAppDataPath();
 const adapter = new FileSync(path.join(appDataDirPath, 'database.json'));
+
 const database = low(adapter);
 
 function getAppDataPath() {
     switch (process.platform) {
         case "darwin": {
-            return path.join(process.env.HOME, "Library", "Application Support", "QuickQuery");
+            return path.join(process.env.HOME, "Library", "Application\ Support", "QuickQuery");
         }
         case "win32": {
             return path.join(process.env.APPDATA, "QuickQuery");
@@ -37,12 +38,21 @@ async function createDefaultDatabase() {
             {
                 "language": "en",
                 "theme": "white"
-            }
+            },
+        "licenseKey": "ZChKQCQxeiMkIWRnZGYkJTJmZA=="
     }).write();
 }
 
 async function getDataFromDatabase() {
-    return await database.read().value();
+    const databaseData = await database.read().value();
+
+    if (databaseData) {
+        return databaseData;
+    } else {
+        await createDefaultDatabase();
+        return await database.read().value();
+    }
+
 }
 
 async function getDatabaseForTransport() {
@@ -58,10 +68,10 @@ async function loadDatabase(encodedDatabase) {
         let bytes = await base64.decode(encodedDatabase);
         let databaseInString = await utf8.decode(bytes);
 
-        if (databaseInString.includes("connections" && "settings")) {
+        if (databaseInString.includes("connections" && "settings" && "licenseKey")) {
             fs.writeFile('database.json', '', () => {
                 fs.writeFile('database.json', databaseInString, function () {
-                    console.log('done');
+                    console.log('done')
                 })
             });
 
@@ -74,10 +84,72 @@ async function loadDatabase(encodedDatabase) {
     }
 }
 
+async function checkLicense() {
+    console.log("checking...");
+    const key = await database.get('licenseKey').value();
+    console.log(key);
+    let bytes = await base64.decode(key);
+    let string = await utf8.decode(bytes);
+
+    if(string === "d(J@$1z#$!dgdf$%2fd") {
+        return "no-license";
+    }
+
+    let dates = string.split("~");
+
+    if(Date.now() <= parseInt(dates[0]) + parseInt(dates[1])) {
+        return "good-license";
+    } else {
+        return "update-license";
+    }
+}
+
+async function setTrial() {
+    try {
+        const key = await database.get('licenseKey').value();
+        let bytes = await base64.decode(key);
+        let string = await utf8.decode(bytes);
+
+        if(string === "d(J@$1z#$!dgdf$%2fd") {
+            let trialTime = "604800000~";
+            let currentDate = Date.now().toString();
+            let trialKey = trialTime + currentDate;
+            await updateKey(trialKey);
+            return "trial-license";
+        } else {
+            return "error-license";
+        }
+    } catch(e) {
+        console.error(e);
+    }
+}
+
+async function updateKey(licenseKey) {
+    try {
+        let bytes = base64.decode(licenseKey);
+        let decoded = utf8.decode(bytes);
+        let split = decoded.split("~", 1)[0];
+        let new_split = split + "~" + Date.now().toString();
+
+        let newBytes = utf8.encode(new_split);
+        let encoded = base64.encode(newBytes);
+
+        database.set('licenseKey', encoded).write();
+
+        //database.update('licenseKey', encodedKey).write();
+        //database.get('licenseKey').assign(encodedKey).write();
+    } catch(e) {
+        console.error(e);
+    }
+}
+
 // Export database's methods
 module.exports = {
     createDefaultDatabase,
     getDataFromDatabase,
     getDatabaseForTransport,
-    loadDatabase
+    loadDatabase,
+    checkLicense,
+    setTrial,
+    updateKey
 };

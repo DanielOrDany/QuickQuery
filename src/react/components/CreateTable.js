@@ -117,6 +117,51 @@ export default class CreateTable extends React.Component {
         }
     }
 
+    reload () {
+        const connection = JSON.parse(localStorage.getItem("current_connection"));
+        let optionsOfTables = [];
+
+        const nativeNamesOfTables = connection.native_tables;
+        const userQueries = connection.queries.filter(query => !!query.table);
+
+        for (const nativeName in nativeNamesOfTables) {
+
+            const updatedQueriesOfNativeTables = userQueries.filter(query => query.table === nativeNamesOfTables[nativeName]);
+
+            if (updatedQueriesOfNativeTables.length > 0) {
+                const queryData = updatedQueriesOfNativeTables[0];
+
+                optionsOfTables.push({
+                    ...queryData,
+                    columns: []
+                });
+            } else {
+                const queryData = {
+                    query: ` SELECT * FROM ${nativeNamesOfTables[nativeName]}`,
+                    type: 'default_query',
+                    alias: nativeNamesOfTables[nativeName],
+                    table: nativeNamesOfTables[nativeName]
+                };
+
+                optionsOfTables.push({
+                    ...queryData,
+                    columns: []
+                });
+            }
+        }
+
+        localStorage.setItem("current_result_options", JSON.stringify({
+            connectionName: connection.name,
+            options: optionsOfTables
+        }));
+
+        this.setState({
+            options: optionsOfTables,
+            isLoading: false
+        });
+
+    }
+
     /** loadTableNames */
     /* Method for loading names of tables */
 
@@ -525,7 +570,7 @@ export default class CreateTable extends React.Component {
                     <div className="table-column">
                         <div className="column-name">
                             { ( index !== 0 && (tables.length - 1) !== index )  &&
-                                <img className="column-arrows" src={westIcon}/>
+                            <img className="column-arrows" src={westIcon}/>
                             }
 
                             <span><b>Column:</b> {tableColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableColumn}</span>}</span>
@@ -541,18 +586,18 @@ export default class CreateTable extends React.Component {
                         </div>
 
                         { ( index !== 0 && (tables.length - 1) !== index )  &&
-                            <div className="column-name">
-                                <img className="column-arrows" src={eastIcon}/>
-                                <span><b>Column:</b> {tableSecondColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableSecondColumn}</span>}</span>
-                                <select className="select-column" value="" onChange={(e) => this.handleSecondColumnChange(e, index)}>
-                                    <option value="" selected disabled hidden>Choose here</option>
-                                    {
-                                        tableSecondColumns && tableSecondColumns.map((column, i) => {
-                                            return <option key={i} value={column.column_name}>{column.column_name}</option>
-                                        })
-                                    }
-                                </select>
-                            </div>
+                        <div className="column-name">
+                            <img className="column-arrows" src={eastIcon}/>
+                            <span><b>Column:</b> {tableSecondColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableSecondColumn}</span>}</span>
+                            <select className="select-column" value="" onChange={(e) => this.handleSecondColumnChange(e, index)}>
+                                <option value="" selected disabled hidden>Choose here</option>
+                                {
+                                    tableSecondColumns && tableSecondColumns.map((column, i) => {
+                                        return <option key={i} value={column.column_name}>{column.column_name}</option>
+                                    })
+                                }
+                            </select>
+                        </div>
                         }
                     </div>
                     }
@@ -576,9 +621,14 @@ export default class CreateTable extends React.Component {
                 <div className="create_edit_table">
                     <div id="mini-menu">
                         <div className="actions">
-                            <button type="button" className="runButton" onClick={() => this.run()}>
-                                <span>Test</span>
-                            </button>
+                            <div className="options-buttons">
+                                <button type="button" className="runButton" onClick={() => this.reload()}>
+                                    <span>Reload tables</span>
+                                </button>
+                                <button type="button" className="runButton" onClick={() => this.run()}>
+                                    <span>Test</span>
+                                </button>
+                            </div>
 
                             <div className="saving-result">
                                 <input type="text" id="aliasText" placeholder="Query Name" value={queryName} className="form-control" onChange={(e) => this.handleQueryNameChange(e)}/>
@@ -600,22 +650,22 @@ export default class CreateTable extends React.Component {
 
 
                     { errorMessage &&
-                        <div id="errorMessage" className="alert">
-                            <strong>Message!</strong> {errorMessage}
-                        </div>
+                    <div id="errorMessage" className="alert">
+                        <strong>Message!</strong> {errorMessage}
+                    </div>
                     }
 
 
                     { successMessage &&
-                        <div id="successMessage" className="alert">
-                            <strong>Success!</strong> {successMessage}
-                        </div>
+                    <div id="successMessage" className="alert">
+                        <strong>Success!</strong> {successMessage}
+                    </div>
                     }
 
                     { warningMessage &&
-                        <div id="warningMessage" className="alert">
-                            <strong>Warning!</strong> {warningMessage}
-                        </div>
+                    <div id="warningMessage" className="alert">
+                        <strong>Warning!</strong> {warningMessage}
+                    </div>
                     }
                 </div>
             );
