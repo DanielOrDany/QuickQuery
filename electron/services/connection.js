@@ -9,7 +9,9 @@ if(fs.existsSync(adapter.source)) {
     console.log("The file exists.");
 } else {
     console.log('The file does not exist.');
-    fs.mkdirSync(appDataDirPath);
+    if(!fs.existsSync(appDataDirPath)) {
+        fs.mkdirSync(appDataDirPath);
+    }
     fs.writeFileSync(adapter.source, JSON.stringify({
         "connections": [],
         "settings":
