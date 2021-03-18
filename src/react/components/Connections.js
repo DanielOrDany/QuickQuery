@@ -17,6 +17,8 @@ import database_icon from "../icons/database.svg";
 import delete_icon from "../icons/delete_icon.png";
 import '../styles/Connections.scss';
 
+const base64 = require('base-64');
+const utf8 = require('utf8');
 
 export default class Connections extends React.Component {
     constructor(props) {
@@ -65,7 +67,7 @@ export default class Connections extends React.Component {
                         if(data === "good-license") {
                             this.setState({ 
                                 isKeyOpen: false,
-                                isOpen: data.connections.length ? false : true // show popup if none connections in the app
+                                isOpen: this.state.connections.length ? false : true // show popup if none connections in the app
                              });
                         } else if(data === "update-license") {
                             this.setState({
@@ -126,56 +128,32 @@ export default class Connections extends React.Component {
             .then(data => {
                 this.setState({
                     connections: data.connections,
-                    searchedConnections: data.connections,
-                    // isOpen: data.connections.length ? false : true // show popup if none connections in the app
+                    searchedConnections: data.connections
                 });
 
                 localStorage.setItem("connections", JSON.stringify(data.connections));
                 localStorage.setItem("data", JSON.stringify(data));
             })
-            .then(() => {
-                checkLicense()
-                    .then(data => {
-                        if(data === "no-license") {
-                            this.setState({ 
-                                isKeyOpen: true,
-                                trialAvailable: true,
-                                trialWindow: true
-                             });
-                        } else if(data === "update-license") {
-                            this.setState({
-                                errorMessage: "Your license has expired.",
-                                licenseError: true,
-                                isErrorOpen: true,
-                                isKeyOpen: false
-                            });
-                        } else if(data === "good-license") {
-                            this.setState({
-                                isOpen: data.connections.length ? false : true // show popup if none connections in the app
-                            });
-                        }
-                    })
-            });
-
-        updateKey("NjA0ODAwMDAwfjE2MTYwNTc4MTMzMDE=")
-            .then((d) => {
-                console.log("updated", d);
-                checkLicense()
-                    .then(data => {
-                        if(data === "good-license") {
-                            this.setState({
-                                isKeyOpen: false,
-                                isOpen: data.connections.length ? false : true // show popup if none connections in the app
-                            });
-                        } else if(data === "update-license") {
-                            this.setState({
-                                errorMessage: "Key is not valid. Please check it and try again.",
-                                licenseError: true,
-                                isErrorOpen: true,
-                                isKeyOpen: false
-                            });
-                        }
-                    })
+        checkLicense()
+            .then(data => {
+                if(data === "no-license") {
+                    this.setState({ 
+                        isKeyOpen: true,
+                        trialAvailable: true,
+                        trialWindow: true
+                        });
+                } else if(data === "update-license") {
+                    this.setState({
+                        errorMessage: "Your license has expired.",
+                        licenseError: true,
+                        isErrorOpen: true,
+                        isKeyOpen: false
+                    });
+                } else if(data === "good-license") {
+                    this.setState({
+                        isOpen: this.state.connections.length ? false : true // show popup if none connections in the app
+                    });
+                }
             });
     };
 
@@ -455,22 +433,16 @@ export default class Connections extends React.Component {
     };
 
     addFreeTrial = () => {
-        setTrial()
-            .then(data => {
-                if(data === "trial-license") {
+        let first = "604800000~";
+        let second = Date.now().toString();
+        let bytes = utf8.encode(first + second);
+        let encr = base64.encode(bytes);
+        updateKey(encr)
+            .then(() => {
                     this.setState({ 
                         isKeyOpen: false,
-                        isOpen: data.connections.length ? false : true // show popup if none connections in the app
+                        isOpen: this.state.connections.length ? false : true // show popup if none connections in the app
                      });
-                } else if (data === "error-license") {
-                    this.setState({
-                        errorMessage: "Oops! Something gone wrong. Please try again later.",
-                        trialError: true,
-                        isErrorOpen: true,
-                        isKeyOpen: false,
-                    });
-                }
-                    
             });
     }
 

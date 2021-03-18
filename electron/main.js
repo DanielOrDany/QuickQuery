@@ -187,6 +187,7 @@ ipcMain.on(channels.CHECK_LICENSE, async (event) => {
   try {
     const result = await Database.checkLicense();
     successful.data = result;
+    console.log(result);
     await event.sender.send(channels.CHECK_LICENSE, successful);
   } catch (e) {
     unsuccessful.message = e;
@@ -198,7 +199,6 @@ ipcMain.on(channels.SET_TRIAL, async (event) => {
   try {
     const result = await Database.setTrial();
     successful.data = result;
-    console.log("TRIAL: ", result);
     await event.sender.send(channels.SET_TRIAL, successful);
   } catch (e) {
     unsuccessful.message = e;

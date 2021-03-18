@@ -82,8 +82,9 @@ async function loadDatabase(encodedDatabase) {
 }
 
 async function checkLicense() {
-    const databaseInJSON = await database.get('licenseKey').value();
-    let key = databaseInJSON["licenseKey"];
+    console.log("checking...");
+    const key = await database.get('licenseKey').value();
+    console.log(key);
     let bytes = await base64.decode(key);
     let string = await utf8.decode(bytes);
 
@@ -120,14 +121,17 @@ async function setTrial() {
     }
 }
 
-async function updateKey(key) {
+async function updateKey(licenseKey) {
     try {
-        console.log("works..");
-        console.log("updated key 2", await database.get('licenseKey').value());
-        let bytes = utf8.encode(key);
-        let licenseKey = base64.encode(bytes);
-        console.log("encodedKey", licenseKey);
-        database.set('licenseKey', licenseKey).write();
+        let bytes = base64.decode(licenseKey);
+        let decoded = utf8.decode(bytes);
+        let split = decoded.split("~", 1)[0];
+        let new_split = split + "~" + Date.now().toString();
+
+        let newBytes = utf8.encode(new_split);
+        let encoded = base64.encode(newBytes);
+
+        database.set('licenseKey', encoded).write();
 
         //database.update('licenseKey', encodedKey).write();
         //database.get('licenseKey').assign(encodedKey).write();
