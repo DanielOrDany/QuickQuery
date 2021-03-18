@@ -237,7 +237,18 @@
     padding: 20px;
 
     color: white;
+  }
+
+  #errorMessage {
+    background-color: #f46d5d;
+  }
+
+  #warningMessage {
     background-color: #f4cb4c;
+  }
+
+  #successMessage {
+    background-color: #2ec554;
   }
 
   .closebtn {

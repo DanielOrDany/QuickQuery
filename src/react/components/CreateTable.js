@@ -30,6 +30,8 @@ export default class CreateTable extends React.Component {
             columns: ['select column'],
             secondColumns: ['select column'],
             errorMessage: "",
+            warningMessage: "",
+            successMessage: "",
             isLoading: true,
             isTableLoading: false,
             alias: "",
@@ -70,7 +72,7 @@ export default class CreateTable extends React.Component {
      */
 
     async componentDidUpdate(prevProps, prevState, snapshot) {
-        const { errorMessage } = this.state;
+        const { errorMessage, warningMessage, successMessage } = this.state;
 
         if ( // verify if constructor is in editing mode
             window.location.href.split('/')[window.location.href.split('/').length - 2] === "edit-table" &&
@@ -92,6 +94,26 @@ export default class CreateTable extends React.Component {
                     errorMessage: ""
                 });
             }, 3500); // show error message only 3,5 seconds
+        }
+
+        if ( // verify on success
+            successMessage !== ""
+        ) {
+            setTimeout(() => {
+                this.setState({
+                    successMessage: ""
+                });
+            }, 3500); // show message message only 3,5 seconds
+        }
+
+        if ( // verify on warning
+            warningMessage !== ""
+        ) {
+            setTimeout(() => {
+                this.setState({
+                    warningMessage: ""
+                });
+            }, 3500); // show warning message only 3,5 seconds
         }
     }
 
@@ -172,15 +194,13 @@ export default class CreateTable extends React.Component {
             this.setState({
                 tables,
                 columns,
-                secondColumns,
-                isTableLoading: true
+                secondColumns
             });
 
         } else {
 
             this.setState({
-                errorMessage: "Please, select the previous table or table column before adding a new one.",
-                isTableLoading: false
+                errorMessage: "Please, select the previous table or table column before adding a new one."
             });
         }
     }
@@ -460,6 +480,8 @@ export default class CreateTable extends React.Component {
                             headers: db_rows.length !== 0 ? Object.keys(db_rows[0]) : data.fields.map(field => field.name),
                             rows: db_rows.length !== 0 ? Object.values(db_rows) : [],
                             errorMessage: "",
+                            successMessage: db_rows.length !== 0 ? "result is successful" : "",
+                            warningMessage: db_rows.length === 0 ? "result has 0 rows" : "",
                             isLoading: false
                         });
                     } else {
@@ -501,48 +523,36 @@ export default class CreateTable extends React.Component {
                     </div>
                     { table !== 'select table' &&
                     <div className="table-column">
+                        <div className="column-name">
+                            { ( index !== 0 && (tables.length - 1) !== index )  &&
+                                <img className="column-arrows" src={westIcon}/>
+                            }
 
-                        { (isLastTable && isTableLoading) &&
-                            <div className="table-loading">
-                                <img src={xxx}/>
-                                Loading...
-                            </div>
-                        }
+                            <span><b>Column:</b> {tableColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableColumn}</span>}</span>
 
-                        { (isLastTable && !isTableLoading) &&
-                            <>
-                                <div className="column-name">
-                                    { ( index !== 0 && (tables.length - 1) !== index )  &&
-                                        <img className="column-arrows" src={westIcon}/>
-                                    }
-
-                                    <span><b>Column:</b> {tableColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableColumn}</span>}</span>
-
-                                    <select className="select-column" value="" onChange={(e) => this.handleColumnChange(e, index)}>
-                                        <option value="" selected disabled hidden>Choose here</option>
-                                        {
-                                            tableColumns && tableColumns.map((column, i) => {
-                                                return <option key={i} value={column.column_name}>{column.column_name}</option>
-                                            })
-                                        }
-                                    </select>
-                                </div>
-
-                                { ( index !== 0 && (tables.length - 1) !== index )  &&
-                                    <div className="column-name">
-                                        <img className="column-arrows" src={eastIcon}/>
-                                        <span><b>Column:</b> {tableSecondColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableSecondColumn}</span>}</span>
-                                        <select className="select-column" value="" onChange={(e) => this.handleSecondColumnChange(e, index)}>
-                                            <option value="" selected disabled hidden>Choose here</option>
-                                            {
-                                                tableSecondColumns && tableSecondColumns.map((column, i) => {
-                                                    return <option key={i} value={column.column_name}>{column.column_name}</option>
-                                                })
-                                            }
-                                        </select>
-                                    </div>
+                            <select className="select-column" value="" onChange={(e) => this.handleColumnChange(e, index)}>
+                                <option value="" selected disabled hidden>Choose here</option>
+                                {
+                                    tableColumns && tableColumns.map((column, i) => {
+                                        return <option key={i} value={column.column_name}>{column.column_name}</option>
+                                    })
                                 }
-                            </>
+                            </select>
+                        </div>
+
+                        { ( index !== 0 && (tables.length - 1) !== index )  &&
+                            <div className="column-name">
+                                <img className="column-arrows" src={eastIcon}/>
+                                <span><b>Column:</b> {tableSecondColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableSecondColumn}</span>}</span>
+                                <select className="select-column" value="" onChange={(e) => this.handleSecondColumnChange(e, index)}>
+                                    <option value="" selected disabled hidden>Choose here</option>
+                                    {
+                                        tableSecondColumns && tableSecondColumns.map((column, i) => {
+                                            return <option key={i} value={column.column_name}>{column.column_name}</option>
+                                        })
+                                    }
+                                </select>
+                            </div>
                         }
                     </div>
                     }
@@ -552,7 +562,7 @@ export default class CreateTable extends React.Component {
     }
 
     render() {
-        const {errorMessage, headers, rows, isLoading, tables, queryName } = this.state;
+        const {errorMessage, successMessage, warningMessage, headers, rows, isLoading, tables, queryName } = this.state;
 
         if (isLoading) {
             return (
@@ -567,7 +577,7 @@ export default class CreateTable extends React.Component {
                     <div id="mini-menu">
                         <div className="actions">
                             <button type="button" className="runButton" onClick={() => this.run()}>
-                                <span>Run</span>
+                                <span>Test</span>
                             </button>
 
                             <div className="saving-result">
@@ -590,46 +600,22 @@ export default class CreateTable extends React.Component {
 
 
                     { errorMessage &&
-                    <div id="errorMessage" className="alert">
-                        <strong>Message!</strong> {errorMessage}
-                    </div>
+                        <div id="errorMessage" className="alert">
+                            <strong>Message!</strong> {errorMessage}
+                        </div>
                     }
 
 
-                    {(headers && rows) &&
-                    <div id="add-btn-table">
-                        <table id="your-new-table">
-                            <tr>
-                                {headers ? headers.map((item) => {
-                                    return <th>{item}</th>
-                                }) : null}
-                            </tr>
-                            {rows ? rows.map((item, key) => {
-                                return <tr className={key++ % 2 === 0 ? "column_one" : "column_two"}>{
-                                    Object.values(item).map((get_item, key) => {
+                    { successMessage &&
+                        <div id="successMessage" className="alert">
+                            <strong>Success!</strong> {successMessage}
+                        </div>
+                    }
 
-                                        let renderItem;
-
-                                        if (typeof get_item === 'object') {
-                                            if (get_item === null) {
-                                                renderItem = "";
-                                            } else {
-                                                renderItem = JSON.stringify(get_item);
-                                            }
-                                        } else {
-                                            renderItem = get_item;
-                                        }
-
-                                        return <td style={key === 0 ? {
-                                            color: "#3E3E3E",
-                                            background: "#EFEFEF",
-                                            border: "1px solid grey"
-                                        } : {color: "#3E3E3E"}}>{renderItem}</td>
-                                    })}
-                                </tr>
-                            }) : null}
-                        </table>
-                    </div>
+                    { warningMessage &&
+                        <div id="warningMessage" className="alert">
+                            <strong>Warning!</strong> {warningMessage}
+                        </div>
                     }
                 </div>
             );

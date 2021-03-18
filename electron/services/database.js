@@ -54,21 +54,24 @@ async function getDatabaseForTransport() {
 }
 
 async function loadDatabase(encodedDatabase) {
-    let bytes = await base64.decode(encodedDatabase);
-    let databaseInString = await utf8.decode(bytes);
+    try {
+        let bytes = await base64.decode(encodedDatabase);
+        let databaseInString = await utf8.decode(bytes);
 
-    if (databaseInString.includes("connections" && "settings")) {
-        fs.writeFile('database.json', '', () => {
-            fs.writeFile('database.json', databaseInString, function () {
-                console.log('done')
-            })
-        });
+        if (databaseInString.includes("connections" && "settings")) {
+            fs.writeFile('database.json', '', () => {
+                fs.writeFile('database.json', databaseInString, function () {
+                    console.log('done');
+                })
+            });
 
-        return true;
-    } else {
-        return false;
+            return true;
+        } else {
+            return false;
+        }
+    } catch (e) {
+        console.log(e);
     }
-
 }
 
 // Export database's methods

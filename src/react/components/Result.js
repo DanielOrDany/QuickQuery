@@ -89,6 +89,7 @@ export default class Result extends React.Component {
             pages: 0,
             isLoading: false,
             isSaving: false,
+            isEmptyQuery: false,
             options: [],
             removedColumns: []
         };
@@ -219,9 +220,11 @@ export default class Result extends React.Component {
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
             if (data) {
-                if (data.records == 0) {
+                console.log("data", data);
+                if (data.records === 0) {
                     this.setState({
-                        isNullResults: true
+                        isNullResults: true,
+                        isEmptyQuery: true
                     });
                 } else {
                     const db_rows = await Promise.all(data.rows);
@@ -239,7 +242,6 @@ export default class Result extends React.Component {
                             isFilterOpened: false
                         }
                     });
-
                     this.setState({
                         pages: data.pages,
                         options: tableOptions,
@@ -273,9 +275,11 @@ export default class Result extends React.Component {
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
             if (data) {
-                console.log("data", data.records);
+                console.log("data", data);
                 if (data.records == 0) {
+
                     this.setState({
+                        headers: data.fields.map(field => field.name),
                         isNullResults: true
                     });
                 } else {
@@ -490,7 +494,7 @@ export default class Result extends React.Component {
     }
 
     render() {
-        let { options, headers, rows, isNullResults, isSaving, removedColumns, isLoading } = this.state;
+        let { isEmptyQuery, options, headers, rows, isNullResults, isSaving, removedColumns, isLoading } = this.state;
 
         removedColumns.forEach(removedColumn => {
             headers = headers.filter((header) => header !== removedColumn);
@@ -499,7 +503,14 @@ export default class Result extends React.Component {
             });
         });
 
-        if (!headers || isSaving || isLoading) {
+        if (isEmptyQuery) {
+            return (
+                <div className={"loading"}>
+                    <img src={xxx}/>
+                    Nothing to load..
+                </div>
+            );
+        } else if (!headers || isSaving || isLoading) {
             return (
                 <div className={"loading"}>
                     <img src={xxx}/>

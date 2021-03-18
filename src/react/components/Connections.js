@@ -243,7 +243,7 @@ export default class Connections extends React.Component {
             }
         });
 
-        this.setState({ searchedConnections: searchedConnections });
+        this.setState({ searchedConnections: searchedConnections.length > 0 ? searchedConnections : [] });
     };
 
     bigInput = () => {
@@ -428,7 +428,7 @@ export default class Connections extends React.Component {
 
                 <div className="folders">
                     {
-                        searchedConnections.length ? searchedConnections.map(conn => {
+                        searchedConnections.length !== 0 ? searchedConnections.map(conn => {
                                 let evenConn = searchedConnections.indexOf(conn) % 2 === 0;
 
                                 return (

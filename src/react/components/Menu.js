@@ -58,22 +58,25 @@ class Menu extends React.Component {
         });
     };
 
-    importConfig = (event) => {
-        const input = event.target;
+    importConfigFile = (event) => {
+        try {
+            const input = event.target;
+            const reader = new FileReader();
 
-        const reader = new FileReader();
-        reader.onload = () => {
-            const content = reader.result;
-            importConfig(content).then(data => {
-                if (data === true) {
-                    this.setState({error: true, message: "Successfully uploaded.", isOpen: true});
-                }
-                else {
-                    this.setState({error: true, message: "Wrong file!", isOpen: true});
-                }
-            });
-        };
-        reader.readAsText(input.files[0]);
+            reader.onload = () => {
+                const content = reader.result;
+                importConfig(content).then(data => {
+                    if (data === true) {
+                        this.setState({error: true, message: "Successfully uploaded.", isOpen: true});
+                    } else {
+                        this.setState({error: true, message: "Wrong file!", isOpen: true});
+                    }
+                });
+            };
+            reader.readAsText(input.files[0]);
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     exportConfig(filename, text) {
@@ -137,7 +140,7 @@ class Menu extends React.Component {
                     >
                         <div className="sharing-buttons">
                             <div id="import-div">
-                                <input id="import-button" type="file" onChange={(event) => this.importConfig(event)}/>
+                                <input id="import-button" type="file" onChange={(event) => this.importConfigFile(event)}/>
                                 <p>Import settings from file</p>
                             </div>
                             <div id="export-div">
