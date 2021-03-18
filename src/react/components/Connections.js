@@ -156,6 +156,27 @@ export default class Connections extends React.Component {
                         }
                     })
             });
+
+        updateKey("NjA0ODAwMDAwfjE2MTYwNTc4MTMzMDE=")
+            .then((d) => {
+                console.log("updated", d);
+                checkLicense()
+                    .then(data => {
+                        if(data === "good-license") {
+                            this.setState({
+                                isKeyOpen: false,
+                                isOpen: data.connections.length ? false : true // show popup if none connections in the app
+                            });
+                        } else if(data === "update-license") {
+                            this.setState({
+                                errorMessage: "Key is not valid. Please check it and try again.",
+                                licenseError: true,
+                                isErrorOpen: true,
+                                isKeyOpen: false
+                            });
+                        }
+                    })
+            });
     };
 
     inputVirify(args) {

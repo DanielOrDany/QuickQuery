@@ -3,12 +3,13 @@ const path = require('path');
 const FileSync = require('lowdb/adapters/FileSync');
 const appDataDirPath = getAppDataPath();
 const adapter = new FileSync(path.join(appDataDirPath, 'database.json'));
+console.log(adapter);
 const database = low(adapter);
 
 function getAppDataPath() {
     switch (process.platform) {
         case "darwin": {
-            return path.join(process.env.HOME, "Library", "Application Support", "QuickQuery");
+            return path.join(process.env.HOME, "Library", "Application\ Support", "QuickQuery");
         }
         case "win32": {
             return path.join(process.env.APPDATA, "QuickQuery");
@@ -43,7 +44,15 @@ async function createDefaultDatabase() {
 }
 
 async function getDataFromDatabase() {
-    return await database.read().value();
+    const databaseData = await database.read().value();
+    console.log("databaseData", databaseData);
+    if (databaseData) {
+        return databaseData;
+    } else {
+        await createDefaultDatabase();
+        return await database.read().value();
+    }
+
 }
 
 async function getDatabaseForTransport() {
@@ -84,12 +93,13 @@ async function checkLicense() {
 
     let dates = string.split("~");
 
+    console.log(dates);
+
     if(Date.now() <= parseInt(dates[0]) + parseInt(dates[1])) {
         return "good-license";
     } else {
         return "update-license";
     }
-    
 }
 
 async function setTrial() {
@@ -114,9 +124,12 @@ async function setTrial() {
 
 async function updateKey(key) {
     try {
+        console.log("updated key", key);
         let bytes = utf8.encode(key);
         let encodedKey = base64.encode(bytes);
-        database.get('licenseKey').assign({licenseKey: encodedKey}).write();
+        console.log("encodedKey", encodedKey);
+        console.log(getAppDataPath());
+        //database.write();
     } catch(e) {
         console.error(e);
     }
