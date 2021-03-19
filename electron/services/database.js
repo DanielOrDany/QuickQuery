@@ -128,16 +128,26 @@ async function updateKey(licenseKey) {
     try {
         let bytes = base64.decode(licenseKey);
         let decoded = utf8.decode(bytes);
-        let split = decoded.split("~", 1)[0];
-        let new_split = split + "~" + Date.now().toString();
+        let split = decoded.split("~");
+        let first_part = split[0];
+        let second_part = split[1];
+        let date = Date.now();
+        if(date <= parseInt(second_part) + 604800000) {
+            let key = first_part + "~" + date;
+            let newBytes = utf8.encode(key);
+            let new_encoded = base64.encode(newBytes);
+            database.set('licenseKey', new_encoded).write();
 
-        let newBytes = utf8.encode(new_split);
-        let encoded = base64.encode(newBytes);
+            let storedKey = await database.get("licenseKey").value();
 
-        database.set('licenseKey', encoded).write();
+            if(storedKey === new_encoded) {
+                return "key-updated";
+            }
 
-        //database.update('licenseKey', encodedKey).write();
-        //database.get('licenseKey').assign(encodedKey).write();
+            return "key-error";
+        }
+
+        return "key-outdated";
     } catch(e) {
         console.error(e);
     }
