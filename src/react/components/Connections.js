@@ -66,7 +66,7 @@ export default class Connections extends React.Component {
                     checkLicense()
                     .then(data => {
                         if(data === "good-license") {
-                            this.setState({ 
+                            this.setState({
                                 isKeyOpen: false,
                                 isOpen: this.state.connections.length ? false : true // show popup if none connections in the app
                              });
@@ -94,7 +94,7 @@ export default class Connections extends React.Component {
                         isKeyOpen: false
                     });
                 }
-                
+
             });
     };
 
@@ -158,7 +158,7 @@ export default class Connections extends React.Component {
         checkLicense()
             .then(data => {
                 if(data === "no-license") {
-                    this.setState({ 
+                    this.setState({
                         isKeyOpen: true,
                         trialAvailable: true,
                         trialWindow: true
@@ -460,7 +460,7 @@ export default class Connections extends React.Component {
         let encr = base64.encode(bytes);
         updateKey(encr)
             .then(() => {
-                    this.setState({ 
+                    this.setState({
                         isKeyOpen: false,
                         isOpen: this.state.connections.length ? false : true // show popup if none connections in the app
                      });
@@ -473,6 +473,10 @@ export default class Connections extends React.Component {
                 <div className="license-key-text">Enter license key:</div>
                 <input placeholder="00000000-00000000-00000000-00000000" className="form-control"
                         onChange={this.keyOnChange}/>
+
+                {this.state.trialAvailable && <Button id="free-trial-btn" onClick={() => this.setState({ trialWindow: true })} invert>
+                    Get a free trial!
+                </Button>}
             </div>
         );
     };
