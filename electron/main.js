@@ -208,7 +208,8 @@ ipcMain.on(channels.SET_TRIAL, async (event) => {
 
 ipcMain.on(channels.UPDATE_KEY, async(event, key) => {
   try {
-    await Database.updateKey(key);
+    const result = await Database.updateKey(key);
+    successful.data = result;
     await event.sender.send(channels.UPDATE_KEY, successful);
   } catch(e) {
     unsuccessful.message = e;

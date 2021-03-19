@@ -61,8 +61,9 @@ export default class Connections extends React.Component {
 
     handleKeySubmit = () => {
         updateKey(this.state.keyInput)
-            .then(() => {
-                checkLicense()
+            .then((data) => {
+                if(data === "key-updated") {
+                    checkLicense()
                     .then(data => {
                         if(data === "good-license") {
                             this.setState({ 
@@ -78,6 +79,22 @@ export default class Connections extends React.Component {
                             });
                         }
                     })
+                } else if (data === "key-error") {
+                    this.setState({
+                        errorMessage: "Key saver error occured. Please try again later.",
+                        licenseError: true,
+                        isErrorOpen: true,
+                        isKeyOpen: false
+                    });
+                } else if (data === "key-outdated") {
+                    this.setState({
+                        errorMessage: "Key activation period expired. Please try another key.",
+                        licenseError: true,
+                        isErrorOpen: true,
+                        isKeyOpen: false
+                    });
+                }
+                
             });
     };
 
@@ -104,6 +121,10 @@ export default class Connections extends React.Component {
                 isErrorOpen: false,
                 isKeyOpen: true
             });
+        } else {
+            this.setState({
+                isErrorOpen: false
+            })
         }
     };
 
