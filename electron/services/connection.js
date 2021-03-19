@@ -56,6 +56,8 @@ pg.defaults.ssl = true;
 
 async function verifyConnection (name) {
     const connectionInDatabase = await db.get('connections').find({name: name}).value();
+    const dbr = await db.read().value();
+    console.log(dbr);
     if (connectionInDatabase)
         throw "Connection with this name already exist!";
 }
