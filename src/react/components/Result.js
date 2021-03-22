@@ -185,7 +185,7 @@ export default class Result extends React.Component {
                     });
                 } else {
                     this.setState({
-                        errorMessage: "Query is not valid.",
+                        errorMessage: "Table is not valid.",
                         isLoading: false,
                         isSaving: false
                     });

@@ -395,7 +395,7 @@ export default class CreateTable extends React.Component {
 
         if (tables.length < 1 && columns.length < 1) {
             this.setState({
-                errorMessage: "Query is not valid.",
+                errorMessage: "Table is not valid.",
                 isLoading: false
             });
         } else {
@@ -439,7 +439,7 @@ export default class CreateTable extends React.Component {
                         });
                     } else {
                         this.setState({
-                            errorMessage: "Query is not valid.",
+                            errorMessage: "Table is not valid.",
                             isLoading: false
                         });
                     }
@@ -461,7 +461,7 @@ export default class CreateTable extends React.Component {
                             });
                         } else {
                             this.setState({
-                                errorMessage: "Query is not valid.",
+                                errorMessage: "Table is not valid.",
                                 isLoading: false
                             });
                         }
@@ -481,7 +481,7 @@ export default class CreateTable extends React.Component {
 
         if (tables.length < 1 && columns.length < 1) {
             this.setState({
-                errorMessage: "Query is not valid.",
+                errorMessage: "Table is not valid.",
                 isLoading: false
             });
         } else {
@@ -531,7 +531,7 @@ export default class CreateTable extends React.Component {
                         });
                     } else {
                         this.setState({
-                            errorMessage: "Query is not valid.",
+                            errorMessage: "Table is not valid.",
                             isLoading: false
                         });
                     }
@@ -631,7 +631,7 @@ export default class CreateTable extends React.Component {
                             </div>
 
                             <div className="saving-result">
-                                <input type="text" id="aliasText" placeholder="Query Name" value={queryName} className="form-control" onChange={(e) => this.handleQueryNameChange(e)}/>
+                                <input type="text" id="aliasText" placeholder="Table Name" value={queryName} className="form-control" onChange={(e) => this.handleQueryNameChange(e)}/>
                                 <button type="button" className="saveButton" onClick={() => this.save()}>
                                     Save
                                 </button>

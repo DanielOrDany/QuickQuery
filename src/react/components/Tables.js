@@ -183,7 +183,7 @@ export default class Tables extends React.Component {
                 >
                   <div id="add-btn-field">
                     <img className="add-button" src={plus} />
-                    <div className="button-text">Join Tables</div>
+                    <div className="button-text">Create table</div>
                   </div>
                 </div>
               </div>
@@ -232,8 +232,8 @@ export default class Tables extends React.Component {
                 <div className="empty-rows">
                   <div className="empty-rows-column">
                     <img className="empty-rows-box" src={upArrow} />
-                    <span>You don't have a query yet.</span>
-                    <span>Please create it on the "Add Query" button.</span>
+                    <span>You don't have a table yet.</span>
+                    <span>Please create it on the "Create table" button.</span>
                   </div>
                 </div>
               )}
@@ -249,7 +249,7 @@ export default class Tables extends React.Component {
                 <div className="empty-result-row">
                   <div className="empty-result-column">
                     <img className="empty-result-box" src={empty} />
-                    <span>Query is not selected.</span>
+                    <span>Table is not selected.</span>
                     <span>Please select it from left list.</span>
                   </div>
                 </div>

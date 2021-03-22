@@ -84,7 +84,7 @@ function MiniMenu(props) {
     return(
         <>
             <Modal
-                title="Delete query"
+                title="Delete table"
                 isOpen={isOpen}
                 onCancel={handleCancel}
                 onSubmit={handleSubmit}
