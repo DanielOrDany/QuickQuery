@@ -2,19 +2,18 @@
 
 #back-section {
   display: flex;
-  margin-left: 110px;
   padding: 0 20px;
 
   #arrow-back {
     width: 30px;
     height: 30px;
 
-    margin-top: 10px;
+    margin-top: 5px;
   }
 
   #connection-name {
     margin-left: 5px;
-    margin-top: 12px;
+    margin-top: 7px;
     color: white;
     transition: 0.2s;
   }
@@ -61,7 +60,7 @@
     font-size: 14px;
 
     color: white;
-    background: $blue;
+    background: #575553;
 
     border-radius: 5px;
 
@@ -71,7 +70,7 @@
   #export-button:hover {
     cursor: pointer;
 
-    background: $hover-blue;
+    background: #484644;
   }
 
 
@@ -100,7 +99,7 @@
 
     font-family: 'Scada', sans-serif;
 
-    background: $blue;
+    background: #575553;
 
     border-radius: 5px;
 
@@ -110,7 +109,7 @@
   #import-button:hover {
     cursor: pointer;
 
-    background: $hover-blue;
+    background: #484644;
   }
 }
 
@@ -124,7 +123,7 @@
 
   height: 50px;
 
-  background: #252628;
+  background: #217348;
 
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 

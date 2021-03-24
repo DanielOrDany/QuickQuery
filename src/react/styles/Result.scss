@@ -85,7 +85,7 @@
       #header-title {
         font-size: 16px;
         margin-left: 5px;
-        color: $white;
+        color: #484644;
       }
 
       .header-options {
@@ -210,7 +210,7 @@
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
 
-  border-bottom: 5px solid $white;
+  border-bottom: 5px solid #484644;
 }
 
 .arrow-down {
@@ -220,7 +220,7 @@
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
 
-  border-top: 5px solid $white;
+  border-top: 5px solid #484644;
 }
 
 
@@ -242,7 +242,7 @@ th {
 
   font-family: 'Scada', sans-serif;
 
-  background: dimgrey;
+  background: white;
 
   border-left: 1px solid gray;
   border-right: 1px solid gray;
@@ -254,7 +254,7 @@ td {
 
   font-family: 'Scada', sans-serif;
 
-  background: dimgrey;
+  background: white;
 
   border-left: 1px solid gray;
   border-right: 1px solid gray;
@@ -265,16 +265,17 @@ tr th {
   font-size: 16px;
   font-family: 'Scada', sans-serif;
 
-  background: #252628;
+  background: #e6e6e6;
   color: white;
 }
 
 td {
   max-width: 100px;
   word-wrap: break-word;
+  background: white;
 
   input {
-    background: #EFEFEF;
+    background: white;
     border: none;
   }
 }
@@ -282,7 +283,7 @@ td {
 .column_one td {
   font-size: 15px;
 
-  background: #EFEFEF;
+  background: white;
 
   border: 1px solid gray;
 }
@@ -290,7 +291,7 @@ td {
 .column_two td {
   font-size: 15px;
 
-  background: #EFEFEF;
+  background: white;
 
   border: 1px solid gray;
 }
@@ -312,7 +313,7 @@ td {
 
       font-size: 14px;
 
-      background-color: $blue;
+      background-color: #2d9d73;
       color: white;
 
       border: 0 solid;
@@ -327,7 +328,7 @@ td {
     button {
       cursor: pointer;
 
-      background-color: $hover-blue;
+      background-color: #29855f;
     }
   }
 
@@ -340,7 +341,7 @@ td {
 
     /* PAGE NUMBER */
     span {
-      color: #3E3E3E;
+      color: #484644;
     }
 
     /* PAGE BTN */
@@ -352,14 +353,14 @@ td {
       font-size: 14px;
 
       background-color: white;
-      color: #3E3E3E;
+      color: #484644;
 
       border-radius: 5px;
       border: 1px solid #3E3E3E;
     }
 
     #select-page-btn:hover {
-      background-color: #3E3E3E;
+      background-color: #484644;
       color: white;
     }
 
@@ -468,7 +469,7 @@ td {
       width: 210px;
 
       span {
-        color: #3E3E3E;
+        color: #484644;
       }
 
       #select-page-btn {
@@ -487,10 +488,10 @@ td {
           width: 70px;
           height: 30px;
           margin-right: 10px;
-          background-color: #EB6E3B;
+          background-color: #217355;
           color: white;
           font-size: 14px;
-          border: 0 solid #EB6E3B;
+          border: 0 solid #217355;
           border-radius: 5px;
         }
       }

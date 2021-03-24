@@ -5,7 +5,7 @@ import CreateTable from "./CreateTable";
 import Result from "./Result";
 import { getAllTables, getTable } from "../methods";
 import { ReactComponent as MiniMenuIcon } from "../icons/open-menu.svg";
-import xxx from "../icons/Gear-0.2s-200px (1).svg";
+import xxx from "../icons/loop.svg";
 import plus from "../icons/plus.svg";
 import empty from "../icons/empty.svg";
 import upArrow from "../icons/up-arrow.svg";
@@ -207,10 +207,10 @@ export default class Tables extends React.Component {
                               localStorage.getItem("openedTable")
                                 ? table.alias ===
                                   localStorage.getItem("openedTable")
-                                  ? { color: "#eb6e3b" }
+                                  ? { color: "#9fcdb3" }
                                   : null
                                 : table.alias === currentOpenedTable
-                                ? { color: "#eb6e3b" }
+                                ? { color: "#9fcdb3" }
                                 : null
                             }
                           >

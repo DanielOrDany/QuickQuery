@@ -4,7 +4,7 @@ import dateFnsFormat from 'date-fns/format';
 import { loadTableResult, saveTableResult, getTableSize } from "../methods";
 import "../styles/Result.scss";
 import XLSX from "xlsx";
-import xxx from "../icons/Gear-0.2s-200px (1).svg";
+import xxx from "../icons/loop.svg";
 import calendarIcon from "../icons/calendar.svg";
 import filterIcon from "../icons/filter.svg";
 import deleteForeverIcon from "../icons/delete_forever_icon.svg";
@@ -659,9 +659,6 @@ export default class Result extends React.Component {
 
                                                 return (
                                                     <td key={key} style={key === 0 ? {
-                                                        color: "#3E3E3E",
-                                                        background: "#EFEFEF",
-                                                        border: "1px solid grey",
                                                     } : {color: "#3E3E3E"}}>
                                                         <input value={renderItem}/>
                                                     </td>

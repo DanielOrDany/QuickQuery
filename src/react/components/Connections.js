@@ -569,7 +569,7 @@ export default class Connections extends React.Component {
 
                 <div className="menu">
                     <input className="search" id="search-field" type="search" placeholder={"Search"} onChange={() => this.search()}/>
-                    <button type="button" id="add-button" onClick={() => this.openModal()}>Add Connection</button>
+                    <button type="button" id="add-button" onClick={() => this.openModal()}>Add a database</button>
                 </div>
 
                 <div className="folders">
@@ -601,8 +601,8 @@ export default class Connections extends React.Component {
                             <div className="empty-result-row">
                                 <div className="empty-result-column">
                                     <img className="empty-result-box" src={empty}/>
-                                    <span>You don't have a connection yet.</span>
-                                    <span>Please create it on the "Add Connection" button.</span>
+                                    <span>You don't have a database yet.</span>
+                                    <span>Please create it on the "Add a database" button.</span>
                                 </div>
                             </div>
                     }

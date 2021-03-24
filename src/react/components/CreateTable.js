@@ -12,7 +12,7 @@ import {
 } from "../methods";
 
 // Icons
-import xxx from "../icons/Gear-0.2s-200px (1).svg";
+import xxx from "../icons/loop.svg";
 import addIcon from "../icons/add-icon.svg";
 import linkIcon from "../icons/link-icon.svg";
 import removeIcon from "../icons/remove.svg";

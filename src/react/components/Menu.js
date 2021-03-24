@@ -152,7 +152,7 @@ class Menu extends React.Component {
           <Router hashType="noslash">
             <div className="menu-header" expand="md">
               <div className="logo-box">
-                <img src={logo_icon} id="l-icon" onClick={() => this.openConnections()} />
+                {/*<img src={logo_icon} id="l-icon" onClick={() => this.openConnections()} />*/}
                 {!this.state.toTables &&
                 <div id="back-section">
                   <img src={arrow_back} id="arrow-back" onClick={() => this.openConnections()}/>
