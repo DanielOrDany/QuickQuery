@@ -132,7 +132,8 @@ async function updateKey(licenseKey) {
         let first_part = split[0];
         let second_part = split[1];
         let date = Date.now();
-        if(date <= parseInt(second_part) + 604800000) {
+
+        //if(date <= parseInt(second_part) + 604800000) {
             let key = first_part + "~" + date;
             let newBytes = utf8.encode(key);
             let new_encoded = base64.encode(newBytes);
@@ -145,9 +146,9 @@ async function updateKey(licenseKey) {
             }
 
             return "key-error";
-        }
+        //}
 
-        return "key-outdated";
+        //return "key-outdated";
     } catch(e) {
         console.error(e);
     }

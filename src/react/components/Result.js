@@ -138,7 +138,9 @@ export default class Result extends React.Component {
         const { pageNumber, isSaving, options } = this.state;
 
         if (prevState.pageNumber !== pageNumber) {
-            this.reloadTable();
+            setTimeout(() => {
+                this.reloadTable();
+            }, 500);
         }
 
         // console.log(!isEqual(prevState.options, options));
@@ -195,7 +197,10 @@ export default class Result extends React.Component {
 
         if (window.location.href.split('/')[window.location.href.split('/').length - 1] != localStorage.getItem("current_result")) {
             localStorage.setItem("current_result", window.location.href.split('/')[window.location.href.split('/').length - 1]);
-            this.loadTable();
+
+            setTimeout(() => {
+                this.reloadTable();
+            }, 500);
         }
     }
 
@@ -275,7 +280,6 @@ export default class Result extends React.Component {
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
             if (data) {
-                console.log("data", data);
                 if (data.records == 0) {
 
                     this.setState({
@@ -311,9 +315,14 @@ export default class Result extends React.Component {
 
     removeColumn = (column) => {
         const { removedColumns } = this.state;
+
         removedColumns.push(column);
+
         this.setState({ removedColumns });
-        this.reloadTable();
+
+        setTimeout(() => {
+            this.reloadTable();
+        }, 500);
     };
 
     changePage = (operation) => {
@@ -372,11 +381,14 @@ export default class Result extends React.Component {
             options: newOptions
         });
 
-        this.reloadTable();
+        setTimeout(() => {
+            this.reloadTable();
+        }, 500);
     }
 
     handleChangeSearchValue(event, columnName) {
         const searchedValue = event.target.value;
+
         const newOptions = this.state.options.map(option => {
             if (option.column === columnName) {
                 if (option.search !== searchedValue) {
@@ -390,7 +402,9 @@ export default class Result extends React.Component {
             options: newOptions
         });
 
-        this.reloadTable();
+        setTimeout(() => {
+            this.reloadTable();
+        }, 500);
     }
 
     handleChangeFilterValue1(event, columnName) {
@@ -408,7 +422,9 @@ export default class Result extends React.Component {
             options: newOptions
         });
 
-        this.reloadTable();
+        setTimeout(() => {
+            this.reloadTable();
+        }, 500);
     }
 
     handleChangeFilterValue2(event, columnName) {
@@ -426,7 +442,9 @@ export default class Result extends React.Component {
             options: newOptions
         });
 
-        this.reloadTable();
+        setTimeout(() => {
+            this.reloadTable();
+        }, 500);
     }
 
     handleDatePicker1(filteredValue, columnName) {
@@ -447,7 +465,9 @@ export default class Result extends React.Component {
                 options: newOptions
             });
 
-            this.reloadTable();
+            setTimeout(() => {
+                this.reloadTable();
+            }, 500);
         }
     }
 
@@ -469,7 +489,9 @@ export default class Result extends React.Component {
                 options: newOptions
             });
 
-            this.reloadTable();
+            setTimeout(() => {
+                this.reloadTable();
+            }, 500);
         }
     }
 
@@ -490,7 +512,9 @@ export default class Result extends React.Component {
             options: newOptions
         });
 
-        this.reloadTable();
+        setTimeout(() => {
+            this.reloadTable();
+        }, 500);
     }
 
     render() {
