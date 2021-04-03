@@ -623,7 +623,7 @@ export default class CreateTable extends React.Component {
                         <div className="actions">
                             <div className="options-buttons">
                                 <button type="button" className="runButton" onClick={() => this.reload()}>
-                                    <span>Reload tables</span>
+                                    <span>Reload Database</span>
                                 </button>
                                 <button type="button" className="runButton" onClick={() => this.run()}>
                                     <span>Test</span>

@@ -183,7 +183,7 @@ export default class Tables extends React.Component {
                 >
                   <div id="add-btn-field">
                     <img className="add-button" src={plus} />
-                    <div className="button-text">Create table</div>
+                    <div className="button-text">Join table</div>
                   </div>
                 </div>
               </div>
@@ -233,7 +233,7 @@ export default class Tables extends React.Component {
                   <div className="empty-rows-column">
                     <img className="empty-rows-box" src={upArrow} />
                     <span>You don't have a table yet.</span>
-                    <span>Please create it on the "Create table" button.</span>
+                    <span>Please create it on the "Join table" button.</span>
                   </div>
                 </div>
               )}
