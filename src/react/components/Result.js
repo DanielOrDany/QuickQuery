@@ -9,9 +9,11 @@ import calendarIcon from "../icons/calendar.svg";
 import filterIcon from "../icons/filter.svg";
 import deleteForeverIcon from "../icons/delete_forever_icon.svg";
 import DayPickerInput from "react-day-picker/DayPickerInput";
+import TableModal from "./TableModal";
 
 const DESC = "DESC";
 const ASC = "ASC";
+
 
 const isEqual = function (value, other) {
 
@@ -91,7 +93,10 @@ export default class Result extends React.Component {
             isSaving: false,
             isEmptyQuery: false,
             options: [],
-            removedColumns: []
+            removedColumns: [],
+            setTableModalActive: false,
+            idRow: null,
+            selectedRowInfo: []
         };
 
         this.handleChangeFilterValue1 = this.handleChangeFilterValue1.bind(this);
@@ -517,8 +522,21 @@ export default class Result extends React.Component {
         }, 500);
     }
 
+
+    setTableModal(active) {
+        this.setState({
+            setTableModalActive: active
+        })
+    }
+
+    handleCancel = () => {
+        this.setState({ setTableModalActive: false });
+    };
+
+
+
     render() {
-        let { isEmptyQuery, options, headers, rows, isNullResults, isSaving, removedColumns, isLoading } = this.state;
+        let { isEmptyQuery, options, headers, rows, isNullResults, isSaving, removedColumns, isLoading, selectedRowInfo, idRow, setTableModalActive} = this.state;
 
         removedColumns.forEach(removedColumn => {
             headers = headers.filter((header) => header !== removedColumn);
@@ -545,8 +563,12 @@ export default class Result extends React.Component {
         } else {
             return (
                 <div className="result">
+
+                    <TableModal isOpen={setTableModalActive} tableInfo={selectedRowInfo} onCancel={this.handleCancel}/>
+
                     <div className="result-table">
                         <table>
+
                             <tr>
                                 { // Headers
                                     headers ? headers.map((header) => {
@@ -663,10 +685,12 @@ export default class Result extends React.Component {
                                     }) : null
                                 }
                             </tr>
+
+
                             { // Rows
-                                (rows && !isNullResults) ? rows.map((item, key) => {
+                                (rows && !isNullResults) ? rows.map((item, rowKey) => {
                                     return (
-                                        <tr key={key} className={key++ % 2 === 0 ? "column_one" : "column_two"}>
+                                        <tr key={rowKey} className={rowKey++ % 2 === 0 ? "column_one" : "column_two"}>
                                             { Object.values(item).map((get_item, key) => {
 
                                                 let renderItem;
@@ -680,11 +704,21 @@ export default class Result extends React.Component {
                                                 } else {
                                                     renderItem = get_item;
                                                 }
-
                                                 return (
-                                                    <td key={key} style={key === 0 ? {
-                                                    } : {color: "#3E3E3E"}}>
-                                                        <input value={renderItem}/>
+                                                    <td key={key}
+                                                        className={rowKey === idRow ? 'result-table-td2' : 'result-table-td'}
+                                                        onClick={() => {
+                                                            this.setState({
+                                                                idRow: rowKey,
+                                                                selectedRowInfo: Object.entries(item)
+                                                            })}
+                                                        }
+
+                                                        onDoubleClick={() => {
+                                                            this.setTableModal(!setTableModalActive);
+
+                                                        }}>
+                                                        <input value={renderItem} className={'result-table-td-text'}/>
                                                     </td>
                                                 );
                                             })}
@@ -692,7 +726,12 @@ export default class Result extends React.Component {
                                     );
                                 }) : null
                             }
+
+
+
                         </table>
+
+
                     </div>
                     <div className="pages-field">
                         <div className="select-page">
@@ -710,6 +749,9 @@ export default class Result extends React.Component {
                             </div>
                         </div>
                     </div>
+
+
+
                 </div>
             );
         }

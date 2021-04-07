@@ -47,7 +47,7 @@ function createWindow () {
   // });
 
   // Set/Remove MENU
-  mainWindow.removeMenu();
+  // mainWindow.removeMenu();
 
   mainWindow.on('closed', function () {
     app.quit();

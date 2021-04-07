@@ -200,6 +200,33 @@
 
     }
   }
+
+  .result-table-td2{
+    background-color: #545454;
+    color: white;
+
+    .result-table-td-text {
+      cursor: pointer;
+      background-color: #545454;
+      color: white;
+      transition: .2s;
+    }
+
+  }
+
+  .result-table-td:hover {
+    cursor: pointer;
+    background-color: #545454;
+    transition: .2s;
+
+    .result-table-td-text {
+      cursor: pointer;
+      background-color: #545454;
+      color: white;
+      transition: .2s;
+    }
+  }
+
 }
 
 // Order arrow
@@ -295,6 +322,7 @@ td {
 
   border: 1px solid gray;
 }
+
 
 /* CHOOSE PAGE */
 .pages-field {

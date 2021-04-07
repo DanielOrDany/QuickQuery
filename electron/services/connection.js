@@ -85,7 +85,7 @@ async function addConnection(params) {
                 dialectOptions: {
                     ssl: {
                         require: true,
-                        rejectUnauthorized: true // <<<<<< YOU NEED THIS
+                        rejectUnauthorized: false // <<<<<< YOU NEED THIS
                     }
                 }}
         );
