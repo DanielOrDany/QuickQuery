@@ -16,8 +16,8 @@ const TableModal = ({isOpen, tableInfo, onCancel}) => {
                 <div className={'row-info'}>
                     {tableInfo.map(tableName =>
                         <div className={'table-rows'}>
-                            <div className={'table-name'}>{tableName[0]}</div>
-                            <div className={'table-infos'}>{tableName[1]}</div>
+                            <div className={'table-name'}><input value={tableName[0]}/></div>
+                            <div className={'table-infos'}><input value={tableName[1]}/></div>
                         </div>)}
                 </div>
 

@@ -4,6 +4,10 @@
   background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   transform: scale(1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 60px;
 }
 
 .no-active {
@@ -12,11 +16,11 @@
 
 
 .table-popup {
-  margin: 20px auto;
   width: 600px;
-  height: 660px;
+  max-height: 660px;
   background-color: white;
   border-radius: 10px;
+  padding-bottom: 60px;
 
 
   .cross-popup {
@@ -41,8 +45,8 @@
   .row-info {
     margin-top: 0;
     margin-bottom: 0;
-    max-height: 540px;
-    overflow: scroll;
+    max-height: 500px;
+    overflow: auto;
     overflow-x:hidden;
 
   }
@@ -54,7 +58,7 @@
 
 
     .table-name {
-      width: 160px;
+      width: 210px;
       text-align: center;
       background-color: #DCE6D9;
       border: 1px solid grey;
@@ -64,15 +68,28 @@
       font-size: 16px;
       font-weight: 900;
 
+      input {
+        text-align: center;
+        border: none;
+        background-color: #DCE6D9;
+      }
+
     }
 
     .table-infos {
-      min-width: 300px;
+      min-width: 350px;
       text-align: center;
       background-color: white;
       border: 1px solid grey;
 
       padding: 15px;
+
+      input {
+        text-align: center;
+        border: none;
+        background-color: white;
+      }
+
     }
   }
 
