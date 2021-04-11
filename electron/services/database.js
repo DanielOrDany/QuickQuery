@@ -100,7 +100,7 @@ async function checkLicense() {
     let keyDecr = crypto.AES.encrypt(aes[1], aes[0]).toString(crypto.enc.Utf8);
     let keySplit = keyDecr.split('~');
 
-    if(Date.now() <= parseInt(dates[2]) + parseInt(dates[3])) {
+    if(Date.now() <= parseInt(keySplit[2]) + parseInt(keySplit[3])) {
         return "good-license";
     } else {
         return "update-license";
