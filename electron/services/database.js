@@ -27,6 +27,7 @@ function getAppDataPath() {
 const fs = require('fs');
 const base64 = require('base-64');
 const utf8 = require('utf8');
+const crypto = require('crypto-js');
 const pg = require('pg');
 pg.defaults.ssl = true;
 
@@ -95,9 +96,11 @@ async function checkLicense() {
         return "no-license";
     }
 
-    let dates = string.split("~");
+    let aes = string.split("|");
+    let keyDecr = crypto.AES.encrypt(aes[1], aes[0]).toString(crypto.enc.Utf8);
+    let keySplit = keyDecr.split('~');
 
-    if(Date.now() <= parseInt(dates[0]) + parseInt(dates[1])) {
+    if(Date.now() <= parseInt(dates[2]) + parseInt(dates[3])) {
         return "good-license";
     } else {
         return "update-license";
@@ -127,15 +130,19 @@ async function setTrial() {
 async function updateKey(licenseKey) {
     try {
         let bytes = base64.decode(licenseKey);
-        let decoded = utf8.decode(bytes);
-        let split = decoded.split("~");
-        let first_part = split[0];
-        let second_part = split[1];
+        let aes = utf8.decode(bytes);
+        let split = aes.split("|");
+        let aesKey = split[0];
+        let aesEncr = split[1];
+        let key = crypto.AES.decrypt(aesEncr, aesKey).toString(crypto.enc.Utf8);
+        split = key.split("~");
         let date = Date.now();
 
-        //if(date <= parseInt(second_part) + 604800000) {
-            let key = first_part + "~" + date;
-            let newBytes = utf8.encode(key);
+        if(date <= parseInt(split[3]) + 604800000) {
+            let key = `${split[0]}~${split[1]}~${split[2]}~${date}`;
+            let encrKey = Math.random().toString(36).substring(2, 7);
+            let keyEncr = crypto.AES.encrypt(key, encrKey).toString();
+            let newBytes = utf8.encode(`${encrKey}|${keyEncr}`);
             let new_encoded = base64.encode(newBytes);
             database.set('licenseKey', new_encoded).write();
 
@@ -146,9 +153,9 @@ async function updateKey(licenseKey) {
             }
 
             return "key-error";
-        //}
+        }
 
-        //return "key-outdated";
+        return "key-outdated";
     } catch(e) {
         console.error(e);
     }
