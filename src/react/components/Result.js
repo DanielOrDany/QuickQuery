@@ -148,7 +148,6 @@ export default class Result extends React.Component {
             }, 500);
         }
 
-        // console.log(!isEqual(prevState.options, options));
         // if (!isEqual(prevState.options, options)) {
         //     this.reloadTable();
         // }
@@ -204,7 +203,7 @@ export default class Result extends React.Component {
             localStorage.setItem("current_result", window.location.href.split('/')[window.location.href.split('/').length - 1]);
 
             setTimeout(() => {
-                this.reloadTable();
+                this.loadTable();
             }, 500);
         }
     }
@@ -230,7 +229,6 @@ export default class Result extends React.Component {
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
             if (data) {
-                console.log("data", data);
                 if (data.records === 0) {
                     this.setState({
                         isNullResults: true,

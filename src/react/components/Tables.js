@@ -127,13 +127,15 @@ export default class Tables extends React.Component {
     const searchValue = document.getElementById("search-field").value;
     let searchedTables = [];
 
-    this.state.tables.forEach(table => {
-      if (table.alias.includes(searchValue)) {
-        searchedTables.push(table);
-      }
-    });
+    if (this.state.tables.length != 0) {
+      this.state.tables.forEach(table => {
+        if (table.alias.includes(searchValue)) {
+          searchedTables.push(table);
+        }
+      });
 
-    this.setState({ searchedTables: searchedTables });
+      this.setState({ searchedTables: searchedTables });
+    }
   };
 
   render() {
