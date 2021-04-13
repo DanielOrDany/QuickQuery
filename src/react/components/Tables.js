@@ -23,6 +23,7 @@ export default class Tables extends React.Component {
       isOpen: false,
       currentConnection: ""
     };
+
   }
 
   async componentDidMount() {
