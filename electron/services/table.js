@@ -729,14 +729,12 @@ async function saveTableResult(connectionName, alias, loadingOptions) {
         for(let i = 0; i < cycles; i++) {
             let queryShard = query + `LIMIT ${downloadLimit} OFFSET ${i * downloadLimit}`;
             let queryShardResult = await sequelize.query(queryShard);
-            console.log(queryShardResult);
             if(i === 0) {
                 queryResult = queryShardResult;
             } else {
                 queryResult[0] = [...queryResult[0], ...queryShardResult[0]];
                 queryResult[1].rows = [...queryResult[1].rows, ...queryShardResult[1].rows];
             }
-            console.log(queryResult);
         }
 
         if (dialect === POSTGRESQL) {
