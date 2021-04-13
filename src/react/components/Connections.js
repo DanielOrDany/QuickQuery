@@ -330,13 +330,15 @@ export default class Connections extends React.Component {
         const searchValue = document.getElementById('search-field').value;
         let searchedConnections = [];
 
-        this.state.connections.forEach(connection => {
-            if (connection.name.includes(searchValue)) {
-                searchedConnections.push(connection);
-            }
-        });
+        if (this.state.connections.length != 0) {
+            this.state.connections.forEach(connection => {
+                if (connection.name.includes(searchValue)) {
+                    searchedConnections.push(connection);
+                }
+            });
 
-        this.setState({ searchedConnections: searchedConnections.length > 0 ? searchedConnections : [] });
+            this.setState({ searchedConnections: searchedConnections.length > 0 ? searchedConnections : [] });
+        }
     };
 
     bigInput = () => {
