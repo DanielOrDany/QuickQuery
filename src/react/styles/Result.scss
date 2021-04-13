@@ -205,6 +205,11 @@
     background-color: #545454;
     color: white;
 
+
+    .result-table-td-img {
+      width: 30px;
+    }
+
     .result-table-td-text {
       cursor: pointer;
       background-color: #545454;
@@ -214,10 +219,18 @@
 
   }
 
+  .result-table-td {
+    .result-table-td-img {
+      width: 30px;
+    }
+  }
+
   .result-table-td:hover {
     cursor: pointer;
     background-color: #545454;
     transition: .2s;
+
+
 
     .result-table-td-text {
       cursor: pointer;

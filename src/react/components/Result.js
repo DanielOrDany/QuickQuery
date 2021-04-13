@@ -10,6 +10,7 @@ import filterIcon from "../icons/filter.svg";
 import deleteForeverIcon from "../icons/delete_forever_icon.svg";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import TableModal from "./TableModal";
+import TableImgModal from "./TableImgModal";
 
 const DESC = "DESC";
 const ASC = "ASC";
@@ -96,7 +97,9 @@ export default class Result extends React.Component {
             removedColumns: [],
             setTableModalActive: false,
             idRow: null,
-            selectedRowInfo: []
+            selectedRowInfo: [],
+            TableImgModalActive: false,
+            columnImg: ''
         };
 
         this.handleChangeFilterValue1 = this.handleChangeFilterValue1.bind(this);
@@ -531,10 +534,34 @@ export default class Result extends React.Component {
         this.setState({ setTableModalActive: false });
     };
 
+    handleImgCancel = () => {
+        this.setState({ TableImgModalActive: false });
+    };
+
+
+    setTableImgModal() {
+        let active = this.state.TableImgModalActive
+        this.setState({TableImgModalActive:!active})
+    }
+
+
+    ImgCheck(renderItem) {
+        if (String(renderItem).indexOf(".png") > -1) {
+            console.log(renderItem)
+            return (
+                <img src={renderItem} alt={'img'} className={'result-table-td-img'} onClick={() => this.setTableImgModal()}/>
+        )
+
+        } else {
+            return (
+                <input value={renderItem} className={'result-table-td-text'}/>)
+        }
+    }
+
 
 
     render() {
-        let { isEmptyQuery, options, headers, rows, isNullResults, isSaving, removedColumns, isLoading, selectedRowInfo, idRow, setTableModalActive} = this.state;
+        let { isEmptyQuery, options, headers, rows, isNullResults, isSaving, removedColumns, isLoading, selectedRowInfo, idRow, setTableModalActive, TableImgModalActive, columnImg} = this.state;
 
         removedColumns.forEach(removedColumn => {
             headers = headers.filter((header) => header !== removedColumn);
@@ -563,6 +590,7 @@ export default class Result extends React.Component {
                 <div className="result">
 
                     <TableModal isOpen={setTableModalActive} tableInfo={selectedRowInfo} onCancel={this.handleCancel}/>
+                    <TableImgModal isOpen={TableImgModalActive} tableInfo={columnImg} onCancel={this.handleImgCancel}/>
 
                     <div className="result-table">
                         <table>
@@ -684,7 +712,6 @@ export default class Result extends React.Component {
                                 }
                             </tr>
 
-
                             { // Rows
                                 (rows && !isNullResults) ? rows.map((item, rowKey) => {
                                     return (
@@ -708,15 +735,18 @@ export default class Result extends React.Component {
                                                         onClick={() => {
                                                             this.setState({
                                                                 idRow: rowKey,
-                                                                selectedRowInfo: Object.entries(item)
-                                                            })}
+                                                                selectedRowInfo: Object.entries(item),
+                                                                columnImg: get_item
+                                                            })
+                                                        }
+
                                                         }
 
                                                         onDoubleClick={() => {
                                                             this.setTableModal(!setTableModalActive);
 
                                                         }}>
-                                                        <input value={renderItem} className={'result-table-td-text'}/>
+                                                        {this.ImgCheck(renderItem)}
                                                     </td>
                                                 );
                                             })}
@@ -724,8 +754,6 @@ export default class Result extends React.Component {
                                     );
                                 }) : null
                             }
-
-
 
                         </table>
 

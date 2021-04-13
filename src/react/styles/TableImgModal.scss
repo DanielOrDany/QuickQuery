@@ -1,0 +1,47 @@
+.tableImgModal-active {
+  height: 100vh;
+  width: 81vw;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  transform: scale(1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding-bottom: 60px;
+
+
+  .img-cross-div {
+    width: 81vw;
+    padding-bottom: 50px;
+
+    display: flex;
+    justify-content: flex-end;
+
+    .cross-table-img-popup {
+      width: 35px;
+      height: 35px;
+      text-align: right;
+      margin-right: 200px;
+    }
+
+    .cross-table-img-popup:hover {
+      cursor: pointer;
+    }
+  }
+
+
+  .img-popup {
+    width: 400px;
+  }
+
+}
+
+.no-active-img {
+  transform: scale(0);
+}
+
+
+
+
+
