@@ -155,7 +155,6 @@ export default class Connections extends React.Component {
                 localStorage.setItem("connections", JSON.stringify(data.connections));
                 localStorage.setItem("data", JSON.stringify(data));
             })
-        /*
         checkLicense()
             .then(data => {
                 if(data === "no-license") {
@@ -177,7 +176,6 @@ export default class Connections extends React.Component {
                     });
                 }
             });
-            */
     };
 
     inputVirify(args) {

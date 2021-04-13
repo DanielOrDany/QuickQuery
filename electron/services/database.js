@@ -86,9 +86,7 @@ async function loadDatabase(encodedDatabase) {
 }
 
 async function checkLicense() {
-    console.log("checking...");
     const key = await database.get('licenseKey').value();
-    console.log(key);
     let bytes = await base64.decode(key);
     let string = await utf8.decode(bytes);
 
@@ -97,7 +95,7 @@ async function checkLicense() {
     }
 
     let aes = string.split("|");
-    let keyDecr = crypto.AES.encrypt(aes[1], aes[0]).toString(crypto.enc.Utf8);
+    let keyDecr = crypto.AES.decrypt(aes[1], aes[0]).toString(crypto.enc.Utf8);
     let keySplit = keyDecr.split('~');
 
     if(Date.now() <= parseInt(keySplit[2]) + parseInt(keySplit[3])) {
