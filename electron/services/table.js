@@ -547,12 +547,16 @@ async function saveTableResult(connectionName, alias, loadingOptions) {
         }
 
         // Get table result
-        let query = db.read()
+        let queryData = db.read()
             .get('connections')
             .find({name: connectionName})
             .get('queries')
             .find({alias: alias})
-            .value().query;
+            .value();
+
+        let query = queryData.query;
+
+        let queryType = queryData.type;
 
         if (query[query.length] === ';') {
             query = query[query.length].replace(';', ' ');
@@ -694,7 +698,7 @@ async function saveTableResult(connectionName, alias, loadingOptions) {
                     const regex = /\./g;
                     const fullColumn = column.replace(regex, '_');
 
-                    if (fullColumn.match(tableColumn)) {
+                    if (fullColumn.match(tableColumn) && queryType === 'new') {
                         column = fullColumn.replace(`${tableColumn}_`, `${tableColumn}.`);
                     }
                 });
@@ -727,7 +731,7 @@ async function saveTableResult(connectionName, alias, loadingOptions) {
         const cycles = Math.ceil(numberOfRecords / downloadLimit);
         
         for(let i = 0; i < cycles; i++) {
-            let queryShard = query + `LIMIT ${downloadLimit} OFFSET ${i * downloadLimit}`;
+            let queryShard = query + ` LIMIT ${downloadLimit} OFFSET ${i * downloadLimit}`;
             let queryShardResult = await sequelize.query(queryShard);
             console.log(queryShardResult);
             if(i === 0) {
