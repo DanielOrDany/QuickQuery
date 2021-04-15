@@ -19,6 +19,10 @@ import removeIcon from "../icons/remove.svg";
 import westIcon from "../icons/west-arrow.svg";
 import eastIcon from "../icons/east-arrow.svg";
 
+const utf8 = require('utf8');
+const base64 = require('base-64');
+const base64RE = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/g;
+
 export default class CreateTable extends React.Component {
 
     constructor(props) {
@@ -376,7 +380,7 @@ export default class CreateTable extends React.Component {
                 columns,
                 secondColumns,
                 alias: (result && result.alias) ? result.alias : "",
-                queryName: result.alias,
+                queryName: result.alias.match(base64RE) ? utf8.decode(base64.decode(result.alias)) : result.alias,
                 isLoading: false
             });
         }

@@ -1,5 +1,7 @@
 const { channels } = require('../../../src/shared/constants');
 const { ipcRenderer } = window;
+const utf8 = require('utf8');
+const base64 = require('base-64');
 
 // Export API methods
 export const
@@ -105,6 +107,11 @@ export const
     },
 
     addTable = async (connectionName, query, type, alias) => {
+        const aliasUTF8 = utf8.encode(alias);
+        if(aliasUTF8 !== alias) {
+            const aliasBase64 = base64.encode(aliasUTF8);
+            alias = aliasBase64;
+        }
         return new Promise(resolve => {
             ipcRenderer.send(channels.ADD_TABLE, connectionName, query, type, alias);
             ipcRenderer.on(channels.ADD_TABLE, (event, result) => {
@@ -159,6 +166,16 @@ export const
     },
 
     updateTableQuery = async (connectionName, alias, query, newAlias) => {
+        const aliasUTF8 = utf8.encode(alias);
+        if(aliasUTF8 !== alias) {
+            const aliasBase64 = base64.encode(aliasUTF8);
+            alias = aliasBase64;
+        }
+        const newAliasUTF8 = utf8.encode(newAlias);
+        if(newAliasUTF8 !== newAlias) {
+            const newAliasBase64 = base64.encode(newAliasUTF8);
+            newAlias = newAliasBase64;
+        }
         return new Promise(resolve => {
             ipcRenderer.send(channels.UPDATE_QUERY, connectionName, alias, query, newAlias);
             ipcRenderer.on(channels.UPDATE_QUERY, (event, result) => {
