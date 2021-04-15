@@ -15,7 +15,10 @@ import Modal from "./Modal";
 
 const utf8 = require('utf8');
 const base64 = require('base-64');
-const base64RE = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/g;
+const base64RE = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$/g;
+const engRE = /^[a-zA-Z]+$/g;
+
+//function validate(str) { try { base64.decode(str); return true; } catch (e) { return false; }}
 
 export default class Tables extends React.Component {
   constructor(props) {
@@ -224,8 +227,12 @@ export default class Tables extends React.Component {
                             &#11044;
                           </span>
                           <div id="name">
-                            {}
-                            <p id="table-n">{table.alias.match(base64RE) ? utf8.decode(base64.decode(table.alias)) : table.alias}</p>
+                            {
+                              table.alias.match(engRE) ?
+                                  <p id="table-n">{table.alias}</p>
+                                  :
+                                  <p id="table-n">{table.alias.match(base64RE) ? utf8.decode(base64.decode(table.alias)) : table.alias }</p>
+                            }
                           </div>
                         </div>
                       </div>

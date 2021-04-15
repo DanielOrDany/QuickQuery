@@ -406,6 +406,7 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
 
                 // Join cases
                 tableColumns.forEach(tableColumn => {
+                    console.log(tableColumn);
                     const regex = /\./g;
                     const fullColumn = column.replace(regex, '_');
 
