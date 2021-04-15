@@ -255,12 +255,15 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
         }
 
         // Get table result
-        let query = db.read()
+        const queryData = db.read()
             .get('connections')
             .find({name: connectionName})
             .get('queries')
             .find({alias: alias})
-            .value().query;
+            .value();
+
+        let query = queryData.query;
+        let queryType = queryData.type;
 
         if (query[query.length] === ';') {
             query = query[query.length].replace(';', ' ');
@@ -406,7 +409,7 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                     const regex = /\./g;
                     const fullColumn = column.replace(regex, '_');
 
-                    if (fullColumn.match(tableColumn)) {
+                    if (fullColumn.match(tableColumn) && queryType === 'new') {
                         column = fullColumn.replace(`${tableColumn}_`, `${tableColumn}.`);
                     }
                 });
