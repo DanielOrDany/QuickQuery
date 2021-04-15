@@ -137,7 +137,7 @@ async function addConnection(params) {
                 tables[0].forEach(table => {
 
                     // save native table name
-                    connection.native_tables.push(table.table_name);
+                    connection.native_tables.push(table.TABLE_NAME);
 
                     // save default query
                     connection.queries.push({
