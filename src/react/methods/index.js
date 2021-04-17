@@ -6,6 +6,24 @@ const base64 = require('base-64');
 // Export API methods
 export const
 
+    authLogin = async (email, password) => {
+        return new Promise(resolve => {
+            ipcRenderer.send(channels.AUTH_LOGIN, email, password);
+            ipcRenderer.on(channels.AUTH_LOGIN, (event, result) => {
+                resolve(result.data);
+            });
+        });
+    },
+
+    authVerifyToken = async (id, token) => {
+        return new Promise(resolve => {
+            ipcRenderer.send(channels.AUTH_VERIFY_TOKEN, id, token);
+            ipcRenderer.on(channels.AUTH_VERIFY_TOKEN, (event, result) => {
+                resolve(result.data);
+            });
+        });
+    },
+
     getDataFromDatabase = async () => {
         return new Promise(resolve => {
             ipcRenderer.send(channels.GET_DB);

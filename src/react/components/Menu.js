@@ -4,26 +4,39 @@ import {
   Route,
   Switch
 } from 'react-router-dom';
+import {
+  importConfig,
+  exportConfig,
+  authLogin,
+  authVerifyToken
+} from "../methods";
+import Modal from './Modal';
+import Auth from "./Auth";
 import Tables from './Tables';
 import Connections from './Connections';
-import Settings from './Settings';
-import '../styles/Menu.scss';
 import arrow_back from "../icons/arrow_back.svg";
-import logo_icon from "../icons/logo.png";
-import { importConfig, exportConfig } from "../methods";
-import top_menu_settings from "../icons/top-menu-settings.png"
+import top_menu_settings from "../icons/top-menu-settings.png";
+import '../styles/Menu.scss';
 
-import Modal from './Modal';
 
 class Menu extends React.Component {
+  constructor(props) {
+    super(props);
 
-  state = {
-    theme: false,
-    toTables: true
+    this.state = {
+      theme: false,
+      toTables: true,
+      isSignedIn: true
+    };
+
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
+    this.verifyEmployee = this.verifyEmployee.bind(this);
+    this.changeSignedStatus = this.changeSignedStatus.bind(this);
   };
 
-  componentDidMount() {
-    if(localStorage.getItem("theme")){
+  async componentDidMount() {
+    if (localStorage.getItem("theme")) {
       this.setState({
         theme: true,
         isOpen: false,
@@ -32,14 +45,49 @@ class Menu extends React.Component {
       });
     }
 
-    if(!(window.location.hash == "" || window.location.hash == "#connections")) {
+    if (!(window.location.hash == "" || window.location.hash == "#connections")) {
       this.setState({toTables: false});
     }
 
     window.onhashchange = () => {
-      if(!(window.location.hash == "" || window.location.hash == "#connections") && this.state.toTables) {
+      if (!(window.location.hash == "" || window.location.hash == "#connections") && this.state.toTables) {
         this.setState({toTables: false});
       }
+    };
+
+    this.verifyEmployee();
+  }
+
+  changeSignedStatus(status) {
+    this.setState({
+      isSignedIn: status
+    })
+  }
+
+  async verifyEmployee() {
+    const id = localStorage.getItem("employeeId");
+    const token = localStorage.getItem("employeeToken");
+
+    if (id && token) {
+      const verified = await authVerifyToken(id, token);
+
+      console.log('verified user', verified);
+
+      if (verified && verified.data) {
+        localStorage.setItem("employeePlan", verified.data.subscription.plan_name);
+        localStorage.setItem("employeeCountSubFrom", verified.data.subscription.count_from);
+        this.setState({
+          isSignedIn: true
+        })
+      } else {
+        this.setState({
+          isSignedIn: false
+        })
+      }
+    } else {
+      this.setState({
+        isSignedIn: false
+      })
     }
   }
 
@@ -98,6 +146,13 @@ class Menu extends React.Component {
     }
   }
 
+  logout() {
+    localStorage.removeItem('employeeId');
+    localStorage.removeItem('employeeToken');
+    localStorage.removeItem('employeePlan');
+    this.setState({ isSignedIn: false, isOpen: false, message: "" });
+  }
+
   openConnections() {
     this.setState({toTables: true});
     window.location.hash = '#/connections';
@@ -110,11 +165,29 @@ class Menu extends React.Component {
     window.location.hash = '#/tables';
   }
 
+  async login(email, password) {
+    const result = await authLogin(email, password);
+
+    if (result.error) {
+      return { error: result.error };
+    } else {
+      localStorage.setItem('employeeId', result.data.id);
+      localStorage.setItem('employeeToken', result.data.token);
+      localStorage.setItem('employeePlan', result.data.subscription_plan);
+      this.setState({ isSignedIn: true });
+      return null;
+    }
+  }
+
   render() {
     const currentConnection = JSON.parse(localStorage.getItem("current_connection"));
 
     return (
         <>
+          {
+            !this.state.isSignedIn &&
+            <Auth onLogin={this.login}/>
+          }
           {
             this.state.error &&
             <Modal
@@ -146,6 +219,10 @@ class Menu extends React.Component {
                   <span id="export-button" onClick={() => this.share()}>Export</span>
                   <p>Export app settings into file</p>
                 </div>
+                <div id="logout-div">
+                  <span id="logout-button" onClick={() => this.logout()}>Exit</span>
+                  <p>Logout from the app</p>
+                </div>
               </div>
             </Modal>
           }
@@ -169,10 +246,9 @@ class Menu extends React.Component {
               </div>
             </div>
             <Switch>
-              <Route path="/tables" component={Tables} />
-              <Route path="/connections" component={Connections} />
-              <Route path="/settings" component={Settings} />
-              <Route path="/" component={Connections} />
+              <Route path="/tables" component={() => <Tables changeSignedStatus={this.changeSignedStatus} />} />
+              <Route path="/connections" component={() => <Connections changeSignedStatus={this.changeSignedStatus} />} />
+              <Route path="/" component={() => <Connections changeSignedStatus={this.changeSignedStatus} />} />
             </Switch>
           </Router>
         </>

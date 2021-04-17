@@ -1,0 +1,91 @@
+@import "./variables";
+
+.auth-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  .blur-back {
+    position: absolute;
+    z-index: 99;
+    background: $white;
+    filter: blur(1000px);
+    width: 100%;
+    height: 100%;
+  }
+
+  .login-form {
+    z-index: 999;
+    position: absolute;
+    width: 300px;
+    height: max-content;
+    box-shadow: $box-shadow;
+    background: $box-background-color;
+    border-radius: 5px;
+    color: $box-text-color;
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    align-items: center;
+
+    .error {
+      color: red;
+      width: 250px;
+      font-size: 14px;
+      word-wrap: break-word;
+      margin-top: 10px;
+    }
+
+    input {
+      width: 250px;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      border-bottom: 1px solid $border-color;
+      color: $box-text-color;
+      font-size: 1em;
+      margin-top: 5px;
+      padding: 10px 10px;
+      font-weight: normal;
+    }
+
+    button {
+      width: 245px;
+      border-radius: 5px;
+      border: none;
+      margin-top: 20px;
+      padding: 10px;
+      font-size: 1em;
+      background: $green-white;
+      color: $white;
+    }
+
+    button:hover {
+      background: $button-hover-background-color;
+    }
+
+    button:active {
+      background-color: $button-active-background-color;
+    }
+  }
+
+  .form-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  #login-email {
+    margin-top: 40px;
+  }
+
+  #login-password {
+    margin-top: 10px;
+  }
+}

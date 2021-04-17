@@ -3,7 +3,7 @@ import "../styles/Tables.scss";
 import { Route } from "react-router-dom";
 import CreateTable from "./CreateTable";
 import Result from "./Result";
-import { getAllTables, getTable } from "../methods";
+import {authVerifyToken, getAllTables, getTable} from "../methods";
 import { ReactComponent as MiniMenuIcon } from "../icons/open-menu.svg";
 import xxx from "../icons/loop.svg";
 import plus from "../icons/plus.svg";
@@ -18,8 +18,6 @@ const base64 = require('base-64');
 const base64RE = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$/g;
 const engRE = /^[a-zA-Z]+$/g;
 
-//function validate(str) { try { base64.decode(str); return true; } catch (e) { return false; }}
-
 export default class Tables extends React.Component {
   constructor(props) {
     super(props);
@@ -28,7 +26,8 @@ export default class Tables extends React.Component {
       tables: [],
       searchedTables: [],
       isOpen: false,
-      currentConnection: ""
+      currentConnection: "",
+      warning: null
     };
 
   }
@@ -42,10 +41,11 @@ export default class Tables extends React.Component {
     const connectionName = JSON.parse(
       localStorage.getItem("current_connection")
     ).name;
+
     await this.loadTables(connectionName);
   }
 
-  async componentDidUpdate() {
+  async componentDidUpdate(prevProps, prevState, snapshot) {
     if (localStorage.getItem("need_update")) {
       localStorage.removeItem("need_update");
       await this.loadTables(
@@ -58,6 +58,12 @@ export default class Tables extends React.Component {
       await this.loadTables(
         JSON.parse(localStorage.getItem("current_connection")).name
       );
+    }
+
+    if (prevState.warning !== this.state.warning) {
+      setTimeout(() => {
+        this.setState({warning: null});
+      }, 5000);
     }
   }
 
@@ -84,51 +90,99 @@ export default class Tables extends React.Component {
     });
   }
 
-  openTable(alias) {
+  async openTable(alias) {
+    await this.verifyEmployee();
+
     const connectionName = JSON.parse(
-      localStorage.getItem("current_connection")
+        localStorage.getItem("current_connection")
     ).name;
+
     getTable(connectionName, alias)
-      .then(result => {
-        localStorage.setItem("current_result_info", JSON.stringify(result));
-        const results = JSON.parse(localStorage.getItem("results"));
+        .then(result => {
+          localStorage.setItem("current_result_info", JSON.stringify(result));
+          const results = JSON.parse(localStorage.getItem("results"));
 
-        if (results) {
-          results.push(result);
-          localStorage.setItem("results", JSON.stringify(results));
-        } else {
-          localStorage.setItem("results", JSON.stringify([result]));
-        }
+          if (results) {
+            results.push(result);
+            localStorage.setItem("results", JSON.stringify(results));
+          } else {
+            localStorage.setItem("results", JSON.stringify([result]));
+          }
 
-        return `#/tables/${window.location.hash.split("/")[1]}/result/${alias}`;
-      })
-      .then(url => {
-        window.location.hash = url;
-        localStorage.removeItem("openedTable");
-        this.setState({
-          currentOpenedTable: alias
+          return `#/tables/${window.location.hash.split("/")[1]}/result/${alias}`;
+        })
+        .then(url => {
+          window.location.hash = url;
+          localStorage.removeItem("openedTable");
+          this.setState({
+            currentOpenedTable: alias
+          });
         });
-      });
   }
 
-  createTable() {
-    if (localStorage.getItem("current_result_info")) {
-      localStorage.removeItem("current_result_info");
+  async verifyEmployee() {
+    const id = localStorage.getItem("employeeId");
+    const token = localStorage.getItem("employeeToken");
+
+    if (id && token) {
+      const verified = await authVerifyToken(id, token);
+
+      console.log('verified user', verified);
+
+      if (verified && verified.data) {
+        localStorage.setItem("employeePlan", verified.data.subscription.plan_name);
+        localStorage.setItem("employeeCountSubFrom", verified.data.subscription.count_from);
+        await this.props.changeSignedStatus(true);
+      } else {
+        await this.props.changeSignedStatus(false);
+      }
+    } else {
+      await this.props.changeSignedStatus(false);
+    }
+  }
+
+  async createTable() {
+    //await this.verifyEmployee();
+    const subPlan = localStorage.getItem("employeePlan");
+    const tablesNum = JSON.parse(localStorage.getItem("current_connection")).native_tables.length;
+
+    console.log(subPlan, tablesNum);
+
+    let limit = 0;
+    if (subPlan === "Startup Plan") {
+        limit = tablesNum + 5;
+    } else if (subPlan === "Pro Plan") {
+        limit = tablesNum + 25;
+    } else { // Personal
+        limit = tablesNum + 2;
     }
 
-    if (localStorage.getItem("openedTable")) {
-      localStorage.removeItem("openedTable");
-    }
+    console.log(limit);
 
-    if (this.state.currentOpenedTable !== "") {
+    if (this.state.tables.length >= limit) {
+      console.log('set limit');
       this.setState({
-        currentOpenedTable: ""
+        warning: `Your limit for ${subPlan} is ${limit} report schemas.`
       });
-    }
+    } else {
+      if (localStorage.getItem("current_result_info")) {
+        localStorage.removeItem("current_result_info");
+      }
 
-    window.location.hash = `#/tables/${
-      window.location.hash.split("/")[1]
-    }/create-table`;
+      if (localStorage.getItem("openedTable")) {
+        localStorage.removeItem("openedTable");
+      }
+
+      if (this.state.currentOpenedTable !== "") {
+        this.setState({
+          currentOpenedTable: ""
+        });
+      }
+
+      window.location.hash = `#/tables/${
+          window.location.hash.split("/")[1]
+      }/create-table`;
+    }
   }
 
   search = () => {
@@ -147,8 +201,9 @@ export default class Tables extends React.Component {
   };
 
   render() {
-    const { currentOpenedTable, tables, isOpen, searchedTables } = this.state;
-
+    const { currentOpenedTable, tables, isOpen, searchedTables, warning } = this.state;
+    console.log(this.state);
+    console.log(warning);
     if (!tables || !searchedTables) {
       return (
         <div className={"loading"}>
@@ -197,6 +252,9 @@ export default class Tables extends React.Component {
                   </div>
                 </div>
               </div>
+              { warning &&
+                <div className="warning">{warning}</div>
+              }
               {searchedTables.length ? (
                 searchedTables.map(table => {
                   let evenConn = searchedTables.indexOf(table) % 2 === 0;

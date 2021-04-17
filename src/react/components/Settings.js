@@ -62,11 +62,19 @@ export default class Settings extends React.Component {
                     <span className="slider round">Dark Theme:</span>
                     <input type="checkbox" id="checkbox"/>
                 </label>
+
                 <hr/>
+
                 <div className="export">
                     <span>Export Config:</span>
                     <button onClick={() => this.share()}>Export</button>
                 </div>
+
+                <div className="import">
+                    <span>Select Config:</span>
+                    <input type="file" accept="text/plain" onChange={(event) => this.importConfig(event)}/>
+                </div>
+
                 <div className="import">
                     <span>Select Config:</span>
                     <input type="file" accept="text/plain" onChange={(event) => this.importConfig(event)}/>

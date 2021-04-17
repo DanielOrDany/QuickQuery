@@ -65,6 +65,18 @@
       font-family: 'Scada', sans-serif;
       cursor: pointer;
 
+      .warning {
+        color: $white;
+        background: $yellow;
+        font-weight: bold;
+        font-size: 12px;
+        width: 100%;
+        margin-left: 10px;
+        border-bottom-left-radius: 5px;
+        margin-bottom: 10px;
+        box-shadow: $box-shadow;
+      }
+
       .dark-row {
         transition: 0.2s;
         background: $row-dark;

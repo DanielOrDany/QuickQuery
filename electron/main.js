@@ -3,6 +3,7 @@ const { channels } = require('../src/shared/constants');
 const Connection = require('./services/connection');
 const Database = require('./services/database');
 const Settings = require('./services/settings');
+const Auth = require('./services/auth');
 const Table = require('./services/table');
 const path = require('path');
 const url = require('url');
@@ -31,7 +32,7 @@ function createWindow () {
     width: 1366,
     height: 768,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 
@@ -73,6 +74,32 @@ ipcMain.on(channels.APP_INFO, (event) => {
     appName: app.getName(),
     appVersion: app.getVersion(),
   });
+});
+
+/**
+ *  Auth
+ */
+
+ipcMain.on(channels.AUTH_LOGIN, async (event, email, password) => {
+  try {
+    const result = await Auth.login(email, password);
+    successful.data = result;
+    await event.sender.send(channels.AUTH_LOGIN, successful);
+  } catch (e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.AUTH_LOGIN, unsuccessful);
+  }
+});
+
+ipcMain.on(channels.AUTH_VERIFY_TOKEN, async (event, id, token) => {
+  try {
+    const result = await Auth.verifyToken(id, token);
+    successful.data = result;
+    await event.sender.send(channels.AUTH_VERIFY_TOKEN, successful);
+  } catch (e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.AUTH_VERIFY_TOKEN, unsuccessful);
+  }
 });
 
 /**

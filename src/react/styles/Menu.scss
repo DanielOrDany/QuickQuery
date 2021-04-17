@@ -35,7 +35,7 @@
 .sharing-buttons {
 
   /* EXPORT-BUTTON */
-  #import-div, #export-div {
+  #import-div, #export-div, #logout-div {
     display: flex;
     justify-content: left;
 
@@ -45,6 +45,37 @@
 
   p {
     margin-top: 4px;
+  }
+
+  #logout-div {
+    margin-top: 40px;
+  }
+
+  #logout-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 70px;
+    height: 30px;
+
+    margin-right: 10px;
+
+    font-family: 'Scada', sans-serif;
+    font-size: 14px;
+
+    color: white;
+    background: $white-red;
+
+    border-radius: 5px;
+
+    transition: 0.2s;
+  }
+
+  #logout-button:hover {
+    cursor: pointer;
+
+    background: $red;
   }
 
   #export-button {
@@ -74,6 +105,9 @@
     background: #484644;
   }
 
+  #import-div {
+    margin-top: 20px;
+  }
 
   /* IMPORT-BUTTON */
   #import-button::-webkit-file-upload-button {
@@ -164,131 +198,5 @@
 
       }
     }
-
-
-    /* ICONS */
   }
 }
-
-
-/* СТАРИЙ КОД */
-
-
-/*.menu-header {
-    // Header
-
-    display: flex;
-    justify-content: space-between;
-
-    height: 50px;
-    background: #252628;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-
-    // LOGO: icon & title text
-
-    .logo-box {
-        margin-left: 30px;
-
-        #l-icon {
-            width: 150px;
-            height: 50px;
-        }
-    }
-
-    // SHARING: select & export buttons
-
-    .menu-box {
-        display: flex;
-
-        margin-right: 10px;
-        padding-top: 7px;
-
-        .sharing-buttons {
-            display: flex;
-
-            // Select button style & animation
-
-            #import-button::-webkit-file-upload-button {
-                visibility: hidden;
-            }
-
-            #import-button::before {
-                content: 'Import';
-                display: flex;
-                font-style: normal;
-                font-weight: normal;
-                font-size: 14px;
-                line-height: 17px;
-                align-items: center;
-                text-align: center;
-                justify-content: center;
-                color: white;
-                padding-top: 6px;
-            }
-
-            #import-button {
-                margin-right: 30px;
-                width: 70px;
-                height: 30px;
-                display: flex;
-                //font-family: "Scada";
-                font-style: normal;
-                font-weight: normal;
-                font-size: 14px;
-                line-height: 17px;
-                align-items: center;
-                text-align: center;
-                justify-content: center;
-                color: white;
-
-                background: #EB6E3B;
-                border-radius: 5px;
-            }
-
-            #import-button:hover
-            {
-                background: #c1562b;
-            }
-
-            // Export button style & animation
-
-            #export-button {
-                //font-family: "Scada";
-                width: 70px;
-                height: 30px;
-
-                margin-right: 10px;
-                display: flex;
-                font-style: normal;
-                font-weight: normal;
-                font-size: 14px;
-                line-height: 17px;
-                align-items: center;
-                text-align: center;
-                justify-content: center;
-                color: white;
-
-                background: #EB6E3B;
-                border-radius: 5px;
-            }
-
-            #export-button:hover
-            {
-                background: #c1562b;
-            }
-        }
-
-        #open-tables {
-            width: 30px;
-            height: 30px;
-            margin-right: 30px;
-        }
-
-        #open-connections {
-            width: 30px;
-            height: 30px;
-            margin-right: 30px;
-        }
-    }
-}
-*/

@@ -99,7 +99,8 @@ export default class Result extends React.Component {
             idRow: null,
             selectedRowInfo: [],
             TableImgModalActive: false,
-            columnImg: ''
+            columnImg: '',
+            limitWarning: null
         };
 
         this.handleChangeFilterValue1 = this.handleChangeFilterValue1.bind(this);
@@ -142,35 +143,31 @@ export default class Result extends React.Component {
         await this.loadTable();
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const { pageNumber, isSaving, options } = this.state;
-
-        if (prevState.pageNumber !== pageNumber) {
-            setTimeout(() => {
-                this.reloadTable();
-            }, 500);
+    saveResult(connectionName, result, loadingOptions, removedColumns, subPlan) {
+        let reportsNum = 0;
+        if (!localStorage.getItem("reportsPerMonth")) {
+            localStorage.setItem("reportsPerMonth", JSON.stringify(reportsNum));
+            reportsNum += 1;
+        } else {
+            console.log("number", Number(JSON.parse(localStorage.getItem("reportsPerMonth"))));
+            reportsNum = Number(JSON.parse(localStorage.getItem("reportsPerMonth")));
+            reportsNum += 1;
+            console.log("result",reportsNum);
         }
 
-        // if (!isEqual(prevState.options, options)) {
-        //     this.reloadTable();
-        // }
+        let limit = 0;
+        if (subPlan === "Startup Plan") {
+            limit = 100 - reportsNum;
+        } else if (subPlan === "Pro Plan") {
+            limit = 300 - reportsNum;
+        } else { // Personal
+            limit = 15 - reportsNum;
+        }
 
-        if (isSaving) {
-            const { options, removedColumns } = this.state;
-            const result = localStorage.getItem('current_result');
-            const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
-            const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
-            const tableColumns = connectionInfo.queries.filter(query => !!query.table).map(query => query.table);
-            const tableSize = localStorage.getItem('tableSize');
+        console.log("limit", limit);
+        console.log("reportsNum", reportsNum);
 
-            const loadingOptions = {
-                page: 0,
-                pageSize: 80,
-                columns: tableColumns,
-                numberOfRecords: tableSize,
-                operationsOptions: options.length ? options : null
-            };
-
+        if (limit >= 0) {
             saveTableResult(connectionName, result, loadingOptions).then(async data => {
                 if (data) {
                     const db_rows = await Promise.all(data.rows);
@@ -186,7 +183,10 @@ export default class Result extends React.Component {
                     let wb = XLSX.utils.book_new();
 
                     XLSX.utils.book_append_sheet(wb, binaryWS, `${result}`);
-                    XLSX.writeFile(wb, `${result}.xlsx`, { bookSST: true, compression: true });
+                    XLSX.writeFile(wb, `report.xlsx`, { bookSST: true, compression: true });
+
+                    console.log("reportsPerMonth", reportsNum);
+                    localStorage.setItem("reportsPerMonth", JSON.stringify(reportsNum));
 
                     this.setState({
                         isLoading: false,
@@ -200,6 +200,70 @@ export default class Result extends React.Component {
                     });
                 }
             });
+        } else {
+            console.log("limited!");
+            this.setState({
+                limitWarning: "You have exceeded the monthly limit.",
+                isLoading: false,
+                isSaving: false
+            })
+        }
+    }
+
+    async componentDidUpdate(prevProps, prevState, snapshot) {
+        const {pageNumber, isSaving, options, limitWarning} = this.state;
+
+        if (prevState.pageNumber !== pageNumber) {
+            setTimeout(() => {
+                this.reloadTable();
+            }, 500);
+        }
+
+        if (prevState.limitWarning !== limitWarning) {
+            setTimeout(() => {
+                this.setState({limitWarning: null})
+            }, 5000);
+        }
+
+        // if (!isEqual(prevState.options, options)) {
+        //     this.reloadTable();
+        // }
+
+        if (isSaving) {
+            const {options, removedColumns} = this.state;
+            const result = localStorage.getItem('current_result');
+            const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+            const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
+            const tableColumns = connectionInfo.queries.filter(query => !!query.table).map(query => query.table);
+            const tableSize = localStorage.getItem('tableSize');
+
+            const loadingOptions = {
+                page: 0,
+                pageSize: 80,
+                columns: tableColumns,
+                numberOfRecords: tableSize,
+                operationsOptions: options.length ? options : null
+            };
+
+            const subPlan = localStorage.getItem("employeePlan");
+            const countSubFrom = localStorage.getItem("employeeCountSubFrom");
+
+            const timeOfUseInMs = Date.now() - Number(countSubFrom);
+            const timeOfUseInDays = timeOfUseInMs / (1000 * 60 * 60 * 24);
+
+            console.log("days", timeOfUseInDays);
+
+            if (!localStorage.getItem("timeOfUseInDays")) {
+                localStorage.setItem("timeOfUseInDays", JSON.stringify(timeOfUseInDays));
+            } else {
+                const storedTimeOfUseInDays = Number(JSON.parse(localStorage.getItem("timeOfUseInDays")));
+                if ((timeOfUseInDays - storedTimeOfUseInDays) <= 30) {
+                    this.saveResult(connectionName, result, loadingOptions, removedColumns, subPlan);
+                } else {
+                    localStorage.setItem("timeOfUseInDays", JSON.stringify(timeOfUseInDays));
+                    this.saveResult(connectionName, result, loadingOptions, removedColumns, subPlan);
+                }
+            }
         }
 
         if (window.location.href.split('/')[window.location.href.split('/').length - 1] != localStorage.getItem("current_result")) {
@@ -561,7 +625,22 @@ export default class Result extends React.Component {
 
 
     render() {
-        let { isEmptyQuery, options, headers, rows, isNullResults, isSaving, removedColumns, isLoading, selectedRowInfo, idRow, setTableModalActive, TableImgModalActive, columnImg} = this.state;
+        let {
+            isEmptyQuery,
+            options,
+            headers,
+            rows,
+            isNullResults,
+            isSaving,
+            removedColumns,
+            isLoading,
+            selectedRowInfo,
+            idRow,
+            setTableModalActive,
+            TableImgModalActive,
+            columnImg,
+            limitWarning
+        } = this.state;
 
         removedColumns.forEach(removedColumn => {
             headers = headers.filter((header) => header !== removedColumn);
@@ -770,13 +849,14 @@ export default class Result extends React.Component {
                             </button>
                         </div>
                         <div className="result-menu">
-                            <div className="save" title="Limited to 3000 rows!">
+                            { limitWarning &&
+                                <div className="warning">{limitWarning}</div>
+                            }
+                            <div className="save">
                                 <button onClick={() => this.save()}>Export excel</button>
                             </div>
                         </div>
                     </div>
-
-
 
                 </div>
             );

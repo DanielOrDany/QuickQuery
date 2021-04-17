@@ -5,7 +5,7 @@ import {
     addConnection,
     setTrial,
     updateKey,
-    checkLicense
+    checkLicense, authVerifyToken
 } from "../methods";
 import { Offline } from "react-detect-offline"
 
@@ -144,7 +144,7 @@ export default class Connections extends React.Component {
         this.setState({ isDeleteOpen: false });
     };
 
-    componentDidMount() {
+    async componentDidMount() {
         getDataFromDatabase()
             .then(data => {
                 this.setState({
@@ -154,7 +154,8 @@ export default class Connections extends React.Component {
 
                 localStorage.setItem("connections", JSON.stringify(data.connections));
                 localStorage.setItem("data", JSON.stringify(data));
-            })
+            });
+
         checkLicense()
             .then(data => {
                 if(data === "no-license") {
@@ -276,7 +277,29 @@ export default class Connections extends React.Component {
         return this.state.connections.find(connection => connection.name === connectionName);
     };
 
-    openConnection(name) {
+    async verifyEmployee() {
+        const id = localStorage.getItem("employeeId");
+        const token = localStorage.getItem("employeeToken");
+
+        if (id && token) {
+            const verified = await authVerifyToken(id, token);
+
+            console.log('verified user', verified);
+
+            if (verified && verified.data) {
+                localStorage.setItem("employeePlan", verified.data.subscription.plan_name);
+                localStorage.setItem("employeeCountSubFrom", verified.data.subscription.count_from);
+                await this.props.changeSignedStatus(true);
+            } else {
+                await this.props.changeSignedStatus(false);
+            }
+        } else {
+            await this.props.changeSignedStatus(false);
+        }
+    }
+
+    async openConnection(name) {
+        await this.verifyEmployee();
         const currentConnection = this.getConnectionData(name);
         localStorage.setItem('current_connection', JSON.stringify(currentConnection));
 
