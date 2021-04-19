@@ -516,8 +516,20 @@ async function getTableColumns(connectionName, table) {
 
         let query = `select column_name from information_schema.columns where table_name='${table}'`;
 
-        const result = await sequelize.query(query);
-        return result[0];
+        const tableColumns = await sequelize.query(query);
+
+        const result = tableColumns[0].map(column => {
+            if (column.column_name) {
+                return column;
+            } else {
+                return {
+                    column_name: column.COLUMN_NAME
+                }
+            }
+        });
+        console.log(result);
+
+        return result;
     } catch (e) {
         console.log(e);
     }
