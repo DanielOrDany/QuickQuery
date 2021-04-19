@@ -288,7 +288,9 @@ export default class Tables extends React.Component {
                               table.alias.match(engRE) ?
                                   <p id="table-n">{table.alias}</p>
                                   :
-                                  <p id="table-n">{table.alias.match(base64RE) ? utf8.decode(base64.decode(table.alias)) : table.alias }</p>
+                                  <p id="table-n"> {
+                                    (table.alias.length === 24 && table.alias.match(base64RE)) ? utf8.decode(base64.decode(table.alias)) : table.alias
+                                  }</p>
                             }
                           </div>
                         </div>
