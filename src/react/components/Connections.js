@@ -156,27 +156,27 @@ export default class Connections extends React.Component {
                 localStorage.setItem("data", JSON.stringify(data));
             });
 
-        checkLicense()
-            .then(data => {
-                if(data === "no-license") {
-                    this.setState({
-                        isKeyOpen: true,
-                        trialAvailable: true,
-                        trialWindow: true
-                        });
-                } else if(data === "update-license") {
-                    this.setState({
-                        errorMessage: "Your license has expired.",
-                        licenseError: true,
-                        isErrorOpen: true,
-                        isKeyOpen: false
-                    });
-                } else if(data === "good-license") {
-                    this.setState({
-                        isOpen: this.state.connections.length ? false : true // show popup if none connections in the app
-                    });
-                }
-            });
+        // checkLicense()
+        //     .then(data => {
+        //         if(data === "no-license") {
+        //             this.setState({
+        //                 isKeyOpen: true,
+        //                 trialAvailable: true,
+        //                 trialWindow: true
+        //                 });
+        //         } else if(data === "update-license") {
+        //             this.setState({
+        //                 errorMessage: "Your license has expired.",
+        //                 licenseError: true,
+        //                 isErrorOpen: true,
+        //                 isKeyOpen: false
+        //             });
+        //         } else if(data === "good-license") {
+        //             this.setState({
+        //                 isOpen: this.state.connections.length ? false : true // show popup if none connections in the app
+        //             });
+        //         }
+        //     });
     };
 
     inputVirify(args) {
