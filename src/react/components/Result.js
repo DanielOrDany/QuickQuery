@@ -1,7 +1,7 @@
 import React from "react";
 import 'react-day-picker/lib/style.css';
 import dateFnsFormat from 'date-fns/format';
-import { loadTableResult, saveTableResult, getTableSize } from "../methods";
+import {loadTableResult, saveTableResult, getTableSize, authVerifyToken} from "../methods";
 import "../styles/Result.scss";
 import XLSX from "xlsx";
 import xxx from "../icons/loop.svg";

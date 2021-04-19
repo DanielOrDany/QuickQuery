@@ -1,5 +1,5 @@
 const axios = require('axios');
-const API_URL = "http://localhost:3000";
+const API_URL = "http://3.123.154.190";
 
 async function login (email, password) {
     try {

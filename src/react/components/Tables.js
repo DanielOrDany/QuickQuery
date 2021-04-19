@@ -29,7 +29,6 @@ export default class Tables extends React.Component {
       currentConnection: "",
       warning: null
     };
-
   }
 
   async componentDidMount() {
@@ -91,11 +90,11 @@ export default class Tables extends React.Component {
   }
 
   async openTable(alias) {
-    await this.verifyEmployee();
-
     const connectionName = JSON.parse(
         localStorage.getItem("current_connection")
     ).name;
+
+    await this.verifyEmployee();
 
     getTable(connectionName, alias)
         .then(result => {
@@ -111,7 +110,7 @@ export default class Tables extends React.Component {
 
           return `#/tables/${window.location.hash.split("/")[1]}/result/${alias}`;
         })
-        .then(url => {
+        .then(async url => {
           window.location.hash = url;
           localStorage.removeItem("openedTable");
           this.setState({

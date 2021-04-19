@@ -59,9 +59,13 @@ class Menu extends React.Component {
   }
 
   changeSignedStatus(status) {
-    this.setState({
-      isSignedIn: status
-    })
+    const currentStatus = this.state.isSignedIn;
+    console.log("changeSignedStatus", currentStatus, status);
+    if (currentStatus !== status) {
+      this.setState({
+        isSignedIn: status
+      });
+    }
   }
 
   async verifyEmployee() {
