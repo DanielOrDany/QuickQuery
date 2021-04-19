@@ -5,7 +5,6 @@ import delete_icon from "../icons/delete_icon.png";
 import PropTypes from "prop-types";
 
 
-
 const TableModal = ({isOpen, tableInfo, onCancel}) => {
 
     return (
@@ -17,21 +16,13 @@ const TableModal = ({isOpen, tableInfo, onCancel}) => {
 
                 <div className={'row-info'}>
                     {tableInfo.map(tableName => {
-                            if (String(tableName[1]).indexOf(".png") > -1) {
-                                return (
+                            return (
                                 <div className={'table-rows'}>
                                     <div className={'table-name'}><input value={tableName[0]}/></div>
-                                    <div className={'table-infos'}><img src={tableName[1]} className={'table-info-img'} alt={'img'}/></div>
+                                    <div className={'table-infos'}><input value={tableName[1]}/></div>
                                 </div>
-                                )
-                            } else {
-                                return (
-                                    <div className={'table-rows'}>
-                                        <div className={'table-name'}><input value={tableName[0]}/></div>
-                                        <div className={'table-infos'}><input value={tableName[1]}/></div>
-                                    </div>
-                                )
-                            }
+                            )
+
                         }
                     )}
                 </div>
@@ -45,7 +36,6 @@ const TableModal = ({isOpen, tableInfo, onCancel}) => {
 };
 
 
-
 TableModal.propTypes = {
     isOpen: PropTypes.bool,
     onCancel: PropTypes.func,
@@ -53,7 +43,8 @@ TableModal.propTypes = {
 
 TableModal.defaultProps = {
     isOpen: false,
-    onCancel: () => {},
+    onCancel: () => {
+    },
 };
 
 
