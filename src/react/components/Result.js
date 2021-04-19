@@ -849,8 +849,9 @@ export default class Result extends React.Component {
                             </button>
                         </div>
                         <div className="result-menu">
-                            { limitWarning &&
-                                <div className="warning">{limitWarning}</div>
+                            { limitWarning ?
+                                <div className="warning">{limitWarning}</div> :
+                                <div></div>
                             }
                             <div className="save">
                                 <button onClick={() => this.save()}>Export excel</button>
