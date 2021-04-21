@@ -172,14 +172,16 @@ class Menu extends React.Component {
   async login(email, password) {
     const result = await authLogin(email, password);
 
-    if (result.error) {
+    if (result && result.error) {
       return { error: result.error };
-    } else {
+    } else if (result && result.data) {
       localStorage.setItem('employeeId', result.data.id);
       localStorage.setItem('employeeToken', result.data.token);
       localStorage.setItem('employeePlan', result.data.subscription_plan);
       this.setState({ isSignedIn: true });
       return null;
+    } else {
+      return { error: "network error" };
     }
   }
 

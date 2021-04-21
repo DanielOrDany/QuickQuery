@@ -1,5 +1,5 @@
 const axios = require('axios');
-const API_URL = "http://3.123.154.190";
+const API_URL = "https://api.quickquery.co";
 
 async function login (email, password) {
     try {

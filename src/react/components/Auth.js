@@ -17,8 +17,11 @@ export default class Auth extends React.Component {
     async login() {
         const { email, password } = this.state;
         const result = await this.props.onLogin(email, password);
-        if (result && result.error) {
-            this.setState({error: result.error});
+        console.log(result);
+        if (result) {
+            if(result.error) {
+                this.setState({error: result.error});
+            }
         }
     }
 
