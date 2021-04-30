@@ -651,6 +651,7 @@ export default class Connections extends React.Component {
                 <div className={"conn-filters-bottom-line"}></div>
 
                 <div className="folders">
+                    <div className={"all-folders"}>
                     {
                         searchedConnections.length !== 0 ? searchedConnections.map(conn => {
                                 let evenConn = searchedConnections.indexOf(conn) % 2 === 0;
@@ -695,6 +696,7 @@ export default class Connections extends React.Component {
                                 </div>
                             </div>
                     }
+                    </div>
                 </div>
 
                 <div className={"conn-page-footer"}>
