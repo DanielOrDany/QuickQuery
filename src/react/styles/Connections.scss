@@ -2,22 +2,67 @@
 @import "./variables";
 
 #configure-manually-btn, #simplified-connection-btn {
-  font-size: 15px;
-  text-decoration: underline;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+  background-color: transparent;
+  margin-top: 46px;
+  padding: 0;
+  margin-left: 45px;
 
-  color: $black;
-  background-color: $white;
+
+  color: #28794E;
 }
 
 /* ADD CONNECTION INPUTS */
 .information-field {
   display: flex;
   flex-direction: column;
+  width: 569px;
+  margin: 0 auto;
 
   .input-title {
     display: flex;
 
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 21px;
+    margin-bottom: 12px;
+    color: #000000;
+
+
     width: max-content;
+  }
+
+  .form-control {
+    width: 569px;
+    height: 52px;
+    background: #FFFFFF;
+    border: 2px solid #D8DFEA;
+    box-sizing: border-box;
+    border-radius: 4px;
+    margin-bottom: 25px;
+
+
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    padding-left: 22px;
+
+    color: #000000;
+  }
+
+
+  .form-control:hover {
+    background: #FFFFFF;
+    border: 3px solid #8EB6F4;
+    border-radius: 4px;
   }
 
   #schema-tip {
@@ -155,42 +200,61 @@
   margin: 0 !important;
 
 
+
   /* TOP MENU */
   .menu {
+    height: 73px;
+    width: 100vw;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 50px;
-    background-color: $menu-shadow;
-    border-bottom: .5px solid $border-color;
+    padding: 0;
+
+
+    background: #FFFFFF;
+
+
+    .conn-page-name {
+      margin-left: 49px;
+
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 33px;
+      /* identical to box height */
+
+
+      color: #3E3E3E;
+    }
 
     /* ADD BUTTON */
     #add-button {
-      min-width: 130px;
-      height: 30px;
+      min-width: 194px;
+      height: 42px;
+      margin-right: 34px;
 
-      font-size: 14px;
-      font-family: 'Scada', sans-serif;
-      color: white;
-      background-color: #2d9d73;
+      background: #28794E;
+      border-radius: 4px;
+      border: none;
 
-      border: 0 solid;
-      box-sizing: border-box;
-      border-radius: 5px;
 
-      margin-right: 10px;
-      transition: 0.2s;
-    }
+      font-family: 'Roboto', sans-serif;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 19px;
 
-    #add-button:hover {
-      cursor: pointer;
-      background-color: #29855f;
+      letter-spacing: -0.11px;
+
+      color: #FFFFFF;
     }
 
 
     /* SEARCH INPUT */
     .search {
-      width: 90%;
+      width: 0;
       height: 30px;
 
       border: .4px solid $border-color;
@@ -204,29 +268,231 @@
     }
   }
 
+
+  /* FILTERS */
+  .connections-page-filters {
+    display: flex;
+    align-items: center;
+    height: 45px;
+    background: #F8F8FA;
+    padding: 0;
+    width: 100vw;
+
+
+
+    /* FILTERS NAME*/
+    .conn-page-name-filter {
+      display: flex;
+      align-items: center;
+      width: 546px;
+    }
+
+    .conn-page-name-filter span {
+      margin-left: 126px;
+
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+      text-transform: capitalize;
+
+      color: #5C5D6F;
+    }
+
+    .conn-filters-name-arrow {
+      margin-left: 8px;
+      width: 8px;
+      height: 6px;
+      margin-right: 83.22px;
+    }
+
+
+    .conn-page-filters-input{
+      width: 99.85px;
+      height: 29px;
+      background: #FFFFFF;
+      border: 1px solid #E2DFE3;
+      border-radius: 6px;
+      padding-left: 11.89px;
+
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+
+      color: #7A7D85;
+    }
+
+
+
+    /* FILTER MINI-MENU */
+    .mini-lines-menu {
+      display: flex;
+      flex-direction: column;
+      margin-left: auto;
+      margin-right: 22px;
+
+
+
+      .mini-menu-lines-style {
+        height: 2.5px;
+        background: #A7A9AC;
+        border-radius: 30px;
+        margin: 0 auto 1.53px;
+      }
+
+      .mini-first-line {
+        width: 13.98px;
+      }
+
+      .mini-second-line {
+        width: 9.16px;
+      }
+
+      .mini-third-line {
+        width: 4.34px;
+      }
+    }
+
+    .mini-lines-menu:hover {
+      cursor: pointer;
+
+      .mini-first-line {
+        background-color: black;
+        transition: .2s;
+      }
+
+      .mini-second-line {
+        background-color: black;
+        transition: .2s;
+      }
+
+      .mini-third-line {
+        background-color: black;
+        transition: .2s;
+      }
+    }
+
+
+
+    /* FILTERS SCHEMA */
+    .conn-page-filters-line {
+      width: 1px;
+      height: 45px;
+      background-color: #E2DFE3;;
+    }
+
+
+    .conn-page-schema-name-filter {
+      display: flex;
+      align-items: center;
+      width: 398px;
+    }
+
+    .conn-page-schema-name-filter span {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+      text-transform: capitalize;
+      margin-left: 29.52px;
+      margin-right: 8px;
+
+      color: #5C5D6F;
+    }
+
+    .conn-page-schema-name-filter img {
+      margin-right: 20px;
+    }
+
+
+
+    /* FILTERS DATE */
+    .conn-page-date-filter {
+      display: flex;
+      align-items: center;
+    }
+
+
+    .conn-page-date-filter span {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+      text-transform: capitalize;
+      margin-left: 102px;
+      margin-right: 8px;
+
+      color: #5C5D6F;
+
+    }
+
+    .conn-page-date-filter img {
+      margin-right: 12.49px;
+    }
+
+    .conn-page-date-filter input {
+      margin-right: 21.69px;
+    }
+
+  }
+
+
+  .conn-filters-bottom-line {
+    height: 1px;
+    background: #E2DFE3;
+    width: 100vw;
+  }
+
+
+
+
+
+
+
   /* FOLDERS */
   .folders {
     grid-area: folders;
     overflow: scroll;
-    width: 100%;
-    height: calc(100vh - 150px);
+    width: 100vw;
+    height: calc(100vh - 275px);
+    background-color: #E5E5E5;
 
-    font-family: 'Scada', sans-serif;
 
-    .dark-row {
-      background: $row-dark;
-    }
-
-    .dark-row:hover {
-      background: $hover-row-dark;
-    }
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 16px;
 
     .white-row {
-      background: $row-white;
+      background-color: white;
     }
 
     .white-row:hover {
-      background: $hover-row-white;
+      background-color: #F8F8FA;
+
+
+      #folders-n {
+        font-weight: 500;
+        color: #2A7C50;
+      }
+
+
+      #folders-schema-n{
+        font-weight: 500;
+        color: #2A7C50;
+      }
+
+      #folders-date {
+        font-weight: 500;
+        color: #2A7C50;
+      }
+
     }
 
     .empty-result-row {
@@ -256,29 +522,38 @@
       }
     }
 
+
+
+
+
     .connection-folder {
       transition: 0.2s;
 
       .link-container {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        padding: 10px;
-        height: 45px;
+
+        border-bottom: 1px solid #E2DFE3;;
+
+        height: 61px;
 
 
         .folders-name {
           display: flex;
           align-items: center;
+          width: 546px;
 
           #database-icon {
-            width: 30px;
-            height: 30px;
+            width: 16px;
+            height: 17.28px;
+            margin-left: 43px;
+            margin-right: 67px;
           }
+
+
 
           .link {
             display: flex;
-            margin-left: 10px;
             font-size: 14px;
 
             #wifi-icon {
@@ -371,6 +646,22 @@
 
       .link-container:hover {
         cursor: pointer;
+        border: 4px solid #CFDCEC;
+
+        #database-icon {
+          margin-left: 39px;
+          margin-right: 67px;
+        }
+
+        #folders-schema-n {
+          margin-left: 25.52px;
+        }
+
+
+        #folders-date {
+          margin-left: 100px;
+        }
+
       }
     }
 
@@ -378,15 +669,58 @@
     #folders-n {
       margin-bottom: 0;
 
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: normal;
       font-size: 14px;
-      font-family: 'Scada', sans-serif;
-      font-weight: 400;
+      line-height: 16px;
 
-      color: #3E3E3E;
+
+      color: #25213B;
     }
+
+
+    .folders-schema-name {
+      display: flex;
+      align-items: center;
+      width: 398px;
+    }
+
+
+    #folders-schema-n {
+      margin-bottom: 0;
+
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 16px;
+      margin-left: 29.52px;
+
+
+      color: #25213B;
+    }
+
+    .folders-date-created {
+
+    }
+
+    #folders-date {
+      margin-bottom: 0;
+
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 16px;
+
+      color: #25213B;
+
+      margin-left: 104px;
+    }
+
   }
 }
-
 
 .license-key-text {
   margin-top: 9px;
@@ -459,6 +793,58 @@
   border-bottom: 1px solid #EB6E3B;
   transition: .1s;
 }
+
+.conn-page-footer {
+  height: 55px;
+  width: 100vw;
+
+
+
+  .conn-page-info {
+    height: 55px;
+    width: 417px;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+
+  }
+
+  .conn-show-number span {
+    font-family: Inter, sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+
+    letter-spacing: 0.05em;
+    margin-right: 11px;
+
+    color: #6E6893;
+  }
+
+  .all-conn-number span{
+    font-family: Inter, sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+
+    letter-spacing: 0.05em;
+    margin-left: 50px;
+
+
+    color: #6E6893;
+  }
+
+  .conn_pages_arrow_left {
+    width: 6px;
+    height: 10px;
+    margin-left: 58px;
+    margin-right: 50px;
+  }
+}
+
+
 
 
 

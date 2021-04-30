@@ -15,7 +15,10 @@ import Auth from "./Auth";
 import Tables from './Tables';
 import Connections from './Connections';
 import arrow_back from "../icons/arrow_back.svg";
-import top_menu_settings from "../icons/top-menu-settings.png";
+import top_menu_settings from "../icons/Path.png";
+import logo_icon from "../icons/QuickQuery.png";
+import home_icon from "../icons/home-icon.png";
+import search_conn_icon from "../icons/search-conn-icon.png";
 import '../styles/Menu.scss';
 
 
@@ -235,18 +238,28 @@ class Menu extends React.Component {
           <Router hashType="noslash">
             <div className="menu-header" expand="md">
               <div className="logo-box">
-                {/*<img src={logo_icon} id="l-icon" onClick={() => this.openConnections()} />*/}
-                {!this.state.toTables &&
-                <div id="back-section">
-                  <img src={arrow_back} id="arrow-back" onClick={() => this.openConnections()}/>
-                  <div id="connection-name" onClick={() => this.openConnections()}>
-                    <div>{currentConnection.name}</div>
-                  </div>
-                </div>
+                <div className={'logo_bg'}></div>
+                <img src={logo_icon} id="l-icon"/>
+                <img src={home_icon} id="home-icon" onClick={() => this.openConnections()} />
+
+                { //!this.state.toTables &&
+                  /*<div id="back-section">
+                    <img src={arrow_back} id="arrow-back" onClick={() => this.openConnections()}/>
+                    <div id="connection-name" onClick={() => this.openConnections()}>
+                      <div>{currentConnection.name}</div>
+                    </div>
+                  </div>*/
                 }
               </div>
+
+
+              <img src={search_conn_icon} className={'search-conn-icon'}/>
+              <input className={'search-connection'} placeholder={'Search'}/>
+
+
               <div className="menu-box">
                 <div className="settings-buttons">
+
                   <img src={top_menu_settings} id="settings-button" onClick={() => this.setState({error: false, isOpen: true})} />
                 </div>
               </div>

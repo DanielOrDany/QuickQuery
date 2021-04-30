@@ -19,38 +19,76 @@
   position: absolute;
 
   min-height: 200px;
-  width: 500px;
+  width: 660px;
+
+  background: #FFFFFF;
+  border-radius: 6px;
 
   top: 50%;
   left: 50%;
 
   transform: translate(-50%, -50%);
 
-  background-color: $white;
-
-  border-radius: 5px;
   border: 0 solid;
 }
 
 .modalHeader,
 .modalBody,
 .modalFooter {
-  padding: 10px 20px;
+  padding: 0;
 }
 
 .modalHeader {
   display: flex;
-  justify-content: space-between;
+
+  flex-direction: column;
   box-sizing: border-box;
   align-items: center;
 
   min-height: 60px;
+  padding: 0;
 
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.header {
+  display: flex;
+  width: 661px;
+  height: 60px;
+  background: linear-gradient(180deg, #2A7E52 0%, #27774C 99.97%);
+  border-radius: 6px 6px 0 0;
+
+}
+
+.header span {
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+  /* identical to box height */
+  margin-left: 46px;
+
+  display: flex;
+  align-items: center;
+
+  color: #FFFFFF;
+
+  mix-blend-mode: normal;
+  opacity: 0.8;
 }
 
 .modalTitle {
-  font-weight: bold;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 33px;
+  margin-bottom: 25px;
+  margin-right: auto;
+  margin-left: 46px;
+
+
+  color: #3E3E3E;
 }
 
 .modalFooter {
@@ -64,7 +102,11 @@
 }
 
 #delete-icon {
-  width: 24px;
+  margin-left: auto;
+  margin-right: 35px;
+  margin-top: 34px;
+  width: 21.99px;
+  height: 21.99px;
   cursor: pointer;
 }
 

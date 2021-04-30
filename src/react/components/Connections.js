@@ -13,8 +13,12 @@ import Button from './Button';
 import Modal from './Modal';
 
 import empty from "../icons/empty.svg";
-import database_icon from "../icons/database.svg";
+import database_icon from "../icons/database.png";
 import delete_icon from "../icons/delete_icon.png";
+import vector_down from "../icons/vector-down.png";
+import conn_count_arrow from "../icons/con-pages-arrow-down.png";
+import conn_pages_arrow_left from "../icons/conn-pages-arrow-left.png";
+import conn_pages_arrow_right from "../icons/conn-pages-arrow-right.png";
 import '../styles/Connections.scss';
 
 const base64 = require('base-64');
@@ -442,38 +446,38 @@ export default class Connections extends React.Component {
         return(
             <div>
                 <div className="information-field">
-                    <span className="input-title">Name:</span>
-                    <input id="input-field-name" ref="name" className="form-control" type="text" placeholder="Yoda" type="search"
+                    <span className="input-title">Name connection</span>
+                    <input id="input-field-name" ref="name" className="form-control" type="text" type="search"
                            onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
                 </div>
                 <div className="information-field">
-                    <span className="input-title">URI:</span>
+                    <span className="input-title">Database URL</span>
                     <input id="input-field-uri" ref="uri" className="form-control" type="text" type="search"
-                           placeholder="databaseType://username:password@host:port/databaseName"
                            onChange={this.uriOnChange} onKeyPress={this.uriKeyPress}
                     />
                 </div>
                 <div className="information-field">
-                    <span className="input-title">Schema name:
+                    <span className="input-title">Schema name
                         <div className="help-tip" id="schema-tip">
                             <p>A schema is a collection of database objects associated with one particular database username.</p>
                         </div>
                     </span>
                     <input id="input-field-schema" ref="schema" className="form-control" type="text"
-                           placeholder="public"
                            type="search"
                            onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                 </div>
-                <hr/>
-                <Button id="configure-manually-btn"
-                        onClick={()=>this.setState({
-                            bigInput: true,
-                            nameInput: '',
-                            uriInput: '',
-                            schemaInput: ''
-                        })} invert>
-                    Configure manually
-                </Button>
+
+                <div>
+                    <Button id="configure-manually-btn"
+                            onClick={()=>this.setState({
+                                bigInput: true,
+                                nameInput: '',
+                                uriInput: '',
+                                schemaInput: ''
+                            })} invert>
+                        Configure manually
+                    </Button>
+                </div>
             </div>
         );
     };
@@ -593,9 +597,58 @@ export default class Connections extends React.Component {
                 </Modal>
 
                 <div className="menu">
-                    <input className="search" id="search-field" type="search" placeholder={"Search"} onChange={() => this.search()}/>
-                    <button type="button" id="add-button" onClick={() => this.openModal()}>Add a database</button>
+                    <span className={"conn-page-name"}>Databases</span>
+                    <button type="button" id="add-button" onClick={() => this.openModal()}>Add database</button>
                 </div>
+
+
+                <div className={"connections-page-filters"}>
+                    <div className={"conn-page-name-filter"}>
+                        <span>Name</span>
+                        <img src={vector_down} className={"conn-filters-name-arrow"}/>
+                        <input placeholder={"Search"} className={"conn-page-filters-input"}/>
+
+                        <div className={"mini-lines-menu"}>
+                            <div className={"mini-menu-lines-style mini-first-line"}></div>
+                            <div className={"mini-menu-lines-style mini-second-line"}></div>
+                            <div className={"mini-menu-lines-style mini-third-line"}></div>
+                        </div>
+
+                    </div>
+
+                    <div className={"conn-page-filters-line"}></div>
+
+                    <div className={"conn-page-schema-name-filter"}>
+                        <span>Schema Name</span>
+                        <img src={vector_down}/>
+                        <input placeholder={"Search"} className={"conn-page-filters-input"}/>
+
+                        <div className={"mini-lines-menu"}>
+                            <div className={"mini-menu-lines-style mini-first-line"}></div>
+                            <div className={"mini-menu-lines-style mini-second-line"}></div>
+                            <div className={"mini-menu-lines-style mini-third-line"}></div>
+                        </div>
+                    </div>
+
+                    <div className={"conn-page-filters-line"}></div>
+
+
+                    <div className={"conn-page-date-filter"}>
+                        <span>Date Created</span>
+                        <img src={vector_down}/>
+                        <input placeholder={"Search"} className={"conn-page-filters-input"}/>
+
+                        <div className={"mini-lines-menu"}>
+                            <div className={"mini-menu-lines-style mini-first-line"}></div>
+                            <div className={"mini-menu-lines-style mini-second-line"}></div>
+                            <div className={"mini-menu-lines-style mini-third-line"}></div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div className={"conn-filters-bottom-line"}></div>
 
                 <div className="folders">
                     {
@@ -603,7 +656,9 @@ export default class Connections extends React.Component {
                                 let evenConn = searchedConnections.indexOf(conn) % 2 === 0;
 
                                 return (
-                                    <div id={conn.name} className={`connection-folder ${evenConn ? "dark-row" : "white-row"}`} key={conn.name}>
+                                    <div id={conn.name}
+                                         className={`connection-folder ${evenConn ? "white-row" : "white-row"}`}
+                                         key={conn.name}>
                                         <div className="link-container"
                                              onDoubleClick={() => this.openConnection(conn.name)}>
                                             <div className="folders-name">
@@ -611,13 +666,22 @@ export default class Connections extends React.Component {
                                                 <div className="link">
                                                     <p id="folders-n">{conn.name} {this.databaseHost(conn)}</p>
                                                 </div>
+
                                             </div>
 
-                                            <div className="functional">
+                                            <div className="folders-schema-name">
+                                                <p id="folders-schema-n">Name</p>
+                                            </div>
+
+                                            <div className="folders-date-created">
+                                                <p id="folders-date">21/03/2021</p>
+                                            </div>
+
+                                            {/*<div className="functional">
                                                 <div onClick={() => this.openDelete(conn.name)}>
                                                     <img alt={"delete icon"} src={delete_icon} id="delete-icon"/>
                                                 </div>
-                                            </div>
+                                            </div>*/}
                                         </div>
                                     </div>
                                 );
@@ -632,6 +696,26 @@ export default class Connections extends React.Component {
                             </div>
                     }
                 </div>
+
+                <div className={"conn-page-footer"}>
+                    <div className={"conn-page-info"}>
+                        <div className={"conn-show-number"}>
+                            <span>Rows per page: 10</span>
+                            <img src={conn_count_arrow} alt={"conn-count-number-arrow"}/>
+                        </div>
+
+                        <div className={"all-conn-number"}>
+                            <span>1-10 of 10</span>
+                        </div>
+
+                        <div className={"conn-pages-arrows"}>
+                            <img src={conn_pages_arrow_left} className={"conn_pages_arrow_left"}/>
+                            <img src={conn_pages_arrow_right} className={"conn_pages_arrow_right"}/>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         );
     }

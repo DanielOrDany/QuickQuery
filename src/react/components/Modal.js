@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Portal from './Portal';
 import Button from './Button';
 import delete_icon from "../icons/delete_icon.png";
+import cancel_icon from "../icons/add-database-cross.png";
 
 import '../styles/Modal.scss';
 
@@ -18,10 +19,14 @@ const Modal = ({
           <div className="modalOverlay">
             <div className="modalWindow">
               <div className="modalHeader">
-                <div className="modalTitle">{title}</div>
+                <div className={"header"}>
+                  <span>Fill out all required information for creating a connection</span>
+                </div>
                 {!noCross &&
-                <img alt={"delete icon"} src={delete_icon} onClick={onCancel} id="delete-icon"/>
+                <img alt={"delete icon"} src={cancel_icon} onClick={onCancel} id="delete-icon"/>
                 }
+                <div className="modalTitle">{title}</div>
+
               </div>
               <div className="modalBody">
                 {children}
