@@ -608,11 +608,11 @@ export default class Connections extends React.Component {
                         <img src={vector_down} className={"conn-filters-name-arrow"}/>
                         <input placeholder={"Search"} className={"conn-page-filters-input"}/>
 
-                        <div className={"mini-lines-menu"}>
+                        {/* <div className={"mini-lines-menu"}>
                             <div className={"mini-menu-lines-style mini-first-line"}></div>
                             <div className={"mini-menu-lines-style mini-second-line"}></div>
                             <div className={"mini-menu-lines-style mini-third-line"}></div>
-                        </div>
+                        </div> */}
 
                     </div>
 
@@ -623,11 +623,11 @@ export default class Connections extends React.Component {
                         <img src={vector_down}/>
                         <input placeholder={"Search"} className={"conn-page-filters-input"}/>
 
-                        <div className={"mini-lines-menu"}>
+                        {/* <div className={"mini-lines-menu"}>
                             <div className={"mini-menu-lines-style mini-first-line"}></div>
                             <div className={"mini-menu-lines-style mini-second-line"}></div>
                             <div className={"mini-menu-lines-style mini-third-line"}></div>
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className={"conn-page-filters-line"}></div>
@@ -638,11 +638,11 @@ export default class Connections extends React.Component {
                         <img src={vector_down}/>
                         <input placeholder={"Search"} className={"conn-page-filters-input"}/>
 
-                        <div className={"mini-lines-menu"}>
+                        {/* <div className={"mini-lines-menu"}>
                             <div className={"mini-menu-lines-style mini-first-line"}></div>
                             <div className={"mini-menu-lines-style mini-second-line"}></div>
                             <div className={"mini-menu-lines-style mini-third-line"}></div>
-                        </div>
+                        </div> */}
                     </div>
 
                 </div>
