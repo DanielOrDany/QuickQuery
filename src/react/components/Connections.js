@@ -674,6 +674,7 @@ export default class Connections extends React.Component {
                                     <div className={'filled-connections-page'}>
 
 
+
                                         {/* ------------------------------- FILTERS -------------------------------- */}
                                         <div className={'connections-page-filters'}>
 
@@ -688,6 +689,7 @@ export default class Connections extends React.Component {
                                             </div>
 
 
+
                                             {/* ------------------------ FILTER SCHEMA NAME ------------------------ */}
                                             <div className={'connections-page-filter-SCHEMA-NAME'}>
                                                 <span className={'connections-page-filters-title'}>Schema Name</span>
@@ -696,6 +698,7 @@ export default class Connections extends React.Component {
                                                 <input className={'connections-page-filters-search'}
                                                        placeholder={'Search'}/>
                                             </div>
+
 
 
                                             {/* ------------------------ FILTER DATE CREATED ----------------------- */}
@@ -709,6 +712,7 @@ export default class Connections extends React.Component {
                                                            placeholder={'Search'}/>
                                                 </div>
 
+
                                                 <div className={'DATE-CREATED-filter-div'}>
                                                     <img className={'connections-page-filters-filter-icon'}
                                                          src={filters_icon} alt={'filter'}/>
@@ -717,6 +721,7 @@ export default class Connections extends React.Component {
 
 
                                         </div>
+
 
 
                                         {/* ------------------------------ DATABASES ------------------------------- */}
