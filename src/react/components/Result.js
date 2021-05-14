@@ -9,8 +9,8 @@ import calendarIcon from "../icons/calendar.svg";
 import filterIcon from "../icons/filter.svg";
 import deleteForeverIcon from "../icons/delete_forever_icon.svg";
 import DayPickerInput from "react-day-picker/DayPickerInput";
-import TableModal from "./TableModal";
-import TableImgModal from "./TableImgModal";
+import TableModal from "../popups/TableModal";
+import TableImgModal from "../popups/TableImgModal";
 
 const DESC = "DESC";
 const ASC = "ASC";

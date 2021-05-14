@@ -11,7 +11,7 @@ import empty from "../icons/empty.svg";
 import upArrow from "../icons/up-arrow.svg";
 
 import MiniMenu from "./MiniMenu";
-import Modal from "./Modal";
+import Modal from "../popups/Modal";
 
 const utf8 = require('utf8');
 const base64 = require('base-64');

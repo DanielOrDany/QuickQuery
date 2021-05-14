@@ -10,16 +10,17 @@ import {
   authLogin,
   authVerifyToken
 } from "../methods";
-import Modal from './Modal';
+import Modal from '../popups/Modal';
 import Auth from "./Auth";
 import Tables from './Tables';
 import Connections from './Connections';
 import arrow_back from "../icons/arrow_back.svg";
-import top_menu_settings from "../icons/Path.png";
-import logo_icon from "../icons/QuickQuery.png";
-import home_icon from "../icons/home-icon.png";
-import search_conn_icon from "../icons/search-conn-icon.png";
+import header_settings from "../icons/header-settings.svg";
+import logo_icon from "../icons/QuickQuery.svg";
+import home_icon from "../icons/home-icon.svg";
+import search_conn_icon from "../icons/search-conn-icon.svg";
 import '../styles/Menu.scss';
+import SettingsPopup from "../popups/SettingsPopup";
 
 
 class Menu extends React.Component {
@@ -213,13 +214,17 @@ class Menu extends React.Component {
           }
           {
             !this.state.error &&
-            <Modal
+
+
+
+            <SettingsPopup
                 title="Settings"
                 isOpen={this.state.isOpen}
                 onCancel={this.handleCancel}
                 submitButton={false}
+                exportBtn={this.share}
             >
-              <div className="sharing-buttons">
+              {/*<div className="sharing-buttons">
                 <div id="import-div">
                   <input id="import-button" type="file" onChange={(event) => this.importConfigFile(event)}/>
                   <p>Import settings from file</p>
@@ -232,8 +237,11 @@ class Menu extends React.Component {
                   <span id="logout-button" onClick={() => this.logout()}>Exit</span>
                   <p>Logout from the app</p>
                 </div>
-              </div>
-            </Modal>
+              </div>*/}
+            </SettingsPopup>
+
+
+
           }
           <Router hashType="noslash">
             <div className="menu-header" expand="md">
@@ -252,15 +260,15 @@ class Menu extends React.Component {
                 }
               </div>
 
-
-              <img src={search_conn_icon} className={'search-conn-icon'}/>
-              <input className={'search-connection'} placeholder={'Search'}/>
-
+              <div className={'search-div'}>
+                <img src={search_conn_icon} className={'search-conn-icon'} alt={'search'}/>
+                <input className={'search-connection'} placeholder={'Search'}/>
+              </div>
 
               <div className="menu-box">
                 <div className="settings-buttons">
 
-                  <img src={top_menu_settings} id="settings-button" onClick={() => this.setState({error: false, isOpen: true})} />
+                  <img src={header_settings} id="settings-button" onClick={() => this.setState({error: false, isOpen: true})} />
                 </div>
               </div>
             </div>

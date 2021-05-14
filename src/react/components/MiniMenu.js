@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import '../styles/MiniMenu.scss';
 import { getTable, deleteTable} from "../methods";
 
-import Modal from './Modal';
+import Modal from '../popups/Modal';
 
 function openTable(alias) {
     const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;

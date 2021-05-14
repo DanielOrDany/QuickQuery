@@ -1,0 +1,241 @@
+
+/* POP-UP */
+.settings-popup-BG {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background: #000000A6;
+
+  z-index: 100;
+
+
+
+  /* POP-UP WINDOW */
+  .settings-popup-window {
+    height: 384px;
+    width: 494px;
+    background: #FFFFFF;
+    border-radius: 6px;
+
+
+
+    /* POP-UP CROSS */
+    .settings-popup-cross {
+      display: flex;
+      margin-left: auto;
+      margin-top: 19px;
+      margin-right: 46px;
+    }
+
+    .settings-popup-cross:hover {
+      cursor: pointer;
+    }
+
+
+
+
+    /* POP-UP TITLE */
+    .settings-popup-title {
+      margin-top: 12px;
+      padding-left: 46px;
+      margin-bottom: 29px;
+
+
+      span {
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 28px;
+        line-height: 33px;
+
+
+        color: #3E3E3E;
+      }
+    }
+
+
+
+
+    .settings-buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+
+
+
+    .import-div {
+      height: 159px;
+      width: 182px;
+      background: #FFFFFF;
+      border: 2px dashed #E2DFE3;
+      border-radius: 4px;
+      margin-left: 46px;
+
+
+      img {
+        margin-top: 49px;
+        margin-left: 75px;
+        position: absolute;
+      }
+
+
+      span {
+        position: absolute;
+        margin-top: 118px;
+        margin-left: 30px;
+
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 21px;
+
+
+        color: #25213B;
+
+      }
+    }
+
+
+    #import-button::-webkit-file-upload-button {
+      visibility: hidden;
+    }
+
+    #import-button {
+      height: 100%;
+      width: 100%;
+      opacity: 0;
+    }
+
+    #import-button:hover {
+      cursor: pointer;
+    }
+
+
+
+
+
+
+
+
+
+
+    #export-div {
+      height: 159px;
+      width: 182px;
+      background: #FFFFFF;
+      border: 2px dashed #E2DFE3;
+      box-sizing: border-box;
+      border-radius: 4px;
+      margin-right: 46px;
+
+
+
+
+      img {
+        margin-top: 49px;
+        margin-left: 75px;
+        position: absolute;
+      }
+
+
+      span {
+        position: absolute;
+        margin-top: 118px;
+        margin-left: 30px;
+
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 21px;
+
+
+        color: #25213B;
+
+      }
+
+
+    }
+
+
+    #export-div:hover {
+      cursor: pointer;
+    }
+
+
+
+
+    .settings-popup-btn {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 48px;
+
+
+
+
+      #settings-popup-cancel-btn {
+        height: 42px;
+        width: 104px;
+        border: 2px solid #D3D3D3;
+        border-radius: 4px;
+
+
+        text-transform: capitalize;
+
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 17px;
+        line-height: 20px;
+
+        letter-spacing: -0.11px;
+
+        color: rgba(139, 139, 139, 0.836589);
+        margin-right: 25px;
+      }
+
+
+
+
+      #settings-popup-create-btn {
+        height: 42px;
+        width: 108px;
+        background: #28794E;
+        border-radius: 4px;
+
+        text-transform: capitalize;
+
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 17px;
+        line-height: 20px;
+        /* identical to box height */
+
+        letter-spacing: -0.11px;
+
+        color: #FFFFFF;
+        margin-right: 46px;
+      }
+    }
+
+
+
+
+
+
+
+
+    }
+
+  }
+
+

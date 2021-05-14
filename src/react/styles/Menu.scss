@@ -198,13 +198,22 @@
 
 
 
-  .search-connection {
 
-    position: absolute;
+  .search-div {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    width: 413px;
+    height: 80px;
+    margin-right: 25px;
+
+
+  }
+
+  .search-connection {
     width: 413px;
     height: 38px;
-    left: 1108px;
-    top: 22px;
+
     padding-left: 39px;
 
     background: #20603B;
@@ -242,8 +251,7 @@
     position: absolute;
     width: 19px;
     height: 19px;
-    left: 1117px;
-    top: 31px;
+    margin-left: 9px;
     z-index: 100;
   }
 
@@ -266,7 +274,7 @@
         width: 26px;
         height: 25px;
 
-        margin-right: 20px;
+        margin-right: 28px;
       }
 
       #settings-button:hover {
