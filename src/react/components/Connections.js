@@ -636,6 +636,25 @@ export default class Connections extends React.Component {
         }
     }
 
+    search = () => {
+        const searchNameValue = document.getElementById('connection-name-search').value;
+        const searchSchemaValue = document.getElementById('connection-schema-search').value;
+        const searchDateValue = document.getElementById('connection-date-search').value;
+        let searchedConnections = [];
+
+        if(this.state.connections.length != 0) {
+            this.state.connections.forEach(connection => {
+                if(connection.name.includes(searchNameValue) && 
+                    connection.schema.includes(searchSchemaValue) &&
+                    connection.createdAt.includes(searchDateValue)) {
+                        searchedConnections.push(connection);
+                }
+            });
+
+            this.setState({searchedConnections: searchedConnections});
+        }
+    }
+
     render() {
         const {
             searchedConnections,
@@ -684,8 +703,8 @@ export default class Connections extends React.Component {
                                                 <span className={'connections-page-filters-title'}>Name</span>
                                                 <img className={'connections-page-filters-arrow'} src={filters_arrow}
                                                      alt={'arrow'}/>
-                                                <input className={'connections-page-filters-search'}
-                                                       placeholder={'Search'}/>
+                                                <input className={'connections-page-filters-search'} id={'connection-name-search'}
+                                                       placeholder={'Search'} onChange={() => this.search()}/>
                                             </div>
 
 
@@ -695,8 +714,8 @@ export default class Connections extends React.Component {
                                                 <span className={'connections-page-filters-title'}>Schema Name</span>
                                                 <img className={'connections-page-filters-arrow'} src={filters_arrow}
                                                      alt={'arrow'}/>
-                                                <input className={'connections-page-filters-search'}
-                                                       placeholder={'Search'}/>
+                                                <input className={'connections-page-filters-search'} id={'connection-schema-search'}
+                                                       placeholder={'Search'} onChange={() => this.search()}/>
                                             </div>
 
 
@@ -708,8 +727,8 @@ export default class Connections extends React.Component {
                                                     <span className={'connections-page-filters-title'}>Date Created</span>
                                                     <img className={'connections-page-filters-arrow'} src={filters_arrow}
                                                          alt={'arrow'}/>
-                                                    <input className={'connections-page-filters-search'}
-                                                           placeholder={'Search'}/>
+                                                    <input className={'connections-page-filters-search'} id={'connection-date-search'}
+                                                           placeholder={'Search'} onChange={() => this.search()}/>
                                                 </div>
 
 
@@ -728,7 +747,6 @@ export default class Connections extends React.Component {
                                         <div className={'connections-page-databases-block'}>
                                             <div className={'connections-page-databases'}>
                                                 {searchedConnections.map(conn => {
-
                                                     return (
                                                             <div className={'database'} id={conn.name} key={conn.name} onDoubleClick={() => this.openConnection(conn.name)}>
 
@@ -746,12 +764,12 @@ export default class Connections extends React.Component {
 
                                                                 {/* -------------- DATABASES SCHEMA NAME --------------- */}
                                                                 <div className={'database-schema-name'}>
-                                                                    <span className={'database-text'} id="folders-schema-n">{conn.URI.schema}</span>
+                                                                    <span className={'database-text'} id="folders-schema-n">{conn.schema}</span>
                                                                 </div>
 
                                                                 {/* -------------- DATABASES DATE CREATED -------------- */}
                                                                 <div className={'database-date-created'}>
-                                                                    <span className={'database-text'} id="folders-date-created">21/03/2021</span>
+                                                                    <span className={'database-text'} id="folders-date-created">{conn.createdAt}</span>
                                                                 </div>
 
                                                             </div>

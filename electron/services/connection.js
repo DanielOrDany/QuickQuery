@@ -17,6 +17,7 @@ if(fs.existsSync(adapter.source)) {
             {
                 "name": "Database for testing",
                 "URI": "postgres://yjcuhopxndsamd:9fa832ec5a7703b1605de6e12234585b6cbc638636b16918697b0f6a2b95d1da@ec2-54-155-226-153.eu-west-1.compute.amazonaws.com:5432/d1r8qbgs2nh6u1",
+                "schema": "public",
                 "queries": [
                     {
                         "query": " SELECT * FROM locations",
@@ -41,7 +42,8 @@ if(fs.existsSync(adapter.source)) {
                     "locations",
                     "todos",
                     "users"
-                ]
+                ],
+                "createdAt": "21/03/2021"
             }
         ],
         "settings":
@@ -132,15 +134,16 @@ async function addConnection(params) {
                 database: database,
                 user: user,
                 password: password,
-                schema: schema,
                 port: port,
                 others: {
                     host: host,
                     dialect: dtype
                 }
             },
+            schema: schema,
             queries: [], // saved constructor queries
-            native_tables: [] // native db names of tables
+            native_tables: [], // native db names of tables
+            createdAt: getCurrentDate()// date connection was added
         };
 
         /** Select All Tables */
@@ -221,6 +224,15 @@ async function deleteConnection(name) {
 
         console.error(e);
     }
+}
+
+function getCurrentDate() {
+    let date = new Date();
+    let day = date.getDate();
+    let month = date.getMonth() + 1
+    let year = date.getFullYear()
+    let currentDate = `${day}/${month < 10 ? `0${month}` : month}/${year}`
+    return currentDate;
 }
 
 // Export db's methods
