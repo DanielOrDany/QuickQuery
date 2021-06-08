@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const { channels } = require('../src/shared/constants');
 const Connection = require('./services/connection');
 const Database = require('./services/database');
@@ -7,6 +7,8 @@ const Auth = require('./services/auth');
 const Table = require('./services/table');
 const path = require('path');
 const url = require('url');
+
+window.shell = shell;
 
 let mainWindow;
 
@@ -32,6 +34,10 @@ function createWindow () {
     width: 1366,
     height: 768,
     webPreferences: {
+      NodeIntegration: true,
+      javascript: true,
+      plugins: true,
+      webSecurity: false,
       preload: path.join(__dirname, 'preload.js')
     }
   });
