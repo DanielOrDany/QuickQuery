@@ -726,7 +726,7 @@ export default class Connections extends React.Component {
 
                                         {/* ------------------------------ DATABASES ------------------------------- */}
                                         <div className={'connections-page-databases-block'}>
-                                            <div className={'connections-page-databases'}>
+                                            <div className={'connections-page-all-databases'}>
                                                 {searchedConnections.map(conn => {
 
                                                     return (

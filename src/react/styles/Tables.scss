@@ -1,5 +1,218 @@
 @import "./variables";
 
+
+/* --------------------------------------------------- TABLES PAGE -------------------------------------------------- */
+.tables-page {
+  display: flex;
+
+
+
+  /* -------------------------------------------- TABLES PAGE LEFT MENU --------------------------------------------- */
+  .tables-page-left-menu {
+    height: calc(100vh - 80px);
+    min-width: 255px;
+    border-right: 1px solid #EDECEF;
+
+
+
+    /* --------------------------------------------- LEFT MENU BUTTON ----------------------------------------------- */
+    .left-menu-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 194px;
+      height: 42px;
+
+      background: #28794E;
+      border-radius: 4px;
+      margin: 14px auto 27px;
+
+
+      /* BUTTON TEXT */
+      span {
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 19px;
+
+        letter-spacing: -0.11px;
+
+        color: #FFFFFF;
+        margin-left: 7.25px;
+      }
+    }
+
+
+
+    /* -------------------------------------------- LEFT MENU ALL TABLES -------------------------------------------- */
+    .left-menu-all-tables {
+      margin-left: 26px;
+      margin-right: 18.71px;
+
+
+
+      /* -------------------------------------------------- TABLE --------------------------------------------------- */
+      .left-menu-table {
+        display: flex;
+        height: 20px;
+        margin-bottom: 28px;
+
+
+        /* TABLE ICON */
+        .table-icon {
+          display: flex;
+          align-items: center;
+          margin-right: 20px;
+
+          svg {
+            fill: #5C5D6F;
+          }
+        }
+
+
+
+        /* TABLE NAME */
+        .table-name {
+          display: flex;
+          align-items: center;
+          width: 150px;
+
+          span {
+            font-family: Roboto, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            line-height: 19px;
+
+            color: #5C5D6F;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+
+
+
+        /* TABLE MENU */
+        .table-menu {
+          display: none;
+        }
+      }
+
+
+
+      /* ------------------------------------------------ TABLE HOVER ----------------------------------------------- */
+      .left-menu-table:hover {
+
+
+
+        /* TABLE ICON HOVER */
+        .table-icon {
+          svg {
+            fill: #2A7C50;
+          }
+        }
+
+
+        /* TABLE NAME HOVER */
+        .table-name {
+          span {
+            font-family: Roboto, sans-serif;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 19px;
+
+            color: #2A7C50;
+          }
+        }
+
+
+        /* TABLE MENU HOVER */
+        .table-menu {
+          display: flex;
+          align-items: center;
+          margin-left: auto;
+          padding-bottom: 4px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+
+
+.empty-result-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(100vw - 255px);
+  height: calc(100vh - 80px);
+  background-color: #F8F8FA;
+
+
+
+  .empty-result-column {
+    display: flex;
+    flex-direction: column;
+    width: 427px;
+
+
+    img {
+      margin: 0 auto 51.54px;
+    }
+
+    span {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 25px;
+
+      text-align: center;
+
+      color: #5C5D6F;
+      width: 251px;
+      margin-left: 117px;
+      margin-bottom: 16px;
+    }
+
+    button {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 19px;
+
+      letter-spacing: -0.11px;
+
+      color: #5C5D6F;
+
+      height: 42px;
+      width: 194px;
+      border: 1px solid #B7B4B7;
+      filter: drop-shadow(0px 11px 15px rgba(0, 0, 0, 0.0535402));
+      border-radius: 4px;
+      background-color: #F8F8FA;
+      margin-left: 140.5px;
+    }
+
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 .all-page-tables {
   display: grid;
   grid-template-areas: "left line right";
@@ -9,7 +222,7 @@
   margin: 0 !important;
 
 
-  /* LEFT SIDE */
+
   .left-side {
     grid-area: left;
 
@@ -58,7 +271,7 @@
       }
     }
 
-    /* TABLES */
+
     .tables {
       grid-area: tables;
       overflow: scroll;
@@ -133,7 +346,7 @@
           background: $row-white;
           padding: 15px 8px;
 
-          /* ADD BUTTON */
+
           #add-btn-field {
             display: flex;
             align-items: center;
@@ -181,7 +394,7 @@
           background: $row-white;
           padding: 15px 8px;
 
-          /* ADD BUTTON */
+
           #add-btn-field {
             display: flex;
             align-items: center;
@@ -253,7 +466,7 @@
     }
   }
 
-  /* VERTICAL LINE */
+
   .line-tables-page {
     grid-area: line;
 
@@ -264,7 +477,7 @@
     filter: blur(1px);
   }
 
-  /* RIGHT SIDE */
+
   .right-side-tables-page {
     grid-area: right;
 
@@ -297,3 +510,4 @@
   }
 }
 
+*/

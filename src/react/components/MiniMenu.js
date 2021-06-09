@@ -97,11 +97,34 @@ function MiniMenu(props) {
                     <strong>Are you sure?</strong>
                 </div>
             </Modal>
+
+
+
+
             <div id="table_menu" onClick={(e) => {openMenu(e)}} ref={wrapperRef}>
                 {props.icon}
                 {open && (
                     <div className="dropdown" id="dropdown" style={{top: heigth}}>
-                        <div className="menu">
+
+
+                        <div className={'menu-item'} onClick={() => openTable(props.table.alias)}>
+                            <span>Open</span>
+                        </div>
+
+                        <div className={'menu-item'}>
+                            <span>Rename</span>
+                        </div>
+
+                        <div className={'menu-item'} onClick={() => editTable(props.table)}>
+                            <span>Edit</span>
+                        </div>
+
+                        <div className={'menu-item'} onClick={() => openModal(props.table.alias)}>
+                            <span>Delete</span>
+                        </div>
+
+                        {/*
+                            <div className="menu">
                             <div className="menu-item" onClick={() => openTable(props.table.alias)}>
                                 Open
                             </div>
@@ -112,6 +135,8 @@ function MiniMenu(props) {
                                 Delete
                             </div>
                         </div>
+                        */}
+
                     </div>
                 )}
             </div>
