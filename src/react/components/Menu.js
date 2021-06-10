@@ -11,9 +11,9 @@ import {
   authVerifyToken
 } from "../methods";
 import Modal from '../popups/Modal';
-import Auth from "./Auth";
-import Tables from './Tables';
-import Connections from './Connections';
+import AuthPopup from "../popups/Auth";
+import Tables from '../views/Tables/Tables';
+import Connections from '../views/Connections/Connections';
 import arrow_back from "../icons/arrow_back.svg";
 import header_settings from "../icons/header-settings.svg";
 import logo_icon from "../icons/QuickQuery.svg";
@@ -21,7 +21,7 @@ import home_icon from "../icons/home-icon.svg";
 import logout_icon from "../icons/logout.svg";
 import search_conn_icon from "../icons/search-conn-icon.svg";
 import '../styles/Menu.scss';
-import SettingsPopup from "../popups/SettingsPopup";
+import SettingsPopup from "../popups/Settings";
 
 
 class Menu extends React.Component {
@@ -197,7 +197,7 @@ class Menu extends React.Component {
         <>
           {
             !this.state.isSignedIn &&
-            <Auth onLogin={this.login}/>
+            <AuthPopup onLogin={this.login}/>
           }
           {
             this.state.error &&
