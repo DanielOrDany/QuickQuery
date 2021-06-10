@@ -33,6 +33,19 @@
     margin-left: 46px;
     color: #28794E;
   }
+
+  #simplified-connection-btn {
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 21px;
+    background-color: transparent;
+    margin-top: 71px;
+    padding: 0;
+    margin-left: 46px;
+    color: #28794E;
+  }
 }
 
 /* ADD CONNECTION SMALL-INPUTS */
@@ -125,6 +138,7 @@
 
     /* BIG-INPUTS TITLES */
     .big-input-title {
+      display: flex;
       height: 21px;
       font-family: Roboto, sans-serif;
       font-style: normal;
@@ -303,9 +317,6 @@
     width: 24px;
     height: 24px;
 
-    top: 18px;
-    right: 10px;
-
     font-size: 14px;
     text-align: center;
     line-height: 26px;
@@ -326,6 +337,8 @@
   .help-tip:hover p {
     display: block;
     z-index: 999;
+    margin-right: 469px;
+    margin-top: 5px;
 
     transform-origin: 100% 0%;
     -webkit-animation: fadeIn 0.3s ease-in-out;

@@ -1,6 +1,6 @@
 import React from 'react';
 import Portal from '../components/Portal';
-import '../popup_styles/SimplifiedConnectionPopup.scss';
+import '../popup_styles/SshPopup.scss';
 import cross_icon from "../icons/pop-up-cross.svg";
 import Button from "../components/Button";
 
@@ -15,19 +15,19 @@ const SSHConnectionPopup = ({
             {isOpen &&
             <Portal>
 
-                <div className={'simplified-connection-popup-BG'}>
+                <div className={'ssh-connection-popup'}>
 
-                    <div className={'simplified-popup-window'}>
-                        <div className={'simplified-popup-header'}>
+                    <div className={'ssh-popup-window'}>
+                        <div className={'ssh-popup-header'}>
                             <span>Fill out all required information for creating a connection</span>
                         </div>
 
 
-                        <img className={'simplified-popup-cross'} src={cross_icon} onClick={onCancel} alt={'cross'}/>
+                        <img className={'ssh-popup-cross'} src={cross_icon} onClick={onCancel} alt={'cross'}/>
 
 
-                        <div className={'simplified-popup-title'}>
-                            <span>Create a connection</span>
+                        <div className={'ssh-popup-title'}>
+                            <span>SSH connection</span>
                         </div>
 
 
@@ -36,9 +36,9 @@ const SSHConnectionPopup = ({
                         </div>
 
 
-                        <div className={'simplified-popup-btn'}>
-                            <Button id='simplified-popup-cancel-btn' onClick={onCancel} invert>Cancel</Button>
-                            <Button id='simplified-popup-create-btn' onClick={onSubmit}>Create</Button>
+                        <div className={'ssh-popup-btn'}>
+                            <Button id='ssh-popup-cancel-btn' onClick={onCancel} invert>Cancel</Button>
+                            <Button id='ssh-popup-create-btn' onClick={onSubmit}>Create</Button>
                         </div>
                     </div>
 
