@@ -3,36 +3,22 @@ import {
     getDataFromDatabase,
     deleteConnection,
     addConnection,
-    setTrial,
     updateKey,
     checkLicense, authVerifyToken
 } from "../methods";
 import { Offline } from "react-detect-offline"
-
 import Button from './Button';
 import Modal from '../popups/Modal';
-
-import empty from "../icons/empty.svg";
-
-import delete_icon from "../icons/delete_icon.png";
-import vector_down from "../icons/vector-down.png";
-import conn_count_arrow from "../icons/con-pages-arrow-down.png";
-import conn_pages_arrow_left from "../icons/conn-pages-arrow-left.png";
-import conn_pages_arrow_right from "../icons/conn-pages-arrow-right.png";
-
-
-
-
 import footer_arrow_left from "../icons/connections-page-footer-arrow-left.svg";
 import footer_arrow_right from "../icons/connections-page-footer-arrow-right.svg";
 import footer_arrow_down from "../icons/connections-page-footer-arrow.svg";
-import database_icon from "../icons/database-icon.svg";
 import filters_icon from "../icons/connections-page-filters-icon.svg";
 import filters_arrow from "../icons/connections-page-filter-arrow.svg";
 import empty_connections_page_icon from "../icons/empty-connections-page.svg";
 import '../styles/Connections.scss';
 import ConfigureManuallyPopup from "../popups/ConfigureManuallyPopup";
 import SimplifiedConnectionPopup from "../popups/SimplifiedConnectionPopup";
+import SSHConnectionPopup from "../popups/SSHConnectionPopup";
 
 const base64 = require('base-64');
 const utf8 = require('utf8');
@@ -67,6 +53,7 @@ export default class Connections extends React.Component {
             licenseError: false,
             isSimplifiedConnectionPopup: false,
             isConfigureManuallyPopup: false,
+            isSSHConnectionPopup: false,
             firstModalHint: true,
             secondModalHint: true,
         };
@@ -79,12 +66,27 @@ export default class Connections extends React.Component {
         this.setState({ isSimplifiedConnectionPopup: true });
     };
 
-    changeInputsModal = () => {
-        this.setState({
-            isConfigureManuallyPopup: !this.state.isConfigureManuallyPopup,
-            isSimplifiedConnectionPopup: !this.state.isSimplifiedConnectionPopup
-        })
-    }
+    changeInputsModal = (modal) => {
+        if (modal === "ssh") {
+            this.setState({
+                isConfigureManuallyPopup: false,
+                isSimplifiedConnectionPopup: false,
+                isSSHConnectionPopup: true
+            })
+        } else if (modal === "configure_manually") {
+            this.setState({
+                isConfigureManuallyPopup: true,
+                isSimplifiedConnectionPopup: false,
+                isSSHConnectionPopup: false
+            })
+        } else {
+            this.setState({
+                isConfigureManuallyPopup: false,
+                isSimplifiedConnectionPopup: true,
+                isSSHConnectionPopup: false
+            })
+        }
+    };
 
 
 
@@ -97,11 +99,11 @@ export default class Connections extends React.Component {
 
     closeFirstModalHint = () => {
         this.setState({firstModalHint: false})
-    }
+    };
 
     closeSecondModalHint = () => {
         this.setState({secondModalHint: false})
-    }
+    };
 
     handleKeySubmit = () => {
         updateKey(this.state.keyInput)
@@ -510,25 +512,38 @@ export default class Connections extends React.Component {
                     </div>
                 </div>
 
-                <Button id="simplified-connection-btn"
-                        onClick={()=>{
+                <div className="big-input-buttons">
+                    <Button id="simplified-connection-btn"
+                            onClick={()=>{
 
-                            this.setState({
-                                bigInput: false,
-                                nameInput: '',
-                                hostInput: '',
-                                portInput: '',
-                                userInput: '',
-                                passwordInput: '',
-                                databaseInput: '',
-                                schemaInput: '',
-                                dtypeInput: 'mysql'
-                            })
+                                this.setState({
+                                    bigInput: false,
+                                    nameInput: '',
+                                    hostInput: '',
+                                    portInput: '',
+                                    userInput: '',
+                                    passwordInput: '',
+                                    databaseInput: '',
+                                    schemaInput: '',
+                                    dtypeInput: 'mysql'
+                                });
 
-                            this.changeInputsModal()
-                        }} invert>
-                    Simplified connection
-                </Button>
+                                this.changeInputsModal("simple");
+                            }} invert>
+                        Simplified connection
+                    </Button>
+                    <Button className="ssh-btn"
+                            onClick={()=>{
+                                this.setState({
+                                    nameInput: '',
+                                    uriInput: '',
+                                    schemaInput: ''
+                                });
+                                this.changeInputsModal("ssh");
+                            }} invert>
+                        SSH connection
+                    </Button>
+                </div>
             </div>
         );
     };
@@ -558,17 +573,89 @@ export default class Connections extends React.Component {
                            onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                 </div>
 
-                <div>
+                <div className="small-information-buttons">
                     <Button id="configure-manually-btn"
                             onClick={()=>{
                                 this.setState({
                                     nameInput: '',
                                     uriInput: '',
                                     schemaInput: ''
-                            })
-                                this.changeInputsModal()
+                                });
+                                this.changeInputsModal("configure_manually");
                             }} invert>
                         Configure manually
+                    </Button>
+                    <Button className="ssh-btn"
+                            onClick={()=>{
+                                this.setState({
+                                    nameInput: '',
+                                    uriInput: '',
+                                    schemaInput: ''
+                                });
+                                this.changeInputsModal("ssh");
+                            }} invert>
+                        SSH connection
+                    </Button>
+                </div>
+            </div>
+        );
+    };
+
+    sshInput = () => {
+        return(
+            <div>
+                {/*<div className="ssh-field">*/}
+                {/*    <span className="small-input-title">Name connection</span>*/}
+                {/*    <input id="input-field-name" ref="name" className="small-form-control" type="text" type="search"*/}
+                {/*           onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>*/}
+                {/*</div>*/}
+                {/*<div className="ssh-fieldd">*/}
+                {/*    <span className="small-input-title">Database URL</span>*/}
+                {/*    <input id="input-field-uri" ref="uri" className="small-form-control" type="text" type="search"*/}
+                {/*           onChange={this.uriOnChange} onKeyPress={this.uriKeyPress}*/}
+                {/*    />*/}
+                {/*</div>*/}
+                {/*<div className="ssh-field">*/}
+                {/*    <span className="small-input-title">Schema name*/}
+                {/*        /!*<div className="help-tip" id="schema-tip">*/}
+                {/*            <p>A schema is a collection of database objects associated with one particular database username.</p>*/}
+                {/*        </div>*!/*/}
+                {/*    </span>*/}
+                {/*    <input id="input-field-schema" ref="schema" className="small-form-control" type="text"*/}
+                {/*           type="search"*/}
+                {/*           onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>*/}
+                {/*</div>*/}
+
+                <div className="small-information-buttons">
+                    <Button id="configure-manually-btn"
+                            onClick={()=>{
+                                this.setState({
+                                    nameInput: '',
+                                    uriInput: '',
+                                    schemaInput: ''
+                                });
+                                this.changeInputsModal("configure_manually");
+                            }} invert>
+                        Configure manually
+                    </Button>
+                    <Button id="simplified-connection-btn"
+                            onClick={()=>{
+
+                                this.setState({
+                                    bigInput: false,
+                                    nameInput: '',
+                                    hostInput: '',
+                                    portInput: '',
+                                    userInput: '',
+                                    passwordInput: '',
+                                    databaseInput: '',
+                                    schemaInput: '',
+                                    dtypeInput: 'mysql'
+                                });
+
+                                this.changeInputsModal("simple");
+                            }} invert>
+                        Simplified connection
                     </Button>
                 </div>
             </div>
@@ -659,6 +746,7 @@ export default class Connections extends React.Component {
         const {
             searchedConnections,
             isSimplifiedConnectionPopup,
+            isSSHConnectionPopup,
             isConfigureManuallyPopup,
             isKeyOpen,
             bigInput,
@@ -980,7 +1068,17 @@ export default class Connections extends React.Component {
                     {this.smallInput()}
                 </SimplifiedConnectionPopup>
 
-
+                <SSHConnectionPopup
+                    isOpen={isSSHConnectionPopup}
+                    onCancel={this.handleCancel}
+                    onSubmit={this.handleSubmit}
+                    closeFirstModalHints={this.closeFirstModalHint}
+                    closeSecondModalHints={this.closeSecondModalHint}
+                    firstModalHint={firstModalHint}
+                    secondModalHint={secondModalHint}
+                >
+                    {this.sshInput()}
+                </SSHConnectionPopup>
 
                 <ConfigureManuallyPopup
                     isOpen={isConfigureManuallyPopup}

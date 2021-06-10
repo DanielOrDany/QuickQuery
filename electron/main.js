@@ -8,8 +8,6 @@ const Table = require('./services/table');
 const path = require('path');
 const url = require('url');
 
-window.shell = shell;
-
 let mainWindow;
 
 let successful = {
@@ -59,6 +57,8 @@ function createWindow () {
   mainWindow.on('closed', function () {
     app.quit();
   });
+
+  window.shell = shell;
 }
 
 app.on('ready', createWindow);

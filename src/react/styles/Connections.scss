@@ -1,24 +1,39 @@
 /* ADD CONNECTION BTN */
 @import "./variables";
 
-#configure-manually-btn {
+.small-information-buttons {
   position: absolute;
-  font-family: Roboto, sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 21px;
-  background-color: transparent;
-  margin-top: 71px;
-  padding: 0;
-  margin-left: 46px;
+  //flex-direction: row;
+  //width: max-content;
+  //justify-content: space-between;
+  .ssh-btn {
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 21px;
+    background-color: transparent;
+    margin-top: 71px;
+    padding: 0;
+    margin-left: 17px;
+    color: #28794E;
+    border: none;
+    text-transform: none;
+  }
 
-
-  color: #28794E;
+  #configure-manually-btn {
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 21px;
+    background-color: transparent;
+    margin-top: 71px;
+    padding: 0;
+    margin-left: 46px;
+    color: #28794E;
+  }
 }
-
-
-
 
 /* ADD CONNECTION SMALL-INPUTS */
 .small-information-field {
@@ -168,25 +183,40 @@
       flex-direction: column;
     }
 
-}
-
-  /* FOOTER SIMPLIFIED CONNECTION BUTTON */
-  #simplified-connection-btn {
-    position: absolute;
-    font-family: Roboto, sans-serif;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 21px;
-
-    color: #28794E;
-    background-color: #FFFFFF;
-    padding: 0;
-    margin-top: 49px;
   }
 
+  .big-input-buttons {
+    position: absolute;
 
+    /* FOOTER SIMPLIFIED CONNECTION BUTTON */
+    #simplified-connection-btn {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 21px;
 
+      color: #28794E;
+      background-color: #FFFFFF;
+      padding: 0;
+      margin-top: 49px;
+    }
+
+    .ssh-btn {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 21px;
+      background-color: transparent;
+      margin-top: 49px;
+      padding: 0;
+      margin-left: 17px;
+      color: #28794E;
+      border: none;
+      text-transform: none;
+    }
+  }
 }
 
 
