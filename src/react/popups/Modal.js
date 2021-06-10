@@ -1,15 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import Portal from '../components/Portal';
 import Button from '../components/Button';
 import arrow from "../icons/modal-arrow.svg";
 import second_arrow from "../icons/second-modal-arrow.svg";
-import cancel_icon from "../icons/add-database-cross.png";
+import cancel_icon from "../icons/pop-up-cross.svg";
 import hint_cross from "../icons/hint-cross.svg";
-
 import '../styles/Modal.scss';
-
 
 const Modal = ({
                  isOpen,

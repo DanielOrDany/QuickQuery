@@ -1,0 +1,660 @@
+@import "../../../styles/variables";
+
+
+::-webkit-scrollbar {
+  height: 15px;
+  border-top: 1px solid #E2DFE3;
+  border-bottom: 1px solid #E2DFE3;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+
+::-webkit-resizer {
+  background-color: red;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: red;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(92, 93, 111, 0.6);
+  border-radius: 4px;
+  height: 5px;
+
+}
+
+::-webkit-scrollbar-button {
+  background-color: red;
+}
+
+::-webkit-scrollbar-track-piece {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+  height: 4px;
+}
+
+
+
+::-webkit-scrollbar-track  {
+
+}
+
+
+
+
+/* ---------------------------------------------------- RESULT PAGE ------------------------------------------------- */
+.result-page {
+  height: calc(100vh - 80px);
+  width: calc(100vw - 255px);
+
+
+  /* ----------------------------------------------- RESULT PAGE HEADER --------------------------------------------- */
+  .result-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 73px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E2DFE3;
+
+
+    /* HEADER TITLE */
+    span {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 33px;
+
+      color: #3E3E3E;
+      margin-left: 30px;
+    }
+
+
+    /* HEADER BUTTON */
+    button {
+      border: 1px solid #B7B4B7;
+      filter: drop-shadow(0px 11px 15px rgba(0, 0, 0, 0.0535402));
+      border-radius: 4px;
+      margin-right: 30px;
+
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 19px;
+
+      letter-spacing: -0.11px;
+
+      color: #5C5D6F;
+
+      height: 42px;
+      width: 194px;
+      background-color: #FFFFFF;
+    }
+  }
+
+
+  /* ------------------------------------------------- RESULT PAGE BODY --------------------------------------------- */
+  .result-page-body {
+    height: calc(100vh - 208px);
+    background-color: #F8F8FA;
+    overflow: auto;
+
+
+
+    /* ---------------------------------------------------- TABLE --------------------------------------------------- */
+    table {
+      width: 100vw;
+      background-color: #FFFFFF;
+      box-shadow: 0 0 5px 0 #0000001A;
+
+
+      /* ---------------------------------------------- TABLE HEADER ------------------------------------------------ */
+      .table-header {
+        height: 45px;
+        border: none;
+        background: #F8F8FA;
+
+        border-bottom: 1px solid #E2DFE3;
+
+
+        /* TABLE HEADER COLUMN */
+        th {
+          border-right: 1px solid #E2DFE3;
+          padding: 0;
+          min-width: 400px;
+
+
+          /* ------------------------------------------ TABLE HEADER FILTERS ---------------------------------------- */
+          .table-header-items {
+            display: flex;
+            justify-content: space-between;
+
+
+            /* ------------------------------------- NAME, SORTING ARROW, SEARCH ------------------------------------ */
+            .column-name-and-search {
+              margin-left: 25px;
+
+              /* COLUMN NAME */
+              span {
+                font-family: Roboto, sans-serif;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 14px;
+                line-height: 16px;
+                text-transform: lowercase;
+
+                color: #5C5D6F;
+              }
+
+
+              /* SORTING ARROW */
+              svg {
+                margin-left: 8px;
+              }
+
+              .arrow-up {
+                transform: rotate(180deg);
+              }
+
+
+              /* SEARCH */
+              input {
+                background: #FFFFFF;
+                border: 1px solid #E2DFE3;
+                border-radius: 6px;
+                margin-left: 15px;
+
+                height: 29px;
+                width: 84px;
+                padding-left: 10px;
+
+
+                font-family: Roboto, sans-serif;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 14px;
+                line-height: 16px;
+
+                color: #7A7D85;
+              }
+            }
+
+
+            /* ----------------------------------------------- FILTERS ---------------------------------------------- */
+            .column-filters {
+              margin-right: 18.24px;
+              padding-bottom: 5px;
+
+              .hide-icon {
+                margin-right: 16px;
+                margin-left: 36px;
+                fill: #A7A9AC;
+              }
+
+              .filter {
+                fill: #A7A9AC;
+              }
+            }
+          }
+        }
+      }
+
+
+      /* ------------------------------------------------ TABLE BODY ------------------------------------------------ */
+      /* TABLE BODY LINE */
+      .table-line {
+        height: 60px;
+        border-bottom: 1px solid #E2DFE3;
+        text-align: left;
+
+
+        /* TABLE BODY COLUMN */
+        td {
+          padding: 0 25px 0 25px;
+
+          /* TABLE BODY COLUMN TEXT */
+          input {
+            text-overflow: ellipsis;
+            width: 100%;
+            border: none;
+
+            font-family: Roboto, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 16px;
+
+            color: #25213B;
+          }
+
+
+          /* IMG IN COLUMN */
+          .result-table-td-img {
+            width: 35px;
+          }
+        }
+      }
+
+
+      /* ---------------------------------------------- TABLE BODY HOVER -------------------------------------------- */
+      /* TABLE BODY LINE HOVER */
+      .table-line:hover {
+        outline: 4px solid #CFDCEC;
+        outline-offset: -4px;
+
+
+        /* TABLE BODY COLUMN HOVER */
+        td {
+          background: #F8F8FA;
+
+          /* TABLE BODY COLUMN TEXT HOVER */
+          input {
+            cursor: default;
+            background: #F8F8FA;
+          }
+        }
+      }
+    }
+  }
+
+  /* ------------------------------------------------ RESULT PAGE FOOTER -------------------------------------------- */
+  .result-page-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 55px;
+    width: calc(100vw - 255px);
+    background-color: #FFFFFF;
+
+
+    /* ----------------------------------------------- FOOTER SAVE BUTTON ------------------------------------------- */
+    .result-page-footer-save-button {
+
+      /* SAVE BUTTON */
+      .save-table-button {
+        margin-left: 38px;
+
+        button {
+          padding: 0;
+          background-color: #FFFFFF;
+          border: none;
+
+          font-family: Roboto, sans-serif;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 18px;
+          line-height: 21px;
+
+          color: #28794E;
+        }
+      }
+    }
+
+
+    /* -------------------------------------------- FOOTER INFO AND BUTTONS ----------------------------------------- */
+    .result-page-footer-page-buttons {
+      display: flex;
+
+
+      /* FOOTER COMMON TEXT CSS */
+      .result-page-footer-text {
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 15px;
+
+        letter-spacing: 0.05em;
+
+        color: #6E6893;
+      }
+
+
+      /* NUMBER OF TABLE LINES PER PAGE */
+      .table-lines-on-page {
+        span {
+          margin-right: 11px;
+        }
+      }
+
+
+      /* NUMBER OF TABLE LINES */
+      .table-lines-amount {
+        span {
+          margin-left: 50px;
+          margin-right: 56px;
+        }
+      }
+
+
+      /* RESULT TABLE PAGES */
+      .result-table-pages {
+
+        button {
+          border: none;
+          background-color: #FFFFFF;
+          margin-right: 50px;
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.loading {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  box-sizing: border-box;
+
+  width: 100%;
+  height: 85vh;
+
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.table-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  box-sizing: border-box;
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+
+  width: 100%;
+  height: 20px;
+
+  font-size: 16px;
+  font-weight: 900;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Order arrow
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.pages-field {
+  grid-area: pages;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .result-menu {
+    display: flex;
+    justify-content: space-between;
+    width: 400px;
+
+    .warning {
+      color: $white;
+      background: $yellow;
+      font-weight: bold;
+      font-size: 12px;
+      width: 100%;
+      padding: 5px;
+      height: 25px;
+      margin-top: 2px;
+      margin-right: -2px;
+      border-bottom-left-radius: 5px;
+      box-shadow: $box-shadow;
+    }
+
+
+    .save {
+      button {
+        width: 140px;
+        height: 30px;
+
+        margin-right: 20px;
+
+        font-size: 14px;
+
+        background-color: #484644;
+        color: white;
+
+        border: 0 solid;
+        border-radius: 5px;
+
+        transition: 0.2s;
+
+      }
+    }
+
+    .save:hover {
+      button {
+        cursor: pointer;
+
+        background-color: #403e3c;
+      }
+    }
+  }
+
+  .select-page {
+    margin: 10px auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 230px;
+
+
+    span {
+      color: #484644;
+    }
+
+
+    #select-page-btn {
+      width: 70px;
+      height: 30px;
+
+      font-family: 'Scada', sans-serif;
+      font-size: 14px;
+
+      background-color: white;
+      color: #484644;
+
+      border-radius: 5px;
+      border: 1px solid #3E3E3E;
+    }
+
+    #select-page-btn:hover {
+      background-color: #484644;
+      color: white;
+    }
+
+    #select-page-btn:disabled {
+      background-color: white;
+      color: #8A8A8A;
+
+      border: 1px solid #8A8A8A;
+    }
+  }
+}
+
+@media (max-width: 900px) {
+
+  .result-table {
+    grid-area: table;
+
+    overflow: auto;
+    width: 590px;
+
+  }
+
+}
+
+@media (max-width: 890px) {
+
+  .result-table {
+    grid-area: table;
+
+    overflow: auto;
+    width: 560px;
+
+  }
+
+}
+
+@media (max-width: 875px) {
+
+  .result-table {
+    grid-area: table;
+
+    overflow: auto;
+    width: 530px;
+
+  }
+
+}
+
+
+@media (max-width: 830px) {
+  .result-table {
+    grid-area: table;
+    overflow: auto;
+    width: 525px;
+  }
+}
+
+@media (max-width: 825px) {
+  .result-table {
+    grid-area: table;
+    overflow: auto;
+    width: 520px;
+  }
+}
+
+@media (max-width: 820px) {
+  .result-table {
+    grid-area: table;
+    overflow: auto;
+    width: 490px;
+  }
+}
+
+@media (max-width: 780px) {
+  .result-table {
+    grid-area: table;
+    overflow: auto;
+    width: 450px;
+  }
+}
+
+
+@media (max-width: 1120px) {
+  .menu_table {
+
+    #sorting-and-search {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 300px;
+
+      select {
+        height: 30px;
+        width: 100px;
+        border-radius: 5px;
+        border: 1px solid #adadad;
+      }
+
+
+    }
+
+    #select-page {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 210px;
+
+      span {
+        color: #484644;
+      }
+
+      #select-page-btn {
+        width: 60px;
+        height: 30px;
+        background-color: #EB6E3B;
+        color: white;
+        font-family: 'Scada', sans-serif;
+        font-size: 14px;
+        border-radius: 5px;
+        border: 0 solid;
+      }
+
+      .save {
+        button {
+          width: 70px;
+          height: 30px;
+          margin-right: 10px;
+          background-color: #217355;
+          color: white;
+          font-size: 14px;
+          border: 0 solid #217355;
+          border-radius: 5px;
+        }
+      }
+    }
+  }
+}
+
+
