@@ -261,7 +261,7 @@
     display: flex;
 
 
-    /* SETTINGS BUTTONS */
+    /* SETTINGS BUTTON */
     .settings-buttons {
       display: flex;
 
@@ -271,16 +271,29 @@
         align-items: center;
         justify-content: center;
 
-        width: 26px;
-        height: 25px;
+        width: 29px;
+        height: 29px;
 
-        margin-right: 28px;
+        margin-right: 25px;
       }
 
       #settings-button:hover {
         cursor: pointer;
 
       }
+    }
+
+
+    /* LOGOUT BUTTON */
+    .logout-buttons {
+      margin-right: 28px;
+      width: 26px;
+      height: 26px;
+    }
+
+    /* LOGOUT BUTTON */
+    .logout-buttons:hover {
+      cursor: pointer;
     }
   }
 }

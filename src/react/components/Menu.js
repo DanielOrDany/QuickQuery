@@ -18,6 +18,7 @@ import arrow_back from "../icons/arrow_back.svg";
 import header_settings from "../icons/header-settings.svg";
 import logo_icon from "../icons/QuickQuery.svg";
 import home_icon from "../icons/home-icon.svg";
+import logout_icon from "../icons/logout.svg";
 import search_conn_icon from "../icons/search-conn-icon.svg";
 import '../styles/Menu.scss';
 import SettingsPopup from "../popups/SettingsPopup";
@@ -260,15 +261,22 @@ class Menu extends React.Component {
                 }
               </div>
 
-              <div className={'search-div'}>
+
+              {/*
+                <div className={'search-div'}>
                 <img src={search_conn_icon} className={'search-conn-icon'} alt={'search'}/>
                 <input className={'search-connection'} placeholder={'Search'}/>
               </div>
+              */}
+
 
               <div className="menu-box">
                 <div className="settings-buttons">
 
                   <img src={header_settings} id="settings-button" onClick={() => this.setState({error: false, isOpen: true})} />
+                </div>
+                <div className="logout-buttons">
+                  <img src={logout_icon} id='logout-button' onClick={() => this.logout()}/>
                 </div>
               </div>
             </div>

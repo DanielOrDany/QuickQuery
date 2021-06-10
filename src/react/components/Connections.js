@@ -833,7 +833,7 @@ export default class Connections extends React.Component {
 
                                         {/* ------------------------------ DATABASES ------------------------------- */}
                                         <div className={'connections-page-databases-block'}>
-                                            <div className={'connections-page-databases'}>
+                                            <div className={'connections-page-all-databases'}>
                                                 {searchedConnections.map(conn => {
                                                     return (
                                                             <div className={'database'} id={conn.name} key={conn.name} onDoubleClick={() => this.openConnection(conn.name)}>

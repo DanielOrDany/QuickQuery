@@ -3,6 +3,8 @@ import '../styles/Auth.scss';
 import appIcon from '../icons/1QuickQuery.svg';
 //import { shell } from 'electron';
 
+import form_logo from "../icons/login-form-logo.svg";
+
 export default class Auth extends React.Component {
     constructor(props) {
         super(props);
@@ -10,7 +12,8 @@ export default class Auth extends React.Component {
         this.state = {
             email: "",
             password: "",
-            error: ""
+            error: "",
+            isError: false
         };
     };
 
@@ -22,9 +25,13 @@ export default class Auth extends React.Component {
         console.log(result);
         if (result) {
             if(result.error) {
-                this.setState({error: result.error});
+                this.setState({error: result.error, isError: true});
+            }
+            else {
+                this.setState({isError: false});
             }
         }
+
     }
 
     async register() {
@@ -35,10 +42,11 @@ export default class Auth extends React.Component {
     }
 
     render() {
-        const { email, password, error } = this.state;
+        const { email, password, error, isError } = this.state;
 
         return(
             <div className="auth-page">
+
                 <div className="auth-form">
                     <div className="auth-form-header">
                         <div className="auth-form-header-text">
