@@ -135,7 +135,8 @@
       #auth-form-cancel-button {
         width: 104px;
         height: 42px;
-        color: rgba(139, 139, 139, 0.836589);
+        color: rgba(139, 139, 139, 0.836589);;
+        background: white;
         border: 2px solid #D3D3D3;
         box-sizing: border-box;
         border-radius: 4px;
@@ -158,6 +159,7 @@
         letter-spacing: -0.11px;
         color: $white;
         margin-left: 25px;
+        border: none;
       }
     }
   }

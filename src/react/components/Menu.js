@@ -22,6 +22,7 @@ import logout_icon from "../icons/logout.svg";
 import search_conn_icon from "../icons/search-conn-icon.svg";
 import '../styles/Menu.scss';
 import SettingsPopup from "../popups/SettingsPopup";
+import LogoutPopup from "../popups/LogoutPopup";
 
 
 class Menu extends React.Component {
@@ -31,7 +32,8 @@ class Menu extends React.Component {
     this.state = {
       theme: false,
       toTables: true,
-      isSignedIn: true
+      isSignedIn: true,
+      isLogoutPopupOpen: false
     };
 
     this.login = this.login.bind(this);
@@ -101,11 +103,11 @@ class Menu extends React.Component {
   }
 
   handleSubmit = () => {
-    this.setState({message: "", isOpen: false });
+    this.setState({message: "", isOpen: false});
   };
 
   handleCancel = () => {
-    this.setState({message: "", isOpen: false });
+    this.setState({message: "", isOpen: false});
   };
 
   share = () => {
@@ -113,6 +115,14 @@ class Menu extends React.Component {
       this.exportConfig("config.txt", data);
     });
   };
+
+  openLogoutPopup = () => {
+    this.setState({isLogoutPopupOpen: true})
+  }
+
+  closeLogoutPopup = () => {
+    this.setState({isLogoutPopupOpen: false})
+  }
 
   importConfigFile = (event) => {
     try {
@@ -145,12 +155,10 @@ class Menu extends React.Component {
         let event = document.createEvent('MouseEvents');
         event.initEvent('click', true, true);
         pom.dispatchEvent(event);
-      }
-      else {
+      } else {
         pom.click();
       }
-    }
-    catch (e) {
+    } catch (e) {
       this.setState({error: true, message: "FAIL", isOpen: true});
     }
   }
@@ -159,7 +167,8 @@ class Menu extends React.Component {
     localStorage.removeItem('employeeId');
     localStorage.removeItem('employeeToken');
     localStorage.removeItem('employeePlan');
-    this.setState({ isSignedIn: false, isOpen: false, message: "" });
+    this.setState({isSignedIn: false, isOpen: false, message: ""});
+    this.setState({isLogoutPopupOpen: false});
   }
 
   openConnections() {
@@ -168,7 +177,7 @@ class Menu extends React.Component {
   }
 
   openTables() {
-    if(localStorage.getItem("current_connection")) {
+    if (localStorage.getItem("current_connection")) {
       this.setState({toTables: false});
     }
     window.location.hash = '#/tables';
@@ -178,15 +187,15 @@ class Menu extends React.Component {
     const result = await authLogin(email, password);
 
     if (result && result.error) {
-      return { error: result.error };
+      return {error: result.error};
     } else if (result && result.data) {
       localStorage.setItem('employeeId', result.data.id);
       localStorage.setItem('employeeToken', result.data.token);
       localStorage.setItem('employeePlan', result.data.subscription_plan);
-      this.setState({ isSignedIn: true });
+      this.setState({isSignedIn: true});
       return null;
     } else {
-      return { error: "network error" };
+      return {error: "network error"};
     }
   }
 
@@ -217,7 +226,6 @@ class Menu extends React.Component {
             !this.state.error &&
 
 
-
             <SettingsPopup
                 title="Settings"
                 isOpen={this.state.isOpen}
@@ -242,14 +250,22 @@ class Menu extends React.Component {
             </SettingsPopup>
 
 
-
           }
+
+          <LogoutPopup
+              isOpen={this.state.isLogoutPopupOpen}
+              onCancel={this.closeLogoutPopup}
+              logout={this.logout}
+          >
+          </LogoutPopup>
+
+
           <Router hashType="noslash">
             <div className="menu-header" expand="md">
               <div className="logo-box">
                 <div className={'logo_bg'}></div>
                 <img src={logo_icon} id="l-icon"/>
-                <img src={home_icon} id="home-icon" onClick={() => this.openConnections()} />
+                <img src={home_icon} id="home-icon" onClick={() => this.openConnections()}/>
 
                 { //!this.state.toTables &&
                   /*<div id="back-section">
@@ -273,17 +289,18 @@ class Menu extends React.Component {
               <div className="menu-box">
                 <div className="settings-buttons">
 
-                  <img src={header_settings} id="settings-button" onClick={() => this.setState({error: false, isOpen: true})} />
+                  <img src={header_settings} id="settings-button"
+                       onClick={() => this.setState({error: false, isOpen: true})}/>
                 </div>
                 <div className="logout-buttons">
-                  <img src={logout_icon} id='logout-button' onClick={() => this.logout()}/>
+                  <img src={logout_icon} id='logout-button' onClick={() => this.openLogoutPopup()}/>
                 </div>
               </div>
             </div>
             <Switch>
-              <Route path="/tables" component={() => <Tables changeSignedStatus={this.changeSignedStatus} />} />
-              <Route path="/connections" component={() => <Connections changeSignedStatus={this.changeSignedStatus} />} />
-              <Route path="/" component={() => <Connections changeSignedStatus={this.changeSignedStatus} />} />
+              <Route path="/tables" component={() => <Tables changeSignedStatus={this.changeSignedStatus}/>}/>
+              <Route path="/connections" component={() => <Connections changeSignedStatus={this.changeSignedStatus}/>}/>
+              <Route path="/" component={() => <Connections changeSignedStatus={this.changeSignedStatus}/>}/>
             </Switch>
           </Router>
         </>

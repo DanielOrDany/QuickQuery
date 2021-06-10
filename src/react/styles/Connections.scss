@@ -755,11 +755,27 @@
         .database-date-created {
           display: flex;
           align-items: center;
-          width: calc(100vw - 944px);
+          width: calc(100vw - 984px);
           height: 60px;
           text-align: left;
           padding-left: 102px;
           padding-right: 102px;
+        }
+
+
+        .database-mini-menu {
+          width: 20px;
+          height: 60px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-right: 20px;
+
+
+          svg {
+            height: 20px;
+            width: 5px;
+          }
         }
       }
 

@@ -1,0 +1,122 @@
+.logout-popup-BG {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background: #000000A6;
+
+  z-index: 100;
+
+
+  .logout-popup-window {
+    height: 272px;
+    width: 660px;
+    background: #FFFFFF;
+    border-radius: 6px;
+
+
+    .logout-popup-cross {
+      display: flex;
+      margin-top: 34px;
+      margin-right: 45px;
+      margin-left: auto;
+    }
+
+    .logout-popup-cross:hover {
+      cursor: pointer;
+    }
+
+
+
+    .logout-popup-title {
+      text-align: left;
+      margin-left: 46px;
+
+
+      span {
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 28px;
+        line-height: 33px;
+
+        color: #3E3E3E;
+      }
+    }
+
+
+    .logout-popup-subtitle {
+      text-align: left;
+      margin-top: 25px;
+      margin-left: 51px;
+
+
+      span {
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 21px;
+
+        color: #000000;
+      }
+    }
+
+
+    .logout-popup-btn {
+      text-align: right;
+      margin-right: 45px;
+      margin-top: 55px;
+
+
+      #logout-popup-cancel-btn {
+        height: 42px;
+        width: 104px;
+        border: 2px solid #D3D3D3;
+        box-sizing: border-box;
+        border-radius: 4px;
+
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 17px;
+        line-height: 20px;
+
+        letter-spacing: -0.11px;
+
+        color: rgba(139, 139, 139, 0.836589);
+
+        margin-right: 25px;
+        text-transform: capitalize;
+      }
+
+
+
+      #logout-popup-sign-out-btn {
+        height: 42px;
+        width: 108px;
+        background: #28794E;
+        border-radius: 4px;
+
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 17px;
+        line-height: 20px;
+
+        letter-spacing: -0.11px;
+
+        color: #FFFFFF;
+        text-transform: capitalize;
+
+      }
+    }
+
+  }
+}
