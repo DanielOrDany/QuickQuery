@@ -107,9 +107,20 @@
   }
 }
 
+.scroll-body {
+  overflow-y: scroll;
+  height: 480px;
+}
+
 /* ADD CONNECTION BIG-INPUTS */
 .big-input-modal {
   margin-left: 46px;
+
+  .ssh-box-line {
+    height: 1px;
+    width: 758px;
+    background: #E2DFE3;
+  }
 
   /* BIG-INPUTS BODY */
   .big-input-modal-body {
@@ -177,6 +188,215 @@
       flex-direction: column;
     }
 
+  }
+
+  .ssh-input-buttons {
+    position: absolute;
+    top: 650px;
+
+    /* FOOTER SIMPLIFIED CONNECTION BUTTON */
+    #simplified-connection-btn {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 21px;
+
+      color: #28794E;
+      background-color: #FFFFFF;
+      padding: 0;
+      margin-top: 35px;
+      margin-left: 20px;
+    }
+
+    #configure-manually-btn {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 21px;
+
+      color: #28794E;
+      background-color: #FFFFFF;
+      padding: 0;
+      margin-top: 35px;
+    }
+
+    //.ssh-btn {
+    //  font-family: Roboto, sans-serif;
+    //  font-style: normal;
+    //  font-weight: 500;
+    //  font-size: 18px;
+    //  line-height: 21px;
+    //  background-color: transparent;
+    //  margin-top: 49px;
+    //  padding: 0;
+    //  margin-left: 17px;
+    //  color: #28794E;
+    //  border: none;
+    //  text-transform: none;
+    //}
+  }
+
+  .big-input-buttons {
+    position: absolute;
+
+    /* FOOTER SIMPLIFIED CONNECTION BUTTON */
+    #simplified-connection-btn {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 21px;
+
+      color: #28794E;
+      background-color: #FFFFFF;
+      padding: 0;
+      margin-top: 49px;
+    }
+
+    .ssh-btn {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 21px;
+      background-color: transparent;
+      margin-top: 49px;
+      padding: 0;
+      margin-left: 17px;
+      color: #28794E;
+      border: none;
+      text-transform: none;
+    }
+  }
+}
+
+
+/* ADD CONNECTION BIG-INPUTS */
+.big-input-modal {
+  margin-left: 46px;
+
+  .ssh-box-line {
+    height: 1px;
+    width: 758px;
+    background: #E2DFE3;
+  }
+
+  /* BIG-INPUTS BODY */
+  .big-input-modal-body {
+    display: flex;
+
+    /* BIG-INPUTS INPUTS-DIV */
+    .big-information-field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* BIG-INPUTS TITLES */
+    .big-input-title {
+      display: flex;
+      height: 21px;
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 21px;
+      margin-top: 25px;
+      margin-bottom: 12px;
+      color: #000000;
+    }
+
+    /* BIG-INPUTS FIELDS */
+    .big-form-control {
+      height: 52px;
+      width: 362px;
+      background: #FFFFFF;
+      border: 2px solid #D8DFEA;
+      box-sizing: border-box;
+      border-radius: 4px;
+
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 19px;
+
+      color: #000000;
+      padding-left: 22px;
+
+    }
+
+    .big-form-control::placeholder {
+      color: rgba(92, 93, 111, 0.6);;
+    }
+
+    .big-form-control:hover {
+      border: 3px solid #8EB6F4;
+      padding-left: 21px;
+    }
+
+    /* BODY FIRST COLUMN */
+    .big-input-first-column {
+      display: flex;
+      flex-direction: column;
+      margin-right: 34px;
+    }
+
+    /* BODY SECOND COLUMN */
+    .big-input-second-column {
+      display: flex;
+      flex-direction: column;
+    }
+
+  }
+
+  .ssh-input-buttons {
+    position: absolute;
+    top: 650px;
+
+    /* FOOTER SIMPLIFIED CONNECTION BUTTON */
+    #simplified-connection-btn {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 21px;
+
+      color: #28794E;
+      background-color: #FFFFFF;
+      padding: 0;
+      margin-top: 35px;
+      margin-left: 20px;
+    }
+
+    #configure-manually-btn {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 21px;
+
+      color: #28794E;
+      background-color: #FFFFFF;
+      padding: 0;
+      margin-top: 35px;
+    }
+
+    //.ssh-btn {
+    //  font-family: Roboto, sans-serif;
+    //  font-style: normal;
+    //  font-weight: 500;
+    //  font-size: 18px;
+    //  line-height: 21px;
+    //  background-color: transparent;
+    //  margin-top: 49px;
+    //  padding: 0;
+    //  margin-left: 17px;
+    //  color: #28794E;
+    //  border: none;
+    //  text-transform: none;
+    //}
   }
 
   .big-input-buttons {

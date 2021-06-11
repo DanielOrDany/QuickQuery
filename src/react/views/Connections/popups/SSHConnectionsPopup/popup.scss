@@ -22,7 +22,7 @@
   .ssh-popup-window {
     height: 722px;
     width: 850px;
-
+    padding-bottom: 20px;
     background: #FFFFFF;
     border-radius: 8px 8px 6px 6px;
 
@@ -104,7 +104,7 @@
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      margin-top: 60px;
+      margin-top: 20px;
 
 
       /* POP-UP CANCEL BUTTON */

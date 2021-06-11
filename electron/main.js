@@ -57,8 +57,6 @@ function createWindow () {
   mainWindow.on('closed', function () {
     app.quit();
   });
-
-  window.shell = shell;
 }
 
 app.on('ready', createWindow);

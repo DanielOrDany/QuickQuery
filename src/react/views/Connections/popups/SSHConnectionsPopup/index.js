@@ -15,18 +15,18 @@ const SSHConnectionPopup = ({
             {isOpen &&
             <Portal>
 
-                <div className={'ssh-connection-popup'}>
+                <div className="ssh-connection-popup">
 
-                    <div className={'ssh-popup-window'}>
-                        <div className={'ssh-popup-header'}>
+                    <div className="ssh-popup-window">
+                        <div className="ssh-popup-header">
                             <span>Fill out all required information for creating a connection</span>
                         </div>
 
 
-                        <img className={'ssh-popup-cross'} src={cross_icon} onClick={onCancel} alt={'cross'}/>
+                        <img className="ssh-popup-cross" src={cross_icon} onClick={onCancel} alt={'cross'}/>
 
 
-                        <div className={'ssh-popup-title'}>
+                        <div className="ssh-popup-title">
                             <span>SSH connection</span>
                         </div>
 
@@ -36,7 +36,7 @@ const SSHConnectionPopup = ({
                         </div>
 
 
-                        <div className={'ssh-popup-btn'}>
+                        <div className="ssh-popup-btn">
                             <Button id='ssh-popup-cancel-btn' onClick={onCancel} invert>Cancel</Button>
                             <Button id='ssh-popup-create-btn' onClick={onSubmit}>Create</Button>
                         </div>

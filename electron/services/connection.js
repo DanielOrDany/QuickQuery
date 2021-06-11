@@ -1,6 +1,7 @@
 const low = require('lowdb');
 const path = require('path');
 const fs = require('fs');
+const tunnel = require('tunnel-ssh');
 const FileSync = require('lowdb/adapters/FileSync');
 const appDataDirPath = getAppDataPath();
 const adapter = new FileSync(path.join(appDataDirPath, 'database.json'));
@@ -96,7 +97,22 @@ async function verifyConnection (name) {
 
 
 async function addConnection(params) {
-    let { name, host, port, user, password, database, schema, dtype, uri } = params;
+    let {
+        name,
+        host,
+        port,
+        user,
+        password,
+        database,
+        schema,
+        dtype,
+        uri,
+        sshHost,
+        sshPort,
+        sshUser,
+        sshPassword,
+        sshPrivateKey
+    } = params;
 
     if (uri) {
         dtype = uri.split('://')[0];
@@ -105,22 +121,64 @@ async function addConnection(params) {
     // throw error if connection already exist
     await verifyConnection(name);
 
+    const config = {
+        username: sshUser,
+        password: sshPassword,
+        host: sshHost,
+        port: sshPort,
+        dstHost: host,
+        dstPort: port,
+        localHost: host,
+        localPort: port
+    };
+
     try {
-        const sequelize = uri ? new Sequelize(uri) : new Sequelize(
-            database,
-            user,
-            password,
-            {
-                host: host,
-                dialect: dtype,
-                ssl: true,
-                dialectOptions: {
-                    ssl: {
-                        require: true,
-                        rejectUnauthorized: false // <<<<<< YOU NEED THIS
-                    }
+        let sequelize;
+
+        if (uri) {
+            sequelize = new Sequelize(uri);
+        } else if (sshHost) {
+            sequelize = await new Promise((resolve, reject) => tunnel(config, (error, server) => {
+                if (error) {
+                    console.error(error);
+                    reject("error 2:", error);
+                } else {
+                    console.log('server:', server);
+
+                    resolve(new Sequelize(database,
+                        user,
+                        password,
+                        {
+                            host: host,
+                            dialect: dtype,
+                            ssl: true,
+                            dialectOptions: {
+                                ssl: {
+                                    require: true,
+                                    rejectUnauthorized: false // <<<<<< YOU NEED THIS
+                                }
+                            }
+                        }
+                    ));
                 }}
-        );
+            ));
+        } else {
+            sequelize = new Sequelize(database,
+                user,
+                password,
+                {
+                    host: host,
+                    dialect: dtype,
+                    ssl: true,
+                    dialectOptions: {
+                        ssl: {
+                            require: true,
+                            rejectUnauthorized: false // <<<<<< YOU NEED THIS
+                        }
+                    }
+                }
+            );
+        }
 
         const selectAllTablesQuery = `
         SELECT table_name 
@@ -143,7 +201,12 @@ async function addConnection(params) {
             schema: schema,
             queries: [], // saved constructor queries
             native_tables: [], // native db names of tables
-            createdAt: getCurrentDate()// date connection was added
+            createdAt: getCurrentDate(), // date connection was added
+            sshHost,
+            sshPort,
+            sshUser,
+            sshPassword,
+            sshPrivateKey
         };
 
         /** Select All Tables */
@@ -229,9 +292,9 @@ async function deleteConnection(name) {
 function getCurrentDate() {
     let date = new Date();
     let day = date.getDate();
-    let month = date.getMonth() + 1
-    let year = date.getFullYear()
-    let currentDate = `${day}/${month < 10 ? `0${month}` : month}/${year}`
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let currentDate = `${day}/${month < 10 ? `0${month}` : month}/${year}`;
     return currentDate;
 }
 

@@ -49,6 +49,11 @@ export default class Connections extends React.Component {
             schemaInput: '',
             dtypeInput: 'mysql',
             uriInput: '',
+            sshHostInput: '',
+            sshUserInput: '',
+            sshPortInput: '',
+            sshPasswordInput: '',
+            sshPrivateKeyInput: '',
             keyInput: '',
             errorMessage: '',
             /*isOpen: false,*/
@@ -160,7 +165,7 @@ export default class Connections extends React.Component {
     };
 
     handleCancel = () => {
-        this.setState({ isSimplifiedConnectionPopup: false, isConfigureManuallyPopup: false });
+        this.setState({ isSimplifiedConnectionPopup: false, isConfigureManuallyPopup: false, isSSHConnectionPopup: false });
     };
 
     openErrorModal = () => {
@@ -216,28 +221,6 @@ export default class Connections extends React.Component {
                 localStorage.setItem("connections", JSON.stringify(data.connections));
                 localStorage.setItem("data", JSON.stringify(data));
             });
-
-        // checkLicense()
-        //     .then(data => {
-        //         if(data === "no-license") {
-        //             this.setState({
-        //                 isKeyOpen: true,
-        //                 trialAvailable: true,
-        //                 trialWindow: true
-        //                 });
-        //         } else if(data === "update-license") {
-        //             this.setState({
-        //                 errorMessage: "Your license has expired.",
-        //                 licenseError: true,
-        //                 isErrorOpen: true,
-        //                 isKeyOpen: false
-        //             });
-        //         } else if(data === "good-license") {
-        //             this.setState({
-        //                 isOpen: this.state.connections.length ? false : true // show popup if none connections in the app
-        //             });
-        //         }
-        //     });
     };
 
     inputVirify(args) {
@@ -252,7 +235,7 @@ export default class Connections extends React.Component {
     }
 
     addConnection = () => {
-        console.log(this.state)
+        console.log(this.state);
         let nameInput = this.state.nameInput;
         let hostInput = this.state.hostInput;
         let portInput = this.state.portInput;
@@ -262,8 +245,12 @@ export default class Connections extends React.Component {
         let schemaInput = this.state.schemaInput;
         let dtypeInput = this.state.dtypeInput;
         let uriInput = this.state.uriInput;
+        let sshHostInput = this.state.sshHostInput;
+        let sshUserInput = this.state.sshUserInput;
+        let sshPortInput = this.state.sshPortInput;
+        let sshPasswordInput = this.state.sshPasswordInput;
+        let sshPrivateKeyInput = this.state.sshPrivateKeyInput;
         let successfullVerify = false;
-
 
         // Check valid inputs
         if (this.state.isConfigureManuallyPopup) {
@@ -276,37 +263,67 @@ export default class Connections extends React.Component {
                 this.inputVirify(databaseInput) &&
                 this.inputVirify(schemaInput) &&
                 this.inputVirify(dtypeInput);
+        } else if (this.state.isSSHConnectionPopup) {
+            successfullVerify =
+                this.inputVirify(nameInput) &&
+                this.inputVirify(hostInput) &&
+                this.inputVirify(portInput) &&
+                this.inputVirify(userInput) &&
+                this.inputVirify(passwordInput) &&
+                this.inputVirify(databaseInput) &&
+                this.inputVirify(schemaInput) &&
+                this.inputVirify(dtypeInput) &&
+                this.inputVirify(sshHostInput) &&
+                this.inputVirify(sshPortInput) &&
+                // this.inputVirify(sshPasswordInput) &&
+                this.inputVirify(sshUserInput) &&
+                this.inputVirify(sshPrivateKeyInput);
         } else {
             successfullVerify =
                 this.inputVirify(nameInput) &&
                 this.inputVirify(uriInput) &&
                 this.inputVirify(schemaInput);
         }
-        console.log(this.inputVirify(nameInput))
-        console.log(this.inputVirify(hostInput))
-        console.log(this.inputVirify(portInput))
-        console.log(this.inputVirify(userInput))
-        console.log(this.inputVirify(passwordInput))
-        console.log(this.inputVirify(databaseInput))
-        console.log(this.inputVirify(schemaInput))
-        console.log(this.inputVirify(dtypeInput))
-        console.log(successfullVerify)
 
         if(successfullVerify) {
-            addConnection(this.state.isConfigureManuallyPopup ? {
-                name: nameInput,
-                host: hostInput,
-                port: portInput,
-                user: userInput,
-                password: passwordInput,
-                database: databaseInput,
-                schema: schemaInput,
-                dtype: dtypeInput
-            } : {
-                schema: schemaInput,
-                uri: uriInput,
-                name: nameInput
-            }).then(connection => {
+            let connectionBody = {};
+
+            if (this.state.isConfigureManuallyPopup) {
+                connectionBody = {
+                    name: nameInput,
+                    host: hostInput,
+                    port: portInput,
+                    user: userInput,
+                    password: passwordInput,
+                    database: databaseInput,
+                    schema: schemaInput,
+                    dtype: dtypeInput
+                };
+            } else if (this.state.isSSHConnectionPopup) {
+                connectionBody = {
+                    name: nameInput,
+                    host: hostInput,
+                    port: portInput,
+                    user: userInput,
+                    password: passwordInput,
+                    database: databaseInput,
+                    schema: schemaInput,
+                    dtype: dtypeInput,
+                    sshHost: sshHostInput,
+                    sshPort: sshPortInput,
+                    sshUser: sshUserInput,
+                    sshPassword: sshPasswordInput,
+                    sshPrivateKey: sshPrivateKeyInput
+                };
+            } else {
+                connectionBody = {
+                    schema: schemaInput,
+                    uri: uriInput,
+                    name: nameInput
+                };
+            }
+
+            addConnection(connectionBody).then(connection => {
                 if (connection) {
                     const connections = JSON.parse(localStorage.getItem("connections"));
                     connections.push(connection);
@@ -405,9 +422,33 @@ export default class Connections extends React.Component {
     uriOnChange = (e) => {
         this.setState({uriInput: e.target.value})
     };
+    uriOnChange = (e) => {
+        this.setState({uriInput: e.target.value})
+    };
+    sshHostOnChange = (e) => {
+        this.setState({sshHostInput: e.target.value})
+    };
+    sshPortOnChange = (e) => {
+        this.setState({sshPortInput: e.target.value})
+    };
+    sshPasswordOnChange = (e) => {
+        this.setState({sshPasswordInput: e.target.value})
+    };
+    sshUserOnChange = (e) => {
+        this.setState({sshUserInput: e.target.value})
+    };
+    sshPrivateKeyOnChange = (e) => {
+        if (e) {
+            if (e.target !== null) {
+                this.setState({sshPrivateKeyInput: e.target.files[0].path})
+            } else {
+                this.setState({errorMessage: "Try to reload private key", sshPrivateKeyInput: ""})
+            }
+        }
+    };
     keyOnChange = (e) => {
         this.setState({keyInput: e.target.value})
-    }
+    };
 
     nameKeyPress = (e) => {
         if (e.key === "Enter") {
@@ -616,9 +657,9 @@ export default class Connections extends React.Component {
 
     sshInput = () => {
         return(
-            <div className='big-input-modal'>
-                <div className={'big-input-modal-body scroll-body'}>
-                    <div className={"big-input-first-column"}>
+            <div className="big-input-modal scroll-body">
+                <div className="big-input-modal-body">
+                    <div className="big-input-first-column">
 
                         <div className="big-information-field">
                             <span className="big-input-title">Name connection</span>
@@ -627,20 +668,20 @@ export default class Connections extends React.Component {
                         </div>
 
                         <div className="big-information-field">
-                            <span className="big-input-title">Port</span>
+                            <span className="big-input-title">Database Port</span>
                             <input id="input-field-port" ref="port" className="big-form-control" type="text" placeholder="5432" type="search"
                                    onChange={this.portOnChange} onKeyPress={this.portKeyPress}/>
                         </div>
 
                         <div className="big-information-field">
-                            <span className="big-input-title">Password</span>
+                            <span className="big-input-title">Database Password</span>
                             <input id="input-field-password" ref="password" className="big-form-control" type="text"
                                    placeholder="Password" type="search"
                                    onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
                         </div>
 
                         <div className="information-field">
-                            <span className="big-input-title">Schema name
+                            <span className="big-input-title">Database Schema name
 
                                     <div className="help-tip" id="schema-tip">
                                         <p>A schema is a collection of database objects associated with one particular database username.</p>
@@ -654,29 +695,29 @@ export default class Connections extends React.Component {
 
                     </div>
 
-                    <div className={"big-input-second-column"}>
+                    <div className="big-input-second-column">
 
                         <div className="big-information-field">
-                            <span className="big-input-title">Host</span>
+                            <span className="big-input-title">Database Host</span>
                             <input id="input-field-host" ref="host" className="big-form-control" type="text" placeholder="127.0.0.1" type="search"
                                    onChange={this.hostOnChange} onKeyPress={this.hostKeyPress}/>
                         </div>
 
                         <div className="big-information-field">
-                            <span className="big-input-title">User name</span>
+                            <span className="big-input-title">Database User</span>
                             <input id="input-field-user" ref="user" className="big-form-control" type="text" placeholder="root" type="search"
                                    onChange={this.userOnChange} onKeyPress={this.userKeyPress}/>
                         </div>
 
                         <div className="big-information-field">
-                            <span className="big-input-title">Database name</span>
+                            <span className="big-input-title">Database Name</span>
                             <input id="input-field-database" ref="database" className="big-form-control" type="text"
                                    placeholder="Database" type="search"
                                    onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
                         </div>
 
                         <div className="choose-db-field">
-                            <span id="choose-db-title">Database</span>
+                            <span id="choose-db-title">Database Type</span>
                             <select
                                 className="selector"
                                 id="choose-db"
@@ -691,81 +732,45 @@ export default class Connections extends React.Component {
                     </div>
                 </div>
 
-                <div className={'big-input-modal-body'}>
-                    <div className={"big-input-first-column"}>
+                <div className="ssh-box-line"/>
 
+                <div className="big-input-modal-body">
+                    <div className="big-input-first-column">
                         <div className="big-information-field">
-                            <span className="big-input-title">Name connection</span>
-                            <input id="input-field-name" ref="name" className="big-form-control" type="text" placeholder="Database" type="search"
-                                   onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
+                            <span className="big-input-title">SSH Host</span>
+                            <input id="input-field-port" ref="port" className="big-form-control" type="text" placeholder="127.0.0.1" type="search"
+                                   onChange={this.sshHostOnChange}/>
                         </div>
 
                         <div className="big-information-field">
-                            <span className="big-input-title">Port</span>
-                            <input id="input-field-port" ref="port" className="big-form-control" type="text" placeholder="5432" type="search"
-                                   onChange={this.portOnChange} onKeyPress={this.portKeyPress}/>
-                        </div>
-
-                        <div className="big-information-field">
-                            <span className="big-input-title">Password</span>
+                            <span className="big-input-title">SSH Password</span>
                             <input id="input-field-password" ref="password" className="big-form-control" type="text"
                                    placeholder="Password" type="search"
-                                   onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
+                                   onChange={this.sshPasswordOnChange}/>
                         </div>
-
-                        <div className="information-field">
-                            <span className="big-input-title">Schema name
-
-                                    <div className="help-tip" id="schema-tip">
-                                        <p>A schema is a collection of database objects associated with one particular database username.</p>
-                                    </div>
-
-                            </span>
-                            <input id="input-field-schema" ref="schema" className="big-form-control" type="text"
-                                   placeholder="public" type="search"
-                                   onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
+                        <div className="big-information-field">
+                            <span className="big-input-title">Private Key</span>
+                            <input id="input-field-host" className="big-form-control" type="file"
+                                   onChange={this.sshPrivateKeyOnChange}/>
                         </div>
-
                     </div>
 
-                    <div className={"big-input-second-column"}>
-
+                    <div className="big-input-second-column">
                         <div className="big-information-field">
-                            <span className="big-input-title">Host</span>
-                            <input id="input-field-host" ref="host" className="big-form-control" type="text" placeholder="127.0.0.1" type="search"
-                                   onChange={this.hostOnChange} onKeyPress={this.hostKeyPress}/>
+                            <span className="big-input-title">SSH User</span>
+                            <input id="input-field-user" ref="user" className="big-form-control" type="text" placeholder="ubuntu" type="search"
+                                   onChange={this.sshUserOnChange}/>
                         </div>
 
                         <div className="big-information-field">
-                            <span className="big-input-title">User name</span>
-                            <input id="input-field-user" ref="user" className="big-form-control" type="text" placeholder="root" type="search"
-                                   onChange={this.userOnChange} onKeyPress={this.userKeyPress}/>
-                        </div>
-
-                        <div className="big-information-field">
-                            <span className="big-input-title">Database name</span>
-                            <input id="input-field-database" ref="database" className="big-form-control" type="text"
-                                   placeholder="Database" type="search"
-                                   onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
-                        </div>
-
-                        <div className="choose-db-field">
-                            <span id="choose-db-title">Database</span>
-                            <select
-                                className="selector"
-                                id="choose-db"
-                                value={this.state.dtypeInput}
-                                onChange={this.dtypeOnChange}
-
-                            >
-                                <option value="mysql">mysql</option>
-                                <option value="postgres">postgres</option>
-                            </select>
+                            <span className="big-input-title">SSH Port</span>
+                            <input id="input-field-host" ref="host" className="big-form-control" type="text" placeholder="5432" type="search"
+                                   onChange={this.sshPortOnChange}/>
                         </div>
                     </div>
                 </div>
 
-                <div className="small-information-buttons">
+                <div className="ssh-input-buttons">
                     <Button id="configure-manually-btn"
                             onClick={()=>{
                                 this.setState({
@@ -1069,149 +1074,7 @@ export default class Connections extends React.Component {
                     }
                 </div>
 
-
-                {/*<div className="folders">
-                    <div className={"all-folders"}>
-                    {
-                        searchedConnections.length !== 0 ? searchedConnections.map(conn => {
-                                let evenConn = searchedConnections.indexOf(conn) % 2 === 0;
-
-                                return (
-                                    <div>
-
-
-                                        <div className={"connections-page-filters"}>
-                                            <div className={"conn-page-name-filter"}>
-                                                <span>Name</span>
-                                                <img src={vector_down} className={"conn-filters-name-arrow"}/>
-                                                <input placeholder={"Search"} className={"conn-page-filters-input"}/>
-
-                                                <div className={"mini-lines-menu"}>
-                                                    <div className={"mini-menu-lines-style mini-first-line"}>
-
-                                                    </div>
-                                                    <div className={"mini-menu-lines-style mini-second-line"}>
-
-                                                    </div>
-                                                    <div className={"mini-menu-lines-style mini-third-line"}>
-
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                            <div className={"conn-page-filters-line"}>
-
-                                            </div>
-
-                                            <div className={"conn-page-schema-name-filter"}>
-                                                <span>Schema Name</span>
-                                                <img src={vector_down}/>
-                                                <input placeholder={"Search"} className={"conn-page-filters-input"}/>
-
-                                                <div className={"mini-lines-menu"}>
-                                                    <div className={"mini-menu-lines-style mini-first-line"}>
-
-                                                    </div>
-                                                    <div className={"mini-menu-lines-style mini-second-line"}>
-
-                                                    </div>
-                                                    <div className={"mini-menu-lines-style mini-third-line"}>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className={"conn-page-filters-line"}>
-
-                                            </div>
-
-
-                                            <div className={"conn-page-date-filter"}>
-                                                <span>Date Created</span>
-                                                <img src={vector_down}/>
-                                                <input placeholder={"Search"} className={"conn-page-filters-input"}/>
-
-                                                <div className={"mini-lines-menu"}>
-                                                    <div className={"mini-menu-lines-style mini-first-line"}></div>
-                                                    <div className={"mini-menu-lines-style mini-second-line"}></div>
-                                                    <div className={"mini-menu-lines-style mini-third-line"}></div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-
-                                        <div className={"conn-filters-bottom-line"}></div>
-
-
-
-                                        <div id={conn.name}
-                                             className={`connection-folder ${evenConn ? "white-row" : "white-row"}`}
-                                             key={conn.name}>
-                                            <div className="link-container"
-                                                 onDoubleClick={() => this.openConnection(conn.name)}>
-                                                <div className="folders-name">
-                                                    <img alt={"icon database"} src={database_icon} id="database-icon"/>
-                                                    <div className="link">
-                                                        <p id="folders-n">{conn.name} {this.databaseHost(conn)}</p>
-                                                    </div>
-
-                                                </div>
-
-                                                <div className="folders-schema-name">
-                                                    <p id="folders-schema-n">Name</p>
-                                                </div>
-
-                                                <div className="folders-date-created">
-                                                    <p id="folders-date">21/03/2021</p>
-                                                </div>
-
-                                                <div className="functional">
-                                                    <div onClick={() => this.openDelete(conn.name)}>
-                                                        <img alt={"delete icon"} src={delete_icon} id="delete-icon"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div className={"conn-page-footer"}>
-                                            <div className={"conn-page-info"}>
-                                                <div className={"conn-show-number"}>
-                                                    <span>Rows per page: 10</span>
-                                                    <img src={conn_count_arrow} alt={"conn-count-number-arrow"}/>
-                                                </div>
-
-                                                <div className={"all-conn-number"}>
-                                                    <span>1-10 of 10</span>
-                                                </div>
-
-                                                <div className={"conn-pages-arrows"}>
-                                                    <img src={conn_pages_arrow_left} className={"conn_pages_arrow_left"}/>
-                                                    <img src={conn_pages_arrow_right} className={"conn_pages_arrow_right"}/>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                );
-                            }
-                            )
-                            :
-                            <div className='empty-connection-page'>
-
-                            </div>
-
-
-
-
-                    }
-                    </div>
-                </div>*/}
-
-
-                {/* ----------------------------------------SETTINGS POPUPS----------------------------------------- */}
+                {/* ----------------------------------------CONNECTION POPUPS----------------------------------------- */}
                 <SimplifiedConnectionPopup
                     isOpen={isSimplifiedConnectionPopup}
                     onCancel={this.handleCancel}
@@ -1244,6 +1107,7 @@ export default class Connections extends React.Component {
                 >
                     {this.bigInput()}
                 </ConfigureManuallyPopup>
+
                 {/* ------------------------------------------------------------------------------------------------ */}
 
                 <Modal
