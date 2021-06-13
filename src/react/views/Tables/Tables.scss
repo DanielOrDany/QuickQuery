@@ -44,6 +44,13 @@
     }
 
 
+    .left-menu-button:hover {
+      background: #5BC470;
+      transition: .2s;
+      cursor: pointer;
+    }
+
+
 
     /* -------------------------------------------- LEFT MENU ALL TABLES -------------------------------------------- */
     .left-menu-all-tables {
@@ -198,6 +205,11 @@
       margin-left: 140.5px;
     }
 
+  }
+
+  .empty-right-side-tables-page-btn:hover {
+    border: 2px solid #5C5D6F;
+    transition: .2s;
   }
 }
 

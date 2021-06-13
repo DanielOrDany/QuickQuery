@@ -46,9 +46,9 @@ const SettingsPopup = ({
 
                         </div>
 
-                        <div className={'settings-popup-btn'}>
-                            <Button id='settings-popup-cancel-btn' onClick={onCancel} invert>Cancel</Button>
-                            <Button id='settings-popup-create-btn' onClick={onSubmit}>Create</Button>
+                        <div className='settings-popup-btn'>
+                            <Button id='settings-popup-cancel-btn' className='settings-popup-cancel-btn' onClick={onCancel} invert>Cancel</Button>
+                            <Button id='settings-popup-create-btn' className='settings-popup-create-btn' onClick={onSubmit}>Create</Button>
                         </div>
 
                     </div>

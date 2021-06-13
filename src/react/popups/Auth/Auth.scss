@@ -29,7 +29,7 @@
     border-radius: 5px;
     color: $box-text-color;
     display: flex;
-    padding: 35px 80px;
+    padding: 35px 77px;
     flex-direction: column;
 
     .auth-form-header {
@@ -42,14 +42,17 @@
           flex-direction: column;
 
           .auth-form-title {
+            font-family: Roboto, sans-serif;
             font-style: normal;
             font-weight: 500;
             font-size: 28px;
             line-height: 33px;
             color: #3E3E3E;
+            text-align: left;
           }
 
           .auth-form-subtitle {
+            font-family: Roboto, sans-serif;
             margin-top: 14px;
             font-style: normal;
             font-weight: normal;
@@ -95,6 +98,7 @@
       width: 100%;
 
       .auth-form-input-label {
+        font-family: Roboto, sans-serif;
         display: flex;
         width: 100%;
         font-style: normal;
@@ -106,18 +110,20 @@
       }
 
       #login-email {
+        font-family: Roboto, sans-serif;
         margin-top: 14px;
         background: #FFFFFF;
         border: 1px solid #D8DFEA;
         box-sizing: border-box;
         border-radius: 4px;
-        padding-left: 10px;
+        padding-left: 21px;
         height: 52px;
       }
 
       #login-password {
+        font-family: Roboto, sans-serif;
         height: 52px;
-        padding-left: 10px;
+        padding-left: 21px;
         margin-top: 14px;
         background: #FFFFFF;
         border: 1px solid #D8DFEA;
@@ -132,10 +138,11 @@
       width: 100%;
       justify-content: flex-end;
 
-      #auth-form-cancel-button {
+      .auth-form-register-button {
+        font-family: Roboto, sans-serif;
         width: 104px;
         height: 42px;
-        color: rgba(139, 139, 139, 0.836589);;
+        color: rgba(139, 139, 139, 0.836589);
         background: white;
         border: 2px solid #D3D3D3;
         box-sizing: border-box;
@@ -145,9 +152,11 @@
         font-size: 17px;
         line-height: 20px;
         letter-spacing: -0.11px;
+
       }
 
-      #auth-form-login-button {
+      .auth-form-login-button {
+        font-family: Roboto, sans-serif;
         width: 104px;
         height: 42px;
         background: #28794E;
@@ -163,4 +172,16 @@
       }
     }
   }
+}
+
+
+#auth-form-cancel-button:hover {
+  color: #5C5D6F;
+  border: 2px solid #5C5D6F;
+  transition: .2s;
+}
+
+#auth-form-login-button:hover {
+  background: #5BC470;
+  transition: .2s;
 }

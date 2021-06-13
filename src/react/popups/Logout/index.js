@@ -27,9 +27,9 @@ const LogoutPopup = ({
                         <span>Come back soon!</span>
                     </div>
 
-                    <div className={'logout-popup-btn'}>
-                        <Button id='logout-popup-cancel-btn' onClick={onCancel}>Cancel</Button>
-                        <Button id='logout-popup-sign-out-btn' onClick={logout}>Sign out</Button>
+                    <div className='logout-popup-btn'>
+                        <Button id='logout-popup-cancel-btn' className='logout-popup-cancel-btn' onClick={onCancel}>Cancel</Button>
+                        <Button id='logout-popup-sign-out-btn' className='logout-popup-sign-out-btn' onClick={logout}>Sign out</Button>
                     </div>
 
                 </div>
