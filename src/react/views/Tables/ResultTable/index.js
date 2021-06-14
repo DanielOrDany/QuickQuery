@@ -14,6 +14,7 @@ import TableImgModal from "../popups/TableImagePopup";
 import footer_arrow_down from "../../../icons/connections-page-footer-arrow.svg";
 import footer_arrow_left from "../../../icons/connections-page-footer-arrow-left.svg";
 import footer_arrow_right from "../../../icons/connections-page-footer-arrow-right.svg";
+import TableRowPopup from "../popups/TableRowPopup";
 
 const DESC = "DESC";
 const ASC = "ASC";
@@ -863,6 +864,11 @@ export default class Result extends React.Component {
 
 
                             {/* -------------------------------------- TABLE BODY ---------------------------------- */}
+                            {/* ------------------------------------------ POPUPS ----------------------------------------- */}
+                            <TableRowPopup isOpen={setTableModalActive} onCancel={this.handleCancel} tableInfo={selectedRowInfo}/>
+
+                            {/*<TableModal isOpen={setTableModalActive} tableInfo={selectedRowInfo} onCancel={this.handleCancel}/>*/}
+                            {/*<TableImgModal isOpen={TableImgModalActive} tableInfo={columnImg} onCancel={this.handleImgCancel}/>*/}
                             { // Rows
 
                                 (rows && !isNullResults) ? rows.map((item, rowKey) => {
@@ -900,6 +906,7 @@ export default class Result extends React.Component {
 
                                                             onDoubleClick={() => {
                                                                 this.setTableModal(!setTableModalActive);
+                                                                console.log(setTableModalActive)
                                                             }}>
                                                             {this.ImgCheck(renderItem)}
                                                         </td>
@@ -969,11 +976,6 @@ export default class Result extends React.Component {
                             </div>
                         </div>
                     </div>
-
-
-                    {/* ------------------------------------------ POPUPS ----------------------------------------- */}
-                    <TableModal isOpen={setTableModalActive} tableInfo={selectedRowInfo} onCancel={this.handleCancel}/>
-                    <TableImgModal isOpen={TableImgModalActive} tableInfo={columnImg} onCancel={this.handleImgCancel}/>
 
                 </div>
 
