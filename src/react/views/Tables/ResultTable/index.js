@@ -9,8 +9,7 @@ import {
 import "./Result.scss";
 import XLSX from "xlsx";
 import xxx from "../../../icons/loop.svg";
-import TableModal from "../popups/TableRowPopup";
-import TableImgModal from "../popups/TableImagePopup";
+import TableImgPopup from "../popups/TableImagePopup";
 import footer_arrow_down from "../../../icons/connections-page-footer-arrow.svg";
 import footer_arrow_left from "../../../icons/connections-page-footer-arrow-left.svg";
 import footer_arrow_right from "../../../icons/connections-page-footer-arrow-right.svg";
@@ -863,12 +862,12 @@ export default class Result extends React.Component {
 
 
 
-                            {/* -------------------------------------- TABLE BODY ---------------------------------- */}
+
                             {/* ------------------------------------------ POPUPS ----------------------------------------- */}
                             <TableRowPopup isOpen={setTableModalActive} onCancel={this.handleCancel} tableInfo={selectedRowInfo}/>
+                            <TableImgPopup isOpen={TableImgModalActive} onCancel={this.handleImgCancel} columnImg={columnImg}/>
 
-                            {/*<TableModal isOpen={setTableModalActive} tableInfo={selectedRowInfo} onCancel={this.handleCancel}/>*/}
-                            {/*<TableImgModal isOpen={TableImgModalActive} tableInfo={columnImg} onCancel={this.handleImgCancel}/>*/}
+                            {/* -------------------------------------- TABLE BODY ---------------------------------- */}
                             { // Rows
 
                                 (rows && !isNullResults) ? rows.map((item, rowKey) => {

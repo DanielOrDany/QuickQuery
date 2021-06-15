@@ -66,18 +66,3 @@ const TableRowPopup = ({
 
 
 export default TableRowPopup;
-
-
-
-{/*<div className={'row-info'}>
-    {tableInfo.map(tableName => {
-            return (
-                <div className={'table-rows'}>
-                    <div className={'table-name'}><input value={tableName[0]}/></div>
-                    <div className={'table-infos'}><input value={tableName[1]}/></div>
-                </div>
-            )
-
-        }
-    )}
-</div>*/}
