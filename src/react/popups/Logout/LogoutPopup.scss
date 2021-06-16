@@ -75,7 +75,7 @@
       margin-top: 55px;
 
 
-      #logout-popup-cancel-btn {
+      .logout-popup-cancel-btn {
         height: 42px;
         width: 104px;
         border: 2px solid #D3D3D3;
@@ -98,7 +98,7 @@
 
 
 
-      #logout-popup-sign-out-btn {
+      .logout-popup-sign-out-btn {
         height: 42px;
         width: 108px;
         background: #28794E;
@@ -116,6 +116,20 @@
         text-transform: capitalize;
 
       }
+    }
+
+    #logout-popup-cancel-btn:hover {
+      color: #5C5D6F;
+      border: 2px solid #5C5D6F;
+      background: #FFFFFF;
+      transition: .2s;
+    }
+
+
+
+    #logout-popup-sign-out-btn:hover {
+      background: #5BC470;
+      transition: .2s;
     }
 
   }

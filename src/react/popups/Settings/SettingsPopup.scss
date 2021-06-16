@@ -181,7 +181,7 @@
 
 
 
-      #settings-popup-cancel-btn {
+      .settings-popup-cancel-btn {
         height: 42px;
         width: 104px;
         border: 2px solid #D3D3D3;
@@ -205,7 +205,7 @@
 
 
 
-      #settings-popup-create-btn {
+      .settings-popup-create-btn {
         height: 42px;
         width: 108px;
         background: #28794E;
@@ -218,13 +218,28 @@
         font-weight: 500;
         font-size: 17px;
         line-height: 20px;
-        /* identical to box height */
 
         letter-spacing: -0.11px;
 
         color: #FFFFFF;
         margin-right: 46px;
       }
+    }
+
+
+
+    #settings-popup-cancel-btn:hover {
+      color: #5C5D6F;
+      border: 2px solid #5C5D6F;
+      transition: .2s;
+    }
+
+
+
+
+    #settings-popup-create-btn:hover {
+      background: #5BC470;
+      transition: .2s;
     }
 
 

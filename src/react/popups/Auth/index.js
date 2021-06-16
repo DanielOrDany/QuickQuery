@@ -74,8 +74,8 @@ export default class AuthPopup extends React.Component {
                     }
 
                     <div className="auth-form-buttons">
-                        <button id="auth-form-cancel-button" onClick={() => this.register()}>Register</button>
-                        <button id="auth-form-login-button" onClick={() => this.login()}>Login</button>
+                        <button id="auth-form-cancel-button" className='auth-form-register-button' onClick={() => this.register()}>Register</button>
+                        <button id="auth-form-login-button" className='auth-form-login-button' onClick={() => this.login()}>Login</button>
                     </div>
                 </div>
                 <div className="blur-back"></div>

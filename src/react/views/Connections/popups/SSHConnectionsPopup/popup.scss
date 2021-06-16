@@ -108,7 +108,7 @@
 
 
       /* POP-UP CANCEL BUTTON */
-      #ssh-popup-cancel-btn {
+      .ssh-popup-cancel-btn {
         height: 42px;
         width: 104px;
         text-transform: capitalize;
@@ -130,7 +130,7 @@
 
 
       /* POP-UP CREATE BUTTON */
-      #ssh-popup-create-btn {
+      .ssh-popup-create-btn {
         height: 42px;
         width: 108px;
         text-transform: capitalize;
@@ -150,5 +150,21 @@
         color: #FFFFFF;
       }
     }
+
+
+    /* POP-UP CANCEL BUTTON */
+    #ssh-popup-cancel-btn:hover {
+      color: #5C5D6F;
+      border: 2px solid #5C5D6F;
+      transition: .2s;
+    }
+
+
+    /* POP-UP CREATE BUTTON */
+    #ssh-popup-create-btn:hover {
+      background: #5BC470;
+      transition: .2s;
+    }
+
   }
 }

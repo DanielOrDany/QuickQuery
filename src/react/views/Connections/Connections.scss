@@ -21,6 +21,11 @@
     text-transform: none;
   }
 
+  .ssh-btn:hover {
+    color: #5BC470;
+    transition: .2s;
+  }
+
   #configure-manually-btn {
     font-family: Roboto, sans-serif;
     font-style: normal;
@@ -34,6 +39,11 @@
     color: #28794E;
   }
 
+  #configure-manually-btn:hover {
+    color: #5BC470;
+    transition: .2s;
+  }
+
   #simplified-connection-btn {
     font-family: Roboto, sans-serif;
     font-style: normal;
@@ -45,6 +55,11 @@
     padding: 0;
     margin-left: 46px;
     color: #28794E;
+  }
+
+  #simplified-connection-btn:hover {
+    color: #5BC470;
+    transition: .2s;
   }
 }
 
@@ -209,6 +224,11 @@
       margin-left: 20px;
     }
 
+    #simplified-connection-btn:hover {
+      color: #5BC470;
+      transition: .2s;
+    }
+
     #configure-manually-btn {
       font-family: Roboto, sans-serif;
       font-style: normal;
@@ -220,6 +240,11 @@
       background-color: #FFFFFF;
       padding: 0;
       margin-top: 35px;
+    }
+
+    #configure-manually-btn:hover {
+      color: #5BC470;
+      transition: .2s;
     }
 
     //.ssh-btn {
@@ -255,6 +280,11 @@
       margin-top: 49px;
     }
 
+    #simplified-connection-btn:hover {
+      color: #5BC470;
+      transition: .2s;
+    }
+
     .ssh-btn {
       font-family: Roboto, sans-serif;
       font-style: normal;
@@ -268,6 +298,11 @@
       color: #28794E;
       border: none;
       text-transform: none;
+    }
+
+    .ssh-btn:hover {
+      color: #5BC470;
+      transition: .2s;
     }
   }
 }
@@ -370,6 +405,11 @@
       margin-left: 20px;
     }
 
+    #simplified-connection-btn:hover {
+      color: #5BC470;
+      transition: .2s;
+    }
+
     #configure-manually-btn {
       font-family: Roboto, sans-serif;
       font-style: normal;
@@ -381,6 +421,11 @@
       background-color: #FFFFFF;
       padding: 0;
       margin-top: 35px;
+    }
+
+    #configure-manually-btn:hover {
+      color: #5BC470;
+      transition: .2s;
     }
 
     //.ssh-btn {
@@ -416,6 +461,11 @@
       margin-top: 49px;
     }
 
+    #simplified-connection-btn:hover {
+      color: #5BC470;
+      transition: .2s;
+    }
+
     .ssh-btn {
       font-family: Roboto, sans-serif;
       font-style: normal;
@@ -429,6 +479,11 @@
       color: #28794E;
       border: none;
       text-transform: none;
+    }
+
+    .ssh-btn:hover {
+      color: #5BC470;
+      transition: .2s;
     }
   }
 }
@@ -697,6 +752,12 @@
       color: #FFFFFF;
       margin-right: 34px;
     }
+
+
+    .add-database-button:hover {
+      background: #5BC470;
+      transition: .2s;
+    }
   }
 
 
@@ -911,6 +972,12 @@
           }
         }
       }
+    }
+
+
+
+    .connections-page-filters-arrow:hover {
+      cursor: pointer;
     }
 
 

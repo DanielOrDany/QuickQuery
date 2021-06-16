@@ -37,8 +37,8 @@ const SSHConnectionPopup = ({
 
 
                         <div className="ssh-popup-btn">
-                            <Button id='ssh-popup-cancel-btn' onClick={onCancel} invert>Cancel</Button>
-                            <Button id='ssh-popup-create-btn' onClick={onSubmit}>Create</Button>
+                            <Button id='ssh-popup-cancel-btn' className='ssh-popup-cancel-btn' onClick={onCancel} invert>Cancel</Button>
+                            <Button id='ssh-popup-create-btn' className='ssh-popup-create-btn' onClick={onSubmit}>Create</Button>
                         </div>
                     </div>
 

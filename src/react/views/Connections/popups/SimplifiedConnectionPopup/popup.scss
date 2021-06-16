@@ -104,11 +104,11 @@
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      margin-top: 60px;
+      margin-top: 11px;
 
 
       /* POP-UP CANCEL BUTTON */
-      #simplified-popup-cancel-btn {
+      .simplified-popup-cancel-btn {
         height: 42px;
         width: 104px;
         text-transform: capitalize;
@@ -130,7 +130,7 @@
 
 
       /* POP-UP CREATE BUTTON */
-      #simplified-popup-create-btn {
+      .simplified-popup-create-btn {
         height: 42px;
         width: 108px;
         text-transform: capitalize;
@@ -150,5 +150,95 @@
         color: #FFFFFF;
       }
     }
+
+    .simplified-popup-btn-no-error {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 60px;
+
+      /* POP-UP CANCEL BUTTON */
+      .simplified-popup-cancel-btn {
+        height: 42px;
+        width: 104px;
+        text-transform: capitalize;
+        margin-right: 26px;
+
+        border: 2px solid #D3D3D3;
+        border-radius: 4px;
+
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 17px;
+        line-height: 20px;
+
+        letter-spacing: -0.11px;
+
+        color: rgba(139, 139, 139, 0.836589);
+      }
+
+
+      /* POP-UP CREATE BUTTON */
+      .simplified-popup-create-btn {
+        height: 42px;
+        width: 108px;
+        text-transform: capitalize;
+        margin-right: 45px;
+
+        background: #28794E;
+        border-radius: 4px;
+
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 17px;
+        line-height: 20px;
+
+        letter-spacing: -0.11px;
+
+        color: #FFFFFF;
+      }
+    }
+
+
+    .simplified-error-message {
+      background: #FFEEED;
+      border: 1px solid #FF6C65;
+      box-sizing: border-box;
+      border-radius: 6px;
+
+      height: 32px;
+      width: 170px;
+      padding-left: 13px;
+      margin-top: 17px;
+      margin-left: 45px;
+      padding-top: 1px;
+
+
+      span {
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 14px;
+
+        text-align: center;
+
+        color: #FF6C65;
+      }
+    }
   }
+}
+
+
+#simplified-popup-cancel-btn:hover {
+  color: #5C5D6F;
+  border: 2px solid #5C5D6F;
+  transition: .2s;
+}
+
+#simplified-popup-create-btn:hover {
+  background: #5BC470;
+  transition: .2s;
 }

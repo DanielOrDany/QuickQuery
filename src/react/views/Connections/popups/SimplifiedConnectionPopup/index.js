@@ -5,10 +5,12 @@ import cross_icon from "../../../../icons/pop-up-cross.svg";
 import Button from "../../../../components/Button";
 
 const SimplifiedConnectionPopup = ({
-                                    isOpen,
-                                    onCancel,
-                                    onSubmit,
-                                    children,
+                                       isOpen,
+                                       onCancel,
+                                       onSubmit,
+                                       children,
+                                       errorMessage,
+                                       isError
                                 }) => {
     return (
         <>
@@ -36,10 +38,29 @@ const SimplifiedConnectionPopup = ({
                         </div>
 
 
-                        <div className={'simplified-popup-btn'}>
-                            <Button id='simplified-popup-cancel-btn' onClick={onCancel} invert>Cancel</Button>
-                            <Button id='simplified-popup-create-btn' onClick={onSubmit}>Create</Button>
+                        {isError &&
+                        <div className='simplified-error-message'>
+                            <span>{errorMessage}</span>
                         </div>
+                        }
+
+                        {isError &&
+                        <div className='simplified-popup-btn'>
+                            <Button id='simplified-popup-cancel-btn' className='simplified-popup-cancel-btn'
+                                    onClick={onCancel} invert>Cancel</Button>
+                            <Button id='simplified-popup-create-btn' className='simplified-popup-create-btn'
+                                    onClick={onSubmit}>Create</Button>
+                        </div>
+                        }
+
+                        {!isError &&
+                        <div className='simplified-popup-btn-no-error'>
+                            <Button id='simplified-popup-cancel-btn' className='simplified-popup-cancel-btn'
+                                    onClick={onCancel} invert>Cancel</Button>
+                            <Button id='simplified-popup-create-btn' className='simplified-popup-create-btn'
+                                    onClick={onSubmit}>Create</Button>
+                        </div>
+                        }
                     </div>
 
 
