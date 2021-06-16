@@ -4,7 +4,7 @@ const FileSync = require('lowdb/adapters/FileSync');
 const appDataDirPath = getAppDataPath();
 const adapter = new FileSync(path.join(appDataDirPath, 'database.json'));
 const db = low(adapter);
-
+const SequelizeTunnelService = require('./sequalize');
 const MYSQL = "mysql";
 const POSTGRESQL = "postgres";
 
@@ -38,7 +38,7 @@ function getAppDataPath() {
 
 const Sequelize = require('sequelize');
 const pg = require('pg');
-pg.defaults.ssl = true;
+pg.defaults.ssl = false;
 
 //Add new table to the current connection
 async function addTable (connectionName, query, type, alias) {
@@ -49,14 +49,48 @@ async function addTable (connectionName, query, type, alias) {
             .value();
 
         const URI = connection.URI;
+        const sshHost = connection.sshHost;
+        const sshPort = connection.sshPort;
+        const sshUser = connection.sshUser;
+        const sshPrivateKey = connection.sshPrivateKey;
         const connectionQueries = connection.queries;
 
-        const sequelize = URI.database ? new Sequelize(
-            URI.database,
-            URI.user,
-            URI.password,
-            URI.others
-        ) : new Sequelize(URI);
+        let sequelize;
+
+        if (typeof URI === "string") {
+            sequelize = new Sequelize(URI);
+
+        } else if (sshHost) {
+
+            // basic connection to a database
+            const dbConfig = {
+                database: URI.database,
+                username: URI.user,
+                password: URI.password,
+                dialect: URI.others.dialect,
+                port: URI.port
+            };
+
+            // ssh tunnel configuration
+            const tunnelConfig = {
+                username: sshUser,
+                host: sshHost,
+                port: sshPort,
+                privateKey: require("fs").readFileSync(sshPrivateKey)
+            };
+
+            // initialize service
+            const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
+            const connection = await sequelizeTunnelService.getConnection();
+
+            sequelize = connection.sequelize;
+        } else if (!sshHost) {
+            sequelize = new Sequelize(URI.database,
+                URI.user,
+                URI.password,
+                URI.others
+            );
+        }
 
         const index = connectionQueries.findIndex(query => query.alias === alias);
         if (index > 0) throw "Table with this name already exist!";
@@ -95,18 +129,53 @@ async function addTable (connectionName, query, type, alias) {
 
 async function runQuery (connectionName, query) {
     try {
-        const URI = db.read()
+        const connection = db.read()
             .get('connections')
             .find({name: connectionName})
-            .get('URI')
             .value();
 
-        const sequelize = URI.database ? new Sequelize(
-            URI.database,
-            URI.user,
-            URI.password,
-            URI.others
-        ) : new Sequelize(URI);
+        const URI = connection.URI;
+        const sshHost = connection.sshHost;
+        const sshPort = connection.sshPort;
+        const sshUser = connection.sshUser;
+        const sshPrivateKey = connection.sshPrivateKey;
+
+        let sequelize;
+
+        if (typeof URI === "string") {
+            sequelize = new Sequelize(URI);
+
+        } else if (sshHost) {
+
+            // basic connection to a database
+            const dbConfig = {
+                database: URI.database,
+                username: URI.user,
+                password: URI.password,
+                dialect: URI.others.dialect,
+                port: URI.port
+            };
+
+            // ssh tunnel configuration
+            const tunnelConfig = {
+                username: sshUser,
+                host: sshHost,
+                port: sshPort,
+                privateKey: require("fs").readFileSync(sshPrivateKey)
+            };
+
+            // initialize service
+            const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
+            const connection = await sequelizeTunnelService.getConnection();
+
+            sequelize = connection.sequelize;
+        } else if (!sshHost) {
+            sequelize = new Sequelize(URI.database,
+                URI.user,
+                URI.password,
+                URI.others
+            );
+        }
 
         query = query.replace(';', ' ');
         query += ' LIMIT 3 OFFSET 0';
@@ -228,18 +297,53 @@ async function updateTableQuery(connectionName, alias, newQuery, newAlias) {
 
 async function loadTableResult(connectionName, alias, loadingOptions) {
     try {
-        const URI = db.read()
+        const connection = db.read()
             .get('connections')
             .find({name: connectionName})
-            .get('URI')
             .value();
 
-        const sequelize = URI.database ? new Sequelize(
-            URI.database,
-            URI.user,
-            URI.password,
-            URI.others
-        ) : new Sequelize(URI);
+        const URI = connection.URI;
+        const sshHost = connection.sshHost;
+        const sshPort = connection.sshPort;
+        const sshUser = connection.sshUser;
+        const sshPrivateKey = connection.sshPrivateKey;
+
+        let sequelize;
+
+        if (typeof URI === "string") {
+            sequelize = new Sequelize(URI);
+
+        } else if (sshHost) {
+
+            // basic connection to a database
+            const dbConfig = {
+                database: URI.database,
+                username: URI.user,
+                password: URI.password,
+                dialect: URI.others.dialect,
+                port: URI.port
+            };
+
+            // ssh tunnel configuration
+            const tunnelConfig = {
+                username: sshUser,
+                host: sshHost,
+                port: sshPort,
+                privateKey: require("fs").readFileSync(sshPrivateKey)
+            };
+
+            // initialize service
+            const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
+            const connection = await sequelizeTunnelService.getConnection();
+
+            sequelize = connection.sequelize;
+        } else if (!sshHost) {
+            sequelize = new Sequelize(URI.database,
+                URI.user,
+                URI.password,
+                URI.others
+            );
+        }
 
         const offset = Number(loadingOptions.page) * Number(loadingOptions.pageSize);
         const limit = Number(loadingOptions.pageSize);
@@ -395,7 +499,7 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                     }
                 });
 
-                query += ` ORDER BY ${lastTableColumn} ${lastChangedOption.order}`;
+                query += ` ORDER BY "${lastTableColumn}" ${lastChangedOption.order}`;
                 orderByNum += 1;
             }
 
@@ -416,9 +520,9 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                 });
 
                 if (orderByNum > 0 && !option.last) {
-                    query += `, ${column} ${order}`;
+                    query += `, "${column}" ${order}`;
                 } else if (orderByNum === 0 && !option.last) {
-                    query += ` ORDER BY ${column} ${order}`;
+                    query += ` ORDER BY "${column}" ${order}`;
                     orderByNum += 1;
                 }
             });
@@ -469,18 +573,53 @@ function isEmpty(str) {
 
 async function getTableSize(connectionName, alias) {
     try {
-        const URI = db.read()
+        const connection = db.read()
             .get('connections')
             .find({name: connectionName})
-            .get('URI')
             .value();
 
-        const sequelize = URI.database ? new Sequelize(
-            URI.database,
-            URI.user,
-            URI.password,
-            URI.others
-        ) : new Sequelize(URI);
+        const URI = connection.URI;
+        const sshHost = connection.sshHost;
+        const sshPort = connection.sshPort;
+        const sshUser = connection.sshUser;
+        const sshPrivateKey = connection.sshPrivateKey;
+
+        let sequelize;
+
+        if (typeof URI === "string") {
+            sequelize = new Sequelize(URI);
+
+        } else if (sshHost) {
+
+            // basic connection to a database
+            const dbConfig = {
+                database: URI.database,
+                username: URI.user,
+                password: URI.password,
+                dialect: URI.others.dialect,
+                port: URI.port
+            };
+
+            // ssh tunnel configuration
+            const tunnelConfig = {
+                username: sshUser,
+                host: sshHost,
+                port: sshPort,
+                privateKey: require("fs").readFileSync(sshPrivateKey)
+            };
+
+            // initialize service
+            const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
+            const connection = await sequelizeTunnelService.getConnection();
+
+            sequelize = connection.sequelize;
+        } else if (!sshHost) {
+            sequelize = new Sequelize(URI.database,
+                URI.user,
+                URI.password,
+                URI.others
+            );
+        }
 
         // Get table result
         const query = db.read()
@@ -501,18 +640,53 @@ async function getTableSize(connectionName, alias) {
 
 async function getTableColumns(connectionName, table) {
     try {
-        const URI = db.read()
+        const connection = db.read()
             .get('connections')
             .find({name: connectionName})
-            .get('URI')
             .value();
 
-        const sequelize = URI.database ? new Sequelize(
-            URI.database,
-            URI.user,
-            URI.password,
-            URI.others
-        ) : new Sequelize(URI);
+        const URI = connection.URI;
+        const sshHost = connection.sshHost;
+        const sshPort = connection.sshPort;
+        const sshUser = connection.sshUser;
+        const sshPrivateKey = connection.sshPrivateKey;
+
+        let sequelize;
+
+        if (typeof URI === "string") {
+            sequelize = new Sequelize(URI);
+
+        } else if (sshHost) {
+
+            // basic connection to a database
+            const dbConfig = {
+                database: URI.database,
+                username: URI.user,
+                password: URI.password,
+                dialect: URI.others.dialect,
+                port: URI.port
+            };
+
+            // ssh tunnel configuration
+            const tunnelConfig = {
+                username: sshUser,
+                host: sshHost,
+                port: sshPort,
+                privateKey: require("fs").readFileSync(sshPrivateKey)
+            };
+
+            // initialize service
+            const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
+            const connection = await sequelizeTunnelService.getConnection();
+
+            sequelize = connection.sequelize;
+        } else if (!sshHost) {
+            sequelize = new Sequelize(URI.database,
+                URI.user,
+                URI.password,
+                URI.others
+            );
+        }
 
         let query = `select column_name from information_schema.columns where table_name='${table}'`;
 
@@ -537,18 +711,53 @@ async function getTableColumns(connectionName, table) {
 
 async function saveTableResult(connectionName, alias, loadingOptions) {
     try {
-        const URI = db.read()
+        const connection = db.read()
             .get('connections')
             .find({name: connectionName})
-            .get('URI')
             .value();
 
-        const sequelize = URI.database ? new Sequelize(
-            URI.database,
-            URI.user,
-            URI.password,
-            URI.others
-        ) : new Sequelize(URI);
+        const URI = connection.URI;
+        const sshHost = connection.sshHost;
+        const sshPort = connection.sshPort;
+        const sshUser = connection.sshUser;
+        const sshPrivateKey = connection.sshPrivateKey;
+
+        let sequelize;
+
+        if (typeof URI === "string") {
+            sequelize = new Sequelize(URI);
+
+        } else if (sshHost) {
+
+            // basic connection to a database
+            const dbConfig = {
+                database: URI.database,
+                username: URI.user,
+                password: URI.password,
+                dialect: URI.others.dialect,
+                port: URI.port
+            };
+
+            // ssh tunnel configuration
+            const tunnelConfig = {
+                username: sshUser,
+                host: sshHost,
+                port: sshPort,
+                privateKey: require("fs").readFileSync(sshPrivateKey)
+            };
+
+            // initialize service
+            const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
+            const connection = await sequelizeTunnelService.getConnection();
+
+            sequelize = connection.sequelize;
+        } else if (!sshHost) {
+            sequelize = new Sequelize(URI.database,
+                URI.user,
+                URI.password,
+                URI.others
+            );
+        }
 
         const offset = Number(loadingOptions.page) * Number(loadingOptions.pageSize);
         const limit = Number(loadingOptions.pageSize);

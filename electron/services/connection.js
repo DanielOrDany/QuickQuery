@@ -5,6 +5,7 @@ const tunnel = require('tunnel-ssh');
 const FileSync = require('lowdb/adapters/FileSync');
 const appDataDirPath = getAppDataPath();
 const adapter = new FileSync(path.join(appDataDirPath, 'database.json'));
+const SequelizeTunnelService = require('./sequalize');
 
 if(fs.existsSync(adapter.source)) {
     console.log("The file exists.");
@@ -84,7 +85,7 @@ function getAppDataPath() {
 
 const Sequelize = require('sequelize');
 const pg = require('pg');
-pg.defaults.ssl = true;
+pg.defaults.ssl = false;
 
 
 async function verifyConnection (name) {
@@ -121,61 +122,49 @@ async function addConnection(params) {
     // throw error if connection already exist
     await verifyConnection(name);
 
-    const config = {
-        username: sshUser,
-        password: sshPassword,
-        host: sshHost,
-        port: sshPort,
-        dstHost: host,
-        dstPort: port,
-        localHost: host,
-        localPort: port
-    };
-
     try {
         let sequelize;
 
         if (uri) {
             sequelize = new Sequelize(uri);
         } else if (sshHost) {
-            sequelize = await new Promise((resolve, reject) => tunnel(config, (error, server) => {
-                if (error) {
-                    console.error(error);
-                    reject("error 2:", error);
-                } else {
-                    console.log('server:', server);
 
-                    resolve(new Sequelize(database,
-                        user,
-                        password,
-                        {
-                            host: host,
-                            dialect: dtype,
-                            ssl: true,
-                            dialectOptions: {
-                                ssl: {
-                                    require: true,
-                                    rejectUnauthorized: false // <<<<<< YOU NEED THIS
-                                }
-                            }
-                        }
-                    ));
-                }}
-            ));
-        } else {
+            // basic connection to a database
+            const dbConfig = {
+                database: database,
+                username: user,
+                password: password,
+                dialect: dtype,
+                port: port
+            };
+
+            // ssh tunnel configuration
+            const tunnelConfig = {
+                username: sshUser,
+                host: sshHost,
+                port: sshPort,
+                privateKey: require("fs").readFileSync(sshPrivateKey)
+            };
+
+            // initialize service
+            const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
+            const connection = await sequelizeTunnelService.getConnection();
+
+            sequelize = connection.sequelize;
+        } else if (!sshHost) {
             sequelize = new Sequelize(database,
                 user,
                 password,
                 {
                     host: host,
-                    dialect: dtype,
-                    ssl: true,
-                    dialectOptions: {
-                        ssl: {
-                            require: true,
-                            rejectUnauthorized: false // <<<<<< YOU NEED THIS
-                        }
-                    }
+                    dialect: dtype
+                    // ssl: true,
+                    // dialectOptions: {
+                    //     ssl: {
+                    //         require: true,
+                    //         rejectUnauthorized: false // <<<<<< YOU NEED THIS
+                    //     }
+                    // }
                 }
             );
         }

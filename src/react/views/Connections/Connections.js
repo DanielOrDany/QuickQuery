@@ -52,7 +52,6 @@ export default class Connections extends React.Component {
             sshHostInput: '',
             sshUserInput: '',
             sshPortInput: '',
-            sshPasswordInput: '',
             sshPrivateKeyInput: '',
             keyInput: '',
             errorMessage: '',
@@ -248,7 +247,6 @@ export default class Connections extends React.Component {
         let sshHostInput = this.state.sshHostInput;
         let sshUserInput = this.state.sshUserInput;
         let sshPortInput = this.state.sshPortInput;
-        let sshPasswordInput = this.state.sshPasswordInput;
         let sshPrivateKeyInput = this.state.sshPrivateKeyInput;
         let successfullVerify = false;
 
@@ -266,7 +264,6 @@ export default class Connections extends React.Component {
         } else if (this.state.isSSHConnectionPopup) {
             successfullVerify =
                 this.inputVirify(nameInput) &&
-                this.inputVirify(hostInput) &&
                 this.inputVirify(portInput) &&
                 this.inputVirify(userInput) &&
                 this.inputVirify(passwordInput) &&
@@ -275,7 +272,6 @@ export default class Connections extends React.Component {
                 this.inputVirify(dtypeInput) &&
                 this.inputVirify(sshHostInput) &&
                 this.inputVirify(sshPortInput) &&
-                // this.inputVirify(sshPasswordInput) &&
                 this.inputVirify(sshUserInput) &&
                 this.inputVirify(sshPrivateKeyInput);
         } else {
@@ -302,7 +298,6 @@ export default class Connections extends React.Component {
             } else if (this.state.isSSHConnectionPopup) {
                 connectionBody = {
                     name: nameInput,
-                    host: hostInput,
                     port: portInput,
                     user: userInput,
                     password: passwordInput,
@@ -312,7 +307,6 @@ export default class Connections extends React.Component {
                     sshHost: sshHostInput,
                     sshPort: sshPortInput,
                     sshUser: sshUserInput,
-                    sshPassword: sshPasswordInput,
                     sshPrivateKey: sshPrivateKeyInput
                 };
             } else {
@@ -422,24 +416,18 @@ export default class Connections extends React.Component {
     uriOnChange = (e) => {
         this.setState({uriInput: e.target.value})
     };
-    uriOnChange = (e) => {
-        this.setState({uriInput: e.target.value})
-    };
     sshHostOnChange = (e) => {
         this.setState({sshHostInput: e.target.value})
     };
     sshPortOnChange = (e) => {
         this.setState({sshPortInput: e.target.value})
     };
-    sshPasswordOnChange = (e) => {
-        this.setState({sshPasswordInput: e.target.value})
-    };
     sshUserOnChange = (e) => {
         this.setState({sshUserInput: e.target.value})
     };
     sshPrivateKeyOnChange = (e) => {
         if (e) {
-            if (e.target !== null) {
+            if (e.target && e.target.files[0]) {
                 this.setState({sshPrivateKeyInput: e.target.files[0].path})
             } else {
                 this.setState({errorMessage: "Try to reload private key", sshPrivateKeyInput: ""})
@@ -696,13 +684,6 @@ export default class Connections extends React.Component {
                     </div>
 
                     <div className="big-input-second-column">
-
-                        <div className="big-information-field">
-                            <span className="big-input-title">Database Host</span>
-                            <input id="input-field-host" ref="host" className="big-form-control" type="text" placeholder="127.0.0.1" type="search"
-                                   onChange={this.hostOnChange} onKeyPress={this.hostKeyPress}/>
-                        </div>
-
                         <div className="big-information-field">
                             <span className="big-input-title">Database User</span>
                             <input id="input-field-user" ref="user" className="big-form-control" type="text" placeholder="root" type="search"
@@ -743,12 +724,6 @@ export default class Connections extends React.Component {
                         </div>
 
                         <div className="big-information-field">
-                            <span className="big-input-title">SSH Password</span>
-                            <input id="input-field-password" ref="password" className="big-form-control" type="text"
-                                   placeholder="Password" type="search"
-                                   onChange={this.sshPasswordOnChange}/>
-                        </div>
-                        <div className="big-information-field">
                             <span className="big-input-title">Private Key</span>
                             <input id="input-field-host" className="big-form-control" type="file"
                                    onChange={this.sshPrivateKeyOnChange}/>
@@ -764,7 +739,7 @@ export default class Connections extends React.Component {
 
                         <div className="big-information-field">
                             <span className="big-input-title">SSH Port</span>
-                            <input id="input-field-host" ref="host" className="big-form-control" type="text" placeholder="5432" type="search"
+                            <input id="input-field-host" ref="host" className="big-form-control" type="text" placeholder="22" type="search"
                                    onChange={this.sshPortOnChange}/>
                         </div>
                     </div>

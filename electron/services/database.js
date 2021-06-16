@@ -29,7 +29,7 @@ const base64 = require('base-64');
 const utf8 = require('utf8');
 const crypto = require('crypto-js');
 const pg = require('pg');
-pg.defaults.ssl = true;
+pg.defaults.ssl = false;
 
 // Set some defaults (required if your JSON file is empty)
 async function createDefaultDatabase() {
