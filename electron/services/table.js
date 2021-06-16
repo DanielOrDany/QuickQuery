@@ -38,7 +38,7 @@ function getAppDataPath() {
 
 const Sequelize = require('sequelize');
 const pg = require('pg');
-pg.defaults.ssl = false;
+pg.defaults.ssl = true;
 
 //Add new table to the current connection
 async function addTable (connectionName, query, type, alias) {

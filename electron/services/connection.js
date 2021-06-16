@@ -85,7 +85,7 @@ function getAppDataPath() {
 
 const Sequelize = require('sequelize');
 const pg = require('pg');
-pg.defaults.ssl = false;
+pg.defaults.ssl = true;
 
 
 async function verifyConnection (name) {
