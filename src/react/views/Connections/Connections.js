@@ -976,13 +976,13 @@ export default class Connections extends React.Component {
                                                     {/* -------------- DATABASES SCHEMA NAME --------------- */}
                                                     <div className={'database-schema-name'}>
                                                         <span className={'database-text'}
-                                                              id="folders-schema-n">public</span>
+                                                              id="folders-schema-n">{conn.schema}</span>
                                                     </div>
 
                                                     {/* -------------- DATABASES DATE CREATED -------------- */}
                                                     <div className={'database-date-created'}>
                                                         <span className={'database-text'}
-                                                              id="folders-date-created">2001-10-05</span>
+                                                              id="folders-date-created">{conn.date}</span>
                                                     </div>
 
                                                     <div className={'database-mini-menu'}
