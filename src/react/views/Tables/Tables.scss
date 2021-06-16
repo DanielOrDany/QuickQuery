@@ -1,6 +1,12 @@
 @import "../../styles/variables";
 
 
+::-webkit-scrollbar {
+  height: 0;
+  width: 0;
+}
+
+
 /* --------------------------------------------------- TABLES PAGE -------------------------------------------------- */
 .tables-page {
   display: flex;

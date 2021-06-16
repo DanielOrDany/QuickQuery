@@ -27,7 +27,8 @@ import Button from '../../components/Button';
 import Modal from '../../popups/Modal';
 
 
-import DatabaseMiniMenuPopup from "../../popups/DatabaseMiniMenu";
+import DatabaseMiniMenuPopup from "./popups/DatabaseMiniMenu";
+import DeleteConnectionPopup from "./popups/DeleteConnectionPopup";
 
 
 const base64 = require('base-64');
@@ -70,7 +71,9 @@ export default class Connections extends React.Component {
             isSSHConnectionPopup: false,
             firstModalHint: true,
             secondModalHint: true,
-            isDBMiniMenu: null
+            isDBMiniMenu: null,
+            isDeleteConnection: false,
+            deleteConnectionName: ''
         };
     };
 
@@ -120,6 +123,20 @@ export default class Connections extends React.Component {
     closeSecondModalHint = () => {
         this.setState({secondModalHint: false})
     };
+
+
+    closeDeleteConnectionPopup = () => {
+        this.setState({isDeleteConnection: false})
+    };
+
+    openDeleteConnectionPopup = () => {
+        this.setState({isDeleteConnection: true})
+    };
+
+    saveDeleteConnectionName = (name) => {
+        this.setState({deleteConnectionName: name})
+    }
+
 
     handleKeySubmit = () => {
         updateKey(this.state.keyInput)
@@ -343,9 +360,9 @@ export default class Connections extends React.Component {
         deleteConnection(name).then(connections => {
             document.getElementById(name).remove();
 
-            if (connections) {
-                this.setState({ connections: connections });
-            }
+            // if (connections) {
+            //     this.setState({ connections: connections });
+            // }
 
             if(localStorage.getItem("current_connection") && JSON.parse(localStorage.getItem("current_connection")).name === name) {
                 localStorage.removeItem("current_connection");
@@ -356,6 +373,7 @@ export default class Connections extends React.Component {
     getConnectionData(connectionName) {
         return this.state.connections.find(connection => connection.name === connectionName);
     };
+
 
     async verifyEmployee() {
         const id = localStorage.getItem("employeeId");
@@ -873,7 +891,9 @@ export default class Connections extends React.Component {
             trialAvailable,
             isBigInputs,
             firstModalHint,
-            secondModalHint
+            secondModalHint,
+            isDeleteConnection,
+            deleteConnectionName
         } = this.state;
 
         return (
@@ -983,7 +1003,8 @@ export default class Connections extends React.Component {
                                                     </div>
 
                                                     <div className={'database-mini-menu'}
-                                                         onClick={() => this.isDBMiniMenuOpen(conn.name)}>
+                                                         onClick={() => (this.isDBMiniMenuOpen(conn.name),
+                                                         this.saveDeleteConnectionName(conn.name))}>
                                                         <svg>
                                                             <path
                                                                 d="M2.14286 7.80488C3.33333 7.80488 4.28571 8.78049 4.28571 10C4.28571 11.2195 3.33333 12.1951 2.14286 12.1951C0.952381 12.1951 0 11.2195 0 10C0 8.78049 0.952381 7.80488 2.14286 7.80488ZM0 2.19512C0 3.41463 0.952381 4.39024 2.14286 4.39024C3.33333 4.39024 4.28571 3.41463 4.28571 2.19512C4.28571 0.97561 3.33333 0 2.14286 0C0.952381 0 0 0.97561 0 2.19512ZM0 17.8049C0 19.0244 0.952381 20 2.14286 20C3.33333 20 4.28571 19.0244 4.28571 17.8049C4.28571 16.5854 3.33333 15.6098 2.14286 15.6098C0.952381 15.6098 0 16.5854 0 17.8049Z"
@@ -992,10 +1013,10 @@ export default class Connections extends React.Component {
 
 
                                                     </div>
+
                                                     <DatabaseMiniMenuPopup
-                                                        connectionName={conn.name}
-                                                        deleteConnection={this.deleteConnection}
                                                         isOpen={this.state.isDBMiniMenu === conn.name}
+                                                        openDeleteConnectionPopup={this.openDeleteConnectionPopup}
                                                     >
                                                     </DatabaseMiniMenuPopup>
 
@@ -1085,6 +1106,17 @@ export default class Connections extends React.Component {
                 >
                     {this.bigInput()}
                 </ConfigureManuallyPopup>
+
+
+
+                <DeleteConnectionPopup
+                    isOpen={isDeleteConnection}
+                    onCancel={this.closeDeleteConnectionPopup}
+                    deleteConnectionName={deleteConnectionName}
+                    deleteConnection={this.deleteConnection}
+                />
+
+
 
                 {/* ------------------------------------------------------------------------------------------------ */}
 
