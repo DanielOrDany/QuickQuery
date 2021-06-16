@@ -3,6 +3,7 @@ import '../styles/MiniMenu.scss';
 import { getTable, deleteTable} from "../methods";
 
 import Modal from '../popups/Modal';
+import DeleteTablePopup from "../popups/DeleteTablePopup";
 
 function openTable(alias) {
     const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
@@ -83,7 +84,15 @@ function MiniMenu(props) {
 
     return(
         <>
-            <Modal
+
+            <DeleteTablePopup
+                isOpen={isOpen}
+                onCancel={handleCancel}
+                deleteTable={handleSubmit}
+            />
+
+            {/*
+             <Modal
                 title="Delete table"
                 isOpen={isOpen}
                 onCancel={handleCancel}
@@ -94,9 +103,12 @@ function MiniMenu(props) {
                 noCross={true}
             >
                 <div>
-                    <strong>Are you sure?</strong>
+                    <strong>Are</strong>
                 </div>
             </Modal>
+            */}
+
+
 
 
 
@@ -107,19 +119,19 @@ function MiniMenu(props) {
                     <div className="dropdown" id="dropdown" style={{top: heigth}}>
 
 
-                        <div className={'menu-item'} onClick={() => openTable(props.table.alias)}>
+                        <div className='menu-item' onClick={() => openTable(props.table.alias)}>
                             <span>Open</span>
                         </div>
 
-                        <div className={'menu-item'}>
+                        <div className='menu-item'>
                             <span>Rename</span>
                         </div>
 
-                        <div className={'menu-item'} onClick={() => editTable(props.table)}>
+                        <div className='menu-item' onClick={() => editTable(props.table)}>
                             <span>Edit</span>
                         </div>
 
-                        <div className={'menu-item'} onClick={() => openModal(props.table.alias)}>
+                        <div className='menu-item' onClick={() => openModal(props.table.alias)}>
                             <span>Delete</span>
                         </div>
 

@@ -66,6 +66,15 @@
 
 
 
+      .table-page-left-menu-table {
+        display: flex;
+        justify-content: space-between;
+        height: 20px;
+        margin-bottom: 28px;
+      }
+
+
+
       /* -------------------------------------------------- TABLE --------------------------------------------------- */
       .left-menu-table {
         display: flex;
@@ -104,13 +113,15 @@
             text-overflow: ellipsis;
           }
         }
+      }
 
-
-
-        /* TABLE MENU */
-        .table-menu {
-          display: none;
-        }
+      /* TABLE MENU */
+      .table-menu {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        padding-bottom: 4px;
+        cursor: pointer;
       }
 
 
@@ -142,14 +153,7 @@
         }
 
 
-        /* TABLE MENU HOVER */
-        .table-menu {
-          display: flex;
-          align-items: center;
-          margin-left: auto;
-          padding-bottom: 4px;
-          cursor: pointer;
-        }
+
       }
     }
   }
