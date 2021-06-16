@@ -144,6 +144,7 @@ Modal.propTypes = {
   noCross: PropTypes.bool,
   children: PropTypes.node
 };
+
 Modal.defaultProps = {
   title: 'Modal title',
   isOpen: false,

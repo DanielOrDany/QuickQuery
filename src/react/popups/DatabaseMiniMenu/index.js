@@ -1,25 +1,26 @@
 import React from 'react';
 import './DatabaseMiniMenuPopup.scss';
-import Button from "../../components/Button";
-import cross_icon from "../../icons/pop-up-cross.svg";
+import PropTypes from "prop-types";
+import Modal from "../Modal";
 
-
-const DatabaseMiniMenuPopup = ({
-                         isOpen
-
-                     }) => {
+const DatabaseMiniMenuPopup = ({ isOpen, connectionName, deleteConnection }) => {
     return (
         <>
             {isOpen &&
             <div className='db-mini-menu-window'>
                 <div className='db-mini-menu-edit'>Edit</div>
-                <div className='db-mini-menu-delete'>Delete</div>
+                <div onClick={()=>deleteConnection(connectionName)} className='db-mini-menu-delete'>Delete</div>
             </div>
             }
         </>
     )
 
-}
+};
 
+// Modal.propTypes = {
+//     isOpen: PropTypes.bool,
+//     deleteConnection: PropTypes.func,
+//     connectionName: PropTypes.string
+// };
 
 export default DatabaseMiniMenuPopup;
