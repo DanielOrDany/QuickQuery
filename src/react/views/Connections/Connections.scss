@@ -980,7 +980,14 @@
       cursor: pointer;
     }
 
+    .connections-page-filters-arrow-down:hover {
+      cursor: pointer;
+    }
 
+    .connections-page-filters-arrow-down {
+      cursor: pointer;
+      transform: rotate(180deg);
+    }
 
 
     /* ---------------------------------------------------- DATABASE ------------------------------------------------ */

@@ -1,38 +1,23 @@
 import React from 'react';
-
-import './Connections.scss';
-
-import footer_arrow_left from "../../icons/connections-page-footer-arrow-left.svg";
-import footer_arrow_right from "../../icons/connections-page-footer-arrow-right.svg";
-import footer_arrow_down from "../../icons/connections-page-footer-arrow.svg";
-import filters_icon from "../../icons/connections-page-filters-icon.svg";
-import filters_arrow from "../../icons/connections-page-filter-arrow.svg";
-import empty_connections_page_icon from "./icons/empty-connections-page.svg";
-
-import ConfigureManuallyPopup from "./popups/ConfigureManuallyPopup";
-import SimplifiedConnectionPopup from "./popups/SimplifiedConnectionPopup";
-import SSHConnectionPopup from "./popups/SSHConnectionsPopup";
-
 import {
     getDataFromDatabase,
     deleteConnection,
     addConnection,
-    updateKey,
-    checkLicense, authVerifyToken
-
+    authVerifyToken
 } from "../../methods";
-import { Offline } from "react-detect-offline"
-
-import Button from '../../components/Button';
+import './Connections.scss';
 import Modal from '../../popups/Modal';
-
-
+import Button from '../../components/Button';
+import { Offline } from "react-detect-offline";
+import footer_arrow_left from "../../icons/connections-page-footer-arrow-left.svg";
+import footer_arrow_right from "../../icons/connections-page-footer-arrow-right.svg";
+import filters_arrow from "../../icons/connections-page-filter-arrow.svg";
+import empty_connections_page_icon from "./icons/empty-connections-page.svg";
+import ConfigureManuallyPopup from "./popups/ConfigureManuallyPopup";
+import SimplifiedConnectionPopup from "./popups/SimplifiedConnectionPopup";
+import SSHConnectionPopup from "./popups/SSHConnectionsPopup";
 import DatabaseMiniMenuPopup from "./popups/DatabaseMiniMenu";
 import DeleteConnectionPopup from "./popups/DeleteConnectionPopup";
-
-
-const base64 = require('base-64');
-const utf8 = require('utf8');
 
 export default class Connections extends React.Component {
     constructor(props) {
@@ -57,15 +42,9 @@ export default class Connections extends React.Component {
             keyInput: '',
             errorMessage: '',
             /*isOpen: false,*/
-            isKeyOpen: false,
-            isErrorOpen: false,
             isDeleteOpen: false,
             ConfigureManuallyPopup: false,
             choosedConnetion: '',
-            trialWindow: false,
-            trialAvailable: false,
-            trialError: false,
-            licenseError: false,
             isSimplifiedConnectionPopup: false,
             isConfigureManuallyPopup: false,
             isSSHConnectionPopup: false,
@@ -73,15 +52,18 @@ export default class Connections extends React.Component {
             secondModalHint: true,
             isDBMiniMenu: null,
             isDeleteConnection: false,
-            deleteConnectionName: ''
+            deleteConnectionName: "",
+            rowsPerPage: 10,
+            pageNumber: 1,
+            orderByName: false,
+            orderBySchema: false,
+            orderByDate: false
         };
     };
 
     openSimplifiedConnectionPopup = () => {
         this.setState({ isSimplifiedConnectionPopup: true });
     };
-
-
 
     isDBMiniMenuOpen = (connectionName) => {
         this.setState({
@@ -111,7 +93,6 @@ export default class Connections extends React.Component {
         }
     };
 
-
     handleSubmit = () => {
         this.addConnection();
     };
@@ -124,7 +105,6 @@ export default class Connections extends React.Component {
         this.setState({secondModalHint: false})
     };
 
-
     closeDeleteConnectionPopup = () => {
         this.setState({isDeleteConnection: false})
     };
@@ -135,76 +115,14 @@ export default class Connections extends React.Component {
 
     saveDeleteConnectionName = (name) => {
         this.setState({deleteConnectionName: name})
-    }
-
-
-    handleKeySubmit = () => {
-        updateKey(this.state.keyInput)
-            .then((data) => {
-                if(data === "key-updated") {
-                    checkLicense()
-                    .then(data => {
-                        if(data === "good-license") {
-                            this.setState({
-                                isKeyOpen: false,
-                                isOpen: this.state.connections.length ? false : true // show popup if none connections in the app
-                             });
-                        } else if(data === "update-license") {
-                            this.setState({
-                                errorMessage: "Key is not valid. Please check it and try again.",
-                                licenseError: true,
-                                isErrorOpen: true,
-                                isKeyOpen: false
-                            });
-                        }
-                    })
-                } else if (data === "key-error") {
-                    this.setState({
-                        errorMessage: "Key saver error occured. Please try again later.",
-                        licenseError: true,
-                        isErrorOpen: true,
-                        isKeyOpen: false
-                    });
-                } else if (data === "key-outdated") {
-                    this.setState({
-                        errorMessage: "Key activation period expired. Please try another key.",
-                        licenseError: true,
-                        isErrorOpen: true,
-                        isKeyOpen: false
-                    });
-                }
-
-            });
     };
 
     handleCancel = () => {
-        this.setState({ isSimplifiedConnectionPopup: false, isConfigureManuallyPopup: false, isSSHConnectionPopup: false });
-    };
-
-    openErrorModal = () => {
-        this.setState({ isErrorOpen: true });
-    };
-
-    handleErrorCancel = () => {
-        if(this.state.trialError) {
-            this.setState({
-                trialError: false,
-                licenseError: false,
-                isErrorOpen: false,
-                trialWindow: true
-            });
-        } else if(this.state.licenseError) {
-            this.setState({
-                trialError: false,
-                licenseError: false,
-                isErrorOpen: false,
-                isKeyOpen: true
-            });
-        } else {
-            this.setState({
-                isErrorOpen: false
-            })
-        }
+        this.setState({
+            isSimplifiedConnectionPopup: false,
+            isConfigureManuallyPopup: false,
+            isSSHConnectionPopup: false
+        });
     };
 
     openDelete = (alias) => {
@@ -236,7 +154,7 @@ export default class Connections extends React.Component {
             });
     };
 
-    inputVirify(args) {
+    inputVerify(args) {
         if (args.replace(/^\s+|\s+$/gm, '').length === 0) {
             this.setState({
                 errorMessage: "Please, fill in all the fields.",
@@ -248,7 +166,6 @@ export default class Connections extends React.Component {
     }
 
     addConnection = () => {
-        console.log(this.state);
         let nameInput = this.state.nameInput;
         let hostInput = this.state.hostInput;
         let portInput = this.state.portInput;
@@ -267,32 +184,32 @@ export default class Connections extends React.Component {
         // Check valid inputs
         if (this.state.isConfigureManuallyPopup) {
             successfullVerify =
-                this.inputVirify(nameInput) &&
-                this.inputVirify(hostInput) &&
-                this.inputVirify(portInput) &&
-                this.inputVirify(userInput) &&
-                this.inputVirify(passwordInput) &&
-                this.inputVirify(databaseInput) &&
-                this.inputVirify(schemaInput) &&
-                this.inputVirify(dtypeInput);
+                this.inputVerify(nameInput) &&
+                this.inputVerify(hostInput) &&
+                this.inputVerify(portInput) &&
+                this.inputVerify(userInput) &&
+                this.inputVerify(passwordInput) &&
+                this.inputVerify(databaseInput) &&
+                this.inputVerify(schemaInput) &&
+                this.inputVerify(dtypeInput);
         } else if (this.state.isSSHConnectionPopup) {
             successfullVerify =
-                this.inputVirify(nameInput) &&
-                this.inputVirify(portInput) &&
-                this.inputVirify(userInput) &&
-                this.inputVirify(passwordInput) &&
-                this.inputVirify(databaseInput) &&
-                this.inputVirify(schemaInput) &&
-                this.inputVirify(dtypeInput) &&
-                this.inputVirify(sshHostInput) &&
-                this.inputVirify(sshPortInput) &&
-                this.inputVirify(sshUserInput) &&
-                this.inputVirify(sshPrivateKeyInput);
+                this.inputVerify(nameInput) &&
+                this.inputVerify(portInput) &&
+                this.inputVerify(userInput) &&
+                this.inputVerify(passwordInput) &&
+                this.inputVerify(databaseInput) &&
+                this.inputVerify(schemaInput) &&
+                this.inputVerify(dtypeInput) &&
+                this.inputVerify(sshHostInput) &&
+                this.inputVerify(sshPortInput) &&
+                this.inputVerify(sshUserInput) &&
+                this.inputVerify(sshPrivateKeyInput);
         } else {
             successfullVerify =
-                this.inputVirify(nameInput) &&
-                this.inputVirify(uriInput) &&
-                this.inputVirify(schemaInput);
+                this.inputVerify(nameInput) &&
+                this.inputVerify(uriInput) &&
+                this.inputVerify(schemaInput);
         }
 
         if(successfullVerify) {
@@ -334,9 +251,8 @@ export default class Connections extends React.Component {
             addConnection(connectionBody).then(connection => {
                 if (connection) {
                     const connections = JSON.parse(localStorage.getItem("connections"));
-                    connections.push(connection);
 
-                    localStorage.setItem("connections", JSON.stringify(connections));
+                    connections.push(connection);
 
                     this.setState({
                         connections: JSON.parse(localStorage.getItem("connections")),
@@ -374,15 +290,12 @@ export default class Connections extends React.Component {
         return this.state.connections.find(connection => connection.name === connectionName);
     };
 
-
     async verifyEmployee() {
         const id = localStorage.getItem("employeeId");
         const token = localStorage.getItem("employeeToken");
 
         if (id && token) {
             const verified = await authVerifyToken(id, token);
-
-            console.log('verified user', verified);
 
             if (verified && verified.data) {
                 localStorage.setItem("employeePlan", verified.data.subscription.plan_name);
@@ -400,10 +313,18 @@ export default class Connections extends React.Component {
         await this.verifyEmployee();
         const currentConnection = this.getConnectionData(name);
         localStorage.setItem('current_connection', JSON.stringify(currentConnection));
-
         window.location.hash = `#/tables/${name}`;
     };
 
+    nameKeyPress = (e) => {
+        if (e.key === "Enter") {
+            if (this.state.urlInput) {
+                this.addConnection();
+            } else {
+                this.refs.url.focus();
+            }
+        }
+    };
     nameOnChange = (e) => {
         this.setState({nameInput: e.target.value})
     };
@@ -449,63 +370,28 @@ export default class Connections extends React.Component {
             }
         }
     };
-    keyOnChange = (e) => {
-        this.setState({keyInput: e.target.value})
-    };
-
-    nameKeyPress = (e) => {
-        if (e.key === "Enter") {
-            if (this.state.urlInput) {
-                this.addConnection();
-            } else {
-                this.refs.url.focus();
-            }
-        }
-    };
-
-    search = () => {
-        const searchValue = document.getElementById('search-field').value;
-        let searchedConnections = [];
-
-        if (this.state.connections.length != 0) {
-            this.state.connections.forEach(connection => {
-                if (connection.name.includes(searchValue)) {
-                    searchedConnections.push(connection);
-                }
-            });
-
-            this.setState({ searchedConnections: searchedConnections.length > 0 ? searchedConnections : [] });
-        }
-    };
 
     bigInput = () => {
         return(
             <div className={"big-input-modal"}>
-                <div className={'big-input-modal-body'}>
+                <div className="big-input-modal-body">
                     <div className={"big-input-first-column"}>
-
-
-
                         <div className="big-information-field">
                             <span className="big-input-title">Name connection</span>
                             <input id="input-field-name" ref="name" className="big-form-control" type="text" placeholder="Database" type="search"
                                    onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
                         </div>
-
-
                         <div className="big-information-field">
                             <span className="big-input-title">Port</span>
                             <input id="input-field-port" ref="port" className="big-form-control" type="text" placeholder="5432" type="search"
                                    onChange={this.portOnChange} onKeyPress={this.portKeyPress}/>
                         </div>
-
                         <div className="big-information-field">
                             <span className="big-input-title">Password</span>
                             <input id="input-field-password" ref="password" className="big-form-control" type="text"
                                    placeholder="Password" type="search"
                                    onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
                         </div>
-
                         <div className="information-field">
                             <span className="big-input-title">Schema name
                                     <div className="help-tip" id="schema-tip">
@@ -520,39 +406,23 @@ export default class Connections extends React.Component {
                             />
                         </div>
                     </div>
-
-
-
-
-
-                    <div className={"big-input-second-column"}>
-
+                    <div className="big-input-second-column">
                         <div className="big-information-field">
                             <span className="big-input-title">Host</span>
                             <input id="input-field-host" ref="host" className="big-form-control" type="text" placeholder="127.0.0.1" type="search"
                                    onChange={this.hostOnChange} onKeyPress={this.hostKeyPress}/>
                         </div>
-
-
                         <div className="big-information-field">
                             <span className="big-input-title">User name</span>
                             <input id="input-field-user" ref="user" className="big-form-control" type="text" placeholder="root" type="search"
                                    onChange={this.userOnChange} onKeyPress={this.userKeyPress}/>
                         </div>
-
-
                         <div className="big-information-field">
                             <span className="big-input-title">Database name</span>
                             <input id="input-field-database" ref="database" className="big-form-control" type="text"
                                    placeholder="Database" type="search"
                                    onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
                         </div>
-
-
-
-
-
-
                         <div className="choose-db-field">
                             <span id="choose-db-title">Database</span>
                             <select
@@ -568,11 +438,9 @@ export default class Connections extends React.Component {
                         </div>
                     </div>
                 </div>
-
                 <div className="big-input-buttons">
                     <Button id="simplified-connection-btn"
                             onClick={()=>{
-
                                 this.setState({
                                     bigInput: false,
                                     nameInput: '',
@@ -629,7 +497,6 @@ export default class Connections extends React.Component {
                            type="search"
                            onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                 </div>
-
                 <div className="small-information-buttons">
                     <Button id="configure-manually-btn"
                             onClick={()=>{
@@ -663,26 +530,22 @@ export default class Connections extends React.Component {
             <div className="big-input-modal scroll-body">
                 <div className="big-input-modal-body">
                     <div className="big-input-first-column">
-
                         <div className="big-information-field">
                             <span className="big-input-title">Name connection</span>
                             <input id="input-field-name" ref="name" className="big-form-control" type="text" placeholder="Database" type="search"
                                    onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
                         </div>
-
                         <div className="big-information-field">
                             <span className="big-input-title">Database Port</span>
                             <input id="input-field-port" ref="port" className="big-form-control" type="text" placeholder="5432" type="search"
                                    onChange={this.portOnChange} onKeyPress={this.portKeyPress}/>
                         </div>
-
                         <div className="big-information-field">
                             <span className="big-input-title">Database Password</span>
                             <input id="input-field-password" ref="password" className="big-form-control" type="text"
-                                   placeholder="Password" type="search"
+                                   placeholder="Password" type="password"
                                    onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
                         </div>
-
                         <div className="information-field">
                             <span className="big-input-title">Database Schema name
 
@@ -695,23 +558,19 @@ export default class Connections extends React.Component {
                                    placeholder="public" type="search"
                                    onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                         </div>
-
                     </div>
-
                     <div className="big-input-second-column">
                         <div className="big-information-field">
                             <span className="big-input-title">Database User</span>
                             <input id="input-field-user" ref="user" className="big-form-control" type="text" placeholder="root" type="search"
                                    onChange={this.userOnChange} onKeyPress={this.userKeyPress}/>
                         </div>
-
                         <div className="big-information-field">
                             <span className="big-input-title">Database Name</span>
                             <input id="input-field-database" ref="database" className="big-form-control" type="text"
                                    placeholder="Database" type="search"
                                    onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
                         </div>
-
                         <div className="choose-db-field">
                             <span id="choose-db-title">Database Type</span>
                             <select
@@ -727,9 +586,7 @@ export default class Connections extends React.Component {
                         </div>
                     </div>
                 </div>
-
                 <div className="ssh-box-line"/>
-
                 <div className="big-input-modal-body">
                     <div className="big-input-first-column">
                         <div className="big-information-field">
@@ -737,21 +594,18 @@ export default class Connections extends React.Component {
                             <input id="input-field-port" ref="port" className="big-form-control" type="text" placeholder="127.0.0.1" type="search"
                                    onChange={this.sshHostOnChange}/>
                         </div>
-
                         <div className="big-information-field">
                             <span className="big-input-title">Private Key</span>
                             <input id="input-field-host" className="big-form-control" type="file"
                                    onChange={this.sshPrivateKeyOnChange}/>
                         </div>
                     </div>
-
                     <div className="big-input-second-column">
                         <div className="big-information-field">
                             <span className="big-input-title">SSH User</span>
                             <input id="input-field-user" ref="user" className="big-form-control" type="text" placeholder="ubuntu" type="search"
                                    onChange={this.sshUserOnChange}/>
                         </div>
-
                         <div className="big-information-field">
                             <span className="big-input-title">SSH Port</span>
                             <input id="input-field-host" ref="host" className="big-form-control" type="text" placeholder="22" type="search"
@@ -759,7 +613,6 @@ export default class Connections extends React.Component {
                         </div>
                     </div>
                 </div>
-
                 <div className="ssh-input-buttons">
                     <Button id="configure-manually-btn"
                             onClick={()=>{
@@ -774,7 +627,6 @@ export default class Connections extends React.Component {
                     </Button>
                     <Button id="simplified-connection-btn"
                             onClick={()=>{
-
                                 this.setState({
                                     bigInput: false,
                                     nameInput: '',
@@ -795,49 +647,6 @@ export default class Connections extends React.Component {
             </div>
         );
     };
-
-    addFreeTrial = () => {
-        let first = "604800000~";
-        let second = Date.now().toString();
-        let bytes = utf8.encode(first + second);
-        let encr = base64.encode(bytes);
-        updateKey(encr)
-            .then(() => {
-                    this.setState({
-                        isKeyOpen: false,
-                        isOpen: this.state.connections.length ? false : true // show popup if none connections in the app
-                     });
-            });
-    }
-
-    keyInput = () => {
-        return(
-            <div>
-                <div className="license-key-text">Enter license key:</div>
-                <input placeholder="00000000-00000000-00000000-00000000" className="form-control"
-                        onChange={this.keyOnChange}/>
-
-                {this.state.trialAvailable && <Button id="free-trial-btn" onClick={() => this.setState({ trialWindow: true })} invert>
-                    Get a free trial!
-                </Button>}
-            </div>
-        );
-    };
-
-    freeTrial = () => {
-        return(
-            <div>
-                <div className="free-trial-text">You have 7 days free trial!</div>
-
-                <button className="free-trial-btn" onClick={() => this.addFreeTrial()}>Get free trial</button>
-
-                <Button id="license-key-btn" onClick={() => this.setState({ trialWindow: false })} invert>
-                    Enter license key
-                </Button>
-            </div>
-        );
-    };
-
 
     databaseHost(conn) {
         let host = "";
@@ -863,110 +672,187 @@ export default class Connections extends React.Component {
         const searchDateValue = document.getElementById('connection-date-search').value;
         let searchedConnections = [];
 
-        if(this.state.connections.length != 0) {
+        if (this.state.connections.length !== 0) {
             this.state.connections.forEach(connection => {
-                if(connection.name.includes(searchNameValue) &&
+                if (connection.name.includes(searchNameValue) &&
                     connection.schema.includes(searchSchemaValue) &&
                     connection.createdAt.includes(searchDateValue)) {
                         searchedConnections.push(connection);
                 }
             });
 
-            this.setState({searchedConnections: searchedConnections});
+            this.setState({
+                searchedConnections: searchedConnections,
+                pageNumber: 1
+            });
         }
-    }
+    };
+
+    moveNext = () => {
+        const { pageNumber, rowsPerPage, searchedConnections } = this.state;
+        const l = searchedConnections.length;
+
+        if (l > pageNumber * rowsPerPage) {
+            this.setState({pageNumber: pageNumber + 1});
+        }
+    };
+
+    moveBack = () => {
+        const { pageNumber } = this.state;
+
+        if (pageNumber !== 1) {
+            this.setState({pageNumber: pageNumber - 1});
+        }
+    };
+
+    changeOrder = (byColumn) => {
+        const {
+            orderByName,
+            orderBySchema,
+            orderByDate,
+            searchedConnections
+        } = this.state;
+
+        if (searchedConnections.length !== 0) {
+            if (byColumn === "name") {
+
+                if (!orderByName) {
+                    searchedConnections.sort(function(a, b) {
+                        return a.name.localeCompare(b.name)
+                    });
+                } else {
+                    searchedConnections.reverse();
+                }
+
+                this.setState({
+                    orderByName: !orderByName,
+                    searchedConnections: searchedConnections
+                });
+            } else if (byColumn === "date") {
+                if (!orderByDate) {
+                    searchedConnections.sort(function(a, b) {
+                        return a.createdAt.localeCompare(b.createdAt)
+                    });
+                } else {
+                    searchedConnections.reverse();
+                }
+
+                this.setState({
+                    orderByDate: !orderByDate,
+                    searchedConnections: searchedConnections
+                });
+            } else if (byColumn === "schema") {
+                if (!orderBySchema) {
+                    searchedConnections.sort(function(a, b) {
+                        return a.schema.localeCompare(b.schema)
+                    });
+                } else {
+                    searchedConnections.reverse();
+                }
+
+                this.setState({
+                    orderBySchema: !orderBySchema,
+                    searchedConnections: searchedConnections
+                });
+            }
+        }
+    };
 
     render() {
-        const {
+        let {
             searchedConnections,
             isSimplifiedConnectionPopup,
             isSSHConnectionPopup,
             isConfigureManuallyPopup,
-            isKeyOpen,
-            bigInput,
             isErrorOpen,
             isDeleteOpen,
             errorMessage,
-            trialWindow,
-            trialAvailable,
-            isBigInputs,
             firstModalHint,
             secondModalHint,
             isDeleteConnection,
-            deleteConnectionName
+            deleteConnectionName,
+            rowsPerPage,
+            connections,
+            pageNumber,
+            orderByName,
+            orderBySchema,
+            orderByDate
         } = this.state;
 
+        const paginationFrom = 1 + rowsPerPage * pageNumber - rowsPerPage;
+        const paginationTo = rowsPerPage * pageNumber;
+        const searchedResults = searchedConnections.length;
+        searchedConnections = searchedConnections.slice(paginationFrom - 1, paginationTo);
+
         return (
-
             /* ------------------------------------------ CONNECTION PAGE ------------------------------------------- */
-            <div className={'connections-page'}>
-
+            <div className="connections-page">
 
                 {/* ------------------------------------ CONNECTION PAGE HEADER ------------------------------------ */}
                 <div className='connections-page-header'>
-                    <span className={'connections-page-name'}>Databases</span>
-                    <button className={'add-database-button'} type="button" id="add-button"
+                    <span className="connections-page-name">Databases</span>
+                    <button className="add-database-button" type="button" id="add-button"
                             onClick={() => this.openSimplifiedConnectionPopup()}>Add database
                     </button>
                 </div>
 
-
                 <div>
-                    {
-                        searchedConnections.length !== 0 ?
+                    { connections.length !== 0 ?
 
                             /* -------------------------- FILLED CONNECTIONS PAGE --------------------------- */
-                            <div className={'filled-connections-page'}>
-
+                            <div className="filled-connections-page">
 
                                 {/* ------------------------------- FILTERS -------------------------------- */}
-                                <div className={'connections-page-filters'}>
-
+                                <div className="connections-page-filters">
 
                                     {/* --------------------------- FILTER NAME ---------------------------- */}
-                                    <div className={'connections-page-filter-NAME'}>
-                                        <span className={'connections-page-filters-title'}>Name</span>
-                                        <img className={'connections-page-filters-arrow'} src={filters_arrow}
-                                             alt={'arrow'}/>
-                                        <input className={'connections-page-filters-search'}
-                                               id={'connection-name-search'}
-                                               placeholder={'Search'} onChange={() => this.search()}/>
+                                    <div className="connections-page-filter-NAME">
+                                        <span className="connections-page-filters-title">Name</span>
+                                        { orderByName ?
+                                            <img className="connections-page-filters-arrow" src={filters_arrow}
+                                                 alt="arrow" onClick={() => this.changeOrder("name")}/>
+                                            :
+                                            <img className="connections-page-filters-arrow-down" src={filters_arrow}
+                                                 alt="arrow" onClick={() => this.changeOrder("name")}/>
+                                        }
+                                        <input className="connections-page-filters-search"
+                                               id="connection-name-search"
+                                               placeholder="Search" onChange={() => this.search()}/>
                                     </div>
-
 
                                     {/* ------------------------ FILTER SCHEMA NAME ------------------------ */}
-                                    <div className={'connections-page-filter-SCHEMA-NAME'}>
-                                        <span className={'connections-page-filters-title'}>Schema Name</span>
-                                        <img className={'connections-page-filters-arrow'} src={filters_arrow}
-                                             alt={'arrow'}/>
-                                        <input className={'connections-page-filters-search'}
-                                               id={'connection-schema-search'}
-                                               placeholder={'Search'} onChange={() => this.search()}/>
+                                    <div className="connections-page-filter-SCHEMA-NAME">
+                                        <span className="connections-page-filters-title">Schema Name</span>
+                                        { orderBySchema ?
+                                            <img className="connections-page-filters-arrow" src={filters_arrow}
+                                                 alt="arrow" onClick={() => this.changeOrder("schema")}/>
+                                            :
+                                            <img className="connections-page-filters-arrow-down" src={filters_arrow}
+                                                 alt="arrow" onClick={() => this.changeOrder("schema")}/>
+                                        }
+                                        <input className="connections-page-filters-search"
+                                               id="connection-schema-search"
+                                               placeholder="Search" onChange={() => this.search()}/>
                                     </div>
-
 
                                     {/* ------------------------ FILTER DATE CREATED ----------------------- */}
-                                    <div className={'connections-page-filter-DATE-CREATED'}>
+                                    <div className="connections-page-filter-DATE-CREATED">
 
-                                        <div className={'DATE-CREATED-search-div'}>
-                                            <span className={'connections-page-filters-title'}>Date Created</span>
-                                            <img className={'connections-page-filters-arrow'} src={filters_arrow}
-                                                 alt={'arrow'}/>
-                                            <input className={'connections-page-filters-search'}
-                                                   id={'connection-date-search'}
-                                                   placeholder={'Search'} onChange={() => this.search()}/>
-                                        </div>
-
-
-                                        <div className={'DATE-CREATED-filter-div'}>
-                                            <img className={'connections-page-filters-filter-icon'}
-                                                 src={filters_icon} alt={'filter'}/>
+                                        <div className="DATE-CREATED-search-div">
+                                            <span className="connections-page-filters-title">Date Created</span>
+                                            { orderByDate ?
+                                                <img className="connections-page-filters-arrow" src={filters_arrow}
+                                                     alt="arrow" onClick={() => this.changeOrder("date")}/>
+                                                :
+                                                <img className="connections-page-filters-arrow-down" src={filters_arrow}
+                                                     alt="arrow" onClick={() => this.changeOrder("date")}/>
+                                            }
+                                            <input className="connections-page-filters-search"
+                                                   id="connection-date-search"
+                                                   placeholder="Search" onChange={() => this.search()}/>
                                         </div>
                                     </div>
-
-
                                 </div>
-
 
                                 {/* ------------------------------ DATABASES ------------------------------- */}
                                 <div className='connections-page-databases-block'>
@@ -985,24 +871,24 @@ export default class Connections extends React.Component {
                                                     </div>
 
                                                     {/* ----------------- DATABASES NAME ------------------- */}
-                                                    <div className={'database-name'}>
-                                                        <span className={'database-text'}
+                                                    <div className="database-name">
+                                                        <span className="database-text"
                                                               id="folders-n">{conn.name} {this.databaseHost(conn)}</span>
                                                     </div>
 
                                                     {/* -------------- DATABASES SCHEMA NAME --------------- */}
-                                                    <div className={'database-schema-name'}>
-                                                        <span className={'database-text'}
+                                                    <div className="database-schema-name">
+                                                        <span className="database-text"
                                                               id="folders-schema-n">{conn.schema}</span>
                                                     </div>
 
                                                     {/* -------------- DATABASES DATE CREATED -------------- */}
-                                                    <div className={'database-date-created'}>
-                                                        <span className={'database-text'}
-                                                              id="folders-date-created">{conn.date}</span>
+                                                    <div className="database-date-created">
+                                                        <span className="database-text"
+                                                              id="folders-date-created">{conn.createdAt}</span>
                                                     </div>
 
-                                                    <div className={'database-mini-menu'}
+                                                    <div className="database-mini-menu"
                                                          onClick={() => (this.isDBMiniMenuOpen(conn.name),
                                                          this.saveDeleteConnectionName(conn.name))}>
                                                         <svg>
@@ -1010,17 +896,12 @@ export default class Connections extends React.Component {
                                                                 d="M2.14286 7.80488C3.33333 7.80488 4.28571 8.78049 4.28571 10C4.28571 11.2195 3.33333 12.1951 2.14286 12.1951C0.952381 12.1951 0 11.2195 0 10C0 8.78049 0.952381 7.80488 2.14286 7.80488ZM0 2.19512C0 3.41463 0.952381 4.39024 2.14286 4.39024C3.33333 4.39024 4.28571 3.41463 4.28571 2.19512C4.28571 0.97561 3.33333 0 2.14286 0C0.952381 0 0 0.97561 0 2.19512ZM0 17.8049C0 19.0244 0.952381 20 2.14286 20C3.33333 20 4.28571 19.0244 4.28571 17.8049C4.28571 16.5854 3.33333 15.6098 2.14286 15.6098C0.952381 15.6098 0 16.5854 0 17.8049Z"
                                                                 fill="#5C5D6F"/>
                                                         </svg>
-
-
                                                     </div>
-
                                                     <DatabaseMiniMenuPopup
                                                         isOpen={this.state.isDBMiniMenu === conn.name}
                                                         openDeleteConnectionPopup={this.openDeleteConnectionPopup}
                                                     >
                                                     </DatabaseMiniMenuPopup>
-
-
                                                 </div>
                                             )
                                         })}
@@ -1029,42 +910,36 @@ export default class Connections extends React.Component {
 
                                 {/* ----------------------- CONNECTIONS PAGE FOOTER ------------------------ */}
                                 <div className='connections-page-footer'>
-
-                                    <div className={'databases-on-page'}>
-                                        <span className={'connections-page-footer-text'}>Rows per page: 10</span>
-                                        <img src={footer_arrow_down} alt={'arrow'}/>
+                                    <div className="databases-on-page">
+                                        <span className="connections-page-footer-text">Rows per page: {rowsPerPage}</span>
                                     </div>
 
-                                    <div className={'databases-amount'}>
-                                        <span className={'connections-page-footer-text'}>1-10 of 10</span>
+                                    <div className="databases-amount">
+                                        <span className="connections-page-footer-text">{paginationFrom}-{paginationTo} of {searchedResults}</span>
                                     </div>
 
-                                    <div className={'database-pages'}>
-                                        <img className={'database-pages-arrow-left'} src={footer_arrow_left}
-                                             alt={'arrow left'}/>
+                                    <div className="database-pages">
+                                        <img className="database-pages-arrow-left" onClick={this.moveBack} src={footer_arrow_left}
+                                             alt="arrow left"/>
 
-                                        <img className={'database-pages-arrow-right'} src={footer_arrow_right}
-                                             alt={'arrow right'}/>
+                                        <img className="database-pages-arrow-right" onClick={this.moveNext} src={footer_arrow_right}
+                                             alt="arrow right"/>
                                     </div>
                                 </div>
 
                             </div>
 
-                            :
+                            : // Else
 
                             /* ------------------------------ EMPTY CONNECTIONS PAGE -------------------------------- */
-                            <div className={'empty-connections-page'}>
-
-                                <div className={'empty-connections-page-block'}>
-                                    <img src={empty_connections_page_icon} alt={'empty page'}/>
-
+                            <div className="empty-connections-page">
+                                <div className="empty-connections-page-block">
+                                    <img src={empty_connections_page_icon} alt="empty page"/>
                                     <span>Not added any connection.<br/>Please add database connection to list.</span>
-
                                     <button type="button" id="add-button"
                                             onClick={() => this.openSimplifiedConnectionPopup()}>Add connection
                                     </button>
                                 </div>
-
                             </div>
                     }
                 </div>
@@ -1083,7 +958,6 @@ export default class Connections extends React.Component {
                 >
                     {this.smallInput()}
                 </SimplifiedConnectionPopup>
-
 
                 <SSHConnectionPopup
                     isOpen={isSSHConnectionPopup}
@@ -1107,42 +981,12 @@ export default class Connections extends React.Component {
                     {this.bigInput()}
                 </ConfigureManuallyPopup>
 
-
-
                 <DeleteConnectionPopup
                     isOpen={isDeleteConnection}
                     onCancel={this.closeDeleteConnectionPopup}
                     deleteConnectionName={deleteConnectionName}
                     deleteConnection={this.deleteConnection}
                 />
-
-
-
-                {/* ------------------------------------------------------------------------------------------------ */}
-
-                <Modal
-                    title="License Authentication"
-                    isOpen={isKeyOpen}
-                    onSubmit={this.handleKeySubmit}
-                    noCross={true}
-                    submitButton={trialWindow ? false : true}
-                >
-                    {(trialWindow && trialAvailable) && this.freeTrial()}
-                    {(!trialAvailable || !trialWindow) && this.keyInput()}
-
-                </Modal>
-
-                {/*
-                <Modal
-                    title="Error"
-                    isOpen={isErrorOpen}
-                    onCancel={this.handleErrorCancel}
-                    onSubmit={this.handleErrorCancel}
-                    submitTitle="Ok"
-                >
-                    <strong>Message!</strong>{errorMessage}
-                </Modal>
-                */}
 
                 <Modal
                     title="Delete connection"
@@ -1158,8 +1002,6 @@ export default class Connections extends React.Component {
                         <strong>Are you sure?</strong>
                     </div>
                 </Modal>
-
-
             </div>
         );
     }

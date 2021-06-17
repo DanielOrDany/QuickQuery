@@ -79,33 +79,6 @@ export const
         });
     },
 
-    checkLicense = async () => {
-        return new Promise(resolve => {
-            ipcRenderer.send(channels.CHECK_LICENSE);
-            ipcRenderer.on(channels.CHECK_LICENSE, (event, result) => {
-                resolve(result.data);
-            });
-        });
-    },
-
-    setTrial = async () => {
-        return new Promise(resolve => {
-            ipcRenderer.send(channels.SET_TRIAL);
-            ipcRenderer.on(channels.SET_TRIAL, (event, result) => {
-                resolve(result.data);
-            });
-        });
-    },
-
-    updateKey = async (key) => {
-        return new Promise(resolve => {
-            ipcRenderer.send(channels.UPDATE_KEY, key);
-            ipcRenderer.on(channels.UPDATE_KEY, (event, result) => {
-                resolve(result.data);
-            });
-        });
-    },
-
     updateLanguage = async (language) => {
         return new Promise(resolve => {
             ipcRenderer.send(channels.UPDATE_LANGUAGE, language);
