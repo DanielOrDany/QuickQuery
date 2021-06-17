@@ -253,13 +253,16 @@ export default class Connections extends React.Component {
                     const connections = JSON.parse(localStorage.getItem("connections"));
 
                     connections.push(connection);
+                    localStorage.setItem("connections", connections);
 
                     this.setState({
-                        connections: JSON.parse(localStorage.getItem("connections")),
-                        searchedConnections: JSON.parse(localStorage.getItem("connections")),
+                        connections: connections,
+                        searchedConnections: connections,
                         isErrorOpen: false,
                         errorMessage: "",
-                        isOpen: false
+                        isConfigureManuallyPopup: false,
+                        isSimplifiedConnectionPopup: false,
+                        isSSHConnectionPopup: false
                     });
 
                 } else {
