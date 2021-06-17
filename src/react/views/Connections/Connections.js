@@ -275,17 +275,21 @@ export default class Connections extends React.Component {
         }
     };
 
-    deleteConnection(name) {
+    deleteConnection = (name) => {
         deleteConnection(name).then(connections => {
-            document.getElementById(name).remove();
+            //document.getElementById(name).remove();
 
-            // if (connections) {
-            //     this.setState({ connections: connections });
-            // }
-
-            if(localStorage.getItem("current_connection") && JSON.parse(localStorage.getItem("current_connection")).name === name) {
-                localStorage.removeItem("current_connection");
+            if (connections) {
+                this.setState({
+                    connections: connections,
+                    searchedConnections: connections,
+                    isDeleteConnection: false
+                });
             }
+
+            // if(localStorage.getItem("current_connection") && JSON.parse(localStorage.getItem("current_connection")).name === name) {
+            //     localStorage.removeItem("current_connection");
+            // }
         });
     };
 
@@ -651,6 +655,17 @@ export default class Connections extends React.Component {
         );
     };
 
+    closeMiniMenu = (name) => {
+        const { isDBMiniMenu } = this.state;
+
+        if (isDBMiniMenu) {
+            this.setState({isDBMiniMenu: null});
+        }
+        // if (isDBMiniMenu === name) {
+        //     this.setState({isDBMiniMenu: null});
+        // }
+    };
+
     databaseHost(conn) {
         let host = "";
 
@@ -874,19 +889,19 @@ export default class Connections extends React.Component {
                                                     </div>
 
                                                     {/* ----------------- DATABASES NAME ------------------- */}
-                                                    <div className="database-name">
+                                                    <div className="database-name" onClick={() => this.closeMiniMenu(conn.name)}>
                                                         <span className="database-text"
                                                               id="folders-n">{conn.name} {this.databaseHost(conn)}</span>
                                                     </div>
 
                                                     {/* -------------- DATABASES SCHEMA NAME --------------- */}
-                                                    <div className="database-schema-name">
+                                                    <div className="database-schema-name" onClick={() => this.closeMiniMenu(conn.name)}>
                                                         <span className="database-text"
                                                               id="folders-schema-n">{conn.schema}</span>
                                                     </div>
 
                                                     {/* -------------- DATABASES DATE CREATED -------------- */}
-                                                    <div className="database-date-created">
+                                                    <div className="database-date-created" onClick={() => this.closeMiniMenu(conn.name)}>
                                                         <span className="database-text"
                                                               id="folders-date-created">{conn.createdAt}</span>
                                                     </div>

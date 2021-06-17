@@ -3,9 +3,6 @@ import './index.scss';
 import Button from "../../../../components/Button";
 import cross_icon from "../../../../icons/pop-up-cross.svg";
 
-
-
-
 const DeleteConnectionPopup = ({
                                    isOpen,
                                    onCancel,
