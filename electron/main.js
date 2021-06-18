@@ -132,6 +132,17 @@ ipcMain.on(channels.ADD_CONNECTION, async (event, params) => {
   }
 });
 
+ipcMain.on(channels.RENAME_CONNECTION, async (event, connectionName, newConnectionName) => {
+  try {
+    const result = await Connection.renameConnection(connectionName, newConnectionName);
+    successful.data = result;
+    await event.sender.send(channels.RENAME_CONNECTION, successful);
+  } catch (e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.RENAME_CONNECTION, unsuccessful);
+  }
+});
+
 /**
  *  Databases
  */

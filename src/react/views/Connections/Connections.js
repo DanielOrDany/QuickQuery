@@ -3,7 +3,8 @@ import {
     getDataFromDatabase,
     deleteConnection,
     addConnection,
-    authVerifyToken
+    authVerifyToken,
+    renameConnection
 } from "../../methods";
 import './Connections.scss';
 import Modal from '../../popups/Modal';
@@ -51,13 +52,15 @@ export default class Connections extends React.Component {
             firstModalHint: true,
             secondModalHint: true,
             isDBMiniMenu: null,
+            editConnection: null,
             isDeleteConnection: false,
             deleteConnectionName: "",
             rowsPerPage: 10,
             pageNumber: 1,
             orderByName: false,
             orderBySchema: false,
-            orderByDate: false
+            orderByDate: false,
+            isErrorOpen: false
         };
     };
 
@@ -97,24 +100,50 @@ export default class Connections extends React.Component {
         this.addConnection();
     };
 
+    handleSave = () => {
+        this.editConnection();
+    };
+
     closeFirstModalHint = () => {
-        this.setState({firstModalHint: false})
+        this.setState({firstModalHint: false});
     };
 
     closeSecondModalHint = () => {
-        this.setState({secondModalHint: false})
+        this.setState({secondModalHint: false});
     };
 
     closeDeleteConnectionPopup = () => {
-        this.setState({isDeleteConnection: false})
+        this.setState({isDeleteConnection: false});
     };
 
     openDeleteConnectionPopup = () => {
-        this.setState({isDeleteConnection: true})
+        this.setState({isDeleteConnection: true});
+    };
+
+    openEditConnectionPopup = (name) => {
+        const { connections } = this.state;
+        const editConnection = connections.find((connection) => connection.name === name);
+
+        if (typeof editConnection.URI === "string") {
+            this.setState({
+                editConnection,
+                isSimplifiedConnectionPopup: true
+            })
+        } else if (editConnection.sshHost) {
+            this.setState({
+                editConnection,
+                isSSHConnectionPopup: true
+            })
+        } else {
+            this.setState({
+                editConnection,
+                isConfigureManuallyPopup: true
+            })
+        }
     };
 
     saveDeleteConnectionName = (name) => {
-        this.setState({deleteConnectionName: name})
+        this.setState({deleteConnectionName: name});
     };
 
     handleCancel = () => {
@@ -164,6 +193,39 @@ export default class Connections extends React.Component {
         }
         return true;
     }
+
+    editConnection = () => {
+        const { nameInput, editConnection } = this.state;
+
+        if (nameInput.replace(/^\s+|\s+$/gm, '').length === 0) {
+            this.setState({
+                errorMessage: "Name should be fill.",
+                isErrorOpen: true
+            });
+        } else {
+            renameConnection(editConnection.name, nameInput).then(connections => {
+                if (connections) {
+                    localStorage.setItem("connections", connections);
+
+                    this.setState({
+                        connections: connections,
+                        searchedConnections: connections,
+                        isErrorOpen: false,
+                        errorMessage: "",
+                        isConfigureManuallyPopup: false,
+                        isSimplifiedConnectionPopup: false,
+                        isSSHConnectionPopup: false
+                    });
+
+                } else {
+                    this.setState({
+                        errorMessage: "Local Error",
+                        isErrorOpen: true
+                    });
+                }
+            });
+        }
+    };
 
     addConnection = () => {
         let nameInput = this.state.nameInput;
@@ -378,7 +440,13 @@ export default class Connections extends React.Component {
         }
     };
 
-    bigInput = () => {
+    handleErrorCancel = () => {
+        this.setState({
+            isErrorOpen: false
+        });
+    };
+
+    bigInput = (editConnection) => {
         return(
             <div className={"big-input-modal"}>
                 <div className="big-input-modal-body">
@@ -480,7 +548,7 @@ export default class Connections extends React.Component {
         );
     };
 
-    smallInput = () => {
+    smallInput = (editConnection) => {
         return(
             <div>
                 <div className="small-information-field">
@@ -532,37 +600,38 @@ export default class Connections extends React.Component {
         );
     };
 
-    sshInput = () => {
+    sshInput = (editConnection) => {
         return(
             <div className="big-input-modal scroll-body">
                 <div className="big-input-modal-body">
                     <div className="big-input-first-column">
                         <div className="big-information-field">
                             <span className="big-input-title">Name connection</span>
-                            <input id="input-field-name" ref="name" className="big-form-control" type="text" placeholder="Database" type="search"
+                            <input id="input-field-name" ref="name" className="big-form-control" defaultValue={editConnection && editConnection.name} type="text" placeholder="Database" type="search"
                                    onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
                         </div>
                         <div className="big-information-field">
                             <span className="big-input-title">Database Port</span>
-                            <input id="input-field-port" ref="port" className="big-form-control" type="text" placeholder="5432" type="search"
+                            <input id="input-field-port" ref="port" className="big-form-control" defaultValue={editConnection && editConnection.URI.port} type="text" placeholder="5432" type="search"
+                                   disabled={!!editConnection}
                                    onChange={this.portOnChange} onKeyPress={this.portKeyPress}/>
                         </div>
                         <div className="big-information-field">
                             <span className="big-input-title">Database Password</span>
                             <input id="input-field-password" ref="password" className="big-form-control" type="text"
-                                   placeholder="Password" type="password"
+                                   disabled={!!editConnection}
+                                   placeholder="Password" type="password" defaultValue={editConnection && editConnection.URI.password}
                                    onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
                         </div>
                         <div className="information-field">
                             <span className="big-input-title">Database Schema name
-
-                                    <div className="help-tip" id="schema-tip">
-                                        <p>A schema is a collection of database objects associated with one particular database username.</p>
-                                    </div>
-
+                                <div className="help-tip" id="schema-tip">
+                                    <p>A schema is a collection of database objects associated with one particular database username.</p>
+                                </div>
                             </span>
                             <input id="input-field-schema" ref="schema" className="big-form-control" type="text"
-                                   placeholder="public" type="search"
+                                   disabled={!!editConnection}
+                                   placeholder="public" type="search" defaultValue={editConnection && editConnection.schema}
                                    onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                         </div>
                     </div>
@@ -570,12 +639,16 @@ export default class Connections extends React.Component {
                         <div className="big-information-field">
                             <span className="big-input-title">Database User</span>
                             <input id="input-field-user" ref="user" className="big-form-control" type="text" placeholder="root" type="search"
+                                   disabled={!!editConnection}
+                                   defaultValue={editConnection && editConnection.URI.user}
                                    onChange={this.userOnChange} onKeyPress={this.userKeyPress}/>
                         </div>
                         <div className="big-information-field">
                             <span className="big-input-title">Database Name</span>
                             <input id="input-field-database" ref="database" className="big-form-control" type="text"
                                    placeholder="Database" type="search"
+                                   disabled={!!editConnection}
+                                   defaultValue={editConnection && editConnection.URI.database}
                                    onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
                         </div>
                         <div className="choose-db-field">
@@ -583,9 +656,9 @@ export default class Connections extends React.Component {
                             <select
                                 className="selector"
                                 id="choose-db"
-                                value={this.state.dtypeInput}
+                                disabled={!!editConnection}
+                                defaultValue={editConnection && editConnection.URI.others.dialect}
                                 onChange={this.dtypeOnChange}
-
                             >
                                 <option value="mysql">mysql</option>
                                 <option value="postgres">postgres</option>
@@ -599,11 +672,14 @@ export default class Connections extends React.Component {
                         <div className="big-information-field">
                             <span className="big-input-title">SSH Host</span>
                             <input id="input-field-port" ref="port" className="big-form-control" type="text" placeholder="127.0.0.1" type="search"
+                                   defaultValue={editConnection && editConnection.sshHost}
+                                   disabled={!!editConnection}
                                    onChange={this.sshHostOnChange}/>
                         </div>
                         <div className="big-information-field">
                             <span className="big-input-title">Private Key</span>
                             <input id="input-field-host" className="big-form-control" type="file"
+                                   disabled={!!editConnection}
                                    onChange={this.sshPrivateKeyOnChange}/>
                         </div>
                     </div>
@@ -611,17 +687,22 @@ export default class Connections extends React.Component {
                         <div className="big-information-field">
                             <span className="big-input-title">SSH User</span>
                             <input id="input-field-user" ref="user" className="big-form-control" type="text" placeholder="ubuntu" type="search"
+                                   defaultValue={editConnection && editConnection.sshUser}
+                                   disabled={!!editConnection}
                                    onChange={this.sshUserOnChange}/>
                         </div>
                         <div className="big-information-field">
                             <span className="big-input-title">SSH Port</span>
                             <input id="input-field-host" ref="host" className="big-form-control" type="text" placeholder="22" type="search"
+                                   defaultValue={editConnection && editConnection.sshPort}
+                                   disabled={!!editConnection}
                                    onChange={this.sshPortOnChange}/>
                         </div>
                     </div>
                 </div>
                 <div className="ssh-input-buttons">
                     <Button id="configure-manually-btn"
+                            disabled={!!editConnection}
                             onClick={()=>{
                                 this.setState({
                                     nameInput: '',
@@ -633,6 +714,7 @@ export default class Connections extends React.Component {
                         Configure manually
                     </Button>
                     <Button id="simplified-connection-btn"
+                            disabled={!!editConnection}
                             onClick={()=>{
                                 this.setState({
                                     bigInput: false,
@@ -655,15 +737,12 @@ export default class Connections extends React.Component {
         );
     };
 
-    closeMiniMenu = (name) => {
+    closeMiniMenu = () => {
         const { isDBMiniMenu } = this.state;
 
         if (isDBMiniMenu) {
             this.setState({isDBMiniMenu: null});
         }
-        // if (isDBMiniMenu === name) {
-        //     this.setState({isDBMiniMenu: null});
-        // }
     };
 
     databaseHost(conn) {
@@ -794,7 +873,8 @@ export default class Connections extends React.Component {
             pageNumber,
             orderByName,
             orderBySchema,
-            orderByDate
+            orderByDate,
+            editConnection
         } = this.state;
 
         const paginationFrom = 1 + rowsPerPage * pageNumber - rowsPerPage;
@@ -917,7 +997,9 @@ export default class Connections extends React.Component {
                                                     </div>
                                                     <DatabaseMiniMenuPopup
                                                         isOpen={this.state.isDBMiniMenu === conn.name}
+                                                        connectionName={conn.name}
                                                         openDeleteConnectionPopup={this.openDeleteConnectionPopup}
+                                                        openEditConnectionPopup={this.openEditConnectionPopup}
                                                     >
                                                     </DatabaseMiniMenuPopup>
                                                 </div>
@@ -966,6 +1048,7 @@ export default class Connections extends React.Component {
                 <SimplifiedConnectionPopup
                     isOpen={isSimplifiedConnectionPopup}
                     onCancel={this.handleCancel}
+                    onSave={this.handleSave}
                     onSubmit={this.handleSubmit}
                     closeFirstModalHints={this.closeFirstModalHint}
                     closeSecondModalHints={this.closeSecondModalHint}
@@ -973,30 +1056,35 @@ export default class Connections extends React.Component {
                     secondModalHint={secondModalHint}
                     errorMessage={errorMessage}
                     isError={isErrorOpen}
+                    isEdit={!!editConnection}
                 >
-                    {this.smallInput()}
+                    {this.smallInput(editConnection)}
                 </SimplifiedConnectionPopup>
 
                 <SSHConnectionPopup
                     isOpen={isSSHConnectionPopup}
                     onCancel={this.handleCancel}
                     onSubmit={this.handleSubmit}
+                    onSave={this.handleSave}
+                    isEdit={!!editConnection}
                     closeFirstModalHints={this.closeFirstModalHint}
                     closeSecondModalHints={this.closeSecondModalHint}
                     firstModalHint={firstModalHint}
                     secondModalHint={secondModalHint}
                 >
-                    {this.sshInput()}
+                    {this.sshInput(editConnection)}
                 </SSHConnectionPopup>
 
                 <ConfigureManuallyPopup
                     isOpen={isConfigureManuallyPopup}
                     onCancel={this.handleCancel}
                     onSubmit={this.handleSubmit}
+                    onSave={this.handleSave}
                     errorMessage={errorMessage}
                     isError={isErrorOpen}
+                    isEdit={!!editConnection}
                 >
-                    {this.bigInput()}
+                    {this.bigInput(editConnection)}
                 </ConfigureManuallyPopup>
 
                 <DeleteConnectionPopup
@@ -1005,6 +1093,16 @@ export default class Connections extends React.Component {
                     deleteConnectionName={deleteConnectionName}
                     deleteConnection={this.deleteConnection}
                 />
+
+                <Modal
+                    title="Error"
+                    isOpen={isErrorOpen}
+                    onCancel={this.handleErrorCancel}
+                    onSubmit={this.handleErrorCancel}
+                    submitTitle="Ok"
+                >
+                    <strong>Message!</strong> {errorMessage}
+                </Modal>
 
                 <Modal
                     title="Delete connection"

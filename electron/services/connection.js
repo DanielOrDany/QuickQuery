@@ -96,6 +96,23 @@ async function verifyConnection (name) {
         throw "Connection with this name already exist!";
 }
 
+async function renameConnection(connectionName, newConnectionName) {
+    // Update connection name
+    db.read()
+        .get('connections')
+        .find({name: connectionName})
+        .assign({name: newConnectionName})
+        .write();
+
+    console.log("updated");
+
+    // Get connections
+    const connections = await db
+        .get('connections')
+        .value();
+
+    return connections;
+}
 
 async function addConnection(params) {
     let {
@@ -290,5 +307,6 @@ function getCurrentDate() {
 // Export db's methods
 module.exports = {
     addConnection,
-    deleteConnection
+    deleteConnection,
+    renameConnection
 };

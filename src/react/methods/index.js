@@ -79,6 +79,15 @@ export const
         });
     },
 
+    renameConnection = async (name, newName) => {
+        return new Promise(resolve => {
+            ipcRenderer.send(channels.RENAME_CONNECTION, name, newName);
+            ipcRenderer.on(channels.RENAME_CONNECTION, (event, result) => {
+                resolve(result.data);
+            });
+        });
+    },
+
     updateLanguage = async (language) => {
         return new Promise(resolve => {
             ipcRenderer.send(channels.UPDATE_LANGUAGE, language);
