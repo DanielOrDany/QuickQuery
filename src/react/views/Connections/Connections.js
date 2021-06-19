@@ -554,11 +554,13 @@ export default class Connections extends React.Component {
                 <div className="small-information-field">
                     <span className="small-input-title">Name connection</span>
                     <input id="input-field-name" ref="name" className="small-form-control" type="text" type="search"
+                           defaultValue={editConnection && editConnection.name}
                            onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
                 </div>
                 <div className="small-information-field">
                     <span className="small-input-title">Database URL</span>
                     <input id="input-field-uri" ref="uri" className="small-form-control" type="text" type="search"
+                           defaultValue={editConnection && editConnection.URI}
                            onChange={this.uriOnChange} onKeyPress={this.uriKeyPress}
                     />
                 </div>
