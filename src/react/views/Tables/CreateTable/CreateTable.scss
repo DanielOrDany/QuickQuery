@@ -59,7 +59,7 @@
       font-size: 28px;
       line-height: 33px;
 
-      color: #3E3E3E;
+      color: #999999;
     }
 
 
@@ -82,6 +82,12 @@
 
       color: #5C5D6F;
       margin-right: 29px;
+    }
+
+    .save-button:hover {
+      transition: .2s;
+      border: 2px solid #5C5D6F;
+      cursor: pointer;
     }
 
 
@@ -185,6 +191,23 @@
     align-items: center;
     justify-content: flex-end;
     height: 116px;
+
+
+    .create-edit-table-footer-delete {
+      margin-right: 60px;
+      padding-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .create-edit-table-footer-reload {
+      cursor: pointer;
+    }
+
+    .create-edit-table-footer-save {
+      margin-right: 20px;
+      cursor: pointer;
+    }
+
   }
 
 

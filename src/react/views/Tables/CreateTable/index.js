@@ -20,6 +20,7 @@ import westIcon from "../../../icons/west-arrow.svg";
 import eastIcon from "../../../icons/east-arrow.svg";
 import deleteIcon from "../../../icons/delete-create-table.svg";
 import saveIcon from "../../../icons/save-create-table.svg";
+import reloadIcon from "../../../icons/create-table-reload.svg";
 
 const utf8 = require('utf8');
 const base64 = require('base-64');
@@ -644,14 +645,14 @@ export default class CreateTable extends React.Component {
 
                         {/*
                         <div className="options-buttons">
-                            <button type="button" className="runButton" onClick={() => this.reload()}>
+                            <button type="button" className="runButton">
                                 <span>Reload Database</span>
                             </button>
 
                         </div>
 
                         <div className="saving-result">
-                        <button type="button" className="runButton" onClick={() => this.run()}>
+                        <button type="button" className="runButton">
                             <span>Test</span>
                         </button>
 
@@ -699,8 +700,9 @@ export default class CreateTable extends React.Component {
                     </div>
 
                     <div className='create-edit-table-footer'>
-                        <img src={deleteIcon} alt={'delete icon'}/>
-                        <img src={saveIcon} alt={'save icon'}/>
+                        <img className='create-edit-table-footer-delete' src={deleteIcon} alt='delete icon'/>
+                        <img className="create-edit-table-footer-reload" src={reloadIcon} alt='reload icon' onClick={() => this.reload()}/>
+                        <img className="create-edit-table-footer-save" src={saveIcon} alt='save icon' onClick={() => this.run()}/>
                     </div>
 
 

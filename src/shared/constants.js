@@ -24,6 +24,7 @@ module.exports = {
     LOAD_QUERY: 'load-result',
     SAVE_QUERY: 'save-result',
     TEST_QUERY: 'test-query',
-    GET_TABLE_COLUMNS: 'get-table-columns'
+    GET_TABLE_COLUMNS: 'get-table-columns',
+    RENAME_CONNECTION: 'rename-connection'
   },
 };

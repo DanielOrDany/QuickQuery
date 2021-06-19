@@ -5,11 +5,13 @@ import cross_icon from "../../../../icons/pop-up-cross.svg";
 import Button from "../../../../components/Button";
 
 const SSHConnectionPopup = ({
-                                       isOpen,
-                                       onCancel,
-                                       onSubmit,
-                                       children,
-                                   }) => {
+    isOpen,
+    onCancel,
+    onSubmit,
+    onSave,
+    children,
+    isEdit
+}) => {
     return (
         <>
             {isOpen &&
@@ -38,7 +40,7 @@ const SSHConnectionPopup = ({
 
                         <div className="ssh-popup-btn">
                             <Button id='ssh-popup-cancel-btn' className='ssh-popup-cancel-btn' onClick={onCancel} invert>Cancel</Button>
-                            <Button id='ssh-popup-create-btn' className='ssh-popup-create-btn' onClick={onSubmit}>Create</Button>
+                            <Button id='ssh-popup-create-btn' className='ssh-popup-create-btn' onClick={isEdit ? onSave : onSubmit}>{isEdit ? "Save" : "Create"}</Button>
                         </div>
                     </div>
 
