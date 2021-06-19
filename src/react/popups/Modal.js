@@ -9,51 +9,40 @@ import hint_cross from "../icons/hint-cross.svg";
 import '../styles/Modal.scss';
 
 const Modal = ({
-                 isOpen,
-                 onCancel,
-                 onSubmit,
-                 cancelButton,
-                 submitButton,
-                 cancelTitle,
-                 submitTitle,
-                 noCross,
-                 children,
-                 isBigModal,
-                 closeFirstModalHints,
-                 firstModalHint,
-                 closeSecondModalHints,
-                 secondModalHint
-               }) => {
-
-
-
+    isOpen,
+    onCancel,
+    onSubmit,
+    cancelButton,
+    submitButton,
+    cancelTitle,
+    submitTitle,
+    noCross,
+    children,
+    isBigModal,
+    closeFirstModalHints,
+    firstModalHint,
+    closeSecondModalHints,
+    secondModalHint,
+    isError
+}) => {
   return (
       <>
         {isOpen &&
         <Portal>
-
           <div className="modalOverlay">
             {isBigModal ?
-                <div>
-
-                </div>
+                <div></div>
                 :
                 firstModalHint ?
                     <div className={'first-modal-hint'}>
                       <img src={arrow} className={'modal-arrow'}/>
-                      <span>First step, you need to create a database connection, please start here  👇</span>
+                      <span>First step, you need to create a database connection, please start here 👇</span>
                       <img src={hint_cross} className={'first-hint-cross'} onClick={closeFirstModalHints}/>
                     </div>
-
                     :
-                    <div>
-
-                    </div>
+                    <div></div>
             }
-
             <div className={isBigModal ? "modalWindowBig" : "modalWindowSmall"}>
-
-
               {isBigModal ?
                   <div className={"headerBig"}>
                     <span
@@ -63,29 +52,22 @@ const Modal = ({
                   <div className={"headerSmall"}>
                     <span className={"headerText"}>Fill out all required information for creating a connection</span>
                   </div>}
-
-
-              {!noCross &&
-              <img alt={"delete icon"} src={cancel_icon} onClick={onCancel} id="delete-icon"/>
+              { !noCross &&
+                <img alt={"delete icon"} src={cancel_icon} onClick={onCancel} id="delete-icon"/>
               }
-
-              {isBigModal ?
-                  <div className="bigModalTitle">
-                    <span>Manual connection</span>
+                { isBigModal ?
+                  <div className="bigModalTitle" style={isError && {marginTop: 20}}>
+                    <span>{isError && "ERROR:"} Manual connection</span>
                   </div>
                   :
-                  <div className="smallModalTitle">
-                    <span>Create a connection</span>
+                  <div className="smallModalTitle" style={isError && {marginTop: 20}}>
+                      <span>{isError && "ERROR:"} Create a connection</span>
                   </div>
-              }
-
-
-
+                }
               <div className="modalBody">
                 {children}
               </div>
-
-              {isBigModal ?
+              { isBigModal ?
                   <div className="bigModalFooter">
                     {cancelButton &&
                     <Button id="cancelBtn" onClick={onCancel} invert>{cancelTitle}</Button>
@@ -103,36 +85,29 @@ const Modal = ({
                     <Button id="subBtn" onClick={onSubmit}>{submitTitle}</Button>
                     }
                   </div>
-
               }
-
             </div>
-
-
-            {isBigModal ?
+            { isBigModal ?
                 <div>
-
                 </div>
                 :
                 secondModalHint ?
                     <div className={'second-modal-hint'}>
                       <img src={second_arrow} className={'second-modal-arrow'}/>
-                      <span>Or configure it manually by your own  😎</span>
+                      <span>Or configure it manually by your own 😎</span>
                       <img src={hint_cross} className={'second-hint-cross'} onClick={closeSecondModalHints}/>
                     </div>
                     :
                     <div>
-
                     </div>
             }
-
-
           </div>
         </Portal>
         }
       </>
   );
 };
+
 Modal.propTypes = {
   isOpen: PropTypes.bool,
   onCancel: PropTypes.func,

@@ -108,12 +108,9 @@
     font-weight: normal;
     font-size: 16px;
     line-height: 19px;
-
     color: #000000;
 
   }
-
-
 
   .small-form-control:hover {
     background: #FFFFFF;
@@ -127,6 +124,12 @@
   max-height: 480px;
 }
 
+.error-message-modal {
+  padding-left: 48px;
+  padding-top: 20px;
+
+}
+
 /* ADD CONNECTION BIG-INPUTS */
 .big-input-modal {
   margin-left: 46px;
@@ -134,6 +137,7 @@
   .ssh-box-line {
     height: 1px;
     width: 758px;
+    margin-top: 20px;
     background: #E2DFE3;
   }
 
@@ -306,7 +310,6 @@
     }
   }
 }
-
 
 /* ADD CONNECTION BIG-INPUTS */
 .big-input-modal {

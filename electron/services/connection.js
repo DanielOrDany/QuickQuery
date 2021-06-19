@@ -90,21 +90,21 @@ pg.defaults.ssl = true;
 
 async function verifyConnection (name) {
     const connectionInDatabase = await db.get('connections').find({name: name}).value();
-    const dbr = await db.read().value();
-    console.log(dbr);
+
     if (connectionInDatabase)
         throw "Connection with this name already exist!";
 }
 
 async function renameConnection(connectionName, newConnectionName) {
+    // throw error if connection already exist
+    await verifyConnection(newConnectionName);
+
     // Update connection name
     db.read()
         .get('connections')
         .find({name: connectionName})
         .assign({name: newConnectionName})
         .write();
-
-    console.log("updated");
 
     // Get connections
     const connections = await db

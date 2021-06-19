@@ -1,0 +1,67 @@
+@import "../../styles/variables";
+
+.connection-error-modal-overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #000000A6;
+  z-index: 1000;
+}
+
+.connection-error-modal-window {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+}
+
+.connection-error-modal-box {
+  width: 100%;
+  height: max-content;
+  padding: 20px 10px;
+  background: #FFFFFF;
+}
+
+.connection-error-modal-title {
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 33px;
+  margin-left: 46px;
+  color: #3E3E3E;
+}
+
+.connection-error-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 36px;
+
+  #subBtn {
+    height: 42px;
+    width: 108px;
+    background: #28794E;
+    border-radius: 4px;
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 20px;
+    letter-spacing: -0.11px;
+    color: #FFFFFF;
+    margin-right: 42px;
+  }
+}
+//
+//#subBtn {
+//  font-size: 14px;
+//  font-family: 'Scada', sans-serif;
+//  text-transform: none;
+//  color: white;
+//  background-color: #2d9d73;
+//  border-radius: 5px;
+//  border: 0 solid;
+//}
