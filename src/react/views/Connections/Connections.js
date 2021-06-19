@@ -345,8 +345,6 @@ export default class Connections extends React.Component {
 
     deleteConnection = (name) => {
         deleteConnection(name).then(connections => {
-            //document.getElementById(name).remove();
-
             if (connections) {
                 this.setState({
                     connections: connections,
@@ -355,10 +353,6 @@ export default class Connections extends React.Component {
                     isDBMiniMenu: false
                 });
             }
-
-            // if(localStorage.getItem("current_connection") && JSON.parse(localStorage.getItem("current_connection")).name === name) {
-            //     localStorage.removeItem("current_connection");
-            // }
         });
     };
 
