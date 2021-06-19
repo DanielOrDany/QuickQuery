@@ -14,6 +14,7 @@ import footer_arrow_down from "../../../icons/connections-page-footer-arrow.svg"
 import footer_arrow_left from "../../../icons/connections-page-footer-arrow-left.svg";
 import footer_arrow_right from "../../../icons/connections-page-footer-arrow-right.svg";
 import TableRowPopup from "../popups/TableRowPopup";
+import HiddenColumnsPopup from "../popups/HiddenColumnsPopup";
 
 const DESC = "DESC";
 const ASC = "ASC";
@@ -98,12 +99,14 @@ export default class Result extends React.Component {
             isEmptyQuery: false,
             options: [],
             removedColumns: [],
+            hiddenColumns: [],
             setTableModalActive: false,
             idRow: null,
             selectedRowInfo: [],
             TableImgModalActive: false,
             columnImg: '',
-            limitWarning: null
+            limitWarning: null,
+            isOpenHiddenColumnsPopup: false
         };
 
         this.handleChangeFilterValue1 = this.handleChangeFilterValue1.bind(this);
@@ -214,7 +217,7 @@ export default class Result extends React.Component {
     }
 
     async componentDidUpdate(prevProps, prevState, snapshot) {
-        const {pageNumber, isSaving, options, limitWarning} = this.state;
+        const { pageNumber, isSaving, limitWarning, options, removedColumns } = this.state;
 
         if (prevState.pageNumber !== pageNumber) {
             setTimeout(() => {
@@ -224,16 +227,11 @@ export default class Result extends React.Component {
 
         if (prevState.limitWarning !== limitWarning) {
             setTimeout(() => {
-                this.setState({limitWarning: null})
+                this.setState({ limitWarning: null })
             }, 5000);
         }
 
-        // if (!isEqual(prevState.options, options)) {
-        //     this.reloadTable();
-        // }
-
         if (isSaving) {
-            const {options, removedColumns} = this.state;
             const result = localStorage.getItem('current_result');
             const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
             const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
@@ -386,12 +384,50 @@ export default class Result extends React.Component {
         });
     };
 
-    removeColumn = (column) => {
-        const {removedColumns} = this.state;
+    hideColumn = (column) => {
+        const { hiddenColumns } = this.state;
 
-        removedColumns.push(column);
+        hiddenColumns.push(column);
 
-        this.setState({removedColumns});
+        this.setState({ hiddenColumns });
+    };
+
+    closeHiddenColumnsPopup = () => {
+        const { hiddenColumns } = this.state;
+
+        this.setState({
+            removedColumns: hiddenColumns,
+            isOpenHiddenColumnsPopup: false
+        });
+
+        this.reloadTable();
+    };
+
+    openHiddenColumnsPopup = () => {
+        const { isOpenHiddenColumnsPopup } = this.state;
+
+        if (isOpenHiddenColumnsPopup) {
+            this.setState({ isOpenHiddenColumnsPopup: false });
+        } else {
+            this.setState({ isOpenHiddenColumnsPopup: true });
+        }
+    };
+
+    unhideColumn = (column) => {
+        let { hiddenColumns } = this.state;
+
+        hiddenColumns = hiddenColumns.filter(e => e !== column);
+        console.log(hiddenColumns);
+
+        this.setState({
+            hiddenColumns
+        });
+    };
+
+    unhideAllColumns = () => {
+        this.setState({
+            hiddenColumns: []
+        });
 
         setTimeout(() => {
             this.reloadTable();
@@ -636,14 +672,18 @@ export default class Result extends React.Component {
             isNullResults,
             isSaving,
             removedColumns,
+            hiddenColumns,
             isLoading,
             selectedRowInfo,
             idRow,
             setTableModalActive,
             TableImgModalActive,
             columnImg,
-            limitWarning
+            limitWarning,
+            isOpenHiddenColumnsPopup
         } = this.state;
+
+        const tableName = localStorage.getItem("current_result");
 
         removedColumns.forEach(removedColumn => {
             headers = headers.filter((header) => header !== removedColumn);
@@ -677,9 +717,11 @@ export default class Result extends React.Component {
 
                     {/* ------------------------------------- RESULT PAGE HEADER ----------------------------------- */}
                     <div className='result-page-header'>
-                        <span>todos</span>
+                        <span>{tableName}</span>
 
-                        <button className='result-page-header-show-hidden-btn'>Show hidden</button>
+                        <button className='result-page-header-show-hidden-btn' onClick={() => this.openHiddenColumnsPopup()}>Show hidden</button>
+
+                        <HiddenColumnsPopup unhide={this.unhideColumn} showAll={this.unhideAllColumns} hide={this.hideColumn} selectedColumns={hiddenColumns} columns={headers} isOpen={isOpenHiddenColumnsPopup} done={this.closeHiddenColumnsPopup}/>
                     </div>
 
 
@@ -727,7 +769,6 @@ export default class Result extends React.Component {
                                                         {/*<img src={deleteForeverIcon} className="delete-forever-icon" onClick={() => this.removeColumn(header)}/>*/}
                                                         <span id="header-title">{header}</span>
 
-
                                                         <svg
                                                             className={currentOption.order === ASC ? "arrow-up" : "arrow-down"}
                                                             id="header-order"
@@ -754,6 +795,7 @@ export default class Result extends React.Component {
                                                     <div className={'column-filters'}>
 
                                                         <svg className={'hide-icon'} width="13" height="11"
+                                                             onClick={() => this.hideColumn(header)}
                                                              viewBox="0 0 13 11" xmlns="http://www.w3.org/2000/svg">
                                                             <path
                                                                 d="M6.50002 7.98322C7.88942 7.98322 9.01956 6.86926 9.01956 5.49976C9.01956 5.07387 8.90002 4.67873 8.7075 4.3276L12.0797 1.0037L11.0614 0L9.67969 1.36193C8.72574 0.861734 7.64361 0.578275 6.50002 0.578275C3.5071 0.578275 0.907861 2.47305 0.0316863 5.29202C-0.0105621 5.42783 -0.0105621 5.57217 0.0316863 5.70798C0.421044 6.96012 1.15271 8.02581 2.10618 8.82745L0.920344 9.9963L1.93863 11L5.31082 7.6761C5.66705 7.86492 6.06793 7.98322 6.50002 7.98322ZM5.42076 5.49976C5.42076 4.91344 5.9047 4.43597 6.50002 4.43597C6.51922 4.43597 6.53651 4.4407 6.55523 4.44164L5.42652 5.55466C5.42556 5.53573 5.42076 5.51822 5.42076 5.49976ZM7.57927 5.49976C7.57927 6.08608 7.09534 6.56356 6.50002 6.56356C6.48082 6.56356 6.46353 6.55883 6.44481 6.55788L7.57351 5.44487C7.57447 5.4638 7.57927 5.48131 7.57927 5.49976ZM1.47822 5.49976C2.22765 3.3963 4.2186 1.99794 6.50002 1.99794C7.24369 1.99794 7.95471 2.14937 8.60284 2.42336L7.68922 3.3239C7.33347 3.13461 6.93259 3.0163 6.50002 3.0163C5.11062 3.0163 3.98048 4.13026 3.98048 5.49976C3.98048 5.92566 4.10002 6.3208 4.29254 6.67193L3.13167 7.81618C2.3928 7.22181 1.81044 6.43343 1.47822 5.49976Z"/>
