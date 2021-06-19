@@ -3,14 +3,8 @@
 
 /* CREATE TABLE PAGE */
 .create_edit_table {
-  display: grid;
-  grid-template-areas:
-          "miniMenu"
-          "queryText"
-          "newTable";
-  grid-template-rows: 50px 45vh auto;
-
-  height: calc(100vh - 50px);
+  height: calc(100vh - 80px);
+  width: calc(100vw - 255px);
 
 
   /* SCROLL */
@@ -31,15 +25,72 @@
 
   /* MINI MENU */
   #mini-menu {
-    grid-area: miniMenu;
+    height: 73px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    height: 50px;
 
-    font-family: 'Scada', sans-serif;
 
-    background-color: #F9F9F9;
+    .create-table-name-input {
+      height: 40px;
+      margin-left: 39px;
 
-    border-bottom: .5px solid #EBEBEB;
+      width: 362px;
+
+      border: none;
+
+      border-bottom: 1px solid #E2DFE3;
+
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 33px;
+
+      color: #3E3E3E;
+
+    }
+
+    .create-table-name-input::placeholder {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 33px;
+
+      color: #999999;
+    }
+
+
+    .save-button {
+      height: 42px;
+      width: 194px;
+      border: 1px solid #B7B4B7;
+      box-sizing: border-box;
+      filter: drop-shadow(0px 11px 15px rgba(0, 0, 0, 0.0535402));
+      border-radius: 4px;
+      background: #FFFFFF;
+
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 19px;
+
+      letter-spacing: -0.11px;
+
+      color: #5C5D6F;
+      margin-right: 29px;
+    }
+
+    .save-button:hover {
+      transition: .2s;
+      border: 2px solid #5C5D6F;
+      cursor: pointer;
+    }
+
+
 
 
     .actions {
@@ -126,6 +177,37 @@
         }
       }
     }
+  }
+
+
+
+
+  .create-edit-table-body {
+    height: calc(100vh - 269px);
+  }
+
+  .create-edit-table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 116px;
+
+
+    .create-edit-table-footer-delete {
+      margin-right: 60px;
+      padding-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .create-edit-table-footer-reload {
+      cursor: pointer;
+    }
+
+    .create-edit-table-footer-save {
+      margin-right: 20px;
+      cursor: pointer;
+    }
+
   }
 
 

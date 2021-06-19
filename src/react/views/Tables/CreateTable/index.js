@@ -18,6 +18,9 @@ import linkIcon from "../../../icons/link-icon.svg";
 import removeIcon from "../../../icons/remove.svg";
 import westIcon from "../../../icons/west-arrow.svg";
 import eastIcon from "../../../icons/east-arrow.svg";
+import deleteIcon from "../../../icons/delete-create-table.svg";
+import saveIcon from "../../../icons/save-create-table.svg";
+import reloadIcon from "../../../icons/create-table-reload.svg";
 
 const utf8 = require('utf8');
 const base64 = require('base-64');
@@ -625,53 +628,84 @@ export default class CreateTable extends React.Component {
             return (
                 <div className="create_edit_table">
                     <div id="mini-menu">
-                        <div className="actions">
-                            <div className="options-buttons">
-                                <button type="button" className="runButton" onClick={() => this.reload()}>
-                                    <span>Reload Database</span>
-                                </button>
-                                <button type="button" className="runButton" onClick={() => this.run()}>
-                                    <span>Test</span>
-                                </button>
-                            </div>
 
-                            <div className="saving-result">
-                                <input type="text" id="aliasText" placeholder="Table Name" value={queryName} className="form-control" onChange={(e) => this.handleQueryNameChange(e)}/>
-                                <button type="button" className="saveButton" onClick={() => this.save()}>
-                                    Save
-                                </button>
-                            </div>
+                        <input type="text" id="aliasText" placeholder="Table Name" value={queryName}
+                               className="create-table-name-input" onChange={(e) => this.handleQueryNameChange(e)}/>
+
+
+                        <button type="button" className="save-button" onClick={() => this.save()}>
+                            Save
+                        </button>
+
+
+
+
+
+
+
+                        {/*
+                        <div className="options-buttons">
+                            <button type="button" className="runButton">
+                                <span>Reload Database</span>
+                            </button>
+
                         </div>
+
+                        <div className="saving-result">
+                        <button type="button" className="runButton">
+                            <span>Test</span>
+                        </button>
+
+
+                        </div>
+                        */}
+
+
                     </div>
 
-                    <div className="query-constructor">
-                        {
-                            tables && tables.map((table, i) => this.renderTable(table, i))
+
+                    <div className='create-edit-table-body'>
+
+                        <div className="query-constructor">
+                            {
+                                tables && tables.map((table, i) => this.renderTable(table, i))
+                            }
+                            <div className="add-table" onClick={() => {
+                                this.addNewTable()
+                            }}>
+                                <img src={addIcon}/>
+                            </div>
+                        </div>
+
+
+                        {errorMessage &&
+                        <div id="errorMessage" className="alert">
+                            <strong>Message!</strong> {errorMessage}
+                        </div>
                         }
-                        <div className="add-table" onClick={() => { this.addNewTable() }}>
-                            <img src={addIcon}/>
+
+
+                        {successMessage &&
+                        <div id="successMessage" className="alert">
+                            <strong>Success!</strong> {successMessage}
                         </div>
+                        }
+
+                        {warningMessage &&
+                        <div id="warningMessage" className="alert">
+                            <strong>Warning!</strong> {warningMessage}
+                        </div>
+                        }
+
+                    </div>
+
+                    <div className='create-edit-table-footer'>
+                        <img className='create-edit-table-footer-delete' src={deleteIcon} alt='delete icon'/>
+                        <img className="create-edit-table-footer-reload" src={reloadIcon} alt='reload icon' onClick={() => this.reload()}/>
+                        <img className="create-edit-table-footer-save" src={saveIcon} alt='save icon' onClick={() => this.run()}/>
                     </div>
 
 
-                    { errorMessage &&
-                    <div id="errorMessage" className="alert">
-                        <strong>Message!</strong> {errorMessage}
-                    </div>
-                    }
-
-
-                    { successMessage &&
-                    <div id="successMessage" className="alert">
-                        <strong>Success!</strong> {successMessage}
-                    </div>
-                    }
-
-                    { warningMessage &&
-                    <div id="warningMessage" className="alert">
-                        <strong>Warning!</strong> {warningMessage}
-                    </div>
-                    }
                 </div>
             );
         }
