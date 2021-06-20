@@ -29,7 +29,7 @@ const ConfigureManuallyPopup = ({
                             <span>Manual connection</span>
                         </div>
                         <div>{children}</div>
-                        <div className={'configure-manually-popup-btn-no-error'}>
+                        <div className='configure-manually-popup-btn-no-error'>
                             <Button id='configure-manually-popup-cancel-btn' className='configure-manually-popup-cancel-btn' onClick={onCancel} invert>Cancel</Button>
                             <Button id='configure-manually-popup-create-btn' className='configure-manually-popup-create-btn' onClick={isEdit ? onSave : onSubmit}>{isEdit ? "Save" : "Create"}</Button>
                         </div>

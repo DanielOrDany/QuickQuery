@@ -17,20 +17,20 @@ const SettingsPopup = ({
             {isOpen &&
             <Portal>
 
-                <div className={'settings-popup-BG'}>
-                    <div className={'settings-popup-window'}>
+                <div className='settings-popup-BG'>
+                    <div className='settings-popup-window'>
 
-                        <img className={'settings-popup-cross'} src={cross_icon} onClick={onCancel} alt={'cross'}/>
+                        <img className='settings-popup-cross' src={cross_icon} onClick={onCancel} alt={'cross'}/>
 
 
-                        <div className={'settings-popup-title'}>
+                        <div className='settings-popup-title'>
                             <span>Settings</span>
                         </div>
 
 
-                        <div className={'settings-buttons'}>
-                            <div className={'import-div'}>
-                                <img src={import_icon} alt={'import'}/>
+                        <div className='settings-buttons'>
+                            <div className='import-div'>
+                                <img src={import_icon} alt='import'/>
                                 <span>Import settings</span>
 
                                 <input id="import-button" src={import_icon} type='file'
@@ -39,7 +39,7 @@ const SettingsPopup = ({
 
 
                             <div id="export-div" onClick={exportBtn}>
-                                <img src={export_icon} alt={'export'}/>
+                                <img src={export_icon} alt='export'/>
                                 <span>Export settings</span>
 
                             </div>

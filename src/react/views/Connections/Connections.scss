@@ -210,8 +210,7 @@
   }
 
   .ssh-input-buttons {
-    position: absolute;
-    top: 650px;
+
 
     /* FOOTER SIMPLIFIED CONNECTION BUTTON */
     #simplified-connection-btn {
@@ -311,6 +310,245 @@
   }
 }
 
+
+
+
+
+/* ADD CONNECTION SSH POPUP */
+
+.ssh-input-modal {
+
+  .ssh-input-modal-body {
+    padding-left: 45px;
+    padding-right: 45px;
+    height: 450px;
+    overflow: auto;
+
+
+
+    .ssh-input-title {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 21px;
+
+      color: #3E3E3E;
+      margin-bottom: 12px;
+    }
+
+    .ssh-input-title-and-hint {
+      display: flex;
+      align-items: center;
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 21px;
+
+      color: #3E3E3E;
+      margin-bottom: 12px;
+
+    }
+
+    .ssh-information-field {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 19px;
+    }
+
+    .ssh-form-control {
+      height: 52px;
+      width: 362px;
+
+      background: #FFFFFF;
+      border: 2px solid #D8DFEA;
+      box-sizing: border-box;
+      border-radius: 4px;
+      padding-left: 21px;
+
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 19px;
+
+      color: #000000;
+
+    }
+
+
+    .ssh-form-control-file {
+      height: 52px;
+      width: 362px;
+
+      background: #FFFFFF;
+      border: 2px solid #D8DFEA;
+      box-sizing: border-box;
+      border-radius: 4px;
+      padding-top: 11px;
+
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 19px;
+
+      color: #000000;
+    }
+
+
+    .ssh-form-control-file::-webkit-file-upload-button {
+      visibility: hidden;
+      width: 20px;
+    }
+
+
+
+    .ssh-form-control::placeholder {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 16px;
+      line-height: 19px;
+
+      color: rgba(92, 93, 111, 0.6);
+
+    }
+
+
+    .ssh-body-first-block {
+      display: flex;
+
+
+      .ssh-body-first-block-left-column {
+        margin-right: 34px;
+      }
+
+      .ssh-body-first-block-right-column {
+
+        .ssh-choose-db-field {
+          display: flex;
+          flex-direction: column;
+
+
+          .ssh-choose-db-title {
+            font-family: Roboto, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 18px;
+            line-height: 21px;
+
+            color: #3E3E3E;
+            margin-bottom: 12px;
+          }
+
+
+          .selector {
+            height: 52px;
+            width: 362px;
+            background: #FFFFFF;
+            border: 2px solid #D8DFEA;
+            box-sizing: border-box;
+            border-radius: 4px;
+            padding-left: 21px;
+          }
+        }
+      }
+    }
+
+
+    .ssh-block-line {
+      height: 1px;
+      width: 100%;
+      background: #E2DFE3;
+      margin-top: 25px;
+      margin-bottom: 25px;
+    }
+
+
+
+    .ssh-body-second-block {
+      display: flex;
+
+
+      .ssh-body-second-block-left-column {
+        margin-right: 34px;
+      }
+
+      .ssh-body-second-block-right-column {
+
+      }
+    }
+  }
+
+
+  .ssh-input-modal-buttons {
+    position: absolute;
+    margin-left: 45px;
+
+    #configure-manually-btn {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 21px;
+
+      color: #28794E;
+      background-color: #FFFFFF;
+      padding: 0;
+      margin-top: 35px;
+    }
+
+    #simplified-connection-btn {
+      font-family: Roboto, sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 21px;
+
+      color: #28794E;
+      background-color: #FFFFFF;
+      padding: 0;
+      margin-top: 35px;
+      margin-left: 20px;
+    }
+
+
+    #configure-manually-btn:hover {
+      color: #5BC470;
+      transition: .2s;
+    }
+
+    #simplified-connection-btn:hover {
+      color: #5BC470;
+      transition: .2s;
+    }
+  }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* ADD CONNECTION BIG-INPUTS */
 .big-input-modal {
   margin-left: 46px;
@@ -390,8 +628,7 @@
   }
 
   .ssh-input-buttons {
-    position: absolute;
-    top: 650px;
+
 
     /* FOOTER SIMPLIFIED CONNECTION BUTTON */
     #simplified-connection-btn {
@@ -582,6 +819,7 @@
 
     background-color: #2d9d73;
     border-radius: 50%;
+
   }
 
   .help-tip:before {
@@ -595,8 +833,8 @@
   .help-tip:hover p {
     display: block;
     z-index: 999;
-    margin-right: 469px;
-    margin-top: 5px;
+    position: sticky;
+    margin-top: 15px;
 
     transform-origin: 100% 0%;
     -webkit-animation: fadeIn 0.3s ease-in-out;
@@ -632,7 +870,7 @@
     width: 0;
     height: 0;
 
-    right: 252px;
+    right: 282px;
     top: -12px;
 
     border: 6px solid transparent;
