@@ -888,7 +888,7 @@ export default class Result extends React.Component {
                                                                                     format={FORMAT}
                                                                                     value={currentOption.filter1}
                                                                                     parseDate={(date) => this.handleDatePicker1(date, header)}
-                                                                                    placeholder={`📅 From date`}
+                                                                                    placeholder={`📅 From`}
                                                                                 />
                                                                             </div>
                                                                             <div className="filter-fields-line">-</div>
@@ -899,7 +899,7 @@ export default class Result extends React.Component {
                                                                                     format={FORMAT}
                                                                                     value={currentOption.filter2}
                                                                                     parseDate={(date) => this.handleDatePicker2(date, header)}
-                                                                                    placeholder={`📅 To date`}
+                                                                                    placeholder={`📅 To`}
                                                                                 />
                                                                             </div>
                                                                         </div>
