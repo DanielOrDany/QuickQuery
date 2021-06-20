@@ -106,6 +106,7 @@ export default class Result extends React.Component {
             TableImgModalActive: false,
             columnImg: '',
             limitWarning: null,
+            rowsPerPage: 10,
             isOpenHiddenColumnsPopup: false
         };
 
@@ -277,7 +278,7 @@ export default class Result extends React.Component {
     }
 
     loadTable = async () => {
-        const {pageNumber} = this.state;
+        const {pageNumber, rowsPerPage} = this.state;
         const result = localStorage.getItem("current_result");
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
@@ -286,7 +287,7 @@ export default class Result extends React.Component {
 
         const loadingOptions = {
             page: pageNumber,
-            pageSize: 80,
+            pageSize: rowsPerPage,
             columns: tableColumns,
             numberOfRecords: tableSize
         };
@@ -323,6 +324,7 @@ export default class Result extends React.Component {
                         options: tableOptions,
                         isNullResults: false,
                         isLoading: false,
+                        records: data.records,
                         headers,
                         rows
                     });
@@ -334,7 +336,7 @@ export default class Result extends React.Component {
     };
 
     reloadTable = () => {
-        const {pageNumber, options} = this.state;
+        const {pageNumber, options, rowsPerPage} = this.state;
         const result = localStorage.getItem("current_result");
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
@@ -343,7 +345,7 @@ export default class Result extends React.Component {
 
         const loadingOptions = {
             page: pageNumber,
-            pageSize: 80,
+            pageSize: rowsPerPage,
             operationsOptions: options.length ? options : null,
             columns: tableColumns,
             numberOfRecords: tableSize
@@ -370,7 +372,8 @@ export default class Result extends React.Component {
                             isNullResults: false,
                             isLoading: false,
                             headers,
-                            rows
+                            rows,
+                            records: data.records
                         });
                     } else {
                         this.setState({
@@ -382,6 +385,20 @@ export default class Result extends React.Component {
                 console.error("ERROR, loadTableResult: ", data);
             }
         });
+    };
+
+    removeColumn = (column) => {
+        const { removedColumns, hiddenColumns } = this.state;
+
+        removedColumns.push(column);
+        hiddenColumns.push(column);
+
+        this.setState({
+            removedColumns,
+            hiddenColumns
+        });
+
+        this.reloadTable();
     };
 
     hideColumn = (column) => {
@@ -417,7 +434,6 @@ export default class Result extends React.Component {
         let { hiddenColumns } = this.state;
 
         hiddenColumns = hiddenColumns.filter(e => e !== column);
-        console.log(hiddenColumns);
 
         this.setState({
             hiddenColumns
@@ -428,13 +444,10 @@ export default class Result extends React.Component {
         this.setState({
             hiddenColumns: []
         });
-
-        setTimeout(() => {
-            this.reloadTable();
-        }, 500);
     };
 
     changePage = (operation) => {
+        console.log(operation);
         this.setState({isLoading: true});
         let n = this.state.pageNumber + operation;
 
@@ -604,6 +617,16 @@ export default class Result extends React.Component {
         }
     }
 
+    handlePageChange = (event) => {
+        this.setState({
+            rowsPerPage: event.target.value
+        });
+
+        setTimeout(() => {
+            this.reloadTable();
+        }, 500);
+    };
+
     formatDate(date, format, locale) {
         return dateFnsFormat(date, format, {locale});
     }
@@ -680,10 +703,15 @@ export default class Result extends React.Component {
             TableImgModalActive,
             columnImg,
             limitWarning,
-            isOpenHiddenColumnsPopup
+            isOpenHiddenColumnsPopup,
+            rowsPerPage,
+            pageNumber,
+            records
         } = this.state;
 
         const tableName = localStorage.getItem("current_result");
+        const paginationFrom = (1 + rowsPerPage * (pageNumber + 1)) - rowsPerPage;
+        const paginationTo = rowsPerPage * (pageNumber + 1);
 
         removedColumns.forEach(removedColumn => {
             headers = headers.filter((header) => header !== removedColumn);
@@ -709,13 +737,12 @@ export default class Result extends React.Component {
             );
         } else {
             return (
-
-
                 /* ------------------------------------------ RESULT PAGE ------------------------------------------- */
+
                 <div className="result-page">
 
-
                     {/* ------------------------------------- RESULT PAGE HEADER ----------------------------------- */}
+
                     <div className='result-page-header'>
                         <span>{tableName}</span>
 
@@ -724,13 +751,13 @@ export default class Result extends React.Component {
                         <HiddenColumnsPopup unhide={this.unhideColumn} showAll={this.unhideAllColumns} hide={this.hideColumn} selectedColumns={hiddenColumns} columns={headers} isOpen={isOpenHiddenColumnsPopup} done={this.closeHiddenColumnsPopup}/>
                     </div>
 
-
                     {/* ------------------------------------- RESULT PAGE BODY ------------------------------------- */}
-                    <div className="result-page-body">
 
+                    <div className="result-page-body">
                         <table>
 
                             {/* ------------------------------------ TABLE HEADER ---------------------------------- */}
+
                             <tr className={'table-header'}>
                                 { // Headers
                                     headers ? headers.map((header) => {
@@ -760,11 +787,12 @@ export default class Result extends React.Component {
                                         return (
 
                                             /* ------------------------- TABLE HEADER ITEMS ------------------------- */
+
                                             <th key={header}>
                                                 <div className="table-header-items">
 
-
                                                     {/* ---------------- NAME, SORTING ARROW, SEARCH --------------- */}
+
                                                     <div className={'column-name-and-search'}>
                                                         {/*<img src={deleteForeverIcon} className="delete-forever-icon" onClick={() => this.removeColumn(header)}/>*/}
                                                         <span id="header-title">{header}</span>
@@ -781,28 +809,26 @@ export default class Result extends React.Component {
                                                         </svg>
 
                                                         {!currentOption.isFilterOpened &&
-                                                        <input id="header-search"
-                                                               type="search"
-                                                               placeholder={"Search"}
-                                                               value={currentOption.search}
-                                                               onChange={(e) => this.handleChangeSearchValue(e, header)}
-                                                        />
+                                                            <input id="header-search"
+                                                                   type="search"
+                                                                   placeholder={"Search"}
+                                                                   value={currentOption.search}
+                                                                   onChange={(e) => this.handleChangeSearchValue(e, header)}
+                                                            />
                                                         }
                                                     </div>
 
-
                                                     {/* -------------------------- FILTERS ------------------------- */}
-                                                    <div className={'column-filters'}>
 
+                                                    <div className={'column-filters'}>
                                                         <svg className={'hide-icon'} width="13" height="11"
-                                                             onClick={() => this.hideColumn(header)}
+                                                             onClick={() => this.removeColumn(header)}
                                                              viewBox="0 0 13 11" xmlns="http://www.w3.org/2000/svg">
                                                             <path
                                                                 d="M6.50002 7.98322C7.88942 7.98322 9.01956 6.86926 9.01956 5.49976C9.01956 5.07387 8.90002 4.67873 8.7075 4.3276L12.0797 1.0037L11.0614 0L9.67969 1.36193C8.72574 0.861734 7.64361 0.578275 6.50002 0.578275C3.5071 0.578275 0.907861 2.47305 0.0316863 5.29202C-0.0105621 5.42783 -0.0105621 5.57217 0.0316863 5.70798C0.421044 6.96012 1.15271 8.02581 2.10618 8.82745L0.920344 9.9963L1.93863 11L5.31082 7.6761C5.66705 7.86492 6.06793 7.98322 6.50002 7.98322ZM5.42076 5.49976C5.42076 4.91344 5.9047 4.43597 6.50002 4.43597C6.51922 4.43597 6.53651 4.4407 6.55523 4.44164L5.42652 5.55466C5.42556 5.53573 5.42076 5.51822 5.42076 5.49976ZM7.57927 5.49976C7.57927 6.08608 7.09534 6.56356 6.50002 6.56356C6.48082 6.56356 6.46353 6.55883 6.44481 6.55788L7.57351 5.44487C7.57447 5.4638 7.57927 5.48131 7.57927 5.49976ZM1.47822 5.49976C2.22765 3.3963 4.2186 1.99794 6.50002 1.99794C7.24369 1.99794 7.95471 2.14937 8.60284 2.42336L7.68922 3.3239C7.33347 3.13461 6.93259 3.0163 6.50002 3.0163C5.11062 3.0163 3.98048 4.13026 3.98048 5.49976C3.98048 5.92566 4.10002 6.3208 4.29254 6.67193L3.13167 7.81618C2.3928 7.22181 1.81044 6.43343 1.47822 5.49976Z"/>
                                                             <path
                                                                 d="M12.9683 5.29202C12.7139 4.47335 12.3101 3.7356 11.7974 3.09581L10.7714 4.10708C11.0849 4.52399 11.3403 4.99058 11.5218 5.49977C10.7719 7.60323 8.78139 9.0016 6.49998 9.0016C6.27961 9.0016 6.06309 8.98503 5.84897 8.95901L4.63 10.1605C5.22676 10.328 5.85329 10.4213 6.49998 10.4213C9.4929 10.4213 12.0921 8.52696 12.9683 5.70751C13.0106 5.5717 13.0106 5.42784 12.9683 5.29202Z"/>
                                                         </svg>
-
                                                         <svg className={'filter'} width="12" height="9"
                                                              viewBox="0 0 12 9" xmlns="http://www.w3.org/2000/svg">
                                                             <path
@@ -812,10 +838,7 @@ export default class Result extends React.Component {
                                                             <path
                                                                 d="M7.70458 8.32417C7.70458 8.69736 7.40207 9 7.02874 9H4.73089C4.35756 9 4.05505 8.69736 4.05505 8.32417V7.69334C4.05505 7.32014 4.35756 7.0175 4.73089 7.0175H7.02874C7.40207 7.0175 7.70458 7.32014 7.70458 7.69334V8.32417Z"/>
                                                         </svg>
-
                                                     </div>
-
-
                                                     {/*
                                                         <div className="header-options">
 
@@ -831,8 +854,6 @@ export default class Result extends React.Component {
                                                             }
                                                         </div>*/}
                                                 </div>
-
-
                                                 {/*
                                                     <div className="header-data-operations">
                                                         { !currentOption.isFilterOpened &&
@@ -895,15 +916,11 @@ export default class Result extends React.Component {
                                                             </div>
                                                         }
                                                     </div>*/}
-
                                             </th>
                                         );
                                     }) : null
                                 }
                             </tr>
-
-
-
 
                             {/* ------------------------------------------ POPUPS ----------------------------------------- */}
                             <TableRowPopup isOpen={setTableModalActive} onCancel={this.handleCancel} tableInfo={selectedRowInfo}/>
@@ -912,28 +929,32 @@ export default class Result extends React.Component {
                             {/* -------------------------------------- TABLE BODY ---------------------------------- */}
                             { // Rows
 
-                                (rows && !isNullResults) ? rows.map((item, rowKey) => {
+                                ( rows && !isNullResults ) ? rows.map((item, rowKey) => {
                                         return (
 
-
                                             /* ------------------------------ TABLE LINE ---------------------------- */
+
                                             <tr key={rowKey} className={'table-line'}>
-                                                {Object.values(item).map((get_item, key) => {
+                                                { Object.values(item).map((get_item, key) => {
 
                                                     let renderItem;
 
                                                     if (typeof get_item === 'object') {
+
                                                         if (get_item === null) {
                                                             renderItem = "";
                                                         } else {
                                                             renderItem = JSON.stringify(get_item);
                                                         }
+
                                                     } else {
                                                         renderItem = get_item;
                                                     }
+
                                                     return (
 
                                                         /* ---------------------- TABLE COLUMN ---------------------- */
+
                                                         <td key={key}
                                                             className={rowKey === idRow ? 'table-active-line' : ''}
                                                             onClick={() => {
@@ -954,25 +975,21 @@ export default class Result extends React.Component {
                                                     );
                                                 })}
                                             </tr>
-
                                         );
                                     })
-                                    : null
+                                : null
                             }
-
                         </table>
-
-
                     </div>
 
-
                     {/* ------------------------------------- RESULT PAGE FOOTER ----------------------------------- */}
+
                     <div className="result-page-footer">
 
-
                         {/* ----------------------------------- FOOTER SAVE BUTTON --------------------------------- */}
+
                         <div className="result-page-footer-save-button">
-                            {limitWarning ?
+                            { limitWarning ?
                                 <div className="warning">{limitWarning}</div> :
                                 <div></div>
                             }
@@ -980,47 +997,42 @@ export default class Result extends React.Component {
                                 <svg>
                                     <path d="M11.3876 7.78938H2.61183C2.4579 7.78938 2.31027 7.85052 2.20142 7.95937C2.09257 8.06822 2.03142 8.21585 2.03142 8.36978V13.3032C2.03142 13.4572 2.09257 13.6048 2.20142 13.7136C2.31027 13.8225 2.4579 13.8836 2.61183 13.8836H11.3876C11.5415 13.8836 11.6891 13.8225 11.798 13.7136C11.9068 13.6048 11.968 13.4572 11.968 13.3032V8.36978C11.968 8.21585 11.9068 8.06822 11.798 7.95937C11.6891 7.85052 11.5415 7.78938 11.3876 7.78938ZM10.8072 10.2532H7.58011V8.95019H10.8072V10.2532ZM6.4193 8.95019V10.2532H3.19224V8.95019H6.4193ZM3.19224 11.414H6.4193V12.7228H3.19224V11.414ZM7.58011 12.7228V11.4169H10.8072V12.7228H7.58011ZM13.9646 4.34466C13.9608 4.3363 13.9559 4.32849 13.9501 4.32144C13.9383 4.29539 13.9247 4.27018 13.9094 4.24599L13.8804 4.21117L13.834 4.15893L9.58542 0.151222L9.54769 0.1193L9.50706 0.0873772L9.45483 0.0583568L9.40839 0.0351406L9.34745 0.0177284L9.30102 0.00321822C9.26341 -0.00107274 9.22544 -0.00107274 9.18784 0.00321822H2.32163C1.70589 0.00321822 1.11538 0.247818 0.679989 0.683207C0.244599 1.1186 0 1.70911 0 2.32485V14.4263C0 15.0421 0.244599 15.6326 0.679989 16.068C1.11538 16.5034 1.70589 16.748 2.32163 16.748H11.6778C12.2935 16.748 12.884 16.5034 13.3194 16.068C13.7548 15.6326 13.9994 15.0421 13.9994 14.4263V4.57392C14.0029 4.49596 13.991 4.41808 13.9646 4.34466ZM9.76824 1.91856L11.9593 3.99351H9.76824V1.91856ZM11.6778 15.5871H2.32163C2.01376 15.5871 1.7185 15.4648 1.50081 15.2471C1.28311 15.0295 1.16081 14.7342 1.16081 14.4263V2.31324C1.16081 2.00537 1.28311 1.71011 1.50081 1.49242C1.7185 1.27472 2.01376 1.15242 2.32163 1.15242H8.60743V4.57392C8.60743 4.72786 8.66858 4.87548 8.77743 4.98433C8.88628 5.09318 9.03391 5.15433 9.18784 5.15433H12.8386V14.4263C12.8386 14.7342 12.7163 15.0295 12.4986 15.2471C12.2809 15.4648 11.9856 15.5871 11.6778 15.5871Z"/>
                                 </svg>
-
                                 <button onClick={() => this.save()}>Export excel</button>
                             </div>
                         </div>
 
-
                         {/* --------------------------------- FOOTER INFO AND BUTTONS ------------------------------ */}
+
                         <div className="result-page-footer-page-buttons">
-
-
-                            <div className={'table-lines-on-page'}>
-                                <span className={'result-page-footer-text'}>Rows per page: 10</span>
-                                <img src={footer_arrow_down} alt={'arrow'}/>
+                            <div className="table-lines-on-page">
+                                <span className="result-page-footer-text">Rows per page:
+                                    <select value={rowsPerPage} onChange={this.handlePageChange} className="result-page-footer-select">
+                                      <option value={10}>10</option>
+                                      <option value={20}>20</option>
+                                      <option value={50}>50</option>
+                                      <option value={60}>60</option>
+                                    </select>
+                                </span>
                             </div>
-
-
                             <div className={'table-lines-amount'}>
-                                <span className={'result-page-footer-text'}>1-10 of 10</span>
+                                <span className={'result-page-footer-text'}>{paginationFrom}-{paginationTo} of {records}</span>
                             </div>
-
 
                             {/* --------------------------------- FOOTER PAGE BUTTONS ------------------------------ */}
-                            <div className={'result-table-pages'}>
 
+                            <div className={'result-table-pages'}>
                                 <button id="select-page-btn" onClick={() => this.changePage(-1)}
                                         disabled={this.state.pageNumber == 0}>
                                     <img className={'result-table-pages-arrow-left'} src={footer_arrow_left} alt={'arrow left'}/>
                                 </button>
-
                                 <button id="select-page-btn" onClick={() => this.changePage(1)}
                                         disabled={this.state.pageNumber == this.state.pages - 1}>
                                     <img className={'result-table-pages-arrow-right'} src={footer_arrow_right} alt={'arrow right'}/>
                                 </button>
-
                             </div>
                         </div>
                     </div>
-
                 </div>
-
-
             );
         }
     }
