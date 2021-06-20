@@ -700,12 +700,22 @@ export default class CreateTable extends React.Component {
                     </div>
 
                     <div className='create-edit-table-footer'>
-                        <img className='create-edit-table-footer-delete' src={deleteIcon} alt='delete icon'/>
-                        <img className="create-edit-table-footer-reload" src={reloadIcon} alt='reload icon' onClick={() => this.reload()}/>
-                        <img className="create-edit-table-footer-save" src={saveIcon} alt='save icon' onClick={() => this.run()}/>
+                        <div className="create-edit-table-footer-delete">
+                            <span>Delete</span>
+                            <img className='create-edit-table-footer-delete-btn' src={deleteIcon} alt='delete icon'/>
+                        </div>
+
+                        <div className="create-edit-table-footer-reload">
+                            <span>Reload</span>
+                            <img className="create-edit-table-footer-reload-btn" src={reloadIcon} alt='reload icon' onClick={() => this.reload()}/>
+                        </div>
+
+                        <div className="create-edit-table-footer-test">
+                            <span>Test</span>
+                            <img className="create-edit-table-footer-test-btn" src={saveIcon} alt='save icon'
+                                 onClick={() => this.run()}/>
+                        </div>
                     </div>
-
-
                 </div>
             );
         }

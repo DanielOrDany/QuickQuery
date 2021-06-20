@@ -151,10 +151,21 @@
             color: #2A7C50;
           }
         }
-
-
-
       }
+
+
+      .table-name:active {
+        span {
+          font-family: Roboto, sans-serif;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 19px;
+
+          color: #2A7C50;
+        }
+      }
+
     }
   }
 }

@@ -635,105 +635,123 @@ export default class Connections extends React.Component {
     sshInput = (editConnection) => {
         return(
 
-            <div className="big-input-modal scroll-body">
-                <div className="big-input-modal-body">
-                    <div className="big-input-first-column">
-                        <div className="big-information-field">
-                            <span className="big-input-title">Name connection</span>
-                            <input id="input-field-name" ref="name" className="big-form-control" defaultValue={editConnection && editConnection.name} type="text" placeholder="Database" type="search"
-                                   onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
-                        </div>
-                        <div className="big-information-field">
-                            <span className="big-input-title">Database Port</span>
-                            <input id="input-field-port" ref="port" className="big-form-control" defaultValue={editConnection && editConnection.sshHost && editConnection.URI.port} type="text" placeholder="5432" type="search"
-                                   disabled={!!editConnection}
-                                   onChange={this.portOnChange} onKeyPress={this.portKeyPress}/>
-                        </div>
-                        <div className="big-information-field">
-                            <span className="big-input-title">Database Password</span>
-                            <input id="input-field-password" ref="password" className="big-form-control" type="text"
-                                   disabled={!!editConnection}
-                                   placeholder="Password" type="password" defaultValue={editConnection && editConnection.sshHost && editConnection.URI.password}
-                                   onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
-                        </div>
-                        <div className="information-field">
-                            <span className="big-input-title">Database Schema name
+            <div className="ssh-input-modal">
+                <div className="ssh-input-modal-body">
+                    <div className="ssh-body-first-block">
+                        <div className="ssh-body-first-block-left-column">
+
+                            <div className="ssh-information-field">
+                                <span className="ssh-input-title">Name connection</span>
+                                <input id="input-field-name" ref="name" className="ssh-form-control" defaultValue={editConnection && editConnection.name} type="text" placeholder="Database" type="search"
+                                       onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
+                            </div>
+                            <div className="ssh-information-field">
+                                <span className="ssh-input-title">Database Port</span>
+                                <input id="input-field-port" ref="port" className="ssh-form-control" defaultValue={editConnection && editConnection.sshHost && editConnection.URI.port} type="text" placeholder="5432" type="search"
+                                       disabled={!!editConnection}
+                                       onChange={this.portOnChange} onKeyPress={this.portKeyPress}/>
+                            </div>
+                            <div className="ssh-information-field">
+                                <span className="ssh-input-title">Database Password</span>
+                                <input id="input-field-password" ref="password" className="ssh-form-control" type="text"
+                                       disabled={!!editConnection}
+                                       placeholder="Password" type="password" defaultValue={editConnection && editConnection.sshHost && editConnection.URI.password}
+                                       onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
+                            </div>
+                            <div className="information-field">
+                            <span className="ssh-input-title-and-hint">Database Schema name
                                 <div className="help-tip" id="schema-tip">
                                     <p>A schema is a collection of database objects associated with one particular database username.</p>
                                 </div>
                             </span>
-                            <input id="input-field-schema" ref="schema" className="big-form-control" type="text"
-                                   disabled={!!editConnection}
-                                   placeholder="public" type="search" defaultValue={editConnection && editConnection.sshHost && editConnection.schema}
-                                   onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
+                                <input id="input-field-schema" ref="schema" className="ssh-form-control" type="text"
+                                       disabled={!!editConnection}
+                                       placeholder="public" type="search" defaultValue={editConnection && editConnection.sshHost && editConnection.schema}
+                                       onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
+                            </div>
+
+                        </div>
+
+
+                        <div className="ssh-body-first-block-right-column">
+
+                            <div className="ssh-information-field">
+                                <span className="ssh-input-title">Database User</span>
+                                <input id="input-field-user" ref="user" className="ssh-form-control" type="text" placeholder="root" type="search"
+                                       disabled={!!editConnection}
+                                       defaultValue={editConnection && editConnection.sshHost && editConnection.URI.user}
+                                       onChange={this.userOnChange} onKeyPress={this.userKeyPress}/>
+                            </div>
+                            <div className="ssh-information-field">
+                                <span className="ssh-input-title">Database Name</span>
+                                <input id="input-field-database" ref="database" className="ssh-form-control" type="text"
+                                       placeholder="Database" type="search"
+                                       disabled={!!editConnection}
+                                       defaultValue={editConnection && editConnection.sshHost && editConnection.URI.database}
+                                       onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
+                            </div>
+                            <div className="ssh-choose-db-field">
+                                <span id="choose-db-title" className="ssh-choose-db-title">Database Type</span>
+                                <select
+                                    className="selector"
+                                    id="choose-db"
+                                    disabled={!!editConnection}
+                                    defaultValue={editConnection && editConnection.sshHost && editConnection.URI.others.dialect}
+                                    onChange={this.dtypeOnChange}
+                                >
+                                    <option value="mysql">mysql</option>
+                                    <option value="postgres">postgres</option>
+                                </select>
+                            </div>
+
                         </div>
                     </div>
-                    <div className="big-input-second-column">
-                        <div className="big-information-field">
-                            <span className="big-input-title">Database User</span>
-                            <input id="input-field-user" ref="user" className="big-form-control" type="text" placeholder="root" type="search"
-                                   disabled={!!editConnection}
-                                   defaultValue={editConnection && editConnection.sshHost && editConnection.URI.user}
-                                   onChange={this.userOnChange} onKeyPress={this.userKeyPress}/>
+
+
+                    <div className="ssh-block-line"/>
+
+                    <div className="ssh-body-second-block">
+
+                        <div className="ssh-body-second-block-left-column">
+
+                            <div className="ssh-information-field">
+                                <span className="ssh-input-title">SSH Host</span>
+                                <input id="input-field-port" ref="port" className="ssh-form-control" type="text" placeholder="127.0.0.1" type="search"
+                                       defaultValue={editConnection && editConnection.sshHost}
+                                       disabled={!!editConnection}
+                                       onChange={this.sshHostOnChange}/>
+                            </div>
+                            <div className="ssh-information-field">
+                                <span className="ssh-input-title">Private Key</span>
+                                <input id="input-field-host" className="ssh-form-control-file" type="file"
+                                       disabled={!!editConnection}
+                                       onChange={this.sshPrivateKeyOnChange}/>
+                            </div>
                         </div>
-                        <div className="big-information-field">
-                            <span className="big-input-title">Database Name</span>
-                            <input id="input-field-database" ref="database" className="big-form-control" type="text"
-                                   placeholder="Database" type="search"
-                                   disabled={!!editConnection}
-                                   defaultValue={editConnection && editConnection.sshHost && editConnection.URI.database}
-                                   onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
-                        </div>
-                        <div className="choose-db-field">
-                            <span id="choose-db-title">Database Type</span>
-                            <select
-                                className="selector"
-                                id="choose-db"
-                                disabled={!!editConnection}
-                                defaultValue={editConnection && editConnection.sshHost && editConnection.URI.others.dialect}
-                                onChange={this.dtypeOnChange}
-                            >
-                                <option value="mysql">mysql</option>
-                                <option value="postgres">postgres</option>
-                            </select>
+
+
+                        <div className="ssh-body-second-block-right-column">
+
+                            <div className="ssh-information-field">
+                                <span className="ssh-input-title">SSH User</span>
+                                <input id="input-field-user" ref="user" className="ssh-form-control" type="text" placeholder="ubuntu" type="search"
+                                       defaultValue={editConnection && editConnection.sshUser}
+                                       disabled={!!editConnection}
+                                       onChange={this.sshUserOnChange}/>
+                            </div>
+                            <div className="ssh-information-field">
+                                <span className="ssh-input-title">SSH Port</span>
+                                <input id="input-field-host" ref="host" className="ssh-form-control" type="text" placeholder="22" type="search"
+                                       defaultValue={editConnection && editConnection.sshPort}
+                                       disabled={!!editConnection}
+                                       onChange={this.sshPortOnChange}/>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div className="ssh-box-line"/>
-                <div className="big-input-modal-body">
-                    <div className="big-input-first-column">
-                        <div className="big-information-field">
-                            <span className="big-input-title">SSH Host</span>
-                            <input id="input-field-port" ref="port" className="big-form-control" type="text" placeholder="127.0.0.1" type="search"
-                                   defaultValue={editConnection && editConnection.sshHost}
-                                   disabled={!!editConnection}
-                                   onChange={this.sshHostOnChange}/>
-                        </div>
-                        <div className="big-information-field">
-                            <span className="big-input-title">Private Key</span>
-                            <input id="input-field-host" className="big-form-control" type="file"
-                                   disabled={!!editConnection}
-                                   onChange={this.sshPrivateKeyOnChange}/>
-                        </div>
-                    </div>
-                    <div className="big-input-second-column">
-                        <div className="big-information-field">
-                            <span className="big-input-title">SSH User</span>
-                            <input id="input-field-user" ref="user" className="big-form-control" type="text" placeholder="ubuntu" type="search"
-                                   defaultValue={editConnection && editConnection.sshUser}
-                                   disabled={!!editConnection}
-                                   onChange={this.sshUserOnChange}/>
-                        </div>
-                        <div className="big-information-field">
-                            <span className="big-input-title">SSH Port</span>
-                            <input id="input-field-host" ref="host" className="big-form-control" type="text" placeholder="22" type="search"
-                                   defaultValue={editConnection && editConnection.sshPort}
-                                   disabled={!!editConnection}
-                                   onChange={this.sshPortOnChange}/>
-                        </div>
-                    </div>
-                </div>
-                <div className="ssh-input-buttons">
+
+
+                <div className="ssh-input-modal-buttons">
                     <Button id="configure-manually-btn"
                             disabled={!!editConnection}
                             onClick={()=>{
@@ -769,6 +787,11 @@ export default class Connections extends React.Component {
             </div>
         );
     };
+
+
+
+
+
 
     closeMiniMenu = () => {
         const { isDBMiniMenu } = this.state;

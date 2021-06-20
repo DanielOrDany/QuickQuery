@@ -721,14 +721,14 @@ export default class Result extends React.Component {
 
         if (isEmptyQuery) {
             return (
-                <div className={"loading"}>
+                <div className="loading">
                     <img src={xxx}/>
                     Nothing to load..
                 </div>
             );
         } else if (!headers || isSaving || isLoading) {
             return (
-                <div className={"loading"}>
+                <div className="loading">
                     <img src={xxx}/>
                     {(!headers || isLoading) && "Loading..."}
                     {isSaving && "Saving..."}
@@ -919,7 +919,7 @@ export default class Result extends React.Component {
                             </tr>
 
                             {/* ------------------------------------------ POPUPS ----------------------------------------- */}
-                            <TableRowPopup isOpen={setTableModalActive} onCancel={this.handleCancel} tableInfo={selectedRowInfo}/>
+                            <TableRowPopup isOpen={setTableModalActive} onCancel={this.handleCancel} tableInfo={selectedRowInfo} tableName={tableName}/>
                             <TableImgPopup isOpen={TableImgModalActive} onCancel={this.handleImgCancel} columnImg={columnImg}/>
 
                             {/* -------------------------------------- TABLE BODY ---------------------------------- */}
