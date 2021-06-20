@@ -109,6 +109,91 @@
 
 
           /* ------------------------------------------ TABLE HEADER FILTERS ---------------------------------------- */
+          .header-data-operations {
+            max-height: 0px;
+
+            .header-filters {
+              display: flex;
+              flex-direction: column;
+
+              .header-filters-title {
+                display: flex;
+                justify-content: flex-start;
+                width: 100%;
+                font-family: Roboto, sans-serif;
+                font-style: normal;
+                font-weight: bold;
+                font-size: 14px;
+                line-height: 16px;
+                text-transform: capitalize;
+                color: #5C5D6F;
+              }
+
+              .header-filters-inputs {
+                margin-top: 15px;
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+
+                .filter-field1 {
+                  background: #FFFFFF;
+                  border: 1px solid #E2DFE3;
+                  border-radius: 6px;
+                  width: 86px;
+                  padding-left: 10px;
+                }
+
+                .filter-fields-line {
+                  font-family: Roboto, sans-serif;
+                  font-style: normal;
+                  font-weight: 500;
+                  font-size: 24px;
+                  margin-top: 5px;
+                  line-height: 16px;
+                  text-transform: capitalize;
+                  color: #5C5D6F;
+                }
+
+                .filter-field2 {
+                  background: #FFFFFF;
+                  width: max-content;
+                  border: 1px solid #E2DFE3;
+                  border-radius: 6px;
+                  width: 86px;
+                  padding-left: 10px;
+                }
+              }
+
+              .filters-buttons {
+                display: flex;
+                width: 100%;
+                justify-content: flex-end;
+                margin-top: 39px;
+
+                #reset-filters-btn {
+                  font-family: Roboto, sans-serif;
+                  font-style: normal;
+                  font-weight: bold;
+                  font-size: 17px;
+                  line-height: 20px;
+                  letter-spacing: -0.11px;
+                  color: rgba(139, 139, 139, 0.836589);
+                }
+
+                #apply-filters-btn {
+                  font-family: Roboto, sans-serif;
+                  font-style: normal;
+                  font-weight: bold;
+                  font-size: 17px;
+                  line-height: 20px;
+                  letter-spacing: -0.11px;
+                  color: #28794E;
+                  margin-left: 20px;
+                }
+              }
+            }
+          }
+
           .table-header-items {
             display: flex;
             justify-content: space-between;
@@ -168,6 +253,7 @@
             .column-filters {
               margin-right: 18.24px;
               padding-bottom: 5px;
+              max-height: 20px;
 
               .hide-icon {
                 margin-right: 16px;

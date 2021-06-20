@@ -15,6 +15,9 @@ import footer_arrow_left from "../../../icons/connections-page-footer-arrow-left
 import footer_arrow_right from "../../../icons/connections-page-footer-arrow-right.svg";
 import TableRowPopup from "../popups/TableRowPopup";
 import HiddenColumnsPopup from "../popups/HiddenColumnsPopup";
+import filterIcon from "./filterIcon.svg";
+import DayPickerInput from "react-day-picker/DayPickerInput";
+import TableFilter from "../popups/TableFilter";
 
 const DESC = "DESC";
 const ASC = "ASC";
@@ -820,8 +823,8 @@ export default class Result extends React.Component {
 
                                                     {/* -------------------------- FILTERS ------------------------- */}
 
-                                                    <div className={'column-filters'}>
-                                                        <svg className={'hide-icon'} width="13" height="11"
+                                                    <div className="column-filters">
+                                                        <svg className="hide-icon" width="13" height="11"
                                                              onClick={() => this.removeColumn(header)}
                                                              viewBox="0 0 13 11" xmlns="http://www.w3.org/2000/svg">
                                                             <path
@@ -829,93 +832,81 @@ export default class Result extends React.Component {
                                                             <path
                                                                 d="M12.9683 5.29202C12.7139 4.47335 12.3101 3.7356 11.7974 3.09581L10.7714 4.10708C11.0849 4.52399 11.3403 4.99058 11.5218 5.49977C10.7719 7.60323 8.78139 9.0016 6.49998 9.0016C6.27961 9.0016 6.06309 8.98503 5.84897 8.95901L4.63 10.1605C5.22676 10.328 5.85329 10.4213 6.49998 10.4213C9.4929 10.4213 12.0921 8.52696 12.9683 5.70751C13.0106 5.5717 13.0106 5.42784 12.9683 5.29202Z"/>
                                                         </svg>
-                                                        <svg className={'filter'} width="12" height="9"
-                                                             viewBox="0 0 12 9" xmlns="http://www.w3.org/2000/svg">
-                                                            <path
-                                                                d="M11.7596 1.30666C11.7596 1.67986 11.4571 1.9825 11.0837 1.9825H0.675838C0.302505 1.9825 0 1.67986 0 1.30666V0.675838C0 0.30264 0.302505 0 0.675838 0H11.0837C11.4571 0 11.7596 0.30264 11.7596 0.675838V1.30666Z"/>
-                                                            <path
-                                                                d="M9.73214 4.81533C9.73214 5.18867 9.42963 5.49117 9.0563 5.49117H2.70343C2.33009 5.49117 2.02759 5.18867 2.02759 4.81533V4.18464C2.02759 3.81131 2.33009 3.5088 2.70343 3.5088H9.0563C9.42963 3.5088 9.73214 3.81131 9.73214 4.18464V4.81533Z"/>
-                                                            <path
-                                                                d="M7.70458 8.32417C7.70458 8.69736 7.40207 9 7.02874 9H4.73089C4.35756 9 4.05505 8.69736 4.05505 8.32417V7.69334C4.05505 7.32014 4.35756 7.0175 4.73089 7.0175H7.02874C7.40207 7.0175 7.70458 7.32014 7.70458 7.69334V8.32417Z"/>
-                                                        </svg>
-                                                    </div>
-                                                    {/*
-                                                        <div className="header-options">
-
-                                                            {
-                                                                ((!currentHeaderIsDate && currentHeaderIsNumber)) &&
-                                                                <img id="header-filter" src={filterIcon} className={currentOption.isFilterOpened ? "selected-filter" : null}
-                                                                     onClick={() => this.handleOpenFilter(header)}/>
-                                                            }
-                                                            {
-                                                                (currentHeaderIsDate && !currentHeaderIsNumber) &&
-                                                                <img id="header-calendar" src={calendarIcon} className={currentOption.isFilterOpened ? "selected-filter" : null}
-                                                                     onClick={() => this.handleOpenFilter(header)}/>
-                                                            }
-                                                        </div>*/}
-                                                </div>
-                                                {/*
-                                                    <div className="header-data-operations">
-                                                        { !currentOption.isFilterOpened &&
-                                                        <input id="header-search"
-                                                               type="search"
-                                                               placeholder={"Search"}
-                                                               value={currentOption.search}
-                                                               onChange={(e) => this.handleChangeSearchValue(e, header)}
-                                                        />
+                                                        {
+                                                            ((!currentHeaderIsDate && currentHeaderIsNumber)) &&
+                                                            <img id="header-filter" src={filterIcon} className="filter"
+                                                                 onClick={() => this.handleOpenFilter(header)}/>
                                                         }
                                                         {
+                                                            (currentHeaderIsDate && !currentHeaderIsNumber) &&
+                                                            <img id="header-calendar" src={filterIcon} className="filter"
+                                                                 onClick={() => this.handleOpenFilter(header)}/>
+                                                        }
+                                                    </div>
+                                                </div>
+                                                    <div className="header-data-operations">
+                                                        {
                                                             (((!currentHeaderIsDate && currentHeaderIsNumber)) && currentOption.isFilterOpened) &&
-                                                            <div className="header-filters" key={header}>
+                                                                <TableFilter style={{marginLeft: 200}} isOpen={true} children={
+                                                                    <div className="header-filters" key={header}>
 
-                                                                <div className="header-filters-inputs">
-                                                                    <input className="filter-field1"
-                                                                           type="search"
-                                                                           placeholder={"From"}
-                                                                           value={currentOption.filter1}
-                                                                           onChange={(e) => this.handleChangeFilterValue1(e, header)}/>
-                                                                    <input className="filter-field2"
-                                                                           type="search"
-                                                                           placeholder={"To"}
-                                                                           value={currentOption.filter2}
-                                                                           onChange={(e) => this.handleChangeFilterValue2(e, header)}/>
-                                                                </div>
+                                                                        <div className="header-filters-title">Filter by</div>
 
-                                                                <btn id="clear-filters-btn" onClick={() => this.clearFilters(header)}>clear filter</btn>
-                                                            </div>
+                                                                        <div className="header-filters-inputs">
+                                                                            <input className="filter-field1"
+                                                                                   type="search"
+                                                                                   placeholder={"From"}
+                                                                                   value={currentOption.filter1}
+                                                                                   onChange={(e) => this.handleChangeFilterValue1(e, header)}/>
+                                                                            <div className="filter-fields-line">-</div>
+                                                                            <input className="filter-field2"
+                                                                                   type="search"
+                                                                                   placeholder={"To"}
+                                                                                   value={currentOption.filter2}
+                                                                                   onChange={(e) => this.handleChangeFilterValue2(e, header)}/>
+                                                                        </div>
+
+                                                                        <div className="filters-buttons">
+                                                                            <btn id="reset-filters-btn" onClick={() => this.clearFilters(header)}>Reset</btn>
+                                                                            <btn id="apply-filters-btn" onClick={() => this.clearFilters(header)}>Apply</btn>
+                                                                        </div>
+                                                                    </div>
+                                                                }/>
                                                         }
                                                         {
                                                             ((currentHeaderIsDate && !currentHeaderIsNumber) && currentOption.isFilterOpened) &&
-                                                            <div className="header-filters" key={header}>
+                                                                <TableFilter isOpen={true} children={
+                                                                    <div className="header-filters" key={header}>
 
-                                                                <div className="header-filters-inputs">
-                                                                    <div className="filter-field1">
-                                                                        <DayPickerInput
-                                                                            style={{color: "#3E3E3E"}}
-                                                                            formatDate={this.formatDate}
-                                                                            format={FORMAT}
-                                                                            value={currentOption.filter1}
-                                                                            parseDate={(date) => this.handleDatePicker1(date, header)}
-                                                                            placeholder={`Start`}
-                                                                        />
+                                                                        <div className="header-filters-inputs">
+                                                                            <div className="filter-field1">
+                                                                                <DayPickerInput
+                                                                                    style={{color: "#3E3E3E"}}
+                                                                                    formatDate={this.formatDate}
+                                                                                    format={FORMAT}
+                                                                                    value={currentOption.filter1}
+                                                                                    parseDate={(date) => this.handleDatePicker1(date, header)}
+                                                                                    placeholder={`Start`}
+                                                                                />
+                                                                            </div>
+                                                                            <div className="filter-field2">
+                                                                                <DayPickerInput
+                                                                                    style={{color: "#3E3E3E"}}
+                                                                                    formatDate={this.formatDate}
+                                                                                    format={FORMAT}
+                                                                                    value={currentOption.filter2}
+                                                                                    parseDate={(date) => this.handleDatePicker2(date, header)}
+                                                                                    placeholder={`End`}
+                                                                                />
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <btn id="clear-filters-btn" onClick={() => this.clearFilters(header)}>clear date</btn>
+
                                                                     </div>
-                                                                    <div className="filter-field2">
-                                                                        <DayPickerInput
-                                                                            style={{color: "#3E3E3E"}}
-                                                                            formatDate={this.formatDate}
-                                                                            format={FORMAT}
-                                                                            value={currentOption.filter2}
-                                                                            parseDate={(date) => this.handleDatePicker2(date, header)}
-                                                                            placeholder={`End`}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-
-                                                                <btn id="clear-filters-btn" onClick={() => this.clearFilters(header)}>clear date</btn>
-
-                                                            </div>
+                                                                }/>
                                                         }
-                                                    </div>*/}
+                                                    </div>
                                             </th>
                                         );
                                     }) : null

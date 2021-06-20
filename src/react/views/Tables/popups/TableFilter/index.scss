@@ -1,0 +1,18 @@
+.table-filter-popup {
+  position: relative;
+  min-width: 245px;
+  min-height: 100px;
+  max-height: 500px;
+  z-index: 9999;
+  top: 10px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin-left: 5px;
+  height: max-content;
+  width: max-content;
+  padding: 22px 17px;
+  background: #FFFFFF;
+  box-shadow: 0px 11px 15px rgba(0, 0, 0, 0.139232);
+  border-radius: 4px;
+}
