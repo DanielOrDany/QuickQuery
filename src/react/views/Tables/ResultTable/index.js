@@ -546,10 +546,6 @@ export default class Result extends React.Component {
         this.setState({
             options: newOptions
         });
-
-        setTimeout(() => {
-            this.reloadTable();
-        }, 500);
     }
 
     handleChangeFilterValue2(event, columnName) {
@@ -566,11 +562,23 @@ export default class Result extends React.Component {
         this.setState({
             options: newOptions
         });
-
-        setTimeout(() => {
-            this.reloadTable();
-        }, 500);
     }
+
+    applyFilter = (columnName) => {
+        const newOptions = this.state.options.map(option => {
+            if (option.column === columnName) {
+                option.isFilterOpened = false;
+            }
+
+            return option;
+        });
+
+        this.setState({
+            options: newOptions
+        });
+
+        this.reloadTable();
+    };
 
     handleDatePicker1(filteredValue, columnName) {
         const newOptions = this.state.options.map(option => {
@@ -589,10 +597,6 @@ export default class Result extends React.Component {
             this.setState({
                 options: newOptions
             });
-
-            setTimeout(() => {
-                this.reloadTable();
-            }, 500);
         }
     }
 
@@ -613,10 +617,6 @@ export default class Result extends React.Component {
             this.setState({
                 options: newOptions
             });
-
-            setTimeout(() => {
-                this.reloadTable();
-            }, 500);
         }
     }
 
@@ -646,10 +646,6 @@ export default class Result extends React.Component {
         this.setState({
             options: newOptions
         });
-
-        setTimeout(() => {
-            this.reloadTable();
-        }, 500);
     }
 
 
@@ -811,14 +807,12 @@ export default class Result extends React.Component {
                                                                 fill="#A7A9AC"/>
                                                         </svg>
 
-                                                        {!currentOption.isFilterOpened &&
-                                                            <input id="header-search"
-                                                                   type="search"
-                                                                   placeholder={"Search"}
-                                                                   value={currentOption.search}
-                                                                   onChange={(e) => this.handleChangeSearchValue(e, header)}
-                                                            />
-                                                        }
+                                                        <input id="header-search"
+                                                               type="search"
+                                                               placeholder={"Search"}
+                                                               value={currentOption.search}
+                                                               onChange={(e) => this.handleChangeSearchValue(e, header)}
+                                                        />
                                                     </div>
 
                                                     {/* -------------------------- FILTERS ------------------------- */}
@@ -834,20 +828,26 @@ export default class Result extends React.Component {
                                                         </svg>
                                                         {
                                                             ((!currentHeaderIsDate && currentHeaderIsNumber)) &&
-                                                            <img id="header-filter" src={filterIcon} className="filter"
-                                                                 onClick={() => this.handleOpenFilter(header)}/>
+                                                                <svg className="filter" viewBox="0 0 12 9" xmlns="http://www.w3.org/2000/svg" onClick={() => this.handleOpenFilter(header)}>
+                                                                    <path d="M11.7596 1.30666C11.7596 1.67986 11.4571 1.9825 11.0837 1.9825H0.675838C0.302505 1.9825 0 1.67986 0 1.30666V0.675838C0 0.30264 0.302505 0 0.675838 0H11.0837C11.4571 0 11.7596 0.30264 11.7596 0.675838V1.30666Z"/>
+                                                                    <path d="M9.73214 4.81532C9.73214 5.18865 9.42963 5.49116 9.0563 5.49116H2.70343C2.33009 5.49116 2.02759 5.18865 2.02759 4.81532V4.18463C2.02759 3.81129 2.33009 3.50879 2.70343 3.50879H9.0563C9.42963 3.50879 9.73214 3.81129 9.73214 4.18463V4.81532Z"/>
+                                                                    <path d="M7.70458 8.32412C7.70458 8.69732 7.40207 8.99996 7.02874 8.99996H4.73089C4.35756 8.99996 4.05505 8.69732 4.05505 8.32412V7.69329C4.05505 7.3201 4.35756 7.01746 4.73089 7.01746H7.02874C7.40207 7.01746 7.70458 7.3201 7.70458 7.69329V8.32412Z"/>
+                                                                </svg>
                                                         }
                                                         {
                                                             (currentHeaderIsDate && !currentHeaderIsNumber) &&
-                                                            <img id="header-calendar" src={filterIcon} className="filter"
-                                                                 onClick={() => this.handleOpenFilter(header)}/>
+                                                                <svg className="filter" viewBox="0 0 12 9" xmlns="http://www.w3.org/2000/svg" onClick={() => this.handleOpenFilter(header)}>
+                                                                    <path d="M11.7596 1.30666C11.7596 1.67986 11.4571 1.9825 11.0837 1.9825H0.675838C0.302505 1.9825 0 1.67986 0 1.30666V0.675838C0 0.30264 0.302505 0 0.675838 0H11.0837C11.4571 0 11.7596 0.30264 11.7596 0.675838V1.30666Z"/>
+                                                                    <path d="M9.73214 4.81532C9.73214 5.18865 9.42963 5.49116 9.0563 5.49116H2.70343C2.33009 5.49116 2.02759 5.18865 2.02759 4.81532V4.18463C2.02759 3.81129 2.33009 3.50879 2.70343 3.50879H9.0563C9.42963 3.50879 9.73214 3.81129 9.73214 4.18463V4.81532Z"/>
+                                                                    <path d="M7.70458 8.32412C7.70458 8.69732 7.40207 8.99996 7.02874 8.99996H4.73089C4.35756 8.99996 4.05505 8.69732 4.05505 8.32412V7.69329C4.05505 7.3201 4.35756 7.01746 4.73089 7.01746H7.02874C7.40207 7.01746 7.70458 7.3201 7.70458 7.69329V8.32412Z"/>
+                                                                </svg>
                                                         }
                                                     </div>
                                                 </div>
                                                     <div className="header-data-operations">
                                                         {
                                                             (((!currentHeaderIsDate && currentHeaderIsNumber)) && currentOption.isFilterOpened) &&
-                                                                <TableFilter style={{marginLeft: 200}} isOpen={true} children={
+                                                                <TableFilter isOpen={true} children={
                                                                     <div className="header-filters" key={header}>
 
                                                                         <div className="header-filters-title">Filter by</div>
@@ -855,20 +855,20 @@ export default class Result extends React.Component {
                                                                         <div className="header-filters-inputs">
                                                                             <input className="filter-field1"
                                                                                    type="search"
-                                                                                   placeholder={"From"}
+                                                                                   placeholder={"🔢 From"}
                                                                                    value={currentOption.filter1}
                                                                                    onChange={(e) => this.handleChangeFilterValue1(e, header)}/>
                                                                             <div className="filter-fields-line">-</div>
                                                                             <input className="filter-field2"
                                                                                    type="search"
-                                                                                   placeholder={"To"}
+                                                                                   placeholder={"🔢 To"}
                                                                                    value={currentOption.filter2}
                                                                                    onChange={(e) => this.handleChangeFilterValue2(e, header)}/>
                                                                         </div>
 
                                                                         <div className="filters-buttons">
                                                                             <btn id="reset-filters-btn" onClick={() => this.clearFilters(header)}>Reset</btn>
-                                                                            <btn id="apply-filters-btn" onClick={() => this.clearFilters(header)}>Apply</btn>
+                                                                            <btn id="apply-filters-btn" onClick={() => this.applyFilter(header)}>Apply</btn>
                                                                         </div>
                                                                     </div>
                                                                 }/>
@@ -878,6 +878,8 @@ export default class Result extends React.Component {
                                                                 <TableFilter isOpen={true} children={
                                                                     <div className="header-filters" key={header}>
 
+                                                                        <div className="header-filters-title">Filter by</div>
+
                                                                         <div className="header-filters-inputs">
                                                                             <div className="filter-field1">
                                                                                 <DayPickerInput
@@ -886,9 +888,10 @@ export default class Result extends React.Component {
                                                                                     format={FORMAT}
                                                                                     value={currentOption.filter1}
                                                                                     parseDate={(date) => this.handleDatePicker1(date, header)}
-                                                                                    placeholder={`Start`}
+                                                                                    placeholder={`📅 From date`}
                                                                                 />
                                                                             </div>
+                                                                            <div className="filter-fields-line">-</div>
                                                                             <div className="filter-field2">
                                                                                 <DayPickerInput
                                                                                     style={{color: "#3E3E3E"}}
@@ -896,13 +899,15 @@ export default class Result extends React.Component {
                                                                                     format={FORMAT}
                                                                                     value={currentOption.filter2}
                                                                                     parseDate={(date) => this.handleDatePicker2(date, header)}
-                                                                                    placeholder={`End`}
+                                                                                    placeholder={`📅 To date`}
                                                                                 />
                                                                             </div>
                                                                         </div>
 
-                                                                        <btn id="clear-filters-btn" onClick={() => this.clearFilters(header)}>clear date</btn>
-
+                                                                        <div className="filters-buttons">
+                                                                            <btn id="reset-filters-btn" onClick={() => this.clearFilters(header)}>Reset</btn>
+                                                                            <btn id="apply-filters-btn" onClick={() => this.applyFilter(header)}>Apply</btn>
+                                                                        </div>
                                                                     </div>
                                                                 }/>
                                                         }
