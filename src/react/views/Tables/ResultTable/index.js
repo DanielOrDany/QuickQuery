@@ -725,14 +725,14 @@ export default class Result extends React.Component {
 
         if (isEmptyQuery) {
             return (
-                <div className={"loading"}>
+                <div className="loading">
                     <img src={xxx}/>
                     Nothing to load..
                 </div>
             );
         } else if (!headers || isSaving || isLoading) {
             return (
-                <div className={"loading"}>
+                <div className="loading">
                     <img src={xxx}/>
                     {(!headers || isLoading) && "Loading..."}
                     {isSaving && "Saving..."}
