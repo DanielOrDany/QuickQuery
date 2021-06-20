@@ -6,7 +6,8 @@ import cross_icon from "../../../../icons/pop-up-cross.svg";
 const TableRowPopup = ({
                            isOpen,
                            onCancel,
-                           tableInfo
+                           tableInfo,
+                           tableName
 
                        }) => {
     return (
@@ -19,7 +20,7 @@ const TableRowPopup = ({
                     <img className='table-row-popup-cross' src={cross_icon} onClick={onCancel} alt={'cross'}/>
 
                     <div className='table-row-popup-title'>
-                        <span>todos</span>
+                        <span>{tableName}</span>
                     </div>
 
                     <div className='table-row-popup-body'>

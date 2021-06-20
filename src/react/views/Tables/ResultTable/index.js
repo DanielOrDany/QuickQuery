@@ -914,7 +914,7 @@ export default class Result extends React.Component {
                             </tr>
 
                             {/* ------------------------------------------ POPUPS ----------------------------------------- */}
-                            <TableRowPopup isOpen={setTableModalActive} onCancel={this.handleCancel} tableInfo={selectedRowInfo}/>
+                            <TableRowPopup isOpen={setTableModalActive} onCancel={this.handleCancel} tableInfo={selectedRowInfo} tableName={tableName}/>
                             <TableImgPopup isOpen={TableImgModalActive} onCancel={this.handleImgCancel} columnImg={columnImg}/>
 
                             {/* -------------------------------------- TABLE BODY ---------------------------------- */}
