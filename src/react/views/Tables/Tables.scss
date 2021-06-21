@@ -99,7 +99,9 @@
         .table-name {
           display: flex;
           align-items: center;
-          width: 150px;
+          width: 165px;
+          padding-right: 15px;
+
 
           span {
             font-family: Roboto, sans-serif;
@@ -119,8 +121,9 @@
       .table-menu {
         display: flex;
         align-items: center;
-        margin-left: auto;
-        padding-bottom: 4px;
+        justify-content: flex-end;
+
+        padding-bottom: 5px;
         cursor: pointer;
       }
 
