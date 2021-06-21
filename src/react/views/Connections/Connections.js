@@ -19,7 +19,7 @@ import SimplifiedConnectionPopup from "./popups/SimplifiedConnectionPopup";
 import SSHConnectionPopup from "./popups/SSHConnectionsPopup";
 import DatabaseMiniMenuPopup from "./popups/DatabaseMiniMenu";
 import DeleteConnectionPopup from "./popups/DeleteConnectionPopup";
-import ConnectionErrorModal from '../../popups/ConnectionError';
+import ConnectionErrorModal from '../../popups/MessagePopup';
 
 export default class Connections extends React.Component {
     constructor(props) {
@@ -445,14 +445,6 @@ export default class Connections extends React.Component {
         this.setState({
             isErrorOpen: false
         });
-    };
-
-    errorConnection = (errorMessage) => {
-        return (
-            <div className="error-message-modal">
-                {errorMessage}
-            </div>
-        );
     };
 
     bigInput = (editConnection) => {
@@ -1158,16 +1150,15 @@ export default class Connections extends React.Component {
                 />
 
                 <ConnectionErrorModal
-                    title="Error"
+                    title="Create/edit connection error"
                     isOpen={isErrorOpen}
                     isError={isErrorOpen}
                     onCancel={this.handleErrorCancel}
                     onSubmit={this.handleErrorCancel}
                     noCross={true}
                     submitTitle="Ok"
-                >
-                    {this.errorConnection(errorMessage)}
-                </ConnectionErrorModal>
+                    text={errorMessage}
+                />
 
                 <Modal
                     title="Delete connection"

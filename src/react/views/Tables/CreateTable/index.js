@@ -21,6 +21,7 @@ import eastIcon from "../../../icons/east-arrow.svg";
 import deleteIcon from "../../../icons/delete-create-table.svg";
 import saveIcon from "../../../icons/save-create-table.svg";
 import reloadIcon from "../../../icons/create-table-reload.svg";
+import MessagePopup from "../../../popups/MessagePopup";
 
 const utf8 = require('utf8');
 const base64 = require('base-64');
@@ -93,37 +94,25 @@ export default class CreateTable extends React.Component {
             // parsing and rendering existing query
             await this.renderFields();
         }
-
-        if ( // verify on error (if error exist)
-            errorMessage !== ""
-        ) {
-            setTimeout(() => {
-                this.setState({
-                    errorMessage: ""
-                });
-            }, 3500); // show error message only 3,5 seconds
-        }
-
-        if ( // verify on success
-            successMessage !== ""
-        ) {
-            setTimeout(() => {
-                this.setState({
-                    successMessage: ""
-                });
-            }, 3500); // show message message only 3,5 seconds
-        }
-
-        if ( // verify on warning
-            warningMessage !== ""
-        ) {
-            setTimeout(() => {
-                this.setState({
-                    warningMessage: ""
-                });
-            }, 3500); // show warning message only 3,5 seconds
-        }
     }
+
+    closeError = () => {
+        this.setState({
+            errorMessage: ""
+        });
+    };
+
+    closeSuccess = () => {
+        this.setState({
+            successMessage: ""
+        });
+    };
+
+    closeWarning = () => {
+        this.setState({
+            warningMessage: ""
+        });
+    };
 
     reload () {
         const connection = JSON.parse(localStorage.getItem("current_connection"));
@@ -264,6 +253,11 @@ export default class CreateTable extends React.Component {
         columns.splice(index, 1);
         secondColumns.splice(index, 1);
         this.setState({ tables, columns, secondColumns });
+    }
+
+    removeAllJoins() {
+        let { tables, columns, secondColumns } = this.state;
+        this.setState({ tables: [], columns: [], secondColumns: [] });
     }
 
     async handleTableChange(e, index) {
@@ -419,7 +413,7 @@ export default class CreateTable extends React.Component {
 
             const selectedColumns = columnNames.map((names, index) => {
                 return names.map(name => {
-                    return `${tables[index]}.${name} AS ${tables[index]}_${name}`
+                    return `${tables[index]}."${name}" AS ${tables[index]}_${name}`
                 });
             });
 
@@ -431,9 +425,9 @@ export default class CreateTable extends React.Component {
 
                 tables.forEach((table, index) => {
                     if (index === 0) {
-                        newQuery += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}.${columns[index]} = ${tables[index + 1]}.${columns[index + 1]}`;
+                        newQuery += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}."${columns[index]}" = ${tables[index + 1]}."${columns[index + 1]}"`;
                     } else if (index < tables.length - 1) {
-                        newQuery += ` JOIN ${tables[index + 1]} ON ${table}.${secondColumns[index]} = ${tables[index + 1]}.${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}`;
+                        newQuery += ` JOIN ${tables[index + 1]} ON ${table}."${secondColumns[index]}" = ${tables[index + 1]}."${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}"`;
                     }
                 });
             }
@@ -506,7 +500,7 @@ export default class CreateTable extends React.Component {
 
             const selectedColumns = columnNames.map((names, index) => {
                 return names.map(name => {
-                    return `${tables[index]}.${name} AS ${tables[index]}_${name}`
+                    return `${tables[index]}."${name}" AS ${tables[index]}_${name}`
                 });
             });
 
@@ -517,9 +511,9 @@ export default class CreateTable extends React.Component {
             } else {
                 tables.forEach((table, index) => {
                     if (index === 0) {
-                        query += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}.${columns[index]} = ${tables[index + 1]}.${columns[index + 1]}`;
+                        query += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}."${columns[index]}" = ${tables[index + 1]}."${columns[index + 1]}"`;
                     } else if (index < tables.length - 1) {
-                        query += ` JOIN ${tables[index + 1]} ON ${table}.${secondColumns[index]} = ${tables[index + 1]}.${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}`;
+                        query += ` JOIN ${tables[index + 1]} ON ${table}."${secondColumns[index]}" = ${tables[index + 1]}."${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}"`;
                     }
                 });
             }
@@ -678,23 +672,17 @@ export default class CreateTable extends React.Component {
                         </div>
 
 
-                        {errorMessage &&
-                        <div id="errorMessage" className="alert">
-                            <strong>Message!</strong> {errorMessage}
-                        </div>
+                        { errorMessage &&
+                            <MessagePopup title={"Constructor error."} isOpen={true} text={errorMessage} onSubmit={() => this.closeError()}/>
                         }
 
 
-                        {successMessage &&
-                        <div id="successMessage" className="alert">
-                            <strong>Success!</strong> {successMessage}
-                        </div>
+                        { successMessage &&
+                            <MessagePopup title={"Constructor success!"} isOpen={true} text={successMessage} onSubmit={() => this.closeSuccess()}/>
                         }
 
-                        {warningMessage &&
-                        <div id="warningMessage" className="alert">
-                            <strong>Warning!</strong> {warningMessage}
-                        </div>
+                        { warningMessage &&
+                            <MessagePopup title={"Constructor warning.."} isOpen={true} text={warningMessage} onSubmit={() => this.closeWarning()}/>
                         }
 
                     </div>
@@ -702,7 +690,7 @@ export default class CreateTable extends React.Component {
                     <div className='create-edit-table-footer'>
                         <div className="create-edit-table-footer-delete">
                             <span>Delete</span>
-                            <img className='create-edit-table-footer-delete-btn' src={deleteIcon} alt='delete icon'/>
+                            <img className='create-edit-table-footer-delete-btn' src={deleteIcon} alt='delete icon' onClick={() => this.removeAllJoins()}/>
                         </div>
 
                         <div className="create-edit-table-footer-reload">

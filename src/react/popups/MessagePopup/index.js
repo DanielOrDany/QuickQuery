@@ -4,27 +4,28 @@ import Button from '../../components/Button';
 import PropTypes from 'prop-types';
 import './index.scss';
 
-const ConnectionErrorModal = ({
+const MessagePopup = ({
     isOpen,
     onSubmit,
+    title,
     submitButton,
     submitTitle,
-    children
+    text
 }) => {
     return (
         <>
             {isOpen &&
             <Portal>
-                <div className="connection-error-modal-overlay">
-                    <div className="connection-error-modal-window">
-                        <div className="connection-error-modal-box">
-                            <div className="connection-error-modal-title">
-                                <span>Create/edit connection error</span>
+                <div className="message-popup-overlay">
+                    <div className="message-popup-window">
+                        <div className="message-popup-box">
+                            <div className="message-popup-title">
+                                <span>{title}</span>
                             </div>
-                            <div className="connection-error-modal-body">
-                                {children}
+                            <div className="message-popup-body">
+                                <div className="message">{text}</div>
                             </div>
-                            <div className="connection-error-modal-footer">
+                            <div className="message-popup-footer">
                                 {submitButton &&
                                 <Button id="subBtn" onClick={onSubmit}>{submitTitle}</Button>
                                 }
@@ -38,7 +39,7 @@ const ConnectionErrorModal = ({
     );
 };
 
-ConnectionErrorModal.propTypes = {
+MessagePopup.propTypes = {
     isOpen: PropTypes.bool,
     onSubmit: PropTypes.func,
     submitButton: PropTypes.bool,
@@ -46,8 +47,8 @@ ConnectionErrorModal.propTypes = {
     children: PropTypes.node
 };
 
-ConnectionErrorModal.defaultProps = {
-    title: 'Connection Error',
+MessagePopup.defaultProps = {
+    title: 'Message',
     isOpen: false,
     onSubmit: () => {},
     submitButton: true,
@@ -55,4 +56,4 @@ ConnectionErrorModal.defaultProps = {
     children: null
 };
 
-export default ConnectionErrorModal;
+export default MessagePopup;
