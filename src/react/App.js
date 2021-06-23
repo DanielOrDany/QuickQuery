@@ -20,7 +20,7 @@ class App extends React.Component {
       if (currentConnection) {
           if (!navigator.onLine) {
               const hostname = currentConnection.URI.others.host;
-              if (!hostname.includes("localhost") &&
+              if (hostname && !hostname.includes("localhost") &&
                   !hostname.includes("127.0.0.1")) {
                   window.location.pathname = '/connections';
                   localStorage.removeItem("current_connection");

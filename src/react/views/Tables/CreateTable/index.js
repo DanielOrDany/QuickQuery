@@ -1,4 +1,5 @@
 import React from 'react';
+import LineTo from 'react-lineto';
 
 // Styles
 import './CreateTable.scss';
@@ -27,7 +28,7 @@ const utf8 = require('utf8');
 const base64 = require('base-64');
 const base64RE = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/g;
 const engRE = /^[a-zA-Z]+$/g;
-const colors = ["#4caf50", "#00bcd4", "#ff9800", "#9fa8da", "#cddc39"];
+const colors = ["#007F4D", "#D97F4F", "#ff9800", "#2AA094", "#AE45BC"];
 
 export default class CreateTable extends React.Component {
 
@@ -401,7 +402,7 @@ export default class CreateTable extends React.Component {
 
         if (tables.length < 1 && columns.length < 1) {
             this.setState({
-                errorMessage: "Table is not valid.",
+                errorMessage: "The result of the query is not valid! Please check your chosen columns to see if any of them work together by type. For example, in the first table with column name \"user_id\" you should select a second column name like \"employee_id\" into another table. So, please do not do something like join table 1 with table 2 by \"user_id\" and \"company_name\" - they are different logic types of data.",
                 isLoading: false
             });
         } else {
@@ -445,7 +446,7 @@ export default class CreateTable extends React.Component {
                         });
                     } else {
                         this.setState({
-                            errorMessage: "Table is not valid.",
+                            errorMessage: "The result of the query is not valid! Please check your chosen columns to see if any of them work together by type. For example, in the first table with column name \"user_id\" you should select a second column name like \"employee_id\" into another table. So, please do not do something like join table 1 with table 2 by \"user_id\" and \"company_name\" - they are different logic types of data.",
                             isLoading: false
                         });
                     }
@@ -467,7 +468,7 @@ export default class CreateTable extends React.Component {
                             });
                         } else {
                             this.setState({
-                                errorMessage: "Table is not valid.",
+                                errorMessage: "The result of the query is not valid! Please check your chosen columns to see if any of them work together by type. For example, in the first table with column name \"user_id\" you should select a second column name like \"employee_id\" into another table. So, please do not do something like join table 1 with table 2 by \"user_id\" and \"company_name\" - they are different logic types of data.",
                                 isLoading: false
                             });
                         }
@@ -487,7 +488,7 @@ export default class CreateTable extends React.Component {
 
         if (tables.length < 1 && columns.length < 1) {
             this.setState({
-                errorMessage: "Table is not valid.",
+                errorMessage: "The result of the query is not valid! Please check your chosen columns to see if any of them work together by type. For example, in the first table with column name \"user_id\" you should select a second column name like \"employee_id\" into another table. So, please do not do something like join table 1 with table 2 by \"user_id\" and \"company_name\" - they are different logic types of data.",
                 isLoading: false
             });
         } else {
@@ -531,13 +532,13 @@ export default class CreateTable extends React.Component {
                             headers: db_rows.length !== 0 ? Object.keys(db_rows[0]) : data.fields.map(field => field.name),
                             rows: db_rows.length !== 0 ? Object.values(db_rows) : [],
                             errorMessage: "",
-                            successMessage: db_rows.length !== 0 ? "result is successful" : "",
-                            warningMessage: db_rows.length === 0 ? "result has 0 rows" : "",
+                            successMessage: db_rows.length !== 0 ? "Result of query is successful!" : "",
+                            warningMessage: db_rows.length === 0 ? "Result of query has 0 rows. You may have entered the wrong type, please check your chosen columns to see if any of them work together by type. For example, in the first table with column name \"user_id\" you should select a second column name like \"employee_id\" into another table. So, please do not do something like join table 1 with table 2 by \"user_id\" and \"company_name\" - they are different logic types of data." : "",
                             isLoading: false
                         });
                     } else {
                         this.setState({
-                            errorMessage: "Table is not valid.",
+                            errorMessage: "The result of the query is not valid! Please check your chosen columns to see if any of them work together by type. For example, in the first table with column name \"user_id\" you should select a second column name like \"employee_id\" into another table. So, please do not do something like join table 1 with table 2 by \"user_id\" and \"company_name\" - they are different logic types of data.",
                             isLoading: false
                         });
                     }
@@ -555,22 +556,23 @@ export default class CreateTable extends React.Component {
         const tableColumns = tableOption.length !== 0 ? tableOption[0].columns : [];
         const tableSecondColumns = tableOption.length !== 0 ? tableOption[0].columns : [];
         const tableColumn = columns[index];
+        const colorIndex = index > colors.length - 1 ? index - colors.length : index;
         const tableSecondColumn = secondColumns[index];
         const isLastTable = tables.length === index + 1;
 
         return (
-            <div className="constructor-table" key={index}>
-                { showLink && <img id="link-icon" src={linkIcon}/> }
-                <div className="constructor-table-data" style={{backgroundColor: colors[index]}}>
+            <div className={"constructor-table table-number-" + index} key={index}>
+                {/*{ showLink && <img id="link-icon" src={linkIcon}/> }*/}
+                <div className="constructor-table-data" style={{backgroundColor: colors[colorIndex]}}>
                     <div className="table-data">
-                        <span><b>Table:</b> {table === "select table" ? <span style={{color: "#f4cb4c"}}>select table</span> : <span>{table}</span>}</span>
+                        <span><b>Table</b> {table === "select table" ? <span style={{color: "#f4cb4c"}}>select table</span> : <span>{table}</span>}</span>
                         <select className="select-table" value="" onChange={(e) => this.handleTableChange(e, index)}>
                             <option value="" selected disabled hidden>Choose here</option>
                             {
                                 options.map((option, i) => <option key={i} value={option.table}>{option.alias}</option>)
                             }
                         </select>
-                        <img id="remove-icon" onClick={() => {this.removeTable(index)}} src={removeIcon}/>
+                        <img id="remove-icon" onClick={() => {this.removeTable(index)}} src={deleteIcon} alt='delete icon'/>
                     </div>
                     { isLastTable && isQueryTableLoading &&
                         <div className="query-table-loader">
@@ -584,7 +586,7 @@ export default class CreateTable extends React.Component {
                                 <img className="column-arrows" src={westIcon}/>
                             }
 
-                            <span style={{color: ( index !== 0 && (tables.length - 1) !== index ) && colors[index - 1]}}><b>Column:</b> {tableColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableColumn}</span>}</span>
+                            <span style={{color: ( index !== 0 && (tables.length - 1) !== index ) && colors[colorIndex - 1]}}><b>Column</b> {tableColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableColumn}</span>}</span>
 
                             <select className="select-column" value="" onChange={(e) => this.handleColumnChange(e, index)}>
                                 <option value="" selected disabled hidden>Choose here</option>
@@ -599,7 +601,7 @@ export default class CreateTable extends React.Component {
                         { ( index !== 0 && (tables.length - 1) !== index )  &&
                         <div className="column-name">
                             <img className="column-arrows" src={eastIcon}/>
-                            <span style={{color: ( index !== 0 && (tables.length - 1) !== index ) && colors[index + 1]}}><b>Column:</b> {tableSecondColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableSecondColumn}</span>}</span>
+                            <span style={{color: ( index !== 0 && (tables.length - 1) !== index ) && colors[colorIndex + 1]}}><b>Column</b> {tableSecondColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableSecondColumn}</span>}</span>
                             <select className="select-column" value="" onChange={(e) => this.handleSecondColumnChange(e, index)}>
                                 <option value="" selected disabled hidden>Choose here</option>
                                 {
@@ -645,13 +647,13 @@ export default class CreateTable extends React.Component {
                     <div className='create-edit-table-body'>
 
                         <div className="query-constructor">
-                            {
-                                tables && tables.map((table, i) => this.renderTable(table, i))
-                            }
-                            <div className="add-table" onClick={() => {
-                                this.addNewTable()
-                            }}>
-                                <img src={addIcon}/>
+                            <div className="constructor-tables">
+                                {
+                                    tables && tables.map((table, i) => this.renderTable(table, i))
+                                }
+                                {
+                                    tables && tables.map((table, i) =>  <LineTo zIndex="0" borderColor="#9d9d9d" borderWidth="4px" fromAnchor="100%" toAnchor="0" from={"table-number-" + i} to={"table-number-" + (i + 1)}/>)
+                                }
                             </div>
                         </div>
 
@@ -672,9 +674,9 @@ export default class CreateTable extends React.Component {
                     </div>
 
                     <div className='create-edit-table-footer'>
-                        <div className="create-edit-table-footer-delete">
-                            <span>Delete</span>
-                            <img className='create-edit-table-footer-delete-btn' src={deleteIcon} alt='delete icon' onClick={() => this.removeAllJoins()}/>
+                        <div className="create-edit-table-footer-add-table">
+                            <span>Add Table</span>
+                            <img className="create-edit-table-footer-add-table-btn" src={addIcon} alt='add table icon' onClick={() => this.addNewTable()}/>
                         </div>
 
                         <div className="create-edit-table-footer-reload">
