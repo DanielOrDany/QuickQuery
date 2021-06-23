@@ -27,6 +27,7 @@ const utf8 = require('utf8');
 const base64 = require('base-64');
 const base64RE = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/g;
 const engRE = /^[a-zA-Z]+$/g;
+const colors = ["#4caf50", "#00bcd4", "#ff9800", "#9fa8da", "#cddc39"];
 
 export default class CreateTable extends React.Component {
 
@@ -43,6 +44,7 @@ export default class CreateTable extends React.Component {
             successMessage: "",
             isLoading: true,
             isTableLoading: false,
+            isQueryTableLoading: false,
             alias: "",
             queryName: ""
         };
@@ -272,13 +274,15 @@ export default class CreateTable extends React.Component {
             const queryData = options[i];
 
             if (queryData.table === tableName) {
+                this.setState({ isQueryTableLoading: true });
+
                 options[i].columns = await getTableColumns(connection.name, queryData.table);
             }
         }
 
         tables[index] = tableName;
 
-        this.setState({ options, tables, isTableLoading: false });
+        this.setState({ options, tables, isTableLoading: false, isQueryTableLoading: false });
     }
 
     handleColumnChange(e, index) {
@@ -545,7 +549,7 @@ export default class CreateTable extends React.Component {
     }
 
     renderTable(table, index) {
-        const { options, tables, columns, secondColumns, isTableLoading } = this.state;
+        const { options, tables, columns, secondColumns, isTableLoading, isQueryTableLoading } = this.state;
         const showLink = index < tables.length && index > 0;
         const tableOption = options.filter(option => option.alias === table);
         const tableColumns = tableOption.length !== 0 ? tableOption[0].columns : [];
@@ -557,7 +561,7 @@ export default class CreateTable extends React.Component {
         return (
             <div className="constructor-table" key={index}>
                 { showLink && <img id="link-icon" src={linkIcon}/> }
-                <div className="constructor-table-data">
+                <div className="constructor-table-data" style={{backgroundColor: colors[index]}}>
                     <div className="table-data">
                         <span><b>Table:</b> {table === "select table" ? <span style={{color: "#f4cb4c"}}>select table</span> : <span>{table}</span>}</span>
                         <select className="select-table" value="" onChange={(e) => this.handleTableChange(e, index)}>
@@ -568,14 +572,19 @@ export default class CreateTable extends React.Component {
                         </select>
                         <img id="remove-icon" onClick={() => {this.removeTable(index)}} src={removeIcon}/>
                     </div>
+                    { isLastTable && isQueryTableLoading &&
+                        <div className="query-table-loader">
+                            <div className="dot-flashing"/>
+                        </div>
+                    }
                     { table !== 'select table' &&
                     <div className="table-column">
                         <div className="column-name">
                             { ( index !== 0 && (tables.length - 1) !== index )  &&
-                            <img className="column-arrows" src={westIcon}/>
+                                <img className="column-arrows" src={westIcon}/>
                             }
 
-                            <span><b>Column:</b> {tableColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableColumn}</span>}</span>
+                            <span style={{color: ( index !== 0 && (tables.length - 1) !== index ) && colors[index - 1]}}><b>Column:</b> {tableColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableColumn}</span>}</span>
 
                             <select className="select-column" value="" onChange={(e) => this.handleColumnChange(e, index)}>
                                 <option value="" selected disabled hidden>Choose here</option>
@@ -590,7 +599,7 @@ export default class CreateTable extends React.Component {
                         { ( index !== 0 && (tables.length - 1) !== index )  &&
                         <div className="column-name">
                             <img className="column-arrows" src={eastIcon}/>
-                            <span><b>Column:</b> {tableSecondColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableSecondColumn}</span>}</span>
+                            <span style={{color: ( index !== 0 && (tables.length - 1) !== index ) && colors[index + 1]}}><b>Column:</b> {tableSecondColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableSecondColumn}</span>}</span>
                             <select className="select-column" value="" onChange={(e) => this.handleSecondColumnChange(e, index)}>
                                 <option value="" selected disabled hidden>Choose here</option>
                                 {
@@ -626,34 +635,9 @@ export default class CreateTable extends React.Component {
                         <input type="text" id="aliasText" placeholder="Table Name" value={queryName}
                                className="create-table-name-input" onChange={(e) => this.handleQueryNameChange(e)}/>
 
-
                         <button type="button" className="save-button" onClick={() => this.save()}>
                             Save
                         </button>
-
-
-
-
-
-
-
-                        {/*
-                        <div className="options-buttons">
-                            <button type="button" className="runButton">
-                                <span>Reload Database</span>
-                            </button>
-
-                        </div>
-
-                        <div className="saving-result">
-                        <button type="button" className="runButton">
-                            <span>Test</span>
-                        </button>
-
-
-                        </div>
-                        */}
-
 
                     </div>
 

@@ -347,6 +347,8 @@
 
   .query-constructor {
     width: 100%;
+    overflow-y: auto;
+    height: calc(100vh - 250px);
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -361,6 +363,63 @@
         width: 30px;
       }
 
+      .query-table-loader {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+
+        .dot-flashing {
+          margin-top: 10px;
+          position: relative;
+          width: 10px;
+          height: 10px;
+          border-radius: 5px;
+          background-color: $black;
+          color: $black;
+          animation: dotFlashing 1s infinite linear alternate;
+          animation-delay: .5s;
+        }
+
+        .dot-flashing::before, .dot-flashing::after {
+          content: '';
+          display: inline-block;
+          position: absolute;
+          top: 0;
+        }
+
+        .dot-flashing::before {
+          left: -15px;
+          width: 10px;
+          height: 10px;
+          border-radius: 5px;
+          background-color: $black;
+          color: $black;
+          animation: dotFlashing 1s infinite alternate;
+          animation-delay: 0s;
+        }
+
+        .dot-flashing::after {
+          left: 15px;
+          width: 10px;
+          height: 10px;
+          border-radius: 5px;
+          background-color: $black;
+          color: $black;
+          animation: dotFlashing 1s infinite alternate;
+          animation-delay: 1s;
+        }
+
+        @keyframes dotFlashing {
+          0% {
+            background-color: $black;
+          }
+          50%,
+          100% {
+            background-color: #ebe6ff;
+          }
+        }
+      }
+
       .constructor-table-data {
         display: flex;
         flex-direction: column;
@@ -370,7 +429,10 @@
         min-height: 50px;
         padding: 10px;
         margin: 5px;
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        border: 1px solid;
+        box-sizing: border-box;
+        box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
 
         span {
           font-size: 16px;
@@ -398,7 +460,9 @@
           padding-right: 50px;
           margin-top: 10px;
           padding-top: 10px;
-          border-top: 1px solid #282c34;
+          background: white;
+          padding-bottom: 10px;
+          padding-left: 10px;
 
           .column-name {
             display: flex;
