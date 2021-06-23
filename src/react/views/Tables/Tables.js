@@ -258,12 +258,11 @@ export default class Tables extends React.Component {
 
                               /* ---------------------------------- LEFT MENU TABLE --------------------------------- */
                               <div className='table-page-left-menu-table'>
-                                <div className='left-menu-table' id={table.alias} key={table.alias}
-                                     onClick={() => this.openTable(table.alias)}>
+                                <div className='left-menu-table' id={table.alias} key={table.alias}>
 
 
                                   {/* --------------------------------- TABLE ICON ----------------------------------- */}
-                                  <div className={'table-icon'}>
+                                  <div className={'table-icon'} onClick={() => this.openTable(table.alias)}>
                                     <svg width="16" height="18" viewBox="0 0 16 18" xmlns="http://www.w3.org/2000/svg" style={
                                       localStorage.getItem("openedTable")
                                           ? table.alias ===
@@ -281,7 +280,7 @@ export default class Tables extends React.Component {
 
 
                                   {/* --------------------------------- TABLE NAME ----------------------------------- */}
-                                  <div className={'table-name'}>
+                                  <div className='table-name' onClick={() => this.openTable(table.alias)}>
                                     {
                                       table.alias.match(engRE) ?
                                           <span id="table-n" style={
@@ -314,12 +313,14 @@ export default class Tables extends React.Component {
                                     }
                                   </div>
 
+                                  {/* --------------------------------- TABLE MENU ----------------------------------- */}
+                                  <div className='table-menu'>
+                                    <MiniMenu icon={<MiniMenuIcon/>} table={table}/>
+                                  </div>
+
                                 </div>
 
-                                {/* --------------------------------- TABLE MENU ----------------------------------- */}
-                                <div className='table-menu'>
-                                  <MiniMenu icon={<MiniMenuIcon/>} table={table}/>
-                                </div>
+
 
                               </div>
                           );
