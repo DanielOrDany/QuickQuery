@@ -549,6 +549,17 @@ export default class CreateTable extends React.Component {
         }
     }
 
+    sortColumnsByKeyword(array) {
+        const keyword = 'id';
+
+        let res = array.sort(el => new RegExp(keyword,"ig").test(el.column_name)).sort((a,b) => {
+            let re = new RegExp("^"+keyword, "i")
+            return re.test(a.column_name) ? re.test(b.column_name) ? a.name.localeCompare(b.column_name) : -1 : 1
+        });
+
+        return res;
+    }
+
     renderTable(table, index) {
         const { options, tables, columns, secondColumns, isTableLoading, isQueryTableLoading } = this.state;
         const showLink = index < tables.length && index > 0;
@@ -562,7 +573,6 @@ export default class CreateTable extends React.Component {
 
         return (
             <div className={"constructor-table table-number-" + index} key={index}>
-                {/*{ showLink && <img id="link-icon" src={linkIcon}/> }*/}
                 <div className="constructor-table-data" style={{backgroundColor: colors[colorIndex]}}>
                     <div className="table-data">
                         <span><b>Table</b> {table === "select table" ? <span style={{color: "#f4cb4c"}}>select table</span> : <span>{table}</span>}</span>
@@ -591,7 +601,7 @@ export default class CreateTable extends React.Component {
                             <select className="select-column" value="" onChange={(e) => this.handleColumnChange(e, index)}>
                                 <option value="" selected disabled hidden>Choose here</option>
                                 {
-                                    tableColumns && tableColumns.map((column, i) => {
+                                    tableColumns && this.sortColumnsByKeyword(tableColumns).map((column, i) => {
                                         return <option key={i} value={column.column_name}>{column.column_name}</option>
                                     })
                                 }
@@ -605,7 +615,7 @@ export default class CreateTable extends React.Component {
                             <select className="select-column" value="" onChange={(e) => this.handleSecondColumnChange(e, index)}>
                                 <option value="" selected disabled hidden>Choose here</option>
                                 {
-                                    tableSecondColumns && tableSecondColumns.map((column, i) => {
+                                    tableSecondColumns && this.sortColumnsByKeyword(tableColumns).map((column, i) => {
                                         return <option key={i} value={column.column_name}>{column.column_name}</option>
                                     })
                                 }
