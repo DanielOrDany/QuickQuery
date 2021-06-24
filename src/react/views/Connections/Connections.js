@@ -522,8 +522,9 @@ export default class Connections extends React.Component {
                                 onChange={this.dtypeOnChange}
                                 disabled={!!editConnection}
                             >
-                                <option value="mysql">mysql</option>
-                                <option value="postgres">postgres</option>
+                                <option value="mysql">MySQL</option>
+                                <option value="mysql">MariaDB</option>
+                                <option value="postgres">Postgres</option>
                             </select>
                         </div>
                     </div>
