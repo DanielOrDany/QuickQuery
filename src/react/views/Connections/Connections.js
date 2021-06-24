@@ -692,8 +692,9 @@ export default class Connections extends React.Component {
                                     defaultValue={editConnection && editConnection.sshHost && editConnection.URI.others.dialect}
                                     onChange={this.dtypeOnChange}
                                 >
-                                    <option value="mysql">mysql</option>
-                                    <option value="postgres">postgres</option>
+                                    <option value="mysql">MySQL</option>
+                                    <option value="mysql">MariaDB</option>
+                                    <option value="postgres">Postgres</option>
                                 </select>
                             </div>
 
