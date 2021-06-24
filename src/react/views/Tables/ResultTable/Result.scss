@@ -141,6 +141,12 @@
                   border-radius: 6px;
                   width: 90px;
                   padding-left: 10px;
+
+                  input {
+                    border: none;
+                    max-width: 75px;
+                    background: none;
+                  }
                 }
 
                 .filter-fields-line {
@@ -160,6 +166,12 @@
                   border-radius: 6px;
                   width: 90px;
                   padding-left: 10px;
+
+                  input {
+                    border: none;
+                    max-width: 75px;
+                    background: none;
+                  }
                 }
               }
 

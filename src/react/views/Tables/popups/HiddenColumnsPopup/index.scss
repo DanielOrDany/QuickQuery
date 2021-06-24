@@ -1,12 +1,14 @@
 .hidden-columns-popup {
   position: absolute;
   min-width: 245px;
+  max-width: 270px;
+  word-wrap: break-word;
   min-height: 100px;
   max-height: 500px;
   z-index: 9999;
   top: 138px;
   bottom: 0;
-  right: 0px;
+  right: 0;
   left: calc(100% - 270px);
   height: max-content;
   width: max-content;

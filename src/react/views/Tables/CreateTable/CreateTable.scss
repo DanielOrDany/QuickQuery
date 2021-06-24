@@ -369,7 +369,7 @@
     .constructor-table {
       display: flex;
       flex-direction: row;
-      margin: 5px 20px;
+      margin: 20px 20px;
       z-index: 999;
 
       #link-icon {
@@ -479,14 +479,16 @@
           margin-top: 10px;
           padding-top: 10px;
           padding-bottom: 10px;
-          background: black;
-          opacity: 0.7;
-          padding-left: 10px;
 
           .column-name {
             display: flex;
             flex-direction: row;
             align-items: center;
+            color: white;
+
+            span {
+              border-radius: 5px;
+            }
 
             .column-arrows {
               width: 24px;

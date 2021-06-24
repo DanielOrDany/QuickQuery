@@ -28,7 +28,7 @@ function openTable(alias) {
 function removeTable(alias) {
     const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
     deleteTable(connectionName, alias).then(tables => {
-        if(tables)  {
+        if (tables) {
             document.getElementById(alias).remove();
             return `#/tables/${alias}`;
         }
@@ -84,34 +84,11 @@ function MiniMenu(props) {
 
     return(
         <>
-
             <DeleteTablePopup
                 isOpen={isOpen}
                 onCancel={handleCancel}
                 deleteTable={handleSubmit}
             />
-
-            {/*
-             <Modal
-                title="Delete table"
-                isOpen={isOpen}
-                onCancel={handleCancel}
-                onSubmit={handleSubmit}
-                cancelButton={true}
-                cancelTitle="No"
-                submitTitle="Yes"
-                noCross={true}
-            >
-                <div>
-                    <strong>Are</strong>
-                </div>
-            </Modal>
-            */}
-
-
-
-
-
 
             <div id="table_menu" onClick={(e) => {openMenu(e)}} ref={wrapperRef}>
                 {props.icon}

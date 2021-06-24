@@ -18,6 +18,7 @@ import HiddenColumnsPopup from "../popups/HiddenColumnsPopup";
 import filterIcon from "./filterIcon.svg";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import TableFilter from "../popups/TableFilter";
+import MessagePopup from "../../../popups/MessagePopup";
 
 const DESC = "DESC";
 const ASC = "ASC";
@@ -204,7 +205,7 @@ export default class Result extends React.Component {
                     });
                 } else {
                     this.setState({
-                        errorMessage: "Table is not valid.",
+                        errorMessage: "Error in saving process. Please notify our team at hello@quickquery.co",
                         isLoading: false,
                         isSaving: false
                     });
@@ -213,12 +214,16 @@ export default class Result extends React.Component {
         } else {
             console.log("limited!");
             this.setState({
-                limitWarning: "You have exceeded the monthly limit.",
+                limitWarning: "You have exceeded the monthly limit. Please upgrade your plan.",
                 isLoading: false,
                 isSaving: false
             })
         }
     }
+
+    closeLimitWarning = () => {
+        this.setState({ limitWarning: null });
+    };
 
     async componentDidUpdate(prevProps, prevState, snapshot) {
         const { pageNumber, isSaving, limitWarning, options, removedColumns } = this.state;
@@ -227,12 +232,6 @@ export default class Result extends React.Component {
             setTimeout(() => {
                 this.reloadTable();
             }, 500);
-        }
-
-        if (prevState.limitWarning !== limitWarning) {
-            setTimeout(() => {
-                this.setState({ limitWarning: null })
-            }, 5000);
         }
 
         if (isSaving) {
@@ -262,10 +261,13 @@ export default class Result extends React.Component {
                 localStorage.setItem("timeOfUseInDays", JSON.stringify(timeOfUseInDays));
             } else {
                 const storedTimeOfUseInDays = Number(JSON.parse(localStorage.getItem("timeOfUseInDays")));
+                console.log('timeOfUseInDays - storedTimeOfUseInDays', timeOfUseInDays - storedTimeOfUseInDays);
                 if ((timeOfUseInDays - storedTimeOfUseInDays) <= 30) {
                     this.saveResult(connectionName, result, loadingOptions, removedColumns, subPlan);
                 } else {
-                    localStorage.setItem("timeOfUseInDays", JSON.stringify(timeOfUseInDays));
+                    localStorage.setItem("reportsPerMonth", JSON.stringify(0));
+                    localStorage.setItem("timeOfUseInDays", JSON.stringify(0));
+                    localStorage.setItem("employeeCountSubFrom", JSON.stringify(Date.now()));
                     this.saveResult(connectionName, result, loadingOptions, removedColumns, subPlan);
                 }
             }
@@ -281,8 +283,13 @@ export default class Result extends React.Component {
     }
 
     loadTable = async () => {
-        const {pageNumber, rowsPerPage} = this.state;
+        const { pageNumber, rowsPerPage } = this.state;
         const result = localStorage.getItem("current_result");
+
+        this.setState({
+            isLoading: true
+        });
+
         const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
         const connectionInfo = JSON.parse(localStorage.getItem('current_connection'));
         const tableColumns = connectionInfo.queries.filter(query => !!query.table).map(query => query.table);
@@ -730,8 +737,8 @@ export default class Result extends React.Component {
             return (
                 <div className="loading">
                     <img src={xxx}/>
-                    {(!headers || isLoading) && "Loading..."}
-                    {isSaving && "Saving..."}
+                    {(!headers || isLoading) && "Loading " + tableName + ".."}
+                    {isSaving && "Saving " + tableName + ".."}
                 </div>
             );
         } else {
@@ -985,9 +992,8 @@ export default class Result extends React.Component {
                         {/* ----------------------------------- FOOTER SAVE BUTTON --------------------------------- */}
 
                         <div className="result-page-footer-save-button">
-                            { limitWarning ?
-                                <div className="warning">{limitWarning}</div> :
-                                <div></div>
+                            { limitWarning &&
+                                <MessagePopup title={"Plan limits"} isOpen={true} text={limitWarning} onSubmit={() => this.closeLimitWarning()}/>
                             }
                             <div className="save-table-button">
                                 <svg>
@@ -1018,11 +1024,11 @@ export default class Result extends React.Component {
 
                             <div className={'result-table-pages'}>
                                 <button id="select-page-btn" onClick={() => this.changePage(-1)}
-                                        disabled={this.state.pageNumber == 0}>
+                                        disabled={this.state.pageNumber === 0}>
                                     <img className={'result-table-pages-arrow-left'} src={footer_arrow_left} alt={'arrow left'}/>
                                 </button>
                                 <button id="select-page-btn" onClick={() => this.changePage(1)}
-                                        disabled={this.state.pageNumber == this.state.pages - 1}>
+                                        disabled={this.state.pageNumber === this.state.pages - 1}>
                                     <img className={'result-table-pages-arrow-right'} src={footer_arrow_right} alt={'arrow right'}/>
                                 </button>
                             </div>

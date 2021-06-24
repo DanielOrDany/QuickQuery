@@ -499,7 +499,7 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                     }
                 });
 
-                query += ` ORDER BY "${lastTableColumn}" ${lastChangedOption.order}`;
+                query += ` ORDER BY ${lastTableColumn} ${lastChangedOption.order}`;
                 orderByNum += 1;
             }
 
@@ -520,9 +520,9 @@ async function loadTableResult(connectionName, alias, loadingOptions) {
                 });
 
                 if (orderByNum > 0 && !option.last) {
-                    query += `, "${column}" ${order}`;
+                    query += `, ${column} ${order}`;
                 } else if (orderByNum === 0 && !option.last) {
-                    query += ` ORDER BY "${column}" ${order}`;
+                    query += ` ORDER BY ${column} ${order}`;
                     orderByNum += 1;
                 }
             });

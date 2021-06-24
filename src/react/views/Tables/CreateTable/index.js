@@ -28,7 +28,7 @@ const utf8 = require('utf8');
 const base64 = require('base-64');
 const base64RE = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/g;
 const engRE = /^[a-zA-Z]+$/g;
-const colors = ["#007F4D", "#D97F4F", "#ff9800", "#2AA094", "#AE45BC"];
+const colors = ["#5da45e", "#5b68a3", "#5da48c", "#735da3", "#a4745d", "#a45c7f", "#985da3"];
 
 export default class CreateTable extends React.Component {
 
@@ -149,6 +149,8 @@ export default class CreateTable extends React.Component {
                 });
             }
         }
+
+        console.log(optionsOfTables);
 
         localStorage.setItem("current_result_options", JSON.stringify({
             connectionName: connection.name,
@@ -418,7 +420,7 @@ export default class CreateTable extends React.Component {
 
             const selectedColumns = columnNames.map((names, index) => {
                 return names.map(name => {
-                    return `${tables[index]}."${name}" AS ${tables[index]}_${name}`
+                    return `${tables[index]}.${name} AS ${tables[index]}_${name}`
                 });
             });
 
@@ -430,9 +432,9 @@ export default class CreateTable extends React.Component {
 
                 tables.forEach((table, index) => {
                     if (index === 0) {
-                        newQuery += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}."${columns[index]}" = ${tables[index + 1]}."${columns[index + 1]}"`;
+                        newQuery += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}.${columns[index]} = ${tables[index + 1]}.${columns[index + 1]}`;
                     } else if (index < tables.length - 1) {
-                        newQuery += ` JOIN ${tables[index + 1]} ON ${table}."${secondColumns[index]}" = ${tables[index + 1]}."${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}"`;
+                        newQuery += ` JOIN ${tables[index + 1]} ON ${table}.${secondColumns[index]} = ${tables[index + 1]}.${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}`;
                     }
                 });
             }
@@ -505,7 +507,7 @@ export default class CreateTable extends React.Component {
 
             const selectedColumns = columnNames.map((names, index) => {
                 return names.map(name => {
-                    return `${tables[index]}."${name}" AS ${tables[index]}_${name}`
+                    return `${tables[index]}.${name} AS ${tables[index]}_${name}`
                 });
             });
 
@@ -516,9 +518,9 @@ export default class CreateTable extends React.Component {
             } else {
                 tables.forEach((table, index) => {
                     if (index === 0) {
-                        query += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}."${columns[index]}" = ${tables[index + 1]}."${columns[index + 1]}"`;
+                        query += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}.${columns[index]} = ${tables[index + 1]}.${columns[index + 1]}`;
                     } else if (index < tables.length - 1) {
-                        query += ` JOIN ${tables[index + 1]} ON ${table}."${secondColumns[index]}" = ${tables[index + 1]}."${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}"`;
+                        query += ` JOIN ${tables[index + 1]} ON ${table}.${secondColumns[index]} = ${tables[index + 1]}.${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}`;
                     }
                 });
             }
@@ -575,7 +577,7 @@ export default class CreateTable extends React.Component {
             <div className={"constructor-table table-number-" + index} key={index}>
                 <div className="constructor-table-data" style={{backgroundColor: colors[colorIndex]}}>
                     <div className="table-data">
-                        <span><b>Table</b> {table === "select table" ? <span style={{color: "#f4cb4c"}}>select table</span> : <span>{table}</span>}</span>
+                        <span><b>Table</b> {table === "select table" ? <span>'select table'</span> : <span>{table}</span>}</span>
                         <select className="select-table" value="" onChange={(e) => this.handleTableChange(e, index)}>
                             <option value="" selected disabled hidden>Choose here</option>
                             {
@@ -596,7 +598,7 @@ export default class CreateTable extends React.Component {
                                 <img className="column-arrows" src={westIcon}/>
                             }
 
-                            <span style={{color: ( index !== 0 && (tables.length - 1) !== index ) && colors[colorIndex - 1]}}><b>Column</b> {tableColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableColumn}</span>}</span>
+                            <span style={{paddingLeft: ( index !== 0 && (tables.length - 1) !== index ) && "10px", background: ( index !== 0 && (tables.length - 1) !== index ) && colors[colorIndex - 1]}}><b>Column</b> {tableColumn === "select column" ? <span>'select column'</span> : <span>{tableColumn}</span>}</span>
 
                             <select className="select-column" value="" onChange={(e) => this.handleColumnChange(e, index)}>
                                 <option value="" selected disabled hidden>Choose here</option>
@@ -611,7 +613,7 @@ export default class CreateTable extends React.Component {
                         { ( index !== 0 && (tables.length - 1) !== index )  &&
                         <div className="column-name">
                             <img className="column-arrows" src={eastIcon}/>
-                            <span style={{color: ( index !== 0 && (tables.length - 1) !== index ) && colors[colorIndex + 1]}}><b>Column</b> {tableSecondColumn === "select column" ? <span style={{color: "#f4cb4c"}}>select column</span> : <span>{tableSecondColumn}</span>}</span>
+                            <span style={{marginTop: "10px", paddingLeft: ( index !== 0 && (tables.length - 1) !== index ) && "10px", background: ( index !== 0 && (tables.length - 1) !== index ) && colors[colorIndex + 1]}}><b>Column</b> {tableSecondColumn === "select column" ? <span>'select column'</span> : <span>{tableSecondColumn}</span>}</span>
                             <select className="select-column" value="" onChange={(e) => this.handleSecondColumnChange(e, index)}>
                                 <option value="" selected disabled hidden>Choose here</option>
                                 {
