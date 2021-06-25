@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const { channels } = require('../src/shared/constants');
+const { autoUpdater } = require('electron-updater');
 const Connection = require('./services/connection');
 const Database = require('./services/database');
 const Settings = require('./services/settings');
@@ -41,6 +42,7 @@ function createWindow () {
   });
 
   mainWindow.once('ready-to-show', () => {
+    autoUpdater.checkForUpdatesAndNotify();
     mainWindow.show();
   });
 
@@ -71,6 +73,17 @@ app.on('activate', function () {
   if (mainWindow === null) {
     createWindow();
   }
+});
+
+autoUpdater.on('update-available', () => {
+  mainWindow.webContents.send('update_available');
+});
+autoUpdater.on('update-downloaded', () => {
+  mainWindow.webContents.send('update_downloaded');
+});
+
+ipcMain.on('restart_app', () => {
+  autoUpdater.quitAndInstall();
 });
 
 ipcMain.on(channels.APP_INFO, (event) => {

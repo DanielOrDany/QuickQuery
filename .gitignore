@@ -3,6 +3,7 @@
 /.pnp
 .pnp.js
 package-lock.json
+electron-builder.yml
 
 # testing
 /coverage
