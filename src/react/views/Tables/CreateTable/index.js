@@ -646,7 +646,7 @@ export default class CreateTable extends React.Component {
                 <div className="create_edit_table">
                     <div id="mini-menu">
 
-                        <input type="text" id="aliasText" placeholder="Table Name" value={queryName}
+                        <input type="text" id="aliasText" placeholder="New Table Name" value={queryName}
                                className="create-table-name-input" onChange={(e) => this.handleQueryNameChange(e)}/>
 
                         <button type="button" className="save-button" onClick={() => this.save()}>
