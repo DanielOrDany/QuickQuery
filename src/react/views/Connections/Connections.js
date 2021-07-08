@@ -951,122 +951,126 @@ export default class Connections extends React.Component {
                             /* -------------------------- FILLED CONNECTIONS PAGE --------------------------- */
                             <div className="filled-connections-page">
 
-                                {/* ------------------------------- FILTERS -------------------------------- */}
-                                <div className="connections-page-filters">
+                                <div className='filled-connections-page-body'>
 
-                                    {/* --------------------------- FILTER NAME ---------------------------- */}
-                                    <div className="connections-page-filter-NAME">
-                                        <span className="connections-page-filters-title">Name</span>
-                                        { orderByName ?
-                                            <img className="connections-page-filters-arrow" src={filters_arrow}
-                                                 alt="arrow" onClick={() => this.changeOrder("name")}/>
-                                            :
-                                            <img className="connections-page-filters-arrow-down" src={filters_arrow}
-                                                 alt="arrow" onClick={() => this.changeOrder("name")}/>
-                                        }
-                                        <input className="connections-page-filters-search"
-                                               id="connection-name-search"
-                                               placeholder="Search" onChange={() => this.search()}/>
-                                    </div>
+                                    {/* ------------------------------- FILTERS -------------------------------- */}
+                                    <div className="connections-page-filters">
 
-                                    {/* ------------------------ FILTER SCHEMA NAME ------------------------ */}
-                                    <div className="connections-page-filter-SCHEMA-NAME">
-                                        <span className="connections-page-filters-title">Schema Name</span>
-                                        { orderBySchema ?
-                                            <img className="connections-page-filters-arrow" src={filters_arrow}
-                                                 alt="arrow" onClick={() => this.changeOrder("schema")}/>
-                                            :
-                                            <img className="connections-page-filters-arrow-down" src={filters_arrow}
-                                                 alt="arrow" onClick={() => this.changeOrder("schema")}/>
-                                        }
-                                        <input className="connections-page-filters-search"
-                                               id="connection-schema-search"
-                                               placeholder="Search" onChange={() => this.search()}/>
-                                    </div>
-
-                                    {/* ------------------------ FILTER DATE CREATED ----------------------- */}
-                                    <div className="connections-page-filter-DATE-CREATED">
-
-                                        <div className="DATE-CREATED-search-div">
-                                            <span className="connections-page-filters-title">Date Created</span>
-                                            { orderByDate ?
+                                        {/* --------------------------- FILTER NAME ---------------------------- */}
+                                        <div className="connections-page-filter-NAME">
+                                            <span className="connections-page-filters-title">Name</span>
+                                            { orderByName ?
                                                 <img className="connections-page-filters-arrow" src={filters_arrow}
-                                                     alt="arrow" onClick={() => this.changeOrder("date")}/>
+                                                     alt="arrow" onClick={() => this.changeOrder("name")}/>
                                                 :
                                                 <img className="connections-page-filters-arrow-down" src={filters_arrow}
-                                                     alt="arrow" onClick={() => this.changeOrder("date")}/>
+                                                     alt="arrow" onClick={() => this.changeOrder("name")}/>
                                             }
                                             <input className="connections-page-filters-search"
-                                                   id="connection-date-search"
+                                                   id="connection-name-search"
                                                    placeholder="Search" onChange={() => this.search()}/>
                                         </div>
+
+                                        {/* ------------------------ FILTER SCHEMA NAME ------------------------ */}
+                                        <div className="connections-page-filter-SCHEMA-NAME">
+                                            <span className="connections-page-filters-title">Schema Name</span>
+                                            { orderBySchema ?
+                                                <img className="connections-page-filters-arrow" src={filters_arrow}
+                                                     alt="arrow" onClick={() => this.changeOrder("schema")}/>
+                                                :
+                                                <img className="connections-page-filters-arrow-down" src={filters_arrow}
+                                                     alt="arrow" onClick={() => this.changeOrder("schema")}/>
+                                            }
+                                            <input className="connections-page-filters-search"
+                                                   id="connection-schema-search"
+                                                   placeholder="Search" onChange={() => this.search()}/>
+                                        </div>
+
+                                        {/* ------------------------ FILTER DATE CREATED ----------------------- */}
+                                        <div className="connections-page-filter-DATE-CREATED">
+
+                                            <div className="DATE-CREATED-search-div">
+                                                <span className="connections-page-filters-title">Date Created</span>
+                                                { orderByDate ?
+                                                    <img className="connections-page-filters-arrow" src={filters_arrow}
+                                                         alt="arrow" onClick={() => this.changeOrder("date")}/>
+                                                    :
+                                                    <img className="connections-page-filters-arrow-down" src={filters_arrow}
+                                                         alt="arrow" onClick={() => this.changeOrder("date")}/>
+                                                }
+                                                <input className="connections-page-filters-search"
+                                                       id="connection-date-search"
+                                                       placeholder="Search" onChange={() => this.search()}/>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
 
-                                {/* ------------------------------ DATABASES ------------------------------- */}
-                                <div className='connections-page-databases-block'>
-                                    <div className='connections-page-all-databases'>
-                                        {searchedConnections.map(conn => {
-                                            return (
-                                                <div className='database' id={conn.name} key={conn.name} >
+                                    {/* ------------------------------ DATABASES ------------------------------- */}
+                                    <div className='connections-page-databases-block'>
+                                        <div className='connections-page-all-databases'>
+                                            {searchedConnections.map(conn => {
+                                                return (
+                                                    <div className='database' id={conn.name} key={conn.name} >
 
-                                                    {/* ----------------- DATABASES ICON ------------------- */}
-                                                    <div className='database-icon' onDoubleClick={() => this.openConnection(conn.name)}>
-                                                        <svg>
-                                                            <path
-                                                                d="M20 6.36C20 4.1552 15.9744 3 12 3C8.0256 3 4 4.1552 4 6.36C4 6.3984 4 6.4368 4 6.4784C4 6.52 4 6.52 4 6.52V17.08C4.0006 17.1589 4.01579 17.237 4.0448 17.3104C4.4864 19.2624 8.2656 20.28 12 20.28C15.7344 20.28 19.5136 19.2624 19.9552 17.3104C19.9842 17.237 19.9994 17.1589 20 17.08V6.52C20 6.504 20 6.4912 20 6.4784C20 6.4656 20 6.3984 20 6.36ZM18.72 11.7776V13.4C18.72 13.6784 18.3616 14.136 17.3504 14.5744C16.0288 15.16 14.08 15.48 12 15.48C9.92 15.48 7.9712 15.16 6.6496 14.5744C5.6384 14.136 5.28 13.6784 5.28 13.4V11.7776H5.2992C5.3632 11.8192 5.4336 11.8608 5.5072 11.9024L5.6 11.96L5.7824 12.0528L5.8688 12.0976C5.9584 12.1392 6.0512 12.184 6.1504 12.2256C7.616 12.872 9.76 13.24 12 13.24C14.24 13.24 16.384 12.872 17.8624 12.2256C17.9616 12.184 18.0544 12.1392 18.1472 12.0944L18.224 12.056L18.416 11.9568L18.4864 11.9152C18.5632 11.8736 18.6368 11.832 18.704 11.7872L18.72 11.7776ZM18.72 9.88C18.72 10.1584 18.3616 10.616 17.3504 11.0544C16.0288 11.64 14.08 11.96 12 11.96C9.92 11.96 7.9712 11.64 6.6496 11.0544C5.6384 10.616 5.28 10.1584 5.28 9.88V8.2576C5.55345 8.42959 5.84023 8.5794 6.1376 8.7056C7.616 9.352 9.76 9.72 12 9.72C12.2816 9.72 12.56 9.72 12.8384 9.704C13.4784 9.6752 14.1184 9.6144 14.7264 9.528C15.1488 9.4672 15.5616 9.3968 15.952 9.3104C16.6098 9.1704 17.2527 8.96788 17.872 8.7056C18.1662 8.57913 18.4497 8.42932 18.72 8.2576V9.88ZM12 4.28C16.1024 4.28 18.72 5.512 18.72 6.36C18.72 6.6384 18.3616 7.096 17.3504 7.5344C16.0288 8.12 14.08 8.44 12 8.44C11.7408 8.44 11.4816 8.44 11.2288 8.424C10.976 8.408 10.6592 8.3952 10.3808 8.3696C9.75073 8.31761 9.12447 8.22677 8.5056 8.0976C8.29227 8.0528 8.08747 8.0048 7.8912 7.9536L7.7504 7.9184C7.37509 7.8158 7.00729 7.68749 6.6496 7.5344C5.6384 7.096 5.28 6.6384 5.28 6.36C5.28 5.512 7.8976 4.28 12 4.28ZM12 19C7.8976 19 5.28 17.768 5.28 16.92V15.2976H5.2992C5.3632 15.3392 5.4336 15.3808 5.5072 15.4224L5.6 15.48L5.7824 15.5728L5.8688 15.6176C5.9584 15.6592 6.0512 15.704 6.1504 15.7456C7.616 16.392 9.76 16.76 12 16.76C14.24 16.76 16.384 16.392 17.8624 15.7456C17.9616 15.704 18.0544 15.6592 18.1472 15.6144L18.224 15.576L18.416 15.4768L18.4864 15.4352C18.5632 15.3936 18.6368 15.352 18.704 15.3072V16.92C18.72 17.768 16.1024 19 12 19Z"/>
-                                                        </svg>
+                                                        {/* ----------------- DATABASES ICON ------------------- */}
+                                                        <div className='database-icon' onDoubleClick={() => this.openConnection(conn.name)}>
+                                                            <svg>
+                                                                <path
+                                                                    d="M20 6.36C20 4.1552 15.9744 3 12 3C8.0256 3 4 4.1552 4 6.36C4 6.3984 4 6.4368 4 6.4784C4 6.52 4 6.52 4 6.52V17.08C4.0006 17.1589 4.01579 17.237 4.0448 17.3104C4.4864 19.2624 8.2656 20.28 12 20.28C15.7344 20.28 19.5136 19.2624 19.9552 17.3104C19.9842 17.237 19.9994 17.1589 20 17.08V6.52C20 6.504 20 6.4912 20 6.4784C20 6.4656 20 6.3984 20 6.36ZM18.72 11.7776V13.4C18.72 13.6784 18.3616 14.136 17.3504 14.5744C16.0288 15.16 14.08 15.48 12 15.48C9.92 15.48 7.9712 15.16 6.6496 14.5744C5.6384 14.136 5.28 13.6784 5.28 13.4V11.7776H5.2992C5.3632 11.8192 5.4336 11.8608 5.5072 11.9024L5.6 11.96L5.7824 12.0528L5.8688 12.0976C5.9584 12.1392 6.0512 12.184 6.1504 12.2256C7.616 12.872 9.76 13.24 12 13.24C14.24 13.24 16.384 12.872 17.8624 12.2256C17.9616 12.184 18.0544 12.1392 18.1472 12.0944L18.224 12.056L18.416 11.9568L18.4864 11.9152C18.5632 11.8736 18.6368 11.832 18.704 11.7872L18.72 11.7776ZM18.72 9.88C18.72 10.1584 18.3616 10.616 17.3504 11.0544C16.0288 11.64 14.08 11.96 12 11.96C9.92 11.96 7.9712 11.64 6.6496 11.0544C5.6384 10.616 5.28 10.1584 5.28 9.88V8.2576C5.55345 8.42959 5.84023 8.5794 6.1376 8.7056C7.616 9.352 9.76 9.72 12 9.72C12.2816 9.72 12.56 9.72 12.8384 9.704C13.4784 9.6752 14.1184 9.6144 14.7264 9.528C15.1488 9.4672 15.5616 9.3968 15.952 9.3104C16.6098 9.1704 17.2527 8.96788 17.872 8.7056C18.1662 8.57913 18.4497 8.42932 18.72 8.2576V9.88ZM12 4.28C16.1024 4.28 18.72 5.512 18.72 6.36C18.72 6.6384 18.3616 7.096 17.3504 7.5344C16.0288 8.12 14.08 8.44 12 8.44C11.7408 8.44 11.4816 8.44 11.2288 8.424C10.976 8.408 10.6592 8.3952 10.3808 8.3696C9.75073 8.31761 9.12447 8.22677 8.5056 8.0976C8.29227 8.0528 8.08747 8.0048 7.8912 7.9536L7.7504 7.9184C7.37509 7.8158 7.00729 7.68749 6.6496 7.5344C5.6384 7.096 5.28 6.6384 5.28 6.36C5.28 5.512 7.8976 4.28 12 4.28ZM12 19C7.8976 19 5.28 17.768 5.28 16.92V15.2976H5.2992C5.3632 15.3392 5.4336 15.3808 5.5072 15.4224L5.6 15.48L5.7824 15.5728L5.8688 15.6176C5.9584 15.6592 6.0512 15.704 6.1504 15.7456C7.616 16.392 9.76 16.76 12 16.76C14.24 16.76 16.384 16.392 17.8624 15.7456C17.9616 15.704 18.0544 15.6592 18.1472 15.6144L18.224 15.576L18.416 15.4768L18.4864 15.4352C18.5632 15.3936 18.6368 15.352 18.704 15.3072V16.92C18.72 17.768 16.1024 19 12 19Z"/>
+                                                            </svg>
+                                                        </div>
+
+                                                        {/* ----------------- DATABASES NAME ------------------- */}
+
+                                                        <div className="database-name"
+                                                             onClick={() => this.closeMiniMenu(conn.name)}
+                                                             onDoubleClick={() => this.openConnection(conn.name)}>
+                                                            <span className="database-text"
+
+                                                                  id="folders-n">{conn.name} {this.databaseHost(conn)}</span>
+                                                        </div>
+
+                                                        {/* -------------- DATABASES SCHEMA NAME --------------- */}
+
+                                                        <div className="database-schema-name"
+                                                             onClick={() => this.closeMiniMenu(conn.name)}
+                                                             onDoubleClick={() => this.openConnection(conn.name)}>
+                                                            <span className="database-text"
+
+                                                                  id="folders-schema-n">{conn.schema}</span>
+                                                        </div>
+
+                                                        {/* -------------- DATABASES DATE CREATED -------------- */}
+
+                                                        <div className="database-date-created"
+                                                             onClick={() => this.closeMiniMenu(conn.name)}
+                                                             onDoubleClick={() => this.openConnection(conn.name)}>
+                                                            <span className="database-text"
+                                                                  id="folders-date-created">{conn.createdAt}</span>
+                                                        </div>
+
+                                                        <div className="database-mini-menu"
+                                                             onClick={() => (this.isDBMiniMenuOpen(conn.name),
+                                                             this.saveDeleteConnectionName(conn.name))}>
+                                                            <svg>
+                                                                <path
+                                                                    d="M2.14286 7.80488C3.33333 7.80488 4.28571 8.78049 4.28571 10C4.28571 11.2195 3.33333 12.1951 2.14286 12.1951C0.952381 12.1951 0 11.2195 0 10C0 8.78049 0.952381 7.80488 2.14286 7.80488ZM0 2.19512C0 3.41463 0.952381 4.39024 2.14286 4.39024C3.33333 4.39024 4.28571 3.41463 4.28571 2.19512C4.28571 0.97561 3.33333 0 2.14286 0C0.952381 0 0 0.97561 0 2.19512ZM0 17.8049C0 19.0244 0.952381 20 2.14286 20C3.33333 20 4.28571 19.0244 4.28571 17.8049C4.28571 16.5854 3.33333 15.6098 2.14286 15.6098C0.952381 15.6098 0 16.5854 0 17.8049Z"
+                                                                    fill="#5C5D6F"/>
+                                                            </svg>
+                                                        </div>
+                                                        <DatabaseMiniMenuPopup
+                                                            isOpen={this.state.isDBMiniMenu === conn.name}
+                                                            connectionName={conn.name}
+                                                            openDeleteConnectionPopup={this.openDeleteConnectionPopup}
+                                                            openEditConnectionPopup={this.openEditConnectionPopup}
+                                                        >
+                                                        </DatabaseMiniMenuPopup>
                                                     </div>
-
-                                                    {/* ----------------- DATABASES NAME ------------------- */}
-
-                                                    <div className="database-name"
-                                                         onClick={() => this.closeMiniMenu(conn.name)}
-                                                         onDoubleClick={() => this.openConnection(conn.name)}>
-                                                        <span className="database-text"
-
-                                                              id="folders-n">{conn.name} {this.databaseHost(conn)}</span>
-                                                    </div>
-
-                                                    {/* -------------- DATABASES SCHEMA NAME --------------- */}
-
-                                                    <div className="database-schema-name"
-                                                         onClick={() => this.closeMiniMenu(conn.name)}
-                                                         onDoubleClick={() => this.openConnection(conn.name)}>
-                                                        <span className="database-text"
-
-                                                              id="folders-schema-n">{conn.schema}</span>
-                                                    </div>
-
-                                                    {/* -------------- DATABASES DATE CREATED -------------- */}
-
-                                                    <div className="database-date-created"
-                                                         onClick={() => this.closeMiniMenu(conn.name)}
-                                                         onDoubleClick={() => this.openConnection(conn.name)}>
-                                                        <span className="database-text"
-                                                              id="folders-date-created">{conn.createdAt}</span>
-                                                    </div>
-
-                                                    <div className="database-mini-menu"
-                                                         onClick={() => (this.isDBMiniMenuOpen(conn.name),
-                                                         this.saveDeleteConnectionName(conn.name))}>
-                                                        <svg>
-                                                            <path
-                                                                d="M2.14286 7.80488C3.33333 7.80488 4.28571 8.78049 4.28571 10C4.28571 11.2195 3.33333 12.1951 2.14286 12.1951C0.952381 12.1951 0 11.2195 0 10C0 8.78049 0.952381 7.80488 2.14286 7.80488ZM0 2.19512C0 3.41463 0.952381 4.39024 2.14286 4.39024C3.33333 4.39024 4.28571 3.41463 4.28571 2.19512C4.28571 0.97561 3.33333 0 2.14286 0C0.952381 0 0 0.97561 0 2.19512ZM0 17.8049C0 19.0244 0.952381 20 2.14286 20C3.33333 20 4.28571 19.0244 4.28571 17.8049C4.28571 16.5854 3.33333 15.6098 2.14286 15.6098C0.952381 15.6098 0 16.5854 0 17.8049Z"
-                                                                fill="#5C5D6F"/>
-                                                        </svg>
-                                                    </div>
-                                                    <DatabaseMiniMenuPopup
-                                                        isOpen={this.state.isDBMiniMenu === conn.name}
-                                                        connectionName={conn.name}
-                                                        openDeleteConnectionPopup={this.openDeleteConnectionPopup}
-                                                        openEditConnectionPopup={this.openEditConnectionPopup}
-                                                    >
-                                                    </DatabaseMiniMenuPopup>
-                                                </div>
-                                            )
-                                        })}
+                                                )
+                                            })}
+                                        </div>
                                     </div>
+
                                 </div>
 
                                 {/* ----------------------- CONNECTIONS PAGE FOOTER ------------------------ */}
