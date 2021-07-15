@@ -1,6 +1,36 @@
 /* ADD CONNECTION BTN */
 @import "../../styles/variables";
 
+
+/* width */
+::-webkit-scrollbar {
+  height: 15px;
+
+}
+
+::-webkit-scrollbar-track-piece {
+  border-top: 5.5px solid transparent;
+  border-bottom: 5.5px solid transparent;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  background-clip: content-box;
+  margin-right: 10px;
+}
+
+  /* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+  /* Handle */
+::-webkit-scrollbar-thumb {
+  border-top: 4.5px solid transparent;
+  border-bottom: 4.5px solid transparent;
+  background: grey;
+  border-radius: 5.5px;
+  background-clip: content-box;
+}
+
 .small-information-buttons {
   position: absolute;
   //flex-direction: row;
@@ -1091,6 +1121,7 @@
     .filled-connections-page-body {
       overflow-x: auto;
       overflow-y: hidden;
+      height: calc(100vh - 208px);
 
     }
 

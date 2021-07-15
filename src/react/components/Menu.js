@@ -207,8 +207,8 @@ class Menu extends React.Component {
     return (
         <>
           {
-            !this.state.isSignedIn &&
-            <AuthPopup onLogin={this.login}/>
+            // !this.state.isSignedIn &&
+            // <AuthPopup onLogin={this.login}/>
           }
           {
             this.state.error &&
