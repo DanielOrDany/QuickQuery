@@ -86,8 +86,9 @@
 
 
     /* ---------------------------------------------------- TABLE --------------------------------------------------- */
+    /* ---------------------------------------------------- TABLE --------------------------------------------------- */
     table {
-      width: 100vw;
+      width: calc(100vw - 255px);
       background-color: #FFFFFF;
       box-shadow: 0 0 5px 0 #0000001A;
 
@@ -105,12 +106,99 @@
         th {
           border-right: 1px solid #E2DFE3;
           padding: 0;
-          min-width: 400px;
+
+
+          .table-header-items {
+            display: flex;
+            justify-content: space-between;
+
+
+
+            /* ------------------------------------- NAME, SORTING ARROW, SEARCH ------------------------------------ */
+            .column-name-and-search {
+              display: flex;
+              align-items: center;
+              margin-left: 25px;
+
+              /* COLUMN NAME */
+              span {
+                font-family: Roboto, sans-serif;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 14px;
+                line-height: 16px;
+                text-transform: lowercase;
+
+                color: #5C5D6F;
+              }
+
+
+              /* SORTING ARROW */
+              svg {
+                margin-left: 8px;
+              }
+
+              .arrow-up {
+                transform: rotate(180deg);
+              }
+
+
+              /* SEARCH */
+              input {
+                background: #FFFFFF;
+                border: 1px solid #E2DFE3;
+                border-radius: 6px;
+                margin-left: 15px;
+
+                height: 29px;
+                width: 84px;
+                padding-left: 10px;
+
+
+                font-family: Roboto, sans-serif;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 14px;
+                line-height: 16px;
+
+                color: #7A7D85;
+              }
+            }
+
+
+            /* ----------------------------------------------- FILTERS ---------------------------------------------- */
+            .column-filters {
+              display: flex;
+              align-items: center;
+              margin-right: 18.24px;
+
+              .hide-icon {
+                margin-right: 16px;
+                margin-left: 36px;
+                fill: #A7A9AC;
+              }
+
+              .hide-icon:hover {
+                fill: #87898c;
+              }
+
+              .filter {
+                width: 13px;
+                height: 11px;
+                fill: #A7A9AC;
+              }
+
+              .filter:hover {
+                fill: #87898c;
+              }
+            }
+          }
+
 
 
           /* ------------------------------------------ TABLE HEADER FILTERS ---------------------------------------- */
           .header-data-operations {
-            max-height: 0px;
+            max-height: 0;
 
             .header-filters {
               display: flex;
@@ -213,89 +301,7 @@
             }
           }
 
-          .table-header-items {
-            display: flex;
-            justify-content: space-between;
-            min-width: 500px;
 
-
-            /* ------------------------------------- NAME, SORTING ARROW, SEARCH ------------------------------------ */
-            .column-name-and-search {
-              margin-left: 25px;
-
-              /* COLUMN NAME */
-              span {
-                font-family: Roboto, sans-serif;
-                font-style: normal;
-                font-weight: 500;
-                font-size: 14px;
-                line-height: 16px;
-                text-transform: lowercase;
-
-                color: #5C5D6F;
-              }
-
-
-              /* SORTING ARROW */
-              svg {
-                margin-left: 8px;
-              }
-
-              .arrow-up {
-                transform: rotate(180deg);
-              }
-
-
-              /* SEARCH */
-              input {
-                background: #FFFFFF;
-                border: 1px solid #E2DFE3;
-                border-radius: 6px;
-                margin-left: 15px;
-
-                height: 29px;
-                width: 84px;
-                padding-left: 10px;
-
-
-                font-family: Roboto, sans-serif;
-                font-style: normal;
-                font-weight: 500;
-                font-size: 14px;
-                line-height: 16px;
-
-                color: #7A7D85;
-              }
-            }
-
-
-            /* ----------------------------------------------- FILTERS ---------------------------------------------- */
-            .column-filters {
-              margin-right: 18.24px;
-              padding-bottom: 5px;
-              max-height: 20px;
-
-              .hide-icon {
-                margin-right: 16px;
-                margin-left: 36px;
-                fill: #A7A9AC;
-              }
-
-              .hide-icon:hover {
-                fill: #87898c;
-              }
-
-              .filter {
-                width: 13px;
-                height: 11px;
-                fill: #A7A9AC;
-              }
-
-              .filter:hover {
-                fill: #87898c;
-              }
-            }
-          }
         }
       }
 
