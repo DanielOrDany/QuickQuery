@@ -1016,18 +1016,18 @@ export default class Result extends React.Component {
                                     </select>
                                 </span>
                             </div>
-                            <div className={'table-lines-amount'}>
-                                <span className={'result-page-footer-text'}>{paginationFrom}-{paginationTo} of {records}</span>
+                            <div className='table-lines-amount'>
+                                <span className='result-page-footer-text'>{paginationFrom}-{paginationTo} of {records}</span>
                             </div>
 
                             {/* --------------------------------- FOOTER PAGE BUTTONS ------------------------------ */}
 
-                            <div className={'result-table-pages'}>
-                                <button id="select-page-btn" onClick={() => this.changePage(-1)}
+                            <div className='result-table-pages'>
+                                <button className='result-page-left-arrow' id="select-page-btn" onClick={() => this.changePage(-1)}
                                         disabled={this.state.pageNumber === 0}>
                                     <img className={'result-table-pages-arrow-left'} src={footer_arrow_left} alt={'arrow left'}/>
                                 </button>
-                                <button id="select-page-btn" onClick={() => this.changePage(1)}
+                                <button className='result-page-right-arrow' id="select-page-btn" onClick={() => this.changePage(1)}
                                         disabled={this.state.pageNumber === this.state.pages - 1}>
                                     <img className={'result-table-pages-arrow-right'} src={footer_arrow_right} alt={'arrow right'}/>
                                 </button>
