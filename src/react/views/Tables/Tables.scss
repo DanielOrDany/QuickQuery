@@ -10,6 +10,7 @@
 /* --------------------------------------------------- TABLES PAGE -------------------------------------------------- */
 .tables-page {
   display: flex;
+  overflow: hidden;
 
 
 
@@ -179,7 +180,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: calc(100vw - 255px);
+  min-width: calc(100vw - 255px);
   height: calc(100vh - 80px);
   background-color: #F8F8FA;
 
@@ -189,6 +190,8 @@
     display: flex;
     flex-direction: column;
     width: 427px;
+    margin-left: 50px;
+    margin-right: 50px;
 
 
     img {

@@ -355,8 +355,6 @@
     overflow-y: auto;
     height: calc(100vh - 250px);
     display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
     padding: 10px;
     align-items: center;
 
@@ -364,8 +362,6 @@
       width: 100%;
       padding: 10px;
       display: flex;
-      flex-wrap: wrap;
-      flex-direction: row;
       align-items: center;
     }
 

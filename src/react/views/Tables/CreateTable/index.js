@@ -574,7 +574,7 @@ export default class CreateTable extends React.Component {
         const isLastTable = tables.length === index + 1;
 
         return (
-            <div className={"constructor-table table-number-" + index} key={index}>
+            <div className={"constructor-table table-number-" + index} id={"table-number-" + index} key={index}>
                 <div className="constructor-table-data" style={{backgroundColor: colors[colorIndex]}}>
                     <div className="table-data">
                         <span><b>Table</b> {table === "select table" ? <span>'select table'</span> : <span>{table}</span>}</span>
@@ -664,8 +664,10 @@ export default class CreateTable extends React.Component {
                                     tables && tables.map((table, i) => this.renderTable(table, i))
                                 }
                                 {
-                                    tables && tables.map((table, i) =>  <LineTo zIndex="0" borderColor="#9d9d9d" borderWidth="4px" fromAnchor="100%" toAnchor="0" from={"table-number-" + i} to={"table-number-" + (i + 1)}/>)
+
+                                    tables && tables.map((table, i) =>  <LineTo zIndex="0" borderColor="#9d9d9d" borderWidth="4px" fromAnchor="top" toAnchor="top" delay='0' from={"table-number-" + i} to={"table-number-" + (i + 1)}/>)
                                 }
+
                             </div>
                         </div>
 
