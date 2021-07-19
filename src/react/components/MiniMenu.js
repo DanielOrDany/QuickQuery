@@ -29,7 +29,7 @@ function removeTable(alias) {
     const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
     deleteTable(connectionName, alias).then(tables => {
         if (tables) {
-            document.getElementById(alias).remove();
+            document.getElementById(alias).parentElement.remove();
             return `#/tables/${alias}`;
         }
     }).then(url => window.location.hash = url);
