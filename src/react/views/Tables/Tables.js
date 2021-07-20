@@ -439,9 +439,13 @@ export default class Tables extends React.Component {
                       <span>Table is not selected. <br/>
                       Please select it from the list on left.</span>
 
-                      <button className='empty-right-side-tables-page-btn' onClick={() => this.createTable()}>Create
-                        table
-                      </button>
+
+
+                      <div className='empty-right-side-tables-page-btn'>
+                        <button onClick={() => this.createTable()}>Create
+                          table
+                        </button>
+                      </div>
 
                     </div>
 
