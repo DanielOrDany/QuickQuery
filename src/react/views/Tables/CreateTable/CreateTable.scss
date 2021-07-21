@@ -21,18 +21,34 @@
   width: calc(100vw - 255px);
 
   /* SCROLL */
+  /* width */
   ::-webkit-scrollbar {
-    height: 5px;
-    width: 5px;
+    height: 15px;
+    border-top: 1px solid #E2DFE3;
+    border-bottom: 1px solid #E2DFE3;
   }
 
-  ::-webkit-scrollbar-track {
-    background: #BFBEBE;
+  ::-webkit-scrollbar-track-piece {
+    border-top: 5.5px solid transparent;
+    border-bottom: 5.5px solid transparent;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    background-clip: content-box;
     margin-right: 10px;
   }
 
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #4A4A4A;
+    border-top: 4.5px solid transparent;
+    border-bottom: 4.5px solid transparent;
+    background: grey;
+    border-radius: 5.5px;
+    background-clip: content-box;
   }
 
   /* MINI MENU */
