@@ -945,7 +945,7 @@ export default class Connections extends React.Component {
 
                 {/* ------------------------------------ CONNECTION PAGE HEADER ------------------------------------ */}
                 <div className='connections-page-header'>
-                    <span className="connections-page-name">Databases v1.0.9</span>
+                    <span className="connections-page-name">Databases v2.0.0</span>
                     <button className="add-database-button" type="button" id="add-button"
                             onClick={() => this.openSimplifiedConnectionPopup()}>Add database
                     </button>
