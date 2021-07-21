@@ -1,6 +1,6 @@
 {
   "name": "quick-query",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "productName": "QuickQuery",
   "main": "electron/main.js",
   "private": true,
