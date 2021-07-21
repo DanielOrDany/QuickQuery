@@ -484,6 +484,29 @@
             padding-left: 21px;
           }
         }
+
+
+        .ssh-choose-scroll-hint {
+          display: flex;
+          margin-top: 75px;
+          width: 100%;
+          justify-content: center;
+          align-items: center;
+
+          span {
+            font-family: Roboto, sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 20px;
+            line-height: 21px;
+
+            color: #3E3E3E;
+          }
+
+          img {
+            margin-left: 10px;
+          }
+        }
       }
     }
 

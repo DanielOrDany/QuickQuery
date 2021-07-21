@@ -21,6 +21,11 @@ import DatabaseMiniMenuPopup from "./popups/DatabaseMiniMenu";
 import DeleteConnectionPopup from "./popups/DeleteConnectionPopup";
 import ConnectionErrorModal from '../../popups/MessagePopup';
 
+import ssh_popup_arrow_hint from "../../icons/ssh-popup-arrow-hint.svg";
+import ssh_popup_arrow_hint2 from "../../icons/ssh-popup-arrow-hint2.svg";
+import ssh_popup_arrow_hint3 from "../../icons/ssh-popup-arrow-hint3.svg";
+
+
 export default class Connections extends React.Component {
     constructor(props) {
         super(props);
@@ -468,7 +473,7 @@ export default class Connections extends React.Component {
                         <div className="big-information-field">
                             <span className="big-input-title">Password</span>
                             <input id="input-field-password" ref="password" className="big-form-control" type="text"
-                                   placeholder="Password" type="search"
+                                   placeholder="Password" type="password"
                                    disabled={!!editConnection}
                                    defaultValue={editConnection && editConnection.URI.password}
                                    onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
@@ -696,6 +701,12 @@ export default class Connections extends React.Component {
                                     <option value="mysql">MariaDB</option>
                                     <option value="postgres">Postgres</option>
                                 </select>
+                            </div>
+
+                            <div className='ssh-choose-scroll-hint'>
+                                <span>Scroll down</span>
+
+                                <img src={ssh_popup_arrow_hint3} alt={'arrow down'}/>
                             </div>
 
                         </div>
