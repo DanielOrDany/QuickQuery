@@ -782,11 +782,6 @@ export default class Connections extends React.Component {
         );
     };
 
-
-
-
-
-
     closeMiniMenu = () => {
         const { isDBMiniMenu } = this.state;
 
