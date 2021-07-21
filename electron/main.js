@@ -42,7 +42,8 @@ function createWindow () {
   });
 
   mainWindow.once('ready-to-show', () => {
-    // autoUpdater.checkForUpdatesAndNotify();
+    //require('update-electron-app')();
+    autoUpdater.checkForUpdatesAndNotify();
     mainWindow.show();
   });
 
