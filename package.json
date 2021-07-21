@@ -98,7 +98,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/DanielOrDany/3c9fe18558ebc918425af95e771ca77b711a2a45.git"
+    "url": "https://github.com/DanielOrDany/QuickQuery.git"
   },
   "eslintConfig": {
     "extends": "react-app"
