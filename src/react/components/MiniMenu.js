@@ -4,6 +4,7 @@ import { getTable, deleteTable} from "../methods";
 
 import Modal from '../popups/Modal';
 import DeleteTablePopup from "../popups/DeleteTablePopup";
+import RenameTablePopup from "../views/Tables/popups/RenameTablePopup";
 
 function openTable(alias) {
     const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
@@ -41,12 +42,14 @@ function editTable(table) {
     window.location.hash = `#/tables/${window.location.hash.split('/')[1]}/edit-table/${table.alias}`;
 }
 
+
 function MiniMenu(props) {
     const [open, setOpen] = useState(false);
     const [isOpen, openPopup] = useState(false);
     const [table, setTable] = useState();
     const [heigth, setHeigth] = useState();
     const wrapperRef = useRef(null);
+    const [renameTablePopup, setRenameTablePopup] = useState(false);
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -65,6 +68,10 @@ function MiniMenu(props) {
         setTable(alias);
         openPopup(true);
     };
+
+    function renameTable() {
+        setRenameTablePopup(!renameTablePopup)
+    }
 
     function handleSubmit() {
         removeTable(table);
@@ -90,6 +97,13 @@ function MiniMenu(props) {
                 deleteTable={handleSubmit}
             />
 
+
+            <RenameTablePopup
+                isOpen={renameTablePopup}
+                onClose={renameTable}
+            />
+
+
             <div id="table_menu" onClick={(e) => {openMenu(e)}} ref={wrapperRef}>
                 {props.icon}
                 {open && (
@@ -100,7 +114,7 @@ function MiniMenu(props) {
                             <span>Open</span>
                         </div>
 
-                        <div className='menu-item'>
+                        <div className='menu-item' onClick={() => renameTable()}>
                             <span>Rename</span>
                         </div>
 
