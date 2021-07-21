@@ -36,7 +36,9 @@
       height: 40px;
       margin-left: 39px;
 
-      width: 362px;
+      max-width: 362px;
+      min-width: 150px;
+      width: 100%;
 
       border: none;
 
@@ -49,6 +51,9 @@
       line-height: 33px;
 
       color: #3E3E3E;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
 
     }
 
@@ -65,12 +70,13 @@
 
     .save-button {
       height: 42px;
-      width: 194px;
+      min-width: 194px;
       border: 1px solid #B7B4B7;
       box-sizing: border-box;
       filter: drop-shadow(0px 11px 15px rgba(0, 0, 0, 0.0535402));
       border-radius: 4px;
       background: #FFFFFF;
+      margin-left: 20px;
 
       font-family: Roboto, sans-serif;
       font-style: normal;
@@ -188,8 +194,8 @@
 
   .create-edit-table-footer {
     display: flex;
+    padding-left: 20px;
 
-    justify-content: flex-end;
     height: 141px;
 
 
@@ -202,6 +208,7 @@
       align-items: center;
       width: 90px;
       margin-right: 60px;
+      margin-left: auto;
 
       span {
         display: none;
@@ -226,7 +233,7 @@
         justify-content: center;
         align-items: center;
         height: 36px;
-        width: 85px;
+        width: 70px;
         background: #FFFFFF;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
         border-radius: 4px;
@@ -234,7 +241,7 @@
         font-family: Roboto, sans-serif;
         font-style: normal;
         font-weight: 500;
-        font-size: 14px;
+        font-size: 13px;
         line-height: 24px;
 
         color: #3E3E3E;
@@ -274,7 +281,7 @@
         font-family: Roboto, sans-serif;
         font-style: normal;
         font-weight: 500;
-        font-size: 14px;
+        font-size: 13px;
         line-height: 24px;
 
         color: #3E3E3E;
@@ -322,7 +329,7 @@
         font-family: Roboto, sans-serif;
         font-style: normal;
         font-weight: 500;
-        font-size: 14px;
+        font-size: 13px;
         line-height: 24px;
 
         color: #3E3E3E;
