@@ -473,7 +473,7 @@ export default class Connections extends React.Component {
                         <div className="big-information-field">
                             <span className="big-input-title">Password</span>
                             <input id="input-field-password" ref="password" className="big-form-control" type="text"
-                                   placeholder="Password" type="search"
+                                   placeholder="Password" type="password"
                                    disabled={!!editConnection}
                                    defaultValue={editConnection && editConnection.URI.password}
                                    onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
