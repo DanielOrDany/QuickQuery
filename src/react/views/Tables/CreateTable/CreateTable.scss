@@ -1,11 +1,24 @@
 @import "../../../styles/variables";
 
+.arrow {
+  pointer-events: none;
+}
+
+.arrow__path {
+  stroke: $black;
+  fill: transparent;
+  stroke-dasharray: 4;
+  stroke-width: 4px;
+}
+
+.arrow__head line {
+  stroke: none;
+}
 
 /* CREATE TABLE PAGE */
 .create_edit_table {
   height: calc(100vh - 80px);
   width: calc(100vw - 255px);
-
 
   /* SCROLL */
   ::-webkit-scrollbar {
@@ -22,7 +35,6 @@
     background: #4A4A4A;
   }
 
-
   /* MINI MENU */
   #mini-menu {
     height: 73px;
@@ -30,31 +42,22 @@
     align-items: center;
     justify-content: space-between;
 
-
-
     .create-table-name-input {
       height: 40px;
       margin-left: 39px;
-
       max-width: 362px;
       min-width: 150px;
       width: 100%;
-
       border: none;
-
       border-bottom: 1px solid #E2DFE3;
-
       font-family: Roboto, sans-serif;
       font-style: normal;
       font-weight: 500;
       font-size: 28px;
       line-height: 33px;
-
       color: #3E3E3E;
-
       overflow: hidden;
       text-overflow: ellipsis;
-
     }
 
     .create-table-name-input::placeholder {
@@ -63,10 +66,8 @@
       font-weight: 500;
       font-size: 28px;
       line-height: 33px;
-
       color: #999999;
     }
-
 
     .save-button {
       height: 42px;
@@ -77,15 +78,12 @@
       border-radius: 4px;
       background: #FFFFFF;
       margin-left: 20px;
-
       font-family: Roboto, sans-serif;
       font-style: normal;
       font-weight: 500;
       font-size: 16px;
       line-height: 19px;
-
       letter-spacing: -0.11px;
-
       color: #5C5D6F;
       margin-right: 29px;
     }
@@ -95,9 +93,6 @@
       border: 2px solid #5C5D6F;
       cursor: pointer;
     }
-
-
-
 
     .actions {
       display: flex;
@@ -145,30 +140,23 @@
         .saveButton {
           display: inline-block;
           cursor: pointer;
-
           width: 90px;
           height: 30px;
-
           margin-top: 10px;
           margin-right: 20px;
           padding: 0 32px;
-
           font-size: 14px;
           text-align: center;
           text-decoration: none;
-
           background-color: white;
           color: #3E3E3E;
-
           border: 1px solid #3E3E3E;
           border-radius: 5px;
-
           transition: 0.2s;
         }
 
         .saveButton:hover {
           cursor: pointer;
-
           color: white;
           background-color: #3E3E3E;
         }
@@ -176,7 +164,6 @@
         #aliasText {
           height: 30px;
           min-width: 110px;
-
           margin-top: 10px;
           margin-right: 20px;
           margin-left: 20px;
@@ -185,9 +172,6 @@
     }
   }
 
-
-
-
   .create-edit-table-body {
     height: calc(100vh - 294px);
   }
@@ -195,12 +179,7 @@
   .create-edit-table-footer {
     display: flex;
     padding-left: 20px;
-
     height: 141px;
-
-
-
-
 
     .create-edit-table-footer-add-table {
       display: flex;
@@ -360,22 +339,23 @@
   .query-constructor {
     width: 100%;
     overflow-y: auto;
-    height: calc(100vh - 250px);
+    height: calc(100vh - 275px);
     display: flex;
     padding: 10px;
     align-items: center;
 
     .constructor-tables {
       width: 100%;
-      padding: 10px;
       display: flex;
+      padding: 100px;
+      margin-right: 100px;
       align-items: center;
     }
 
     .constructor-table {
       display: flex;
       flex-direction: row;
-      margin: 20px 20px;
+      margin: 20px 30px;
       z-index: 100;
 
       #link-icon {

@@ -1,5 +1,6 @@
 import React from 'react';
 import LineTo from 'react-lineto';
+import Arrow, { DIRECTION } from 'react-arrows';
 
 // Styles
 import './CreateTable.scss';
@@ -28,7 +29,20 @@ const utf8 = require('utf8');
 const base64 = require('base-64');
 const base64RE = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/g;
 const engRE = /^[a-zA-Z]+$/g;
-const colors = ["#5da45e", "#5b68a3", "#5da48c", "#735da3", "#a4745d", "#a45c7f", "#985da3"];
+//const colors = ["#5da45e", "#5b68a3", "#5da48c", "#735da3", "#a4745d", "#a45c7f", "#985da3"];
+const colors = Array.from(Array(50).keys()).map((e, i) => getUniqueColor(i + 1 + Math.floor(Math.random() * 11) + 1 + Math.floor(Math.random() * 8)));
+
+function getUniqueColor(n) {
+    const rgb = [0, 0, 0];
+
+    for (let i = 0; i < 24; i++) {
+        rgb[i%3] <<= 1;
+        rgb[i%3] |= n & 0x01;
+        n >>= 1;
+    }
+
+    return '#' + rgb.reduce((a, c) => (c > 0x0f ? c.toString(16) : '0' + c.toString(16)) + a, '')
+}
 
 export default class CreateTable extends React.Component {
 
@@ -575,7 +589,7 @@ export default class CreateTable extends React.Component {
 
         return (
             <div className={"constructor-table table-number-" + index} id={"table-number-" + index} key={index}>
-                <div className="constructor-table-data" style={{backgroundColor: colors[colorIndex]}}>
+                <div className="constructor-table-data" style={{backgroundColor: colors[colorIndex], marginRight: isLastTable && '50px'}}>
                     <div className="table-data">
                         <span><b>Table</b> {table === "select table" ? <span>'select table'</span> : <span>{table}</span>}</span>
                         <select className="select-table" value="" onChange={(e) => this.handleTableChange(e, index)}>
@@ -665,7 +679,20 @@ export default class CreateTable extends React.Component {
                                 }
                                 {
 
-                                    tables && tables.map((table, i) =>  <LineTo zIndex="0" borderColor="#9d9d9d" borderWidth="4px" fromAnchor="top" toAnchor="top" delay='0' from={"table-number-" + i} to={"table-number-" + (i + 1)}/>)
+                                    tables && tables.map((table, i) => <Arrow
+                                        className='arrow'
+                                        from={{
+                                            direction: DIRECTION.RIGHT,
+                                            node: () => document.getElementById("table-number-" + i),
+                                            translation: [0, 0],
+                                        }}
+                                        to={{
+                                            direction: DIRECTION.LEFT,
+                                            node: () => document.getElementById("table-number-" + (i + 1)),
+                                            translation: [0, 0],
+                                        }}
+                                    />)
+                                    // tables && tables.map((table, i) =>  <LineTo zIndex="0" borderColor="#9d9d9d" borderWidth="4px" fromAnchor="top" toAnchor="top" delay='0' from={"table-number-" + i} to={"table-number-" + (i + 1)}/>)
                                 }
 
                             </div>
