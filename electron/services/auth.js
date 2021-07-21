@@ -4,13 +4,15 @@ const API_URL = "https://api.quickquery.co";
 async function login (email, password) {
     try {
         const lowerEmail = email.toString().toLowerCase();
+
         const response = await axios.post(API_URL + '/api/v1/employees/sign-in', {
             email: lowerEmail, password: password
-        });
+        }, {});
 
         return response.data;
 
     } catch (e) {
+        console.log("response", e);
         return e.response.data;
     }
 }

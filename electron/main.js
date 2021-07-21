@@ -42,7 +42,7 @@ function createWindow () {
   });
 
   mainWindow.once('ready-to-show', () => {
-    autoUpdater.checkForUpdatesAndNotify();
+    // autoUpdater.checkForUpdatesAndNotify();
     mainWindow.show();
   });
 
