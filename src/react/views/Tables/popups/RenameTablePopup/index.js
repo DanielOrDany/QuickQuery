@@ -3,12 +3,14 @@ import './index.scss';
 import cross_icon from "../../../../icons/pop-up-cross.svg";
 import Button from "../../../../components/Button";
 
-
 const RenameTablePopup = ({
-                              isOpen,
-                              onClose
+    oldAlias,
+    isOpen,
+    onClose,
+    onSave
+}) => {
+    let textInput = React.createRef();
 
-                          }) => {
     return (
         <>
             {isOpen &&
@@ -28,13 +30,13 @@ const RenameTablePopup = ({
 
                         <div className='rename-table-popup-body-items'>
                             <span>Name</span>
-                            <input placeholder={'Enter name'}/>
+                            <input ref={textInput} placeholder={'Enter name'}/>
                         </div>
                     </div>
 
                     <div className='rename-table-popup-btn'>
                         <Button className='rename-table-popup-cancel-btn' onClick={onClose}>Cancel</Button>
-                        <Button className='rename-table-popup-save-btn'>Save</Button>
+                        <Button className='rename-table-popup-save-btn' onClick={() => onSave(oldAlias, textInput.current.value)}>Save</Button>
                     </div>
 
 

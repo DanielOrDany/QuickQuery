@@ -323,7 +323,8 @@ ipcMain.on(channels.ADD_TABLE, async (event, connectionName, query, type, alias)
 
 ipcMain.on(channels.RENAME_TABLE, async (event, connectionName, alias, newAlias) => {
   try {
-    await Table.renameTable(connectionName, alias, newAlias);
+    const result = await Table.renameTable(connectionName, alias, newAlias);
+    successful.data = result;
     await event.sender.send(channels.RENAME_TABLE, successful);
   } catch (e) {
     unsuccessful.message = e;

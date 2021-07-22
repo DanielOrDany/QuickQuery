@@ -130,6 +130,17 @@ export const
     },
 
     renameTable = async (connectionName, alias, newAlias) => {
+        const aliasUTF8 = utf8.encode(alias);
+        if(aliasUTF8 !== alias) {
+            const aliasBase64 = base64.encode(aliasUTF8);
+            alias = aliasBase64;
+        }
+        const newAliasUTF8 = utf8.encode(newAlias);
+        if(newAliasUTF8 !== newAlias) {
+            const newAliasBase64 = base64.encode(newAliasUTF8);
+            newAlias = newAliasBase64;
+        }
+
         return new Promise(resolve => {
             ipcRenderer.send(channels.RENAME_TABLE, connectionName, alias, newAlias);
             ipcRenderer.on(channels.RENAME_TABLE, (event, result) => {

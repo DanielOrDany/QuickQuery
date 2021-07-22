@@ -192,6 +192,7 @@ async function runQuery (connectionName, query) {
 }
 
 function renameTable (connectionName, alias, newAlias) {
+    console.log(connectionName, alias, newAlias);
     // Get queries
     const queries = db.read()
         .get('connections')
@@ -204,12 +205,14 @@ function renameTable (connectionName, alias, newAlias) {
     queries[index].alias = newAlias;
 
     // Update queries
-    db.read()
-        .get('connections')
+    db.get('connections')
         .find({name: connectionName})
         .get('queries')
         .assign({ queries })
         .write();
+
+    console.log(queries);
+    return queries;
 }
 
 function deleteTable (connectionName, alias) {

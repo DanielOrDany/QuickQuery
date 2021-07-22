@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import '../styles/MiniMenu.scss';
-import { getTable, deleteTable} from "../methods";
+import { getTable, deleteTable, renameTable } from "../methods";
 
 import Modal from '../popups/Modal';
 import DeleteTablePopup from "../popups/DeleteTablePopup";
@@ -36,6 +36,21 @@ function removeTable(alias) {
     }).then(url => window.location.hash = url);
 }
 
+function saveNewTableName(alias, newAlias) {
+    if (alias && newAlias) {
+        const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+        renameTable(connectionName, alias, newAlias).then(tables => {
+            if (tables) {
+                document.getElementById(alias).childNodes[1].innerText = newAlias;
+                return `#/tables/${newAlias}`;
+            }
+        }).then(url => {
+            window.location.hash = url;
+            localStorage.setItem("need_update", true);
+        });
+    }
+}
+
 function editTable(table) {
     localStorage.setItem("current_result_info", JSON.stringify(table));
     localStorage.setItem("openedTable", table.alias);
@@ -69,8 +84,15 @@ function MiniMenu(props) {
         openPopup(true);
     };
 
-    function renameTable() {
+    function closeRenameTable() {
         setRenameTablePopup(!renameTablePopup)
+    }
+
+    function saveNameTable(oldAlias, newAlias) {
+        setTable(oldAlias);
+        setRenameTablePopup(!renameTablePopup);
+        saveNewTableName(oldAlias, newAlias);
+        console.log("oldAlias, newAlias", oldAlias, newAlias);
     }
 
     function handleSubmit() {
@@ -99,8 +121,10 @@ function MiniMenu(props) {
 
 
             <RenameTablePopup
+                oldAlias={table}
                 isOpen={renameTablePopup}
-                onClose={renameTable}
+                onClose={closeRenameTable}
+                onSave={saveNameTable}
             />
 
 
@@ -114,7 +138,7 @@ function MiniMenu(props) {
                             <span>Open</span>
                         </div>
 
-                        <div className='menu-item' onClick={() => renameTable()}>
+                        <div className='menu-item' onClick={() => saveNameTable(props.table.alias)}>
                             <span>Rename</span>
                         </div>
 
