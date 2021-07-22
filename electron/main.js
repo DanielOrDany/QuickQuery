@@ -50,12 +50,12 @@ function createWindow () {
   mainWindow.loadURL(startUrl);
 
   // Set/Remove devtools
-  // mainWindow.webContents.on("devtools-opened", () => {
-  //     mainWindow.closeDevTools();
-  // });
+  mainWindow.webContents.on("devtools-opened", () => {
+      mainWindow.closeDevTools();
+  });
 
   // Set/Remove MENU
-  // mainWindow.removeMenu();
+  mainWindow.removeMenu();
 
   mainWindow.on('closed', function () {
     app.quit();
