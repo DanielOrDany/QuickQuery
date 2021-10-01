@@ -1,5 +1,11 @@
 const axios = require('axios');
 const API_URL = "https://api.quickquery.co";
+const https = require('https');
+
+// At request level
+const agent = new https.Agent({
+    rejectUnauthorized: false
+});
 
 async function login (email, password) {
     try {
@@ -7,7 +13,7 @@ async function login (email, password) {
 
         const response = await axios.post(API_URL + '/api/v1/employees/sign-in', {
             email: lowerEmail, password: password
-        }, {});
+        }, { httpsAgent: agent });
 
         return response.data;
 
@@ -20,7 +26,8 @@ async function login (email, password) {
 async function verifyToken (id, auth) {
     try {
         const response = await axios.get(API_URL + '/api/v1/employees/verify', {
-            headers: { id, auth }
+            headers: { id, auth },
+            httpsAgent: agent
         });
 
         return response.data;

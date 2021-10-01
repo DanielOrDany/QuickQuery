@@ -266,11 +266,12 @@ export default class CreateTable extends React.Component {
         }
     }
 
-    removeTable(index) {
+    async removeTable(index) {
         let { tables, columns, secondColumns } = this.state;
         tables.splice(index, 1);
         columns.splice(index, 1);
         secondColumns.splice(index, 1);
+        console.log(tables);
         this.setState({ tables, columns, secondColumns });
     }
 
@@ -446,9 +447,9 @@ export default class CreateTable extends React.Component {
 
                 tables.forEach((table, index) => {
                     if (index === 0) {
-                        newQuery += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}.${columns[index]} = ${tables[index + 1]}.${columns[index + 1]}`;
+                        newQuery += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}.${columns[index]}::text = ${tables[index + 1]}.${columns[index + 1]}::text`;
                     } else if (index < tables.length - 1) {
-                        newQuery += ` JOIN ${tables[index + 1]} ON ${table}.${secondColumns[index]} = ${tables[index + 1]}.${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}`;
+                        newQuery += ` JOIN ${tables[index + 1]} ON ${table}.${secondColumns[index]}::text = ${tables[index + 1]}.${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}::text`;
                     }
                 });
             }
@@ -532,9 +533,9 @@ export default class CreateTable extends React.Component {
             } else {
                 tables.forEach((table, index) => {
                     if (index === 0) {
-                        query += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}.${columns[index]} = ${tables[index + 1]}.${columns[index + 1]}`;
+                        query += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}.${columns[index]}::text = ${tables[index + 1]}.${columns[index + 1]}::text`;
                     } else if (index < tables.length - 1) {
-                        query += ` JOIN ${tables[index + 1]} ON ${table}.${secondColumns[index]} = ${tables[index + 1]}.${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}`;
+                        query += ` JOIN ${tables[index + 1]} ON ${table}.${secondColumns[index]}::text = ${tables[index + 1]}.${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}::text`;
                     }
                 });
             }
@@ -679,7 +680,7 @@ export default class CreateTable extends React.Component {
                                 }
                                 {
 
-                                    tables && tables.map((table, i) => <Arrow
+                                    tables.length > 1 && tables.map((table, i) => <Arrow
                                         className='arrow'
                                         from={{
                                             direction: DIRECTION.RIGHT,
@@ -692,7 +693,6 @@ export default class CreateTable extends React.Component {
                                             translation: [0, 0],
                                         }}
                                     />)
-                                    // tables && tables.map((table, i) =>  <LineTo zIndex="0" borderColor="#9d9d9d" borderWidth="4px" fromAnchor="top" toAnchor="top" delay='0' from={"table-number-" + i} to={"table-number-" + (i + 1)}/>)
                                 }
 
                             </div>

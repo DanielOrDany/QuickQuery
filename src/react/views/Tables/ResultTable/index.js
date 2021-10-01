@@ -335,6 +335,7 @@ export default class Result extends React.Component {
                         isNullResults: false,
                         isLoading: false,
                         records: data.records,
+                        isEmptyQuery: false,
                         headers,
                         rows
                     });
