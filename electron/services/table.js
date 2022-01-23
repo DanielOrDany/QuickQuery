@@ -1,5 +1,6 @@
 const low = require('lowdb');
 const path = require('path');
+const auth = require('./auth');
 const FileSync = require('lowdb/adapters/FileSync');
 const appDataDirPath = getAppDataPath();
 const adapter = new FileSync(path.join(appDataDirPath, 'database.json'));
@@ -186,6 +187,170 @@ async function runQuery (connectionName, query) {
             "rows": results,
             "fields": metadata.fields
         }
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+async function updateDefaultTableRow(id, token, connectionName, alias, columnsAndValues) {
+    try {
+        const connection = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .value();
+
+        const table = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .get('queries')
+            .find({alias: alias})
+            .value();
+
+        const URI = connection.URI;
+        const sshHost = connection.sshHost;
+        const sshPort = connection.sshPort;
+        const sshUser = connection.sshUser;
+        const sshPrivateKey = connection.sshPrivateKey;
+
+        let sequelize;
+
+        if (typeof URI === "string") {
+            sequelize = new Sequelize(URI);
+
+        } else if (sshHost) {
+
+            // basic connection to a database
+            const dbConfig = {
+                database: URI.database,
+                username: URI.user,
+                password: URI.password,
+                dialect: URI.others.dialect,
+                port: URI.port
+            };
+
+            // ssh tunnel configuration
+            const tunnelConfig = {
+                username: sshUser,
+                host: sshHost,
+                port: sshPort,
+                privateKey: require("fs").readFileSync(sshPrivateKey)
+            };
+
+            // initialize service
+            const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
+            const connection = await sequelizeTunnelService.getConnection();
+
+            sequelize = connection.sequelize;
+        } else if (!sshHost) {
+            sequelize = new Sequelize(URI.database,
+                URI.user,
+                URI.password,
+                URI.others
+            );
+        }
+
+        const updateColumns = columnsAndValues.filter((rc) => rc.length > 2);
+        const oldColumns = columnsAndValues.filter((rc) => rc.length < 3);
+
+        const newColumnValues = updateColumns.map((uc) => {
+            return ` ${uc[1]}`;
+        });
+        const oldColumnValues = updateColumns.map((uc) => {
+            return ` ${uc[2]}`;
+        });
+
+        let newValues = updateColumns.map((cAndV) => {
+            return ` ${cAndV[0]} = '${cAndV[1]}'`;
+        });
+
+        const oldColumnsLen = oldColumns.length;
+        let oldValues = oldColumns.map((cAndV, index) => {
+            if (index === oldColumnsLen - 1) {
+                return ` ${cAndV[0]} = '${cAndV[1]}'`;
+            } else {
+                return ` ${cAndV[0]} = '${cAndV[1]}' AND`;
+            }
+        });
+
+        const query = `UPDATE ${table.table} SET ${newValues.join()} WHERE ${oldValues.join().replace(/,/g, '')};`;
+
+        auth.addHistoryItem(id, token, 'update', table.table, oldColumnValues.join(), newColumnValues.join());
+        return await sequelize.query(query);
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+async function deleteDefaultTableRow(id, token, connectionName, alias, columnsAndValues) {
+    try {
+        const connection = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .value();
+
+        const table = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .get('queries')
+            .find({alias: alias})
+            .value();
+
+        const URI = connection.URI;
+        const sshHost = connection.sshHost;
+        const sshPort = connection.sshPort;
+        const sshUser = connection.sshUser;
+        const sshPrivateKey = connection.sshPrivateKey;
+
+        let sequelize;
+
+        if (typeof URI === "string") {
+            sequelize = new Sequelize(URI);
+
+        } else if (sshHost) {
+
+            // basic connection to a database
+            const dbConfig = {
+                database: URI.database,
+                username: URI.user,
+                password: URI.password,
+                dialect: URI.others.dialect,
+                port: URI.port
+            };
+
+            // ssh tunnel configuration
+            const tunnelConfig = {
+                username: sshUser,
+                host: sshHost,
+                port: sshPort,
+                privateKey: require("fs").readFileSync(sshPrivateKey)
+            };
+
+            // initialize service
+            const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
+            const connection = await sequelizeTunnelService.getConnection();
+
+            sequelize = connection.sequelize;
+        } else if (!sshHost) {
+            sequelize = new Sequelize(URI.database,
+                URI.user,
+                URI.password,
+                URI.others
+            );
+        }
+
+        const oldColumnsLen = columnsAndValues.length;
+        let where = columnsAndValues.map((cAndV, index) => {
+            if (index === oldColumnsLen - 1) {
+                return ` ${cAndV[0]} = '${cAndV[1]}'`;
+            } else {
+                return ` ${cAndV[0]} = '${cAndV[1]}' and`;
+            }
+        });
+
+        const query = `DELETE FROM ${table.table} WHERE ${where.join().replace(/,/g, '')};`;
+
+        auth.addHistoryItem(id, token, 'delete', table.table, where.join().replace(/,/g, ''));
+        return await sequelize.query(query);
     } catch (e) {
         console.log(e);
     }
@@ -997,5 +1162,7 @@ module.exports = {
     updateTableQuery,
     loadTableResult,
     getTableColumns,
-    getTableSize
+    getTableSize,
+    updateDefaultTableRow,
+    deleteDefaultTableRow
 };

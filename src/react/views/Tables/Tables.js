@@ -125,6 +125,8 @@ export default class Tables extends React.Component {
       console.log('verified user', verified);
 
       if (verified && verified.data) {
+        localStorage.setItem("deleteAccess", verified.data.employee.dataValues.delete_access);
+        localStorage.setItem("updateAccess", verified.data.employee.dataValues.update_access);
         localStorage.setItem("employeePlan", verified.data.subscription.plan_name);
         localStorage.setItem("employeeCountSubFrom", verified.data.subscription.count_from);
         await this.props.changeSignedStatus(true);

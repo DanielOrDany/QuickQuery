@@ -4,7 +4,9 @@ import dateFnsFormat from 'date-fns/format';
 import {
     loadTableResult,
     saveTableResult,
-    getTableSize
+    getTableSize,
+    updateDefaultTableRow,
+    deleteDefaultTableRow
 } from "../../../methods";
 import "./Result.scss";
 import XLSX from "xlsx";
@@ -667,6 +669,46 @@ export default class Result extends React.Component {
         this.setState({setTableModalActive: false});
     };
 
+    handleUpdate = async (rowColumns) => {
+        let result;
+
+        if (localStorage.getItem("current_result_info") && localStorage.getItem("current_result_info").includes('default_query')) {
+            const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+            const connectionTable = localStorage.getItem('current_result');
+            const id = localStorage.getItem('employeeId');
+            const token = localStorage.getItem('employeeToken');
+
+            result = await updateDefaultTableRow(id, token, connectionName, connectionTable, rowColumns);
+        } else {
+            console.log('nope');
+        }
+
+        if (result) {
+            this.reloadTable();
+            this.setState({setTableModalActive: false});
+        }
+    };
+
+    handleDelete = async (rowColumns) => {
+        let result;
+
+        if (localStorage.getItem("current_result_info") && localStorage.getItem("current_result_info").includes('default_query')) {
+            const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+            const connectionTable = localStorage.getItem('current_result');
+            const id = localStorage.getItem('employeeId');
+            const token = localStorage.getItem('employeeToken');
+
+            result = await deleteDefaultTableRow(id, token, connectionName, connectionTable, rowColumns);
+        } else {
+            console.log('nope');
+        }
+
+        if (result) {
+            this.reloadTable();
+            this.setState({setTableModalActive: false});
+        }
+    };
+
     handleImgCancel = () => {
         this.setState({TableImgModalActive: false});
     };
@@ -927,7 +969,9 @@ export default class Result extends React.Component {
                             </tr>
 
                             {/* ------------------------------------------ POPUPS ----------------------------------------- */}
-                            <TableRowPopup isOpen={setTableModalActive} onCancel={this.handleCancel} tableInfo={selectedRowInfo} tableName={tableName}/>
+                            { setTableModalActive &&
+                                <TableRowPopup onCancel={this.handleCancel}  onUpdate={this.handleUpdate} onDelete={this.handleDelete} tableInfo={selectedRowInfo} tableName={tableName}/>
+                            }
                             <TableImgPopup isOpen={TableImgModalActive} onCancel={this.handleImgCancel} columnImg={columnImg}/>
 
                             {/* -------------------------------------- TABLE BODY ---------------------------------- */}

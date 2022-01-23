@@ -25,6 +25,8 @@ module.exports = {
     SAVE_QUERY: 'save-result',
     TEST_QUERY: 'test-query',
     GET_TABLE_COLUMNS: 'get-table-columns',
-    RENAME_CONNECTION: 'rename-connection'
+    RENAME_CONNECTION: 'rename-connection',
+    UPDATE_DEFAULT_TABLE_ROW: 'update-default-table-row',
+    DELETE_DEFAULT_TABLE_ROW: 'delete-default-table-row'
   },
 };

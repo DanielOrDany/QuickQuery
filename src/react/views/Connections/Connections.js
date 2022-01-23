@@ -373,6 +373,8 @@ export default class Connections extends React.Component {
             const verified = await authVerifyToken(id, token);
 
             if (verified && verified.data) {
+                localStorage.setItem("deleteAccess", verified.data.employee.dataValues.delete_access);
+                localStorage.setItem("updateAccess", verified.data.employee.dataValues.update_access);
                 localStorage.setItem("employeePlan", verified.data.subscription.plan_name);
                 localStorage.setItem("employeeCountSubFrom", verified.data.subscription.count_from);
                 await this.props.changeSignedStatus(true);

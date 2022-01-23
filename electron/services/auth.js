@@ -1,5 +1,5 @@
 const axios = require('axios');
-const API_URL = "https://api.quickquery.co";
+const API_URL = "http://localhost:3000"; // "https://api.quickquery.co";
 const https = require('https');
 
 // At request level
@@ -37,8 +37,30 @@ async function verifyToken (id, auth) {
     }
 }
 
+async function addHistoryItem (id, auth, action, table, old_value, new_value) {
+    try {
+        const response = await axios.post(API_URL + '/api/v1/modifications/new', {
+            action,
+            table,
+            old_value,
+            new_value
+        }, {
+            headers: { id, auth },
+            httpsAgent: agent
+        });
+
+        console.log("response", response);
+        return response.data;
+
+    } catch (e) {
+        console.log("error", e);
+        return e.response.error;
+    }
+}
+
 // Export auth's methods
 module.exports = {
     login,
-    verifyToken
+    verifyToken,
+    addHistoryItem
 };

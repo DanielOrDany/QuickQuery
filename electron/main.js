@@ -51,7 +51,7 @@ function createWindow () {
 
   // Set/Remove devtools
   mainWindow.webContents.on("devtools-opened", () => {
-      mainWindow.closeDevTools();
+      // mainWindow.closeDevTools();
   });
 
   // Set/Remove MENU
@@ -285,6 +285,28 @@ ipcMain.on(channels.GET_ALL_TABLES, async (event, connectionName) => {
   } catch (e) {
     unsuccessful.message = e;
     await event.sender.send(channels.GET_ALL_TABLES, unsuccessful);
+  }
+});
+
+ipcMain.on(channels.UPDATE_DEFAULT_TABLE_ROW, async (event, id, token, connectionName, alias, columnsAndValues) => {
+  try {
+    const result = await Table.updateDefaultTableRow(id, token, connectionName, alias, columnsAndValues);
+    successful.data = result;
+    await event.sender.send(channels.UPDATE_DEFAULT_TABLE_ROW, successful);
+  } catch (e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.UPDATE_DEFAULT_TABLE_ROW, unsuccessful);
+  }
+});
+
+ipcMain.on(channels.DELETE_DEFAULT_TABLE_ROW, async (event, id, token, connectionName, alias, columnsAndValues) => {
+  try {
+    const result = await Table.deleteDefaultTableRow(id, token, connectionName, alias, columnsAndValues);
+    successful.data = result;
+    await event.sender.send(channels.DELETE_DEFAULT_TABLE_ROW, successful);
+  } catch (e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.DELETE_DEFAULT_TABLE_ROW, unsuccessful);
   }
 });
 

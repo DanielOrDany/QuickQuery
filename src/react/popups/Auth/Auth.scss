@@ -10,7 +10,7 @@
 
   .blur-back {
     position: absolute;
-    z-index: 99;
+    z-index: 200;
     background: $white;
     filter: blur(1000px);
     width: 100%;

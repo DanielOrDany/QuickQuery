@@ -120,6 +120,34 @@ export const
         });
     },
 
+    updateDefaultTableRow = async (id, token, connectionName, alias, columnsAndValues) => {
+        const aliasUTF8 = utf8.encode(alias);
+        if(aliasUTF8 !== alias) {
+            const aliasBase64 = base64.encode(aliasUTF8);
+            alias = aliasBase64;
+        }
+        return new Promise(resolve => {
+            ipcRenderer.send(channels.UPDATE_DEFAULT_TABLE_ROW, id, token, connectionName, alias, columnsAndValues);
+            ipcRenderer.on(channels.UPDATE_DEFAULT_TABLE_ROW, (event, result) => {
+                resolve(result.data);
+            });
+        });
+    },
+
+    deleteDefaultTableRow = async (id, token, connectionName, alias, columnsAndValues) => {
+        const aliasUTF8 = utf8.encode(alias);
+        if(aliasUTF8 !== alias) {
+            const aliasBase64 = base64.encode(aliasUTF8);
+            alias = aliasBase64;
+        }
+        return new Promise(resolve => {
+            ipcRenderer.send(channels.DELETE_DEFAULT_TABLE_ROW, id, token, connectionName, alias, columnsAndValues);
+            ipcRenderer.on(channels.DELETE_DEFAULT_TABLE_ROW, (event, result) => {
+                resolve(result.data);
+            });
+        });
+    },
+
     testTableQuery = async (connectionName, query) => {
         return new Promise(resolve => {
             ipcRenderer.send(channels.TEST_QUERY, connectionName, query);
