@@ -192,6 +192,82 @@ async function runQuery (connectionName, query) {
     }
 }
 
+async function searchByAllTables(connectionName, value) {
+    try {
+        const connection = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .value();
+
+        const URI = connection.URI;
+        const sshHost = connection.sshHost;
+        const sshPort = connection.sshPort;
+        const sshUser = connection.sshUser;
+        const sshPrivateKey = connection.sshPrivateKey;
+
+        let sequelize;
+
+        if (typeof URI === "string") {
+            sequelize = new Sequelize(URI);
+
+        } else if (sshHost) {
+
+            // basic connection to a database
+            const dbConfig = {
+                database: URI.database,
+                username: URI.user,
+                password: URI.password,
+                dialect: URI.others.dialect,
+                port: URI.port
+            };
+
+            // ssh tunnel configuration
+            const tunnelConfig = {
+                username: sshUser,
+                host: sshHost,
+                port: sshPort,
+                privateKey: require("fs").readFileSync(sshPrivateKey)
+            };
+
+            // initialize service
+            const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
+            const connection = await sequelizeTunnelService.getConnection();
+
+            sequelize = connection.sequelize;
+        } else if (!sshHost) {
+            sequelize = new Sequelize(URI.database,
+                URI.user,
+                URI.password,
+                URI.others
+            );
+        }
+
+        const defaultTables = connection.queries.filter((q) => q.type === 'default_query');
+
+        const result = await Promise.all(defaultTables.map(async (t) => {
+            const columnsQuery = `select column_name from information_schema.columns where table_name='${t.table}'`;
+
+            const tableColumns = await sequelize.query(columnsQuery);
+
+            const columns = tableColumns[0].map(column => {
+                if (column.column_name) {
+                    return column.column_name;
+                } else {
+                    return column.COLUMN_NAME;
+                }
+            });
+
+            console.log(result); // [column_name, ..]
+
+            const query = `SELECT * FROM ${t.table} WHERE ${value} in (${columns.join()});`;
+            const qResult = await sequelize.query(query);
+            return qResult;
+        }));
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 async function updateDefaultTableRow(id, token, connectionName, alias, columnsAndValues) {
     try {
         const connection = db.read()
@@ -1164,5 +1240,6 @@ module.exports = {
     getTableColumns,
     getTableSize,
     updateDefaultTableRow,
-    deleteDefaultTableRow
+    deleteDefaultTableRow,
+    searchByAllTables
 };

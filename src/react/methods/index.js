@@ -42,6 +42,15 @@ export const
         });
     },
 
+    searchByAllTables = async (connectionName, value) => {
+        return new Promise(resolve => {
+            ipcRenderer.send(channels.SEARCH_BY_ALL_TABLES, connectionName, value);
+            ipcRenderer.on(channels.SEARCH_BY_ALL_TABLES, (event, result) => {
+                resolve(result.data);
+            });
+        });
+    },
+
     exportConfig = async () => {
         return new Promise(resolve => {
             ipcRenderer.send(channels.SHARE_DB);

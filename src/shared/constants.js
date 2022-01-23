@@ -27,6 +27,7 @@ module.exports = {
     GET_TABLE_COLUMNS: 'get-table-columns',
     RENAME_CONNECTION: 'rename-connection',
     UPDATE_DEFAULT_TABLE_ROW: 'update-default-table-row',
-    DELETE_DEFAULT_TABLE_ROW: 'delete-default-table-row'
+    DELETE_DEFAULT_TABLE_ROW: 'delete-default-table-row',
+    SEARCH_BY_ALL_TABLES: 'search-by-all-tables',
   },
 };

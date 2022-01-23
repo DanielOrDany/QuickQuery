@@ -6,7 +6,8 @@ import {
     saveTableResult,
     getTableSize,
     updateDefaultTableRow,
-    deleteDefaultTableRow
+    deleteDefaultTableRow,
+    searchByAllTables
 } from "../../../methods";
 import "./Result.scss";
 import XLSX from "xlsx";
@@ -154,6 +155,9 @@ export default class Result extends React.Component {
         }
 
         await this.loadTable();
+        const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+        const searchResult = await searchByAllTables(connectionName, 'nikulshyn.daniel@gmail.com');
+        console.log("searchResult", searchResult);
     }
 
     saveResult(connectionName, result, loadingOptions, removedColumns, subPlan) {

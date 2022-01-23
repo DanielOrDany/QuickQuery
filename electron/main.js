@@ -419,3 +419,14 @@ ipcMain.on(channels.GET_TABLE_COLUMNS, async (event, connectionName, table) => {
     await event.sender.send(channels.GET_TABLE_COLUMNS, unsuccessful);
   }
 });
+
+ipcMain.on(channels.SEARCH_BY_ALL_TABLES, async (event, connectionName, value) => {
+  try {
+    const result = await Table.searchByAllTables(connectionName, value);
+    successful.data = result;
+    await event.sender.send(channels.SEARCH_BY_ALL_TABLES, successful);
+  } catch (e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.SEARCH_BY_ALL_TABLES, unsuccessful);
+  }
+});
