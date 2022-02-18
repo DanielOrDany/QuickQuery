@@ -720,13 +720,12 @@ export default class Result extends React.Component {
 
     setTableImgModal() {
         let active = this.state.TableImgModalActive
-        this.setState({TableImgModalActive: !active})
+        this.setState({ TableImgModalActive: !active })
     }
 
 
     ImgCheck(renderItem) {
         if (String(renderItem).indexOf(".png") > -1) {
-            console.log(renderItem)
             return (
                 <img src={renderItem} alt={'img'} className={'result-table-td-img'}
                      onClick={() => this.setTableImgModal()}/>
@@ -738,6 +737,22 @@ export default class Result extends React.Component {
         }
     }
 
+    hideTablesMenu() {
+        let pageFooter = document.getElementById('result-page-footer-id');
+        let pageContainer = document.getElementById('result-page-container');
+        let menu = document.getElementById('left-tables-menu');
+
+        if (menu.style.display === 'none') {
+            menu.style.display = 'block';
+            pageFooter.style.width = 'calc(100vw - 255px)';
+            pageContainer.style.width = 'calc(100vw - 255px)';
+
+        } else {
+            menu.style.display = 'none';
+            pageFooter.style.width = '100vw';
+            pageContainer.style.width = '100vw';
+        }
+    }
 
     render() {
         let {
@@ -792,12 +807,15 @@ export default class Result extends React.Component {
             return (
                 /* ------------------------------------------ RESULT PAGE ------------------------------------------- */
 
-                <div className="result-page">
+                <div className="result-page" id="result-page-container">
 
                     {/* ------------------------------------- RESULT PAGE HEADER ----------------------------------- */}
 
                     <div className='result-page-header'>
-                        <span>{tableName}</span>
+                        <div className="menu-and-title">
+                            <svg onClick={() => this.hideTablesMenu()} xmlns="http://www.w3.org/2000/svg" height="34px" viewBox="0 0 24 24" width="34px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+                            <span>{tableName}</span>
+                        </div>
 
                         <button className='result-page-header-show-hidden-btn' onClick={() => this.openHiddenColumnsPopup()}>Show hidden</button>
 
@@ -846,7 +864,7 @@ export default class Result extends React.Component {
 
                                                     {/* ---------------- NAME, SORTING ARROW, SEARCH --------------- */}
 
-                                                    <div className={'column-name-and-search'}>
+                                                    <div className='column-name-and-search'>
                                                         {/*<img src={deleteForeverIcon} className="delete-forever-icon" onClick={() => this.removeColumn(header)}/>*/}
                                                         <span id="header-title">{header}</span>
 
@@ -974,7 +992,7 @@ export default class Result extends React.Component {
 
                             {/* ------------------------------------------ POPUPS ----------------------------------------- */}
                             { setTableModalActive &&
-                                <TableRowPopup onCancel={this.handleCancel}  onUpdate={this.handleUpdate} onDelete={this.handleDelete} tableInfo={selectedRowInfo} tableName={tableName}/>
+                                <TableRowPopup onCancel={this.handleCancel}  onUpdate={this.handleUpdate} onDelete={this.handleDelete} tableRows={selectedRowInfo} tableName={tableName}/>
                             }
                             <TableImgPopup isOpen={TableImgModalActive} onCancel={this.handleImgCancel} columnImg={columnImg}/>
 
@@ -986,7 +1004,7 @@ export default class Result extends React.Component {
 
                                             /* ------------------------------ TABLE LINE ---------------------------- */
 
-                                            <tr key={rowKey} className={'table-line'}>
+                                            <tr key={rowKey} className='table-line'>
                                                 { Object.values(item).map((get_item, key) => {
 
                                                     let renderItem;
@@ -1036,7 +1054,7 @@ export default class Result extends React.Component {
 
                     {/* ------------------------------------- RESULT PAGE FOOTER ----------------------------------- */}
 
-                    <div className="result-page-footer">
+                    <div className="result-page-footer" id="result-page-footer-id">
 
                         {/* ----------------------------------- FOOTER SAVE BUTTON --------------------------------- */}
 

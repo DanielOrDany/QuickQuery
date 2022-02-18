@@ -10,7 +10,7 @@ export default class TableRowPopup extends React.Component {
             onCancel,
             onUpdate,
             onDelete,
-            tableInfo,
+            tableRows,
             tableName } = this.props;
 
         this.state = {
@@ -18,8 +18,9 @@ export default class TableRowPopup extends React.Component {
             onUpdate,
             onDelete,
             tableName,
-            oldRowColumns: JSON.parse(JSON.stringify(tableInfo)),
-            rowColumns: tableInfo
+            tableType: JSON.parse(localStorage.getItem('current_result_info')).type,
+            oldRowColumns: JSON.parse(JSON.stringify(tableRows)),
+            rowColumns: tableRows
         };
 
         this.handleColumnChange = this.handleColumnChange.bind(this);
@@ -63,7 +64,7 @@ export default class TableRowPopup extends React.Component {
                         <img className='table-row-popup-cross' src={cross_icon} onClick={this.state.onCancel} alt={'cross'}/>
 
                         <div className='table-row-popup-title'>
-                            <span>{this.state.tableName}</span>
+                            <span>✏️ {this.state.tableName}</span>
                         </div>
 
                         <div className='table-row-popup-body'>
@@ -99,15 +100,15 @@ export default class TableRowPopup extends React.Component {
                         </div>
 
                         <div className='table-row-popup-buttons'>
-                            { updateAccess &&
+                            { updateAccess && this.state.tableType !== 'new' &&
                                 <div className='table-row-popup-btn update'>
-                                    <button onClick={() => this.state.onUpdate(this.state.rowColumns)}>Update</button>
+                                    <button disabled={this.state.tableType === 'new'} onClick={() => this.state.onUpdate(this.state.rowColumns)}>Update</button>
                                 </div>
                             }
 
-                            { deleteAccess &&
+                            { deleteAccess && this.state.tableType !== 'new' &&
                                 <div className='table-row-popup-btn delete'>
-                                    <button onClick={() => this.state.onDelete(this.state.rowColumns)}>Delete</button>
+                                    <button disabled={this.state.tableType === 'new'} onClick={() => this.state.onDelete(this.state.rowColumns)}>Delete</button>
                                 </div>
                             }
 
