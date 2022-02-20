@@ -1,5 +1,5 @@
 const axios = require('axios');
-const API_URL = "http://localhost:3000"; // "https://api.quickquery.co";
+const API_URL = "https://api.quickquery.co";
 const https = require('https');
 
 // At request level
@@ -14,7 +14,7 @@ async function login (email, password) {
         const response = await axios.post(API_URL + '/api/v1/employees/sign-in', {
             email: lowerEmail, password: password
         }, { httpsAgent: agent });
-
+        console.log("Login", response.data);
         return response.data;
 
     } catch (e) {
