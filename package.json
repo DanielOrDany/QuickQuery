@@ -40,6 +40,7 @@
     "react-detect-offline": "^2.4.0",
     "react-dom": "^16.8.6",
     "react-dotenv": "^0.1.3",
+    "react-hot-toast": "^2.2.0",
     "react-lineto": "^3.2.1",
     "react-onclickoutside": "^6.9.0",
     "react-router-dom": "^5.1.2",
@@ -79,11 +80,13 @@
     "deploy-win": "npm run build && npm run build-electron-win && npm run package-win"
   },
   "build": {
-    "publish": [{
-      "provider": "github",
-      "owner": "DanielOrDany",
-      "repo": "QuickQuery"
-    }],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "DanielOrDany",
+        "repo": "QuickQuery"
+      }
+    ],
     "appId": "quick-query",
     "productName": "QuickQuery",
     "copyright": "Copyright © 2020 BatiBots",

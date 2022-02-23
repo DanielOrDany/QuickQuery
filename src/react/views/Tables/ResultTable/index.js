@@ -22,6 +22,7 @@ import filterIcon from "./filterIcon.svg";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import TableFilter from "../popups/TableFilter";
 import MessagePopup from "../../../popups/MessagePopup";
+import toast, { Toaster } from 'react-hot-toast';
 
 const DESC = "DESC";
 const ASC = "ASC";
@@ -670,7 +671,9 @@ export default class Result extends React.Component {
     }
 
     handleCancel = () => {
-        this.setState({setTableModalActive: false});
+        this.setState({
+            setTableModalActive: false
+        });
     };
 
     handleUpdate = async (rowColumns) => {
@@ -683,8 +686,9 @@ export default class Result extends React.Component {
             const token = localStorage.getItem('employeeToken');
 
             result = await updateDefaultTableRow(id, token, connectionName, connectionTable, rowColumns);
+
         } else {
-            console.log('nope');
+            toast('Sorry, something went wrong!', '🌚');
         }
 
         if (result) {
@@ -704,7 +708,7 @@ export default class Result extends React.Component {
 
             result = await deleteDefaultTableRow(id, token, connectionName, connectionTable, rowColumns);
         } else {
-            console.log('nope');
+            toast('Sorry, something went wrong!', '🌚');
         }
 
         if (result) {
@@ -808,6 +812,10 @@ export default class Result extends React.Component {
                 /* ------------------------------------------ RESULT PAGE ------------------------------------------- */
 
                 <div className="result-page" id="result-page-container">
+                    <Toaster
+                        position="bottom-right"
+                        reverseOrder={false}
+                    />
 
                     {/* ------------------------------------- RESULT PAGE HEADER ----------------------------------- */}
 

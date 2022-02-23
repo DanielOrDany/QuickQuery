@@ -286,7 +286,7 @@ export default class Tables extends React.Component {
                                   </div>
 
                                   {/* --------------------------------- TABLE NAME ----------------------------------- */}
-                                  <div className='table-name' onClick={() => this.openTable(table.alias)}>
+                                  <div className='table-name' title={table.alias} onClick={() => this.openTable(table.alias)}>
                                     {
                                       table.alias.match(engRE) ?
                                           <span id="table-n" style={
@@ -362,12 +362,8 @@ export default class Tables extends React.Component {
                       <span>Table is not selected. <br/>
                       Please select it from the list on left.</span>
 
-
-
                       <div className='empty-right-side-tables-page-btn'>
-                        <button onClick={() => this.createTable()}>Create
-                          table
-                        </button>
+                        <span>OR</span> <button onClick={() => this.createTable()}>Create New Spreadsheet</button>
                       </div>
 
                     </div>

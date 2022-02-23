@@ -336,15 +336,15 @@ async function updateDefaultTableRow(id, token, connectionName, alias, columnsAn
         });
 
         let newValues = updateColumns.map((cAndV) => {
-            return ` ${cAndV[0]} = '${cAndV[1]}'`;
+            return ` ${cAndV[0]} ${typeof cAndV[1] === 'string' ? `= '${cAndV[1]}'` : `is ${cAndV[1]}`}`;
         });
 
         const oldColumnsLen = oldColumns.length;
         let oldValues = oldColumns.map((cAndV, index) => {
             if (index === oldColumnsLen - 1) {
-                return ` ${cAndV[0]} = '${cAndV[1]}'`;
+                return ` ${cAndV[0]} ${typeof cAndV[1] === 'string' ? `= '${cAndV[1]}'` : `is ${cAndV[1]}`}`;
             } else {
-                return ` ${cAndV[0]} = '${cAndV[1]}' AND`;
+                return ` ${cAndV[0]} ${typeof cAndV[1] === 'string' ? `= '${cAndV[1]}'` : `is ${cAndV[1]}`} AND`;
             }
         });
 
@@ -417,9 +417,9 @@ async function deleteDefaultTableRow(id, token, connectionName, alias, columnsAn
         const oldColumnsLen = columnsAndValues.length;
         let where = columnsAndValues.map((cAndV, index) => {
             if (index === oldColumnsLen - 1) {
-                return ` ${cAndV[0]} = '${cAndV[1]}'`;
+                return ` ${cAndV[0]} ${typeof cAndV[1] === 'string' ? `= '${cAndV[1]}'` : `is ${cAndV[1]}`}`;
             } else {
-                return ` ${cAndV[0]} = '${cAndV[1]}' and`;
+                return ` ${cAndV[0]} ${typeof cAndV[1] === 'string' ? `= '${cAndV[1]}'` : `is ${cAndV[1]}`} and`;
             }
         });
 
