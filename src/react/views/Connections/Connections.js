@@ -14,6 +14,10 @@ import footer_arrow_left from "../../icons/connections-page-footer-arrow-left.sv
 import footer_arrow_right from "../../icons/connections-page-footer-arrow-right.svg";
 import filters_arrow from "../../icons/connections-page-filter-arrow.svg";
 import empty_connections_page_icon from "./icons/empty-connections-page.svg";
+
+import firestore from "../../icons/firestore.svg";
+import postgresql from "../../icons/postgresql.svg";
+import mysql from "../../icons/mysql.svg";
 import ConfigureManuallyPopup from "./popups/ConfigureManuallyPopup";
 import SimplifiedConnectionPopup from "./popups/SimplifiedConnectionPopup";
 import SSHConnectionPopup from "./popups/SSHConnectionsPopup";
@@ -24,6 +28,7 @@ import ConnectionErrorModal from '../../popups/MessagePopup';
 import ssh_popup_arrow_hint from "../../icons/ssh-popup-arrow-hint.svg";
 import ssh_popup_arrow_hint2 from "../../icons/ssh-popup-arrow-hint2.svg";
 import ssh_popup_arrow_hint3 from "../../icons/ssh-popup-arrow-hint3.svg";
+import ConnectionPopup from "./popups/ConnectionPopup";
 
 
 export default class Connections extends React.Component {
@@ -55,6 +60,7 @@ export default class Connections extends React.Component {
             isSimplifiedConnectionPopup: false,
             isConfigureManuallyPopup: false,
             isSSHConnectionPopup: false,
+            isConnectionPopup: false,
             firstModalHint: true,
             secondModalHint: true,
             isDBMiniMenu: null,
@@ -68,6 +74,14 @@ export default class Connections extends React.Component {
             orderByDate: false,
             isErrorOpen: false
         };
+    };
+
+    openConnectionPopup = () => {
+        this.setState({ isConnectionPopup: true });
+    };
+
+    closeConnectionPopup = () => {
+        this.setState({ isConnectionPopup: false });
     };
 
     openSimplifiedConnectionPopup = () => {
@@ -573,6 +587,30 @@ export default class Connections extends React.Component {
         );
     };
 
+    chooseDatabase = (type) => {
+
+        if (type === "mysql" || type === "postgresql") {
+            this.setState({
+                isSimplifiedConnectionPopup: true,
+                isConnectionPopup: false
+            });
+        } else {
+
+        }
+    };
+
+    databaseList = () => {
+        return(
+            <div className="choose-database-popup">
+                <div className="database-list">
+                    <img src={firestore} onClick={() => this.chooseDatabase("firestore")}/>
+                    <img src={mysql} onClick={() => this.chooseDatabase("mysql")}/>
+                    <img src={postgresql} onClick={() => this.chooseDatabase("postgresql")}/>
+                </div>
+            </div>
+        );
+    };
+
     smallInput = (editConnection) => {
         return(
             <div>
@@ -919,6 +957,7 @@ export default class Connections extends React.Component {
             isSimplifiedConnectionPopup,
             isSSHConnectionPopup,
             isConfigureManuallyPopup,
+            isConnectionPopup,
             isErrorOpen,
             isDeleteOpen,
             errorMessage,
@@ -949,7 +988,8 @@ export default class Connections extends React.Component {
                 <div className='connections-page-header'>
                     <span className="connections-page-name">Databases</span>
                     <button className="add-database-button" type="button" id="add-button"
-                            onClick={() => this.openSimplifiedConnectionPopup()}>Add database
+                            onClick={() => this.openConnectionPopup()}
+                    >Add database
                     </button>
                 </div>
 
@@ -1118,6 +1158,13 @@ export default class Connections extends React.Component {
                 </div>
 
                 {/* ----------------------------------------CONNECTION POPUPS----------------------------------------- */}
+                <ConnectionPopup
+                    isOpen={isConnectionPopup}
+                    onCancel={() => this.closeConnectionPopup()}
+                >
+                    {this.databaseList()}
+                </ConnectionPopup>
+
                 <SimplifiedConnectionPopup
                     isOpen={isSimplifiedConnectionPopup}
                     onCancel={this.handleCancel}

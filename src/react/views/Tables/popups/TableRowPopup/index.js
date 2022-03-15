@@ -2,6 +2,7 @@ import React from 'react';
 import './TableModal.scss';
 import cross_icon from "../../../../icons/pop-up-cross.svg";
 import {authVerifyToken} from "../../../../methods";
+import toast from "react-hot-toast";
 
 export default class TableRowPopup extends React.Component {
     constructor(props) {
@@ -102,13 +103,21 @@ export default class TableRowPopup extends React.Component {
                         <div className='table-row-popup-buttons'>
                             { updateAccess && this.state.tableType !== 'new' &&
                                 <div className='table-row-popup-btn update'>
-                                    <button disabled={this.state.tableType === 'new'} onClick={() => this.state.onUpdate(this.state.rowColumns)}>Update</button>
+                                    <button disabled={this.state.tableType === 'new'} onClick={() => toast.promise(this.state.onUpdate(this.state.rowColumns), {
+                                        loading: '⏳ Saving...',
+                                        success: <b>👏 Table updated!</b>,
+                                        error: <b>❌ Could not save.</b>,
+                                    })}>Update</button>
                                 </div>
                             }
 
                             { deleteAccess && this.state.tableType !== 'new' &&
                                 <div className='table-row-popup-btn delete'>
-                                    <button disabled={this.state.tableType === 'new'} onClick={() => this.state.onDelete(this.state.rowColumns)}>Delete</button>
+                                    <button disabled={this.state.tableType === 'new'} onClick={() => toast.promise(this.state.onDelete(this.state.rowColumns), {
+                                        loading: '⏳ Deleting...',
+                                        success: <b>👏 Table updated!</b>,
+                                        error: <b>❌ Could not delete.</b>,
+                                    })}>Delete</button>
                                 </div>
                             }
 
