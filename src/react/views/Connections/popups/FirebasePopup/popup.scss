@@ -1,6 +1,6 @@
 
 /* POP-UP */
-.connection-popup-BG {
+.firebase-popup-BG {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,25 +17,30 @@
 
 
 
+
   /* POP-UP WINDOW */
-  .connection-popup-window {
-    height: 422px;
-    width: 850px;
+  .firebase-popup-window {
+    height: 620px;
+    width: 660px;
 
     background: #FFFFFF;
     border-radius: 8px 8px 6px 6px;
 
 
 
+
     /* POP-UP HEADER */
-    .connection-popup-header {
+    .firebase-popup-header {
       display: flex;
       align-items: center;
-      padding-left: 46px;
       height: 59px;
-      width: 850px;
-      background: linear-gradient(180deg, #2A7E52 0%, #27774C 99.97%);
+      width: 660px;
       border-radius: 6px 6px 0 0;
+      background: linear-gradient(180deg, #2A7E52 0%, #27774C 99.97%);
+      margin-bottom: 0;
+      padding-left: 46px;
+
+
 
 
       /* POP-UP HEADER TEXT */
@@ -45,9 +50,6 @@
         font-weight: 500;
         font-size: 18px;
         line-height: 21px;
-
-        display: flex;
-        align-items: center;
 
         color: #FFFFFF;
 
@@ -59,28 +61,28 @@
 
 
 
+
+
+
     /* POP-UP CROSS */
-    .connection-popup-cross {
+    .firebase-popup-cross {
       display: flex;
       margin-left: auto;
       margin-top: 34px;
-      margin-right: 46px;
+      margin-right: 35px;
 
       height: 22px;
     }
 
-    .connection-popup-cross:hover {
+    .firebase-popup-cross:hover {
       cursor: pointer;
     }
 
 
 
-
     /* POP-UP TITLE */
-    .connection-popup-title {
-      display: flex;
-      justify-content: center;
-      margin-right: 46px;
+    .firebase-popup-title {
+      padding-left: 46px;
 
       span {
         font-family: Roboto, sans-serif;
@@ -95,23 +97,25 @@
 
 
 
+
+
     /* POP-UP BUTTON */
-    .connection-popup-btn {
+    .firebase-popup-btn {
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      margin-top: 4px;
-
+      margin-top: 11px;
 
 
       /* POP-UP CANCEL BUTTON */
-      .connection-popup-cancel-btn {
+      .firebase-popup-cancel-btn {
         height: 42px;
         width: 104px;
+        text-transform: capitalize;
+        margin-right: 26px;
+
         border: 2px solid #D3D3D3;
         border-radius: 4px;
-        text-transform: capitalize;
-        margin-right: 25px;
 
         font-family: Roboto, sans-serif;
         font-style: normal;
@@ -126,13 +130,14 @@
 
 
       /* POP-UP CREATE BUTTON */
-      .connection-popup-create-btn {
+      .firebase-popup-create-btn {
         height: 42px;
         width: 108px;
+        text-transform: capitalize;
+        margin-right: 45px;
+
         background: #28794E;
         border-radius: 4px;
-        text-transform: capitalize;
-        margin-right: 46px;
 
         font-family: Roboto, sans-serif;
         font-style: normal;
@@ -146,37 +151,21 @@
       }
     }
 
-    /* POP-UP CANCEL BUTTON */
-    #connection-popup-cancel-btn:hover {
-      color: #5C5D6F;
-      border: 2px solid #5C5D6F;
-      transition: .2s;
-    }
-
-
-    /* POP-UP CREATE BUTTON */
-    #connection-popup-create-btn:hover {
-      background: #5BC470;
-      transition: .2s;
-    }
-
-
-    .connection-popup-btn-no-error {
+    .firebase-popup-btn-no-error {
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      margin-top: 36px;
-
-
+      margin-top: 60px;
 
       /* POP-UP CANCEL BUTTON */
-      .connection-popup-cancel-btn {
+      .firebase-popup-cancel-btn {
         height: 42px;
         width: 104px;
+        text-transform: capitalize;
+        margin-right: 26px;
+
         border: 2px solid #D3D3D3;
         border-radius: 4px;
-        text-transform: capitalize;
-        margin-right: 25px;
 
         font-family: Roboto, sans-serif;
         font-style: normal;
@@ -191,13 +180,14 @@
 
 
       /* POP-UP CREATE BUTTON */
-      .connection-popup-create-btn {
+      .firebase-popup-create-btn {
         height: 42px;
         width: 108px;
+        text-transform: capitalize;
+        margin-right: 45px;
+
         background: #28794E;
         border-radius: 4px;
-        text-transform: capitalize;
-        margin-right: 46px;
 
         font-family: Roboto, sans-serif;
         font-style: normal;
@@ -212,7 +202,7 @@
     }
 
 
-    .configure-error-message {
+    .firebase-error-message {
       background: #FFEEED;
       border: 1px solid #FF6C65;
       box-sizing: border-box;
@@ -221,6 +211,7 @@
       height: 32px;
       width: 170px;
       padding-left: 13px;
+      margin-top: 17px;
       margin-left: 45px;
       padding-top: 1px;
 
@@ -238,4 +229,16 @@
       }
     }
   }
+}
+
+
+#firebase-popup-cancel-btn:hover {
+  color: #5C5D6F;
+  border: 2px solid #5C5D6F;
+  transition: .2s;
+}
+
+#firebase-popup-create-btn:hover {
+  background: #5BC470;
+  transition: .2s;
 }

@@ -189,6 +189,46 @@
   padding-top: 20px;
 }
 
+/* ADD CONNECTION FIREBASE-INPUTS */
+.firebase-information-field {
+  display: flex;
+  flex-direction: column;
+  margin-left: 46px;
+
+  .firebase-input-title {
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 21px;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    color: #000000;
+  }
+
+  .firebase-form-control {
+    height: 52px;
+    width: 569px;
+    background: #FFFFFF;
+    border: 2px solid #D8DFEA;
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding-left: 22px;
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    color: #000000;
+  }
+
+  .firebase-form-control:hover {
+    background: #FFFFFF;
+    border: 3px solid #8EB6F4;
+    border-radius: 4px;
+  }
+}
+
 /* ADD CONNECTION BIG-INPUTS */
 .big-input-modal {
   margin-left: 46px;
@@ -513,32 +553,8 @@
             padding-left: 21px;
           }
         }
-
-
-        .ssh-choose-scroll-hint {
-          display: flex;
-          margin-top: 75px;
-          width: 100%;
-          justify-content: center;
-          align-items: center;
-
-          span {
-            font-family: Roboto, sans-serif;
-            font-style: normal;
-            font-weight: bold;
-            font-size: 20px;
-            line-height: 21px;
-
-            color: #3E3E3E;
-          }
-
-          img {
-            margin-left: 10px;
-          }
-        }
       }
     }
-
 
     .ssh-block-line {
       height: 1px;
@@ -884,7 +900,6 @@
   #schema-tip {
     width: 24px;
 
-    margin-bottom: 5px;
     margin-left: 5px;
   }
 
@@ -901,14 +916,10 @@
 
     background-color: #2d9d73;
     border-radius: 50%;
-
   }
 
   .help-tip:before {
     content: '?';
-
-    font-weight: bold;
-
     color: $white;
   }
 

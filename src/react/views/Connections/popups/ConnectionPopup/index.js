@@ -12,14 +12,14 @@ const ConnectionPopup = ({
         <>
             {isOpen &&
             <Portal>
-                <div className={'configure-manually-popup-BG'}>
-                    <div className={'configure-manually-popup-window'}>
-                        <div className={'configure-manually-popup-header'}>
+                <div className={'connection-popup-BG'}>
+                    <div className={'connection-popup-window'}>
+                        <div className={'connection-popup-header'}>
                             <span>Adding new database</span>
                         </div>
-                        <img className='configure-manually-popup-cross' src={cross_icon} onClick={onCancel}
+                        <img className='connection-popup-cross' src={cross_icon} onClick={onCancel}
                              alt={'cross'}/>
-                        <div className='configure-manually-popup-title'>
+                        <div className='connection-popup-title'>
                             <span>Select your database</span>
                         </div>
                         <div>{children}</div>

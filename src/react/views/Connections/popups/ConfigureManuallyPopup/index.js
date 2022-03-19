@@ -18,14 +18,14 @@ const ConfigureManuallyPopup = ({
         <>
             {isOpen &&
             <Portal>
-                <div className={'configure-manually-popup-BG'}>
-                    <div className={'configure-manually-popup-window'}>
-                        <div className={'configure-manually-popup-header'}>
+                <div className='configure-manually-popup-BG'>
+                    <div className='configure-manually-popup-window'>
+                        <div className='configure-manually-popup-header'>
                             <span>Fill out all required information for creating a connection manually</span>
                         </div>
-                        <img className={'configure-manually-popup-cross'} src={cross_icon} onClick={onCancel}
+                        <img className='configure-manually-popup-cross' src={cross_icon} onClick={onCancel}
                              alt={'cross'}/>
-                        <div className={'configure-manually-popup-title'}>
+                        <div className='configure-manually-popup-title'>
                             <span>Manual connection</span>
                         </div>
                         <div>{children}</div>

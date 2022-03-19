@@ -29,6 +29,7 @@ import ssh_popup_arrow_hint from "../../icons/ssh-popup-arrow-hint.svg";
 import ssh_popup_arrow_hint2 from "../../icons/ssh-popup-arrow-hint2.svg";
 import ssh_popup_arrow_hint3 from "../../icons/ssh-popup-arrow-hint3.svg";
 import ConnectionPopup from "./popups/ConnectionPopup";
+import FirebasePopup from "./popups/FirebasePopup";
 
 
 export default class Connections extends React.Component {
@@ -53,10 +54,13 @@ export default class Connections extends React.Component {
             sshPrivateKeyInput: '',
             keyInput: '',
             errorMessage: '',
+            databaseType: '',
             /*isOpen: false,*/
             isDeleteOpen: false,
             ConfigureManuallyPopup: false,
             choosedConnetion: '',
+            firebaseConfigInput: '',
+            isFirebaseConnectionPopup: false,
             isSimplifiedConnectionPopup: false,
             isConfigureManuallyPopup: false,
             isSSHConnectionPopup: false,
@@ -82,6 +86,10 @@ export default class Connections extends React.Component {
 
     closeConnectionPopup = () => {
         this.setState({ isConnectionPopup: false });
+    };
+
+    closeFirebasePopup = () => {
+        this.setState({ isFirebaseConnectionPopup: false });
     };
 
     openSimplifiedConnectionPopup = () => {
@@ -259,12 +267,13 @@ export default class Connections extends React.Component {
         let passwordInput = this.state.passwordInput;
         let databaseInput = this.state.databaseInput;
         let schemaInput = this.state.schemaInput;
-        let dtypeInput = this.state.dtypeInput;
+        let dtypeInput = this.state.databaseType; //this.state.dtypeInput;
         let uriInput = this.state.uriInput;
         let sshHostInput = this.state.sshHostInput;
         let sshUserInput = this.state.sshUserInput;
         let sshPortInput = this.state.sshPortInput;
         let sshPrivateKeyInput = this.state.sshPrivateKeyInput;
+        let firebaseConfigInput = this.state.firebaseConfigInput;
         let successfullVerify = false;
 
         // Check valid inputs
@@ -291,6 +300,10 @@ export default class Connections extends React.Component {
                 this.inputVerify(sshPortInput) &&
                 this.inputVerify(sshUserInput) &&
                 this.inputVerify(sshPrivateKeyInput);
+        } else if (this.state.isFirebaseConnectionPopup) {
+            successfullVerify =
+                this.inputVerify(nameInput) &&
+                this.inputVerify(firebaseConfigInput)
         } else {
             successfullVerify =
                 this.inputVerify(nameInput) &&
@@ -298,7 +311,7 @@ export default class Connections extends React.Component {
                 this.inputVerify(schemaInput);
         }
 
-        if(successfullVerify) {
+        if (successfullVerify) {
             let connectionBody = {};
 
             if (this.state.isConfigureManuallyPopup) {
@@ -326,8 +339,15 @@ export default class Connections extends React.Component {
                     sshUser: sshUserInput,
                     sshPrivateKey: sshPrivateKeyInput
                 };
+            } else if (this.state.isFirebaseConnectionPopup) {
+                connectionBody = {
+                    firebaseConfig: firebaseConfigInput,
+                    dtype: dtypeInput,
+                    name: nameInput
+                };
             } else {
                 connectionBody = {
+                    dtype: dtypeInput,
                     schema: schemaInput,
                     uri: uriInput,
                     name: nameInput
@@ -461,6 +481,15 @@ export default class Connections extends React.Component {
             }
         }
     };
+    firebaseConfigOnChange = (e) => {
+        if (e) {
+            if (e.target && e.target.files[0]) {
+                this.setState({firebaseConfigInput: e.target.files[0].path})
+            } else {
+                this.setState({errorMessage: "Try to reload private key", firebaseConfigInput: ""})
+            }
+        }
+    };
 
     handleErrorCancel = () => {
         this.setState({
@@ -533,21 +562,21 @@ export default class Connections extends React.Component {
                                    disabled={!!editConnection}
                                    onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
                         </div>
-                        <div className="choose-db-field">
-                            <span id="choose-db-title">Database</span>
-                            <select
-                                className="selector"
-                                id="choose-db"
-                                value={this.state.dtypeInput}
-                                defaultValue={editConnection && editConnection.URI.others && editConnection.URI.others.dialect}
-                                onChange={this.dtypeOnChange}
-                                disabled={!!editConnection}
-                            >
-                                <option value="mysql">MySQL</option>
-                                <option value="mysql">MariaDB</option>
-                                <option value="postgres">Postgres</option>
-                            </select>
-                        </div>
+                        {/*<div className="choose-db-field">*/}
+                        {/*    <span id="choose-db-title">Database</span>*/}
+                        {/*    <select*/}
+                        {/*        className="selector"*/}
+                        {/*        id="choose-db"*/}
+                        {/*        value={this.state.dtypeInput}*/}
+                        {/*        defaultValue={editConnection && editConnection.URI.others && editConnection.URI.others.dialect}*/}
+                        {/*        onChange={this.dtypeOnChange}*/}
+                        {/*        disabled={!!editConnection}*/}
+                        {/*    >*/}
+                        {/*        <option value="mysql">MySQL</option>*/}
+                        {/*        <option value="mysql">MariaDB</option>*/}
+                        {/*        <option value="postgres">Postgres</option>*/}
+                        {/*    </select>*/}
+                        {/*</div>*/}
                     </div>
                 </div>
                 <div className="big-input-buttons">
@@ -588,14 +617,19 @@ export default class Connections extends React.Component {
     };
 
     chooseDatabase = (type) => {
-
-        if (type === "mysql" || type === "postgresql") {
+        if (type === "mysql" || type === "postgres") {
             this.setState({
                 isSimplifiedConnectionPopup: true,
-                isConnectionPopup: false
+                isConnectionPopup: false,
+                databaseType: type
             });
-        } else {
-
+        } else if (type === "firestore") {
+            console.log("firestore");
+            this.setState({
+                isFirebaseConnectionPopup: true,
+                isConnectionPopup: false,
+                databaseType: type
+            });
         }
     };
 
@@ -605,7 +639,26 @@ export default class Connections extends React.Component {
                 <div className="database-list">
                     <img src={firestore} onClick={() => this.chooseDatabase("firestore")}/>
                     <img src={mysql} onClick={() => this.chooseDatabase("mysql")}/>
-                    <img src={postgresql} onClick={() => this.chooseDatabase("postgresql")}/>
+                    <img src={postgresql} onClick={() => this.chooseDatabase("postgres")}/>
+                </div>
+            </div>
+        );
+    };
+
+    firebaseInput = (editConnection) => {
+        return(
+            <div>
+                <div className="firebase-information-field">
+                    <span className="firebase-input-title">Name connection</span>
+                    <input id="input-field-name" ref="name" className="firebase-form-control" type="text" type="search"
+                           defaultValue={editConnection && editConnection.name}
+                           onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
+                </div>
+                <div className="firebase-information-field">
+                    <span className="firebase-input-title">Firebase config</span>
+                    <input id="input-field-host" className="firebase-config-file" type="file"
+                           disabled={!!editConnection}
+                           onChange={this.firebaseConfigOnChange}/>
                 </div>
             </div>
         );
@@ -621,24 +674,12 @@ export default class Connections extends React.Component {
                            onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
                 </div>
                 <div className="small-information-field">
-                    <span className="small-input-title">Database URL</span>
+                    <span className="small-input-title">Firebase config</span>
                     <input id="input-field-uri" ref="uri" className="small-form-control" type="text" type="search"
                            defaultValue={editConnection && typeof editConnection.URI === "string" && editConnection.URI}
                            disabled={!!editConnection}
                            onChange={this.uriOnChange} onKeyPress={this.uriKeyPress}
                     />
-                </div>
-                <div className="small-information-field">
-                    <span className="small-input-title">Schema name
-                        {/*<div className="help-tip" id="schema-tip">
-                            <p>A schema is a collection of database objects associated with one particular database username.</p>
-                        </div>*/}
-                    </span>
-                    <input id="input-field-schema" ref="schema" className="small-form-control" type="text"
-                           type="search"
-                           disabled={!!editConnection}
-                           defaultValue={editConnection && editConnection.schema}
-                           onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                 </div>
                 <div className="small-information-buttons">
                     <Button id="configure-manually-btn"
@@ -677,7 +718,6 @@ export default class Connections extends React.Component {
                 <div className="ssh-input-modal-body">
                     <div className="ssh-body-first-block">
                         <div className="ssh-body-first-block-left-column">
-
                             <div className="ssh-information-field">
                                 <span className="ssh-input-title">Name connection</span>
                                 <input id="input-field-name" ref="name" className="ssh-form-control" defaultValue={editConnection && editConnection.name} type="text" placeholder="Database" type="search"
@@ -696,23 +736,8 @@ export default class Connections extends React.Component {
                                        placeholder="Password" type="password" defaultValue={editConnection && editConnection.sshHost && editConnection.URI.password}
                                        onChange={this.passwordOnChange} onKeyPress={this.passwordKeyPress}/>
                             </div>
-                            <div className="information-field">
-                            <span className="ssh-input-title-and-hint">Database Schema name
-                                <div className="help-tip" id="schema-tip">
-                                    <p>A schema is a collection of database objects associated with one particular database username.</p>
-                                </div>
-                            </span>
-                                <input id="input-field-schema" ref="schema" className="ssh-form-control" type="text"
-                                       disabled={!!editConnection}
-                                       placeholder="public" type="search" defaultValue={editConnection && editConnection.sshHost && editConnection.schema}
-                                       onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
-                            </div>
-
                         </div>
-
-
                         <div className="ssh-body-first-block-right-column">
-
                             <div className="ssh-information-field">
                                 <span className="ssh-input-title">Database User</span>
                                 <input id="input-field-user" ref="user" className="ssh-form-control" type="text" placeholder="root" type="search"
@@ -728,30 +753,33 @@ export default class Connections extends React.Component {
                                        defaultValue={editConnection && editConnection.sshHost && editConnection.URI.database}
                                        onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
                             </div>
-                            <div className="ssh-choose-db-field">
-                                <span id="choose-db-title" className="ssh-choose-db-title">Database Type</span>
-                                <select
-                                    className="selector"
-                                    id="choose-db"
-                                    disabled={!!editConnection}
-                                    defaultValue={editConnection && editConnection.sshHost && editConnection.URI.others.dialect}
-                                    onChange={this.dtypeOnChange}
-                                >
-                                    <option value="mysql">MySQL</option>
-                                    <option value="mysql">MariaDB</option>
-                                    <option value="postgres">Postgres</option>
-                                </select>
+                            <div className="information-field">
+                                <span className="ssh-input-title-and-hint">Database Schema name
+                                    <div className="help-tip" id="schema-tip">
+                                        <p>A schema is a collection of database objects associated with one particular database username.</p>
+                                    </div>
+                                </span>
+                                <input id="input-field-schema" ref="schema" className="ssh-form-control" type="text"
+                                       disabled={!!editConnection}
+                                       placeholder="public" type="search" defaultValue={editConnection && editConnection.sshHost && editConnection.schema}
+                                       onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                             </div>
-
-                            <div className='ssh-choose-scroll-hint'>
-                                <span>Scroll down</span>
-
-                                <img src={ssh_popup_arrow_hint3} alt={'arrow down'}/>
-                            </div>
-
+                            {/*<div className="ssh-choose-db-field">*/}
+                            {/*    <span id="choose-db-title" className="ssh-choose-db-title">Database Type</span>*/}
+                            {/*    <select*/}
+                            {/*        className="selector"*/}
+                            {/*        id="choose-db"*/}
+                            {/*        disabled={!!editConnection}*/}
+                            {/*        defaultValue={editConnection && editConnection.sshHost && editConnection.URI.others.dialect}*/}
+                            {/*        onChange={this.dtypeOnChange}*/}
+                            {/*    >*/}
+                            {/*        <option value="mysql">MySQL</option>*/}
+                            {/*        <option value="mysql">MariaDB</option>*/}
+                            {/*        <option value="postgres">Postgres</option>*/}
+                            {/*    </select>*/}
+                            {/*</div>*/}
                         </div>
                     </div>
-
 
                     <div className="ssh-block-line"/>
 
@@ -955,6 +983,7 @@ export default class Connections extends React.Component {
         let {
             searchedConnections,
             isSimplifiedConnectionPopup,
+            isFirebaseConnectionPopup,
             isSSHConnectionPopup,
             isConfigureManuallyPopup,
             isConnectionPopup,
@@ -1164,6 +1193,16 @@ export default class Connections extends React.Component {
                 >
                     {this.databaseList()}
                 </ConnectionPopup>
+
+                <FirebasePopup
+                    isOpen={isFirebaseConnectionPopup}
+                    onCancel={() => this.closeFirebasePopup()}
+                    onSubmit={this.handleSubmit}
+                    onSave={this.handleSave}
+                    isEdit={!!editConnection}
+                >
+                    {this.firebaseInput(editConnection)}
+                </FirebasePopup>
 
                 <SimplifiedConnectionPopup
                     isOpen={isSimplifiedConnectionPopup}
