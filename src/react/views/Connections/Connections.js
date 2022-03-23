@@ -304,7 +304,7 @@ export default class Connections extends React.Component {
             successfullVerify =
                 this.inputVerify(nameInput) &&
                 this.inputVerify(firebaseConfigInput)
-        } else {
+        } else if (this.state.isSimplifiedConnectionPopup){
             successfullVerify =
                 this.inputVerify(nameInput) &&
                 this.inputVerify(uriInput) &&
@@ -345,7 +345,7 @@ export default class Connections extends React.Component {
                     dtype: dtypeInput,
                     name: nameInput
                 };
-            } else {
+            } else if (this.state.isSimplifiedConnectionPopup){
                 connectionBody = {
                     dtype: dtypeInput,
                     schema: schemaInput,
@@ -674,12 +674,24 @@ export default class Connections extends React.Component {
                            onChange={this.nameOnChange} onKeyPress={this.nameKeyPress}/>
                 </div>
                 <div className="small-information-field">
-                    <span className="small-input-title">Firebase config</span>
+                    <span className="small-input-title">Database URL</span>
                     <input id="input-field-uri" ref="uri" className="small-form-control" type="text" type="search"
                            defaultValue={editConnection && typeof editConnection.URI === "string" && editConnection.URI}
                            disabled={!!editConnection}
                            onChange={this.uriOnChange} onKeyPress={this.uriKeyPress}
                     />
+                </div>
+                <div className="small-information-field">
+                    <span className="small-input-title">Schema name
+                        {/*<div className="help-tip" id="schema-tip">
+                            <p>A schema is a collection of database objects associated with one particular database username.</p>
+                        </div>*/}
+                    </span>
+                    <input id="input-field-schema" ref="schema" className="small-form-control" type="text"
+                           type="search"
+                           disabled={!!editConnection}
+                           defaultValue={editConnection && editConnection.schema}
+                           onChange={this.schemaOnChange} onKeyPress={this.schemaKeyPress}/>
                 </div>
                 <div className="small-information-buttons">
                     <Button id="configure-manually-btn"

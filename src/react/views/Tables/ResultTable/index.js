@@ -328,7 +328,7 @@ export default class Result extends React.Component {
                     const tableOptions = headers.map((header) => {
                         return {
                             column: header,
-                            order: ASC,
+                            // order: ASC,
                             search: "",
                             filter1: "",
                             filter2: "",
@@ -506,12 +506,15 @@ export default class Result extends React.Component {
 
                 if (option.order === ASC) {
                     option.order = DESC;
-                } else {
+                } else if (option.order === DESC) {
                     option.order = ASC;
+                } else {
+                    option.order = DESC;
                 }
 
             } else {
                 option.last = false;
+                option.order = null;
             }
 
             return option;
@@ -877,7 +880,7 @@ export default class Result extends React.Component {
                                                         <span id="header-title">{header}</span>
 
                                                         <svg
-                                                            className={currentOption.order === ASC ? "arrow-up" : "arrow-down"}
+                                                            className={currentOption.order ? (currentOption.order === ASC ? "arrow-up" : "arrow-down") : "arrow-up"}
                                                             id="header-order"
                                                             onClick={() => this.handleChangeOrder(header)} width="8"
                                                             height="6" viewBox="0 0 8 6"
