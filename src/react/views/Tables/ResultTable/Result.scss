@@ -76,36 +76,49 @@
   .result-page-body {
     height: calc(100vh - 208px);
     background-color: #F8F8FA;
-    overflow: auto;
-
+    overflow-x: scroll;  /* Hide the horizontal scroll */
 
     /* ---------------------------------------------------- TABLE --------------------------------------------------- */
+
+    //tbody {
+    //  height: calc(100vh - 258px);
+    //  overflow-y: scroll;    /* Trigger vertical scroll    */
+    //}
+
+    table tbody {
+      overflow-y: scroll;
+      height: calc(100vh - 258px);
+    }
+
     table {
-      width: calc(100vw - 255px);
+      width: max-content;
       background-color: #FFFFFF;
       box-shadow: 0 0 5px 0 #0000001A;
 
-
       /* ---------------------------------------------- TABLE HEADER ------------------------------------------------ */
       .table-header {
-        height: 45px;
-        border: none;
-        background: #F8F8FA;
 
-        border-bottom: 1px solid #E2DFE3;
-
+        .column-number {
+          width: 10px;
+          background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(248,248,250,1) 100%);
+        }
 
         /* TABLE HEADER COLUMN */
         th {
+          position: -webkit-sticky;
+          position: sticky;
+          top: 0;
+          z-index: 2;
+          height: 45px;
+          border: none;
+          background: #F8F8FA;
+          border-bottom: 1px solid #E2DFE3;
           border-right: 1px solid #E2DFE3;
           padding: 0;
-
 
           .table-header-items {
             display: flex;
             justify-content: space-between;
-
-
 
             /* ------------------------------------- NAME, SORTING ARROW, SEARCH ------------------------------------ */
             .column-name-and-search {
@@ -121,10 +134,8 @@
                 font-size: 14px;
                 line-height: 16px;
                 text-transform: lowercase;
-
                 color: #5C5D6F;
               }
-
 
               /* SORTING ARROW */
               svg {
@@ -135,29 +146,23 @@
                 transform: rotate(180deg);
               }
 
-
               /* SEARCH */
               input {
                 background: #FFFFFF;
                 border: 1px solid #E2DFE3;
                 border-radius: 6px;
                 margin-left: 15px;
-
                 height: 29px;
                 width: 84px;
                 padding-left: 10px;
-
-
                 font-family: Roboto, sans-serif;
                 font-style: normal;
                 font-weight: 500;
                 font-size: 14px;
                 line-height: 16px;
-
                 color: #7A7D85;
               }
             }
-
 
             /* ----------------------------------------------- FILTERS ---------------------------------------------- */
             .column-filters {
@@ -186,8 +191,6 @@
               }
             }
           }
-
-
 
           /* ------------------------------------------ TABLE HEADER FILTERS ---------------------------------------- */
           .header-data-operations {
@@ -293,20 +296,23 @@
               }
             }
           }
-
-
         }
       }
-
 
       /* ------------------------------------------------ TABLE BODY ------------------------------------------------ */
       /* TABLE BODY LINE */
       .table-line {
-        height: 60px;
+        height: 40px;
         border-bottom: 1px solid #E2DFE3;
         text-align: left;
         cursor: pointer;
 
+        .row-number {
+          font-size: 12px;
+          width: 10px;
+          padding: 0px 5px 0px 10px;
+          background: #F8F8FA;
+        }
 
         /* TABLE BODY COLUMN */
         td {

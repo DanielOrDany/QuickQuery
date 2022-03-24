@@ -21,7 +21,7 @@ async function loadFirestoreTable(connection, queryData, loadingOptions) {
             admin.initializeApp({
                 credential: admin.credential.cert(connection.firebaseConfig)
             });
-        }else {
+        } else {
             admin.app(); // if already initialized, use that one
         }
 
@@ -101,13 +101,77 @@ async function loadFirestoreTable(connection, queryData, loadingOptions) {
             pages: Math.ceil(pages),
             records: records
         }
+    } catch (e) {
+        console.log(e);
+    }
+}
 
-        // return {
-        //     "rows": rows,
-        //     "fields": fields,
-        //     "pages": Math.ceil(pages),
-        //     "records": records
-        // };
+async function saveFirestoreTableResult(connection, queryData, loadingOptions) {
+    try {
+        if (!admin.apps.length) {
+            admin.initializeApp({
+                credential: admin.credential.cert(connection.firebaseConfig)
+            });
+        } else {
+            admin.app(); // if already initialized, use that one
+        }
+
+        const firebase_db = admin.firestore();
+
+        let query = firebase_db.collection(queryData.table);
+        const tableColumns = loadingOptions.columns ? sortByLength(loadingOptions.columns) : [];
+
+        if (loadingOptions.operationsOptions) {
+            loadingOptions.operationsOptions.forEach((option) => {
+                let column = option.column;
+                const search = option.search;
+
+                // Join cases
+                tableColumns.forEach(tableColumn => {
+                    const regex = /\./g;
+                    const fullColumn = column.replace(regex, '_');
+
+                    if (fullColumn.match(tableColumn)) {
+                        column = fullColumn.replace(`${tableColumn}_`, `${tableColumn}.`);
+                    }
+                });
+
+                let searchArray = [];
+                for (let i = 0; i < search.length; i++) {
+                    searchArray.push(search.slice(0, i + 1));
+                }
+
+                console.log(searchArray)
+                if (searchArray.length > 0) {
+                    query = query.where(column, '==', search)
+                }
+            });
+
+            let order;
+            let orderColumn;
+
+            loadingOptions.operationsOptions.forEach((option) => {
+                if (option.order) {
+                    order = option.order;
+                    orderColumn = option.column;
+                }
+            });
+
+            if (orderColumn && order) {
+                query = query.orderBy(orderColumn, order.toLowerCase())
+            }
+        }
+
+        const snapshot = await query.get();
+
+        const rows = await Promise.all(snapshot.docs.map(row => {
+            return row.data();
+        }));
+
+        return {
+            rows: rows,
+            fields: rows.length > 0 ? Object.keys(rows[0]) : []
+        }
     } catch (e) {
         console.log(e);
     }
@@ -115,5 +179,6 @@ async function loadFirestoreTable(connection, queryData, loadingOptions) {
 
 module.exports = {
     loadFirestoreTable,
-    getFirestoreTableSize
+    getFirestoreTableSize,
+    saveFirestoreTableResult
 };
