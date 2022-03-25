@@ -18,70 +18,70 @@
   .tables-page-left-menu {
     max-height: calc(100vh - 80px);
     min-width: 255px;
-    border-right: 1px solid #EDECEF;
-    overflow: auto;
-    background-color: #FFFFFF;
+    border-right: 1px solid #e3e2e5;
+    background-color: #f7f7f7;
     z-index: 100;
 
+    .top-menu-part {
+      height: 50%;
+      min-height: 200px;
+    }
+
+    .bottom-menu-part {
+      height: 50%;
+      min-height: 200px;
+    }
 
     .new-tab {
       display: flex;
       flex-direction: column;
+      background: #EDECEF;
 
-      span {
-        width: 100vw;
+      .new-tab-title {
+        display: flex;
+        width: 100%;
+        cursor: pointer;
         text-align: start;
         margin-left: 16px;
+        margin-top: 5px;
         font-size: 14px;
+
+        .create-new-table-btn {
+          background: #28794E;
+          border-radius: 4px;
+          font-family: Roboto, sans-serif;
+          font-style: normal;
+          font-weight: bold;
+          font-size: 12px;
+
+          padding: 1px 6px;
+          margin-top: 1px;
+          letter-spacing: -0.11px;
+
+          color: #FFFFFF;
+          margin-left: 7.25px;
+        }
+
+        .create-new-table-btn:hover {
+          background: #5abd6a;
+          transition: .2s;
+          cursor: pointer;
+        }
       }
 
       .left-menu-line {
-        width: 100vw;
-        border-bottom: 1px solid #ebebeb;
+        width: 100%;
+        margin-top: 5px;
+        border-bottom: 1px solid #d2d2d2;
       }
     }
-
-    /* --------------------------------------------- LEFT MENU BUTTON ----------------------------------------------- */
-    .left-menu-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 194px;
-      height: 36px;
-
-      background: #28794E;
-      border-radius: 4px;
-      margin: 14px auto 27px;
-
-
-      /* BUTTON TEXT */
-      span {
-        font-family: Roboto, sans-serif;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 16px;
-        line-height: 19px;
-
-        letter-spacing: -0.11px;
-
-        color: #FFFFFF;
-        margin-left: 7.25px;
-      }
-    }
-
-
-    .left-menu-button:hover {
-      background: #5BC470;
-      transition: .2s;
-      cursor: pointer;
-    }
-
-
 
     /* -------------------------------------------- LEFT MENU ALL TABLES -------------------------------------------- */
     .left-menu-all-tables {
+      overflow-y: scroll;
+      height: 83%;
       margin-right: 18.71px;
-      margin-top: 20px;
+      padding-top: 20px;
 
       .table-page-left-menu-table {
         margin-bottom: 28px;
@@ -93,6 +93,7 @@
           height: 20px;
           margin-bottom: 28px;
           justify-content: space-between;
+          cursor: pointer;
 
           /* TABLE ICON */
           .table-icon {
