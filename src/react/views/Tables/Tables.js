@@ -151,11 +151,8 @@ export default class Tables extends React.Component {
   }
 
   async createTable() {
-    //await this.verifyEmployee();
     const subPlan = localStorage.getItem("employeePlan");
     const tablesNum = JSON.parse(localStorage.getItem("current_connection")).native_tables.length;
-
-    console.log(subPlan, tablesNum);
 
     let limit = 0;
     if (subPlan === "Startup Plan") {
@@ -166,10 +163,7 @@ export default class Tables extends React.Component {
       limit = tablesNum + 2;
     }
 
-    console.log(limit);
-
     if (this.state.tables.length >= limit) {
-      console.log('set limit');
       this.setState({
         warning: `Your limit for ${subPlan} is ${limit} report schemas. Please upgrade your plan.`
       });
