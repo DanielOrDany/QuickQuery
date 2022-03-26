@@ -61,11 +61,9 @@ export default class TableRowPopup extends React.Component {
                 <div className='table-row-popup-BG'>
 
                     <div className='table-row-popup-window'>
-
-                        <img className='table-row-popup-cross' src={cross_icon} onClick={this.state.onCancel} alt={'cross'}/>
-
                         <div className='table-row-popup-title'>
-                            <span>✏️ {this.state.tableName}</span>
+                            <div>✏️ Edit Row️</div>
+                            <img className='table-row-popup-cross' src={cross_icon} onClick={this.state.onCancel} alt={'cross'}/>
                         </div>
 
                         <div className='table-row-popup-body'>
@@ -81,7 +79,22 @@ export default class TableRowPopup extends React.Component {
                             </div>
 
                             <div className='table-row-popup-body-rows'>
-                                {this.state.rowColumns.map(columnName => {
+                                { this.state.rowColumns.map(columnName => {
+
+                                    let renderItem;
+
+                                    if (typeof columnName[1] === 'object') {
+
+                                        if (columnName[1] === null) {
+                                            renderItem = "";
+                                        } else {
+                                            renderItem = JSON.stringify(columnName[1]);
+                                        }
+
+                                    } else {
+                                        renderItem = columnName[1];
+                                    }
+
                                     return (
                                         <div className='table-row-popup-body-row'>
                                             <div className='body-row-name'>
@@ -89,7 +102,7 @@ export default class TableRowPopup extends React.Component {
                                             </div>
 
                                             <div className='body-row-info'>
-                                                <input className='body-row-text' value={columnName[1]} onChange={(e) => {
+                                                <input className='body-row-text' value={renderItem} onChange={(e) => {
                                                     this.handleColumnChange(e, columnName[0], this.state.rowColumns);
                                                 }}/>
                                             </div>
