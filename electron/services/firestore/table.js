@@ -266,10 +266,15 @@ async function deleteDefaultFirestoreTableRow(id, token, connection, table, colu
     return { status: 'deleted' };
 }
 
+async function getFirestoreTableColumns(connection, table) {
+
+}
+
 module.exports = {
     loadFirestoreTable,
     getFirestoreTableSize,
     saveFirestoreTableResult,
     updateDefaultFirestoreTableRow,
-    deleteDefaultFirestoreTableRow
+    deleteDefaultFirestoreTableRow,
+    getFirestoreTableColumns
 };

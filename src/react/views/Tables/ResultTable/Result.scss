@@ -492,7 +492,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: $white;
+  background: radial-gradient(circle, rgba(207,207,207,0.49763655462184875) 0%, rgba(236,236,236,1) 51%);
   height: calc(100vh - 80px);
 
   h3 {
@@ -505,12 +505,14 @@
 
   h1 {
     position: absolute;
-    font-weight: 600;
+    font-weight: bold;
     font-size: 15px;
+    font-family: Roboto, sans-serif;
+    font-style: normal;
     max-width: 160px;
     word-wrap: break-word;
-    text-transform: uppercase;
-    left: 52%;
+
+    left: 58%;
     top: 58%;
   }
 
@@ -518,7 +520,7 @@
     position: absolute;
     top: 50%;
     margin-left: -50px;
-    left: 55%;
+    left: 60%;
     animation: speeder .4s linear infinite;
 
     > span {
