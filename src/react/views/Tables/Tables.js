@@ -9,7 +9,8 @@ import {
   getTable
 } from "../../methods";
 import { ReactComponent as MiniMenuIcon } from "../../icons/tables-page-left-menu-table-menu.svg";
-import xxx from "../../icons/loop.svg";
+import expand_more_black_24dp from "../../icons/expand_more_black_24dp.svg";
+import chevron_right_black_24dp from "../../icons/chevron_right_black_24dp.svg";
 import empty_result_page from "../../icons/empry-result-page.svg";
 import MiniMenu from "../../components/MiniMenu";
 import Modal from "../../popups/Modal";
@@ -202,36 +203,47 @@ export default class Tables extends React.Component {
   };
 
   hideDatabaseTablesMenu() {
+    let less_icon = document.getElementById('expand_less_top');
+    let more_icon = document.getElementById('expand_more_top');
     let topMenu = document.getElementById('bottom-menu');
     let bottomMenu = document.getElementById('top-menu');
     let bottomTablesMenu = document.getElementById('top-menu-tables');
 
     if (bottomTablesMenu.style.display === 'none') {
       bottomTablesMenu.style.display = 'block';
+      less_icon.style.display = 'none';
+      more_icon.style.display = 'block';
       bottomMenu.style.height = '50%';
       topMenu.style.height = '50%';
 
     } else {
+      less_icon.style.display = 'block';
+      more_icon.style.display = 'none';
       bottomTablesMenu.style.display = 'none';
       bottomMenu.style.height = '0%';
-      bottomMenu.style.minHeight = '30px';
+      bottomMenu.style.minHeight = '35px';
       topMenu.style.height = '100%';
     }
   }
 
   hideJoinedTablesMenu() {
-    let topMenu = document.getElementById('top-menu');
+    let less_icon = document.getElementById('expand_less_bottom');
+    let more_icon = document.getElementById('expand_more_bottom');
     let bottomMenu = document.getElementById('bottom-menu');
     let bottomTablesMenu = document.getElementById('bottom-menu-tables');
 
     if (bottomTablesMenu.style.display === 'none') {
+      less_icon.style.display = 'none';
+      more_icon.style.display = 'block';
       bottomTablesMenu.style.display = 'block';
       bottomMenu.style.height = '100%';
 
     } else {
+      less_icon.style.display = 'block';
+      more_icon.style.display = 'none';
       bottomTablesMenu.style.display = 'none';
       bottomMenu.style.height = '0%';
-      bottomMenu.style.minHeight = '30px';
+      bottomMenu.style.minHeight = '35px';
     }
   }
 
@@ -240,9 +252,26 @@ export default class Tables extends React.Component {
 
     if (!tables || !searchedTables) {
       return (
-          <div className={"loading"}>
-            <img src={xxx}/>
-            Loading...
+          <div className="loading">
+            <div className='body'>
+                  <span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </span>
+              <div className='base'>
+                <span></span>
+                <div className='face'></div>
+              </div>
+            </div>
+            <div className='longfazers'>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <h1>Loading..</h1>
           </div>
       );
     } else
@@ -279,7 +308,7 @@ export default class Tables extends React.Component {
               {/* ----------------------------------- TABLES PAGE LEFT MENU BUTTON ----------------------------------- */}
               <div className="top-menu-part" id="top-menu">
                 <div className="new-tab" onClick={() => this.hideDatabaseTablesMenu()}>
-                  <div className="new-tab-title">Database tables</div>
+                  <div className="new-tab-title"><img id="expand_more_top" src={expand_more_black_24dp}/><img id="expand_less_top" src={chevron_right_black_24dp}/> Database tables</div>
                   <div className="left-menu-line"></div>
                 </div>
 
@@ -369,7 +398,7 @@ export default class Tables extends React.Component {
 
               <div className="bottom-menu-part" id="bottom-menu">
                 <div className="new-tab" onClick={() => this.hideJoinedTablesMenu()}>
-                  <div className="new-tab-title">Joined tables <div className='create-new-table-btn' onClick={() => this.createTable()}>+</div></div>
+                  <div className="new-tab-title"><img id="expand_more_bottom" src={expand_more_black_24dp}/><img id="expand_less_bottom" src={chevron_right_black_24dp}/> Joined tables <div className='create-new-table-btn' onClick={() => this.createTable()}>+</div></div>
                   <div className="left-menu-line"></div>
                 </div>
                 <div className='left-menu-all-tables' id="bottom-menu-tables">

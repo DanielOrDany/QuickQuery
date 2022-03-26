@@ -11,14 +11,14 @@ import {
 } from "../../../methods";
 import "./Result.scss";
 import XLSX from "xlsx";
-import xxx from "../../../icons/loop.svg";
+import empty_result_page from "../../../icons/empry-result-page.svg";
 import TableImgPopup from "../popups/TableImagePopup";
-import footer_arrow_down from "../../../icons/connections-page-footer-arrow.svg";
+import menu_black_24dp from "../../../icons/menu_black_24dp.svg";
+import menu_open_black_24dp from "../../../icons/menu_open_black_24dp.svg";
 import footer_arrow_left from "../../../icons/connections-page-footer-arrow-left.svg";
 import footer_arrow_right from "../../../icons/connections-page-footer-arrow-right.svg";
 import TableRowPopup from "../popups/TableRowPopup";
 import HiddenColumnsPopup from "../popups/HiddenColumnsPopup";
-import filterIcon from "./filterIcon.svg";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import TableFilter from "../popups/TableFilter";
 import MessagePopup from "../../../popups/MessagePopup";
@@ -27,9 +27,7 @@ import toast, { Toaster } from 'react-hot-toast';
 const DESC = "DESC";
 const ASC = "ASC";
 
-
 const isEqual = function (value, other) {
-
     // Get the value type
     let type = Object.prototype.toString.call(value);
 
@@ -314,8 +312,9 @@ export default class Result extends React.Component {
         localStorage.setItem('isChangedPicker2', false);
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
+            console.log("loadTableResult", data);
             if (data) {
-                if (data.records === 0) {
+                if (tableSize === 0) {
                     this.setState({
                         isNullResults: true,
                         isEmptyQuery: true
@@ -337,11 +336,11 @@ export default class Result extends React.Component {
                         }
                     });
                     this.setState({
-                        pages: data.pages,
+                        pages: rowsPerPage,
                         options: tableOptions,
                         isNullResults: false,
                         isLoading: false,
-                        records: data.records,
+                        records: tableSize,
                         isEmptyQuery: false,
                         headers,
                         rows
@@ -371,8 +370,7 @@ export default class Result extends React.Component {
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
             if (data) {
-                if (data.records == 0) {
-
+                if (tableSize === 0) {
                     this.setState({
                         headers: data.fields.map(field => field.name),
                         isNullResults: true
@@ -385,13 +383,13 @@ export default class Result extends React.Component {
                         const rows = Object.values(db_rows);
 
                         this.setState({
-                            pages: data.pages,
+                            pages: rowsPerPage,
                             selectedItem: selectedValue,
                             isNullResults: false,
                             isLoading: false,
                             headers,
                             rows,
-                            records: data.records
+                            records: tableSize
                         });
                     } else {
                         this.setState({
@@ -465,7 +463,6 @@ export default class Result extends React.Component {
     };
 
     changePage = (operation) => {
-        console.log(operation);
         this.setState({isLoading: true});
         let n = this.state.pageNumber + operation;
 
@@ -745,16 +742,22 @@ export default class Result extends React.Component {
     }
 
     hideTablesMenu() {
+        let menuOpened = document.getElementById('menu-opened');
+        let menuOpen = document.getElementById('menu-open');
         let pageFooter = document.getElementById('result-page-footer-id');
         let pageContainer = document.getElementById('result-page-container');
         let menu = document.getElementById('left-tables-menu');
 
         if (menu.style.display === 'none') {
             menu.style.display = 'block';
+            menuOpened.style.display = 'none';
+            menuOpen.style.display = 'block';
             pageFooter.style.width = 'calc(100vw - 255px)';
             pageContainer.style.width = 'calc(100vw - 255px)';
 
         } else {
+            menuOpened.style.display = 'block';
+            menuOpen.style.display = 'none';
             menu.style.display = 'none';
             pageFooter.style.width = '100vw';
             pageContainer.style.width = '100vw';
@@ -798,16 +801,35 @@ export default class Result extends React.Component {
         if (isEmptyQuery) {
             return (
                 <div className="loading">
-                    <img src={xxx}/>
-                    Nothing to load..
+                    <img src={empty_result_page}/>
+                    <h3>Nothing to load, table has 0 rows.</h3>
                 </div>
             );
         } else if (!headers || isSaving || isLoading) {
             return (
                 <div className="loading">
-                    <img src={xxx}/>
-                    {(!headers || isLoading) && "Loading " + tableName + ".."}
-                    {isSaving && "Saving " + tableName + ".."}
+                    <div className='body'>
+                      <span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </span>
+                        <div className='base'>
+                            <span></span>
+                            <div className='face'></div>
+                        </div>
+                    </div>
+                    <div className='longfazers'>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <h1>
+                        {(!headers || isLoading) && "Loading " + tableName}
+                        {isSaving && "Saving " + tableName}
+                    </h1>
                 </div>
             );
         } else {
@@ -824,8 +846,8 @@ export default class Result extends React.Component {
 
                     <div className='result-page-header'>
                         <div className="menu-and-title">
-                            <svg onClick={() => this.hideTablesMenu()} xmlns="http://www.w3.org/2000/svg" height="34px" viewBox="0 0 24 24" width="34px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-                            <span>{tableName}</span>
+                            <img id="menu-opened" src={menu_black_24dp} onClick={() => this.hideTablesMenu()}/>
+                            <img id="menu-open" src={menu_open_black_24dp} onClick={() => this.hideTablesMenu()}/> {tableName}
                         </div>
 
                         <button className='result-page-header-show-hidden-btn' onClick={() => this.openHiddenColumnsPopup()}>Show hidden</button>

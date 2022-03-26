@@ -1,12 +1,17 @@
 const FireSQL = require("firesql").FireSQL;
 const admin = require("firebase-admin");
+const auth = require('../auth');
 
 const { isEmpty, sortByLength } = require('../helpers');
 
 async function getFirestoreTableSize(connection, tableName) {
-    admin.initializeApp({
-        credential: admin.credential.cert(connection.firebaseConfig)
-    });
+    if (!admin.apps.length) {
+        admin.initializeApp({
+            credential: admin.credential.cert(connection.firebaseConfig)
+        });
+    } else {
+        admin.app(); // if already initialized, use that one
+    }
 
     const firebase_db = admin.firestore();
 
@@ -141,7 +146,6 @@ async function saveFirestoreTableResult(connection, queryData, loadingOptions) {
                     searchArray.push(search.slice(0, i + 1));
                 }
 
-                console.log(searchArray)
                 if (searchArray.length > 0) {
                     query = query.where(column, '==', search)
                 }
@@ -177,8 +181,48 @@ async function saveFirestoreTableResult(connection, queryData, loadingOptions) {
     }
 }
 
+async function updateDefaultFirestoreTableRow(id, token, connection, table, columnsAndValues) {
+    if (!admin.apps.length) {
+        admin.initializeApp({
+            credential: admin.credential.cert(connection.firebaseConfig)
+        });
+    } else {
+        admin.app(); // if already initialized, use that one
+    }
+
+    const firebase_db = admin.firestore();
+
+    let query = firebase_db.collection(table.table);
+
+    const updateColumns = columnsAndValues.filter((rc) => rc.length > 2);
+    const oldColumns = columnsAndValues.filter((rc) => rc.length < 3);
+
+    let newValues = updateColumns.map((cAndV) => {
+        return ` ${cAndV[0]} ${typeof cAndV[1] === 'string' ? `= '${cAndV[1]}'` : `is ${cAndV[1]}`}`;
+    });
+
+    oldColumns.forEach((cAndV) => {
+        query = query.where(cAndV[0], '==', cAndV[1]);
+    });
+
+    const snapshot = await query.get();
+
+    const rows = await Promise.all(snapshot.docs.map(row => {
+        return row.data();
+    }));
+
+    rows.forEach((row) => {
+        console.log("row", row);
+    });
+    // const query = `UPDATE ${table.table} SET ${newValues.join()} WHERE ${oldValues.join().replace(/,/g, '')};`;
+
+    //auth.addHistoryItem(id, token, 'update', table.table, oldColumnValues.join(), newColumnValues.join());
+    return { status: 'works' };
+}
+
 module.exports = {
     loadFirestoreTable,
     getFirestoreTableSize,
-    saveFirestoreTableResult
+    saveFirestoreTableResult,
+    updateDefaultFirestoreTableRow
 };
