@@ -766,11 +766,66 @@ async function getPostgresTableColumns(connection, table) {
     return result;
 }
 
+async function runPostgresQuery(connection, query) {
+    const URI = connection.URI;
+    const sshHost = connection.sshHost;
+    const sshPort = connection.sshPort;
+    const sshUser = connection.sshUser;
+    const sshPrivateKey = connection.sshPrivateKey;
+
+    let sequelize;
+
+    if (typeof URI === "string") {
+        sequelize = new Sequelize(URI);
+
+    } else if (sshHost) {
+        // basic connection to a database
+        const dbConfig = {
+            database: URI.database,
+            username: URI.user,
+            password: URI.password,
+            dialect: URI.others.dialect,
+            port: URI.port
+        };
+
+        // ssh tunnel configuration
+        const tunnelConfig = {
+            username: sshUser,
+            host: sshHost,
+            port: sshPort,
+            privateKey: require("fs").readFileSync(sshPrivateKey)
+        };
+
+        // initialize service
+        const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
+        const connection = await sequelizeTunnelService.getConnection();
+
+        sequelize = connection.sequelize;
+    } else if (!sshHost) {
+        sequelize = new Sequelize(URI.database,
+            URI.user,
+            URI.password,
+            URI.others
+        );
+    }
+
+    query = query.replace(';', ' ');
+    query += ' LIMIT 3 OFFSET 0';
+
+    const [results, metadata] = await sequelize.query(query);
+
+    return {
+        "rows": results,
+        "fields": metadata.fields
+    }
+}
+
 module.exports = {
     loadPostgresTable,
     getPostgresTableSize,
     savePostgresTableResult,
     updateDefaultPostgresTableRow,
     deleteDefaultPostgresTableRow,
-    getPostgresTableColumns
+    getPostgresTableColumns,
+    runPostgresQuery
 };

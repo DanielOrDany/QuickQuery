@@ -22,45 +22,11 @@ if (fs.existsSync(adapter.source)) {
         fs.mkdirSync(appDataDirPath);
     }
     fs.writeFileSync(adapter.source, JSON.stringify({
-        "connections": [
-            {
-                "name": "Database for testing",
-                "URI": "postgres://yjcuhopxndsamd:9fa832ec5a7703b1605de6e12234585b6cbc638636b16918697b0f6a2b95d1da@ec2-54-155-226-153.eu-west-1.compute.amazonaws.com:5432/d1r8qbgs2nh6u1",
-                "schema": "public",
-                "queries": [
-                    {
-                        "query": " SELECT * FROM locations",
-                        "type": "default_query",
-                        "alias": "locations",
-                        "table": "locations"
-                    },
-                    {
-                        "query": " SELECT * FROM todos",
-                        "type": "default_query",
-                        "alias": "todos",
-                        "table": "todos"
-                    },
-                    {
-                        "query": " SELECT * FROM users",
-                        "type": "default_query",
-                        "alias": "users",
-                        "table": "users"
-                    }
-                ],
-                "native_tables": [
-                    "locations",
-                    "todos",
-                    "users"
-                ],
-                "createdAt": "21/03/2021"
-            }
-        ],
-        "settings":
-            {
-                "language": "en",
-                "theme": "white"
-            },
-        "licenseKey": "ZChKQCQxeiMkIWRnZGYkJTJmZA=="
+        "connections": [],
+        "settings": {
+            "language": "en",
+            "theme": "white"
+        }
     }));
 
     if(fs.existsSync(adapter.source)) {

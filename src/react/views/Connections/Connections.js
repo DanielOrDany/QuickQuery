@@ -89,11 +89,16 @@ export default class Connections extends React.Component {
     };
 
     closeFirebasePopup = () => {
-        this.setState({ isFirebaseConnectionPopup: false });
+        this.setState({
+            isFirebaseConnectionPopup: false,
+            isDBMiniMenu: false,
+        });
     };
 
     openSimplifiedConnectionPopup = () => {
-        this.setState({ isSimplifiedConnectionPopup: true });
+        this.setState({
+            isSimplifiedConnectionPopup: true
+        });
     };
 
     isDBMiniMenuOpen = (connectionName) => {
@@ -152,21 +157,28 @@ export default class Connections extends React.Component {
         const { connections } = this.state;
         const editConnection = connections.find((connection) => connection.name === name);
 
-        if (typeof editConnection.URI === "string") {
+        if (editConnection.dtype === "firestore") {
             this.setState({
                 editConnection,
-                isSimplifiedConnectionPopup: true
-            })
-        } else if (editConnection.sshHost) {
-            this.setState({
-                editConnection,
-                isSSHConnectionPopup: true
+                isFirebaseConnectionPopup: true
             })
         } else {
-            this.setState({
-                editConnection,
-                isConfigureManuallyPopup: true
-            })
+            if (typeof editConnection.URI === "string") {
+                this.setState({
+                    editConnection,
+                    isSimplifiedConnectionPopup: true
+                })
+            } else if (editConnection.sshHost) {
+                this.setState({
+                    editConnection,
+                    isSSHConnectionPopup: true
+                })
+            } else {
+                this.setState({
+                    editConnection,
+                    isConfigureManuallyPopup: true
+                })
+            }
         }
     };
 
@@ -179,6 +191,7 @@ export default class Connections extends React.Component {
             isSimplifiedConnectionPopup: false,
             isConfigureManuallyPopup: false,
             isSSHConnectionPopup: false,
+            isFirebaseConnectionPopup: false,
             isDBMiniMenu: false,
             editConnection: null
         });
@@ -226,7 +239,7 @@ export default class Connections extends React.Component {
 
     editConnection = () => {
         const { nameInput, editConnection } = this.state;
-        console.log(this.state);
+
         if (nameInput.replace(/^\s+|\s+$/gm, '').length === 0) {
             this.setState({
                 errorMessage: "Sorry, we cannot save it. You should change the connection name or click on the 'close' button.",
@@ -245,6 +258,7 @@ export default class Connections extends React.Component {
                         isConfigureManuallyPopup: false,
                         isSimplifiedConnectionPopup: false,
                         isSSHConnectionPopup: false,
+                        isFirebaseConnectionPopup: false,
                         isDBMiniMenu: false,
                         editConnection: null
                     });
@@ -368,6 +382,7 @@ export default class Connections extends React.Component {
                         errorMessage: "",
                         isConfigureManuallyPopup: false,
                         isSimplifiedConnectionPopup: false,
+                        isFirebaseConnectionPopup: false,
                         isSSHConnectionPopup: false,
                         isDBMiniMenu: false
                     });
@@ -562,21 +577,6 @@ export default class Connections extends React.Component {
                                    disabled={!!editConnection}
                                    onChange={this.databaseOnChange} onKeyPress={this.databaseKeyPress}/>
                         </div>
-                        {/*<div className="choose-db-field">*/}
-                        {/*    <span id="choose-db-title">Database</span>*/}
-                        {/*    <select*/}
-                        {/*        className="selector"*/}
-                        {/*        id="choose-db"*/}
-                        {/*        value={this.state.dtypeInput}*/}
-                        {/*        defaultValue={editConnection && editConnection.URI.others && editConnection.URI.others.dialect}*/}
-                        {/*        onChange={this.dtypeOnChange}*/}
-                        {/*        disabled={!!editConnection}*/}
-                        {/*    >*/}
-                        {/*        <option value="mysql">MySQL</option>*/}
-                        {/*        <option value="mysql">MariaDB</option>*/}
-                        {/*        <option value="postgres">Postgres</option>*/}
-                        {/*    </select>*/}
-                        {/*</div>*/}
                     </div>
                 </div>
                 <div className="big-input-buttons">
@@ -624,7 +624,6 @@ export default class Connections extends React.Component {
                 databaseType: type
             });
         } else if (type === "firestore") {
-            console.log("firestore");
             this.setState({
                 isFirebaseConnectionPopup: true,
                 isConnectionPopup: false,
@@ -1203,7 +1202,7 @@ export default class Connections extends React.Component {
                     isOpen={isConnectionPopup}
                     onCancel={() => this.closeConnectionPopup()}
                 >
-                    {this.databaseList()}
+                    {isConnectionPopup && this.databaseList()}
                 </ConnectionPopup>
 
                 <FirebasePopup
@@ -1213,7 +1212,7 @@ export default class Connections extends React.Component {
                     onSave={this.handleSave}
                     isEdit={!!editConnection}
                 >
-                    {this.firebaseInput(editConnection)}
+                    {isFirebaseConnectionPopup && this.firebaseInput(editConnection)}
                 </FirebasePopup>
 
                 <SimplifiedConnectionPopup
@@ -1227,7 +1226,7 @@ export default class Connections extends React.Component {
                     secondModalHint={secondModalHint}
                     isEdit={!!editConnection}
                 >
-                    {this.smallInput(editConnection)}
+                    {isSimplifiedConnectionPopup && this.smallInput(editConnection)}
                 </SimplifiedConnectionPopup>
 
                 <SSHConnectionPopup
@@ -1241,7 +1240,7 @@ export default class Connections extends React.Component {
                     firstModalHint={firstModalHint}
                     secondModalHint={secondModalHint}
                 >
-                    {this.sshInput(editConnection)}
+                    {isSSHConnectionPopup && this.sshInput(editConnection)}
                 </SSHConnectionPopup>
 
                 <ConfigureManuallyPopup
@@ -1251,7 +1250,7 @@ export default class Connections extends React.Component {
                     onSave={this.handleSave}
                     isEdit={!!editConnection}
                 >
-                    {this.bigInput(editConnection)}
+                    {isConfigureManuallyPopup && this.bigInput(editConnection)}
                 </ConfigureManuallyPopup>
 
                 <DeleteConnectionPopup

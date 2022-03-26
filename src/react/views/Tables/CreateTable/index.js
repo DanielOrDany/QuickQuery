@@ -511,7 +511,8 @@ export default class CreateTable extends React.Component {
         } else {
             let query = "";
 
-            const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+            const connection = JSON.parse(localStorage.getItem('current_connection'));
+            const connectionName = connection.name;
 
             const columnNames = tables.map(table => {
                 const tableOption = options.filter(option => option.alias === table);
@@ -528,16 +529,28 @@ export default class CreateTable extends React.Component {
 
             const mergedColumns = [].concat.apply([], selectedColumns);
 
-            if (tables.length === 1) {
-                query += `SELECT ${mergedColumns.join(',')} FROM ${tables[0]}`;
+            if (connection.dtype === "firestore") {
+                if (tables.length !== 1) {
+                    tables.forEach((table, index) => {
+                        if (index === 0) {
+                            query += `${table}.${columns[index]}=${tables[index + 1]}.${columns[index + 1]}`;
+                        } else if (index < tables.length - 1) {
+                            query += `#${table}.${secondColumns[index]}=${tables[index + 1]}.${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}`;
+                        }
+                    });
+                }
             } else {
-                tables.forEach((table, index) => {
-                    if (index === 0) {
-                        query += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}.${columns[index]}::text = ${tables[index + 1]}.${columns[index + 1]}::text`;
-                    } else if (index < tables.length - 1) {
-                        query += ` JOIN ${tables[index + 1]} ON ${table}.${secondColumns[index]}::text = ${tables[index + 1]}.${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}::text`;
-                    }
-                });
+                if (tables.length === 1) {
+                    query += `SELECT ${mergedColumns.join(',')} FROM ${tables[0]}`;
+                } else {
+                    tables.forEach((table, index) => {
+                        if (index === 0) {
+                            query += `SELECT ${mergedColumns.join(',')} FROM ${table} JOIN ${tables[index + 1]} ON ${table}.${columns[index]}::text = ${tables[index + 1]}.${columns[index + 1]}::text`;
+                        } else if (index < tables.length - 1) {
+                            query += ` JOIN ${tables[index + 1]} ON ${table}.${secondColumns[index]}::text = ${tables[index + 1]}.${(tables.length - 1) !== index ? columns[index + 1]: secondColumns[index + 1]}::text`;
+                        }
+                    });
+                }
             }
 
             try {

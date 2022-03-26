@@ -10,7 +10,8 @@ const {
     saveFirestoreTableResult,
     updateDefaultFirestoreTableRow,
     deleteDefaultFirestoreTableRow,
-    getFirestoreTableColumns
+    getFirestoreTableColumns,
+    runFirestoreQuery
 } = require('./firestore/table');
 const {
     loadPostgresTable,
@@ -18,14 +19,16 @@ const {
     savePostgresTableResult,
     updateDefaultPostgresTableRow,
     deleteDefaultPostgresTableRow,
-    getPostgresTableColumns
+    getPostgresTableColumns,
+    runPostgresQuery
 } = require('./postgres/table');
 const { loadMysqlTable,
     getMysqlTableSize,
     saveMysqlTableResult,
     updateDefaultMysqlTableRow,
     deleteDefaultMysqlTableRow,
-    getMysqlTableColumns
+    getMysqlTableColumns,
+    runMysqlQuery
 } = require('./mysql/table');
 const {
     getAppDataPath
@@ -135,70 +138,6 @@ async function addTable (connectionName, query, type, alias) {
     }
 }
 
-async function runQuery (connectionName, query) {
-    try {
-        const connection = db.read()
-            .get('connections')
-            .find({name: connectionName})
-            .value();
-
-        const URI = connection.URI;
-        const sshHost = connection.sshHost;
-        const sshPort = connection.sshPort;
-        const sshUser = connection.sshUser;
-        const sshPrivateKey = connection.sshPrivateKey;
-
-        let sequelize;
-
-        if (typeof URI === "string") {
-            sequelize = new Sequelize(URI);
-
-        } else if (sshHost) {
-
-            // basic connection to a database
-            const dbConfig = {
-                database: URI.database,
-                username: URI.user,
-                password: URI.password,
-                dialect: URI.others.dialect,
-                port: URI.port
-            };
-
-            // ssh tunnel configuration
-            const tunnelConfig = {
-                username: sshUser,
-                host: sshHost,
-                port: sshPort,
-                privateKey: require("fs").readFileSync(sshPrivateKey)
-            };
-
-            // initialize service
-            const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
-            const connection = await sequelizeTunnelService.getConnection();
-
-            sequelize = connection.sequelize;
-        } else if (!sshHost) {
-            sequelize = new Sequelize(URI.database,
-                URI.user,
-                URI.password,
-                URI.others
-            );
-        }
-
-        query = query.replace(';', ' ');
-        query += ' LIMIT 3 OFFSET 0';
-
-        const [results, metadata] = await sequelize.query(query);
-
-        return {
-            "rows": results,
-            "fields": metadata.fields
-        }
-    } catch (e) {
-        console.log(`[${new Date().toLocaleString()}] RUN QUERY ERROR: `, e);
-    }
-}
-
 async function searchByAllTables(connectionName, value) {
     try {
         const connection = db.read()
@@ -272,6 +211,29 @@ async function searchByAllTables(connectionName, value) {
         }));
     } catch (e) {
         console.log(`[${new Date().toLocaleString()}] SEARCH ALL TABLES ERROR: `, e);
+    }
+}
+
+async function runQuery (connectionName, query) {
+    try {
+        const connection = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .value();
+
+        let result;
+
+        if (connection.dtype === FIRESTORE) {
+            result = await runFirestoreQuery(connection, query);
+        } else if (connection.dtype === POSTGRESQL) {
+            result = await runPostgresQuery(connection, query);
+        } else if (connection.dtype === MYSQL) {
+            result = await runMysqlQuery(connection, query);
+        }
+
+        return result;
+    } catch (e) {
+        console.log(`[${new Date().toLocaleString()}] RUN QUERY ERROR: `, e);
     }
 }
 

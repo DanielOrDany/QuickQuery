@@ -267,7 +267,70 @@ async function deleteDefaultFirestoreTableRow(id, token, connection, table, colu
 }
 
 async function getFirestoreTableColumns(connection, table) {
+    if (!admin.apps.length) {
+        admin.initializeApp({
+            credential: admin.credential.cert(connection.firebaseConfig)
+        });
+    } else {
+        admin.app(); // if already initialized, use that one
+    }
 
+    const firebase_db = admin.firestore();
+
+    let query = firebase_db.collection(table);
+
+    const snapshot = await query.get();
+
+    const rows = await Promise.all(snapshot.docs.map(row => {
+        return row.data();
+    }));
+
+    const columns = Object.keys(rows[0]);
+
+    return columns.map(column => {
+        return {
+            column_name: column
+        }
+    });
+}
+
+async function runFirestoreQuery(connection, query) {
+    if (!admin.apps.length) {
+        admin.initializeApp({
+            credential: admin.credential.cert(connection.firebaseConfig)
+        });
+    } else {
+        admin.app(); // if already initialized, use that one
+    }
+
+    const firebase_db = admin.firestore();
+
+    const joins = query.split("#");
+
+    joins.forEach(join => {
+       if (join.length > 0) {
+           const params = join.split("=");
+           const firstTable = params[0].split(".")[0];
+           const firstColumn = params[0].split(".")[1];
+           const secondTable = params[1].split(".")[0];
+           const secondColumn = params[1].split(".")[1];
+            // console.log({
+            //     firstTable,
+            //     firstColumn,
+            //     secondTable,
+            //     secondColumn
+            // })
+       }
+    });
+    // console.log(joins);
+    // console.log("QUERY", query);
+    // query = query.replace(';', ' ');
+    // query += ' LIMIT 3 OFFSET 0';
+    //
+    // return {
+    //     "rows": results,
+    //     "fields": metadata.fields
+    // }
 }
 
 module.exports = {
@@ -276,5 +339,6 @@ module.exports = {
     saveFirestoreTableResult,
     updateDefaultFirestoreTableRow,
     deleteDefaultFirestoreTableRow,
-    getFirestoreTableColumns
+    getFirestoreTableColumns,
+    runFirestoreQuery
 };
