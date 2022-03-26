@@ -646,9 +646,69 @@ async function updateDefaultPostgresTableRow(id, token, connection, table, colum
     return await sequelize.query(query);
 }
 
+async function deleteDefaultPostgresTableRow(id, token, connection, table, columnsAndValues) {
+    const URI = connection.URI;
+    const sshHost = connection.sshHost;
+    const sshPort = connection.sshPort;
+    const sshUser = connection.sshUser;
+    const sshPrivateKey = connection.sshPrivateKey;
+
+    let sequelize;
+
+    if (typeof URI === "string") {
+        sequelize = new Sequelize(URI);
+
+    } else if (sshHost) {
+
+        // basic connection to a database
+        const dbConfig = {
+            database: URI.database,
+            username: URI.user,
+            password: URI.password,
+            dialect: URI.others.dialect,
+            port: URI.port
+        };
+
+        // ssh tunnel configuration
+        const tunnelConfig = {
+            username: sshUser,
+            host: sshHost,
+            port: sshPort,
+            privateKey: require("fs").readFileSync(sshPrivateKey)
+        };
+
+        // initialize service
+        const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
+        const connection = await sequelizeTunnelService.getConnection();
+
+        sequelize = connection.sequelize;
+    } else if (!sshHost) {
+        sequelize = new Sequelize(URI.database,
+            URI.user,
+            URI.password,
+            URI.others
+        );
+    }
+
+    const oldColumnsLen = columnsAndValues.length;
+    let where = columnsAndValues.map((cAndV, index) => {
+        if (index === oldColumnsLen - 1) {
+            return ` ${cAndV[0]} ${typeof cAndV[1] === 'string' ? `= '${cAndV[1]}'` : `is ${cAndV[1]}`}`;
+        } else {
+            return ` ${cAndV[0]} ${typeof cAndV[1] === 'string' ? `= '${cAndV[1]}'` : `is ${cAndV[1]}`} and`;
+        }
+    });
+
+    const query = `DELETE FROM ${table.table} WHERE ${where.join().replace(/,/g, '')};`;
+
+    auth.addHistoryItem(id, token, 'delete', table.table, where.join().replace(/,/g, ''));
+    return await sequelize.query(query);
+}
+
 module.exports = {
     loadPostgresTable,
     getPostgresTableSize,
     savePostgresTableResult,
-    updateDefaultPostgresTableRow
+    updateDefaultPostgresTableRow,
+    deleteDefaultPostgresTableRow
 };

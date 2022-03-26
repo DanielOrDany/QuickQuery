@@ -197,32 +197,79 @@ async function updateDefaultFirestoreTableRow(id, token, connection, table, colu
     const updateColumns = columnsAndValues.filter((rc) => rc.length > 2);
     const oldColumns = columnsAndValues.filter((rc) => rc.length < 3);
 
-    let newValues = updateColumns.map((cAndV) => {
-        return ` ${cAndV[0]} ${typeof cAndV[1] === 'string' ? `= '${cAndV[1]}'` : `is ${cAndV[1]}`}`;
+    const newColumnValues = updateColumns.map((uc) => {
+        return ` ${uc[1]}`;
+    });
+    const oldColumnValues = updateColumns.map((uc) => {
+        return ` ${uc[2]}`;
     });
 
     oldColumns.forEach((cAndV) => {
-        query = query.where(cAndV[0], '==', cAndV[1]);
+        if (typeof cAndV[1] !== 'object') {
+            query = query.where(cAndV[0], '==', cAndV[1]);
+        }
     });
 
     const snapshot = await query.get();
 
-    const rows = await Promise.all(snapshot.docs.map(row => {
-        return row.data();
-    }));
+    if (snapshot.docs.length > 0) {
+        let updateQuery = firebase_db.collection(table.table);
 
-    rows.forEach((row) => {
-        console.log("row", row);
+        const entries = updateColumns.map(c => [c[0], c[1]]);
+        const obj = Object.fromEntries(entries);
+
+        updateQuery.doc(snapshot.docs[0].id).update(obj);
+    }
+
+    auth.addHistoryItem(id, token, 'update', table.table, oldColumnValues.join(), newColumnValues.join());
+    return { status: 'updated' };
+}
+
+async function deleteDefaultFirestoreTableRow(id, token, connection, table, columnsAndValues) {
+    if (!admin.apps.length) {
+        admin.initializeApp({
+            credential: admin.credential.cert(connection.firebaseConfig)
+        });
+    } else {
+        admin.app(); // if already initialized, use that one
+    }
+
+    const firebase_db = admin.firestore();
+
+    let query = firebase_db.collection(table.table);
+
+    const oldColumnsLen = columnsAndValues.length;
+    let where = columnsAndValues.map((cAndV, index) => {
+        if (index === oldColumnsLen - 1) {
+            return ` ${cAndV[0]} ${typeof cAndV[1] === 'string' ? `= '${cAndV[1]}'` : `is ${cAndV[1]}`}`;
+        } else {
+            return ` ${cAndV[0]} ${typeof cAndV[1] === 'string' ? `= '${cAndV[1]}'` : `is ${cAndV[1]}`} and`;
+        }
     });
-    // const query = `UPDATE ${table.table} SET ${newValues.join()} WHERE ${oldValues.join().replace(/,/g, '')};`;
 
-    //auth.addHistoryItem(id, token, 'update', table.table, oldColumnValues.join(), newColumnValues.join());
-    return { status: 'works' };
+    columnsAndValues.map((cAndV) => {
+        if (typeof cAndV[1] !== 'object') {
+            query = query.where(cAndV[0], '==', cAndV[1]);
+        }
+    });
+
+    const snapshot = await query.get();
+
+    if (snapshot.docs.length > 0) {
+        let deleteQuery = firebase_db.collection(table.table);
+
+        deleteQuery.doc(snapshot.docs[0].id).delete();
+    }
+
+    auth.addHistoryItem(id, token, 'delete', table.table, where.join().replace(/,/g, ''));
+
+    return { status: 'deleted' };
 }
 
 module.exports = {
     loadFirestoreTable,
     getFirestoreTableSize,
     saveFirestoreTableResult,
-    updateDefaultFirestoreTableRow
+    updateDefaultFirestoreTableRow,
+    deleteDefaultFirestoreTableRow
 };

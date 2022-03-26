@@ -4,10 +4,29 @@ const FileSync = require('lowdb/adapters/FileSync');
 const Sequelize = require('sequelize');
 const pg = require('pg');
 
-const { loadFirestoreTable, getFirestoreTableSize, saveFirestoreTableResult, updateDefaultFirestoreTableRow } = require('./firestore/table');
-const { loadPostgresTable, getPostgresTableSize, savePostgresTableResult, updateDefaultPostgresTableRow } = require('./postgres/table');
-const { loadMysqlTable, getMysqlTableSize, saveMysqlTableResult, updateDefaultMysqlTableRow } = require('./mysql/table');
-const { isEmpty, sortByLength, getAppDataPath } = require('./helpers');
+const {
+    loadFirestoreTable,
+    getFirestoreTableSize,
+    saveFirestoreTableResult,
+    updateDefaultFirestoreTableRow,
+    deleteDefaultFirestoreTableRow
+} = require('./firestore/table');
+const {
+    loadPostgresTable,
+    getPostgresTableSize,
+    savePostgresTableResult,
+    updateDefaultPostgresTableRow,
+    deleteDefaultPostgresTableRow
+} = require('./postgres/table');
+const { loadMysqlTable,
+    getMysqlTableSize,
+    saveMysqlTableResult,
+    updateDefaultMysqlTableRow,
+    deleteDefaultMysqlTableRow
+} = require('./mysql/table');
+const {
+    getAppDataPath
+} = require('./helpers');
 
 const auth = require('./auth');
 const SequelizeTunnelService = require('./sequalize');
@@ -280,7 +299,7 @@ async function updateDefaultTableRow(id, token, connectionName, alias, columnsAn
 
         return result;
     } catch (e) {
-        console.log(e);
+        console.log(`[${new Date().toLocaleString()}] UPDATE TABLE ROW ERROR: `, e);
     }
 }
 
@@ -298,64 +317,19 @@ async function deleteDefaultTableRow(id, token, connectionName, alias, columnsAn
             .find({alias: alias})
             .value();
 
-        const URI = connection.URI;
-        const sshHost = connection.sshHost;
-        const sshPort = connection.sshPort;
-        const sshUser = connection.sshUser;
-        const sshPrivateKey = connection.sshPrivateKey;
+        let result;
 
-        let sequelize;
-
-        if (typeof URI === "string") {
-            sequelize = new Sequelize(URI);
-
-        } else if (sshHost) {
-
-            // basic connection to a database
-            const dbConfig = {
-                database: URI.database,
-                username: URI.user,
-                password: URI.password,
-                dialect: URI.others.dialect,
-                port: URI.port
-            };
-
-            // ssh tunnel configuration
-            const tunnelConfig = {
-                username: sshUser,
-                host: sshHost,
-                port: sshPort,
-                privateKey: require("fs").readFileSync(sshPrivateKey)
-            };
-
-            // initialize service
-            const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
-            const connection = await sequelizeTunnelService.getConnection();
-
-            sequelize = connection.sequelize;
-        } else if (!sshHost) {
-            sequelize = new Sequelize(URI.database,
-                URI.user,
-                URI.password,
-                URI.others
-            );
+        if (connection.dtype === FIRESTORE) {
+            result = await deleteDefaultFirestoreTableRow(id, token, connection, table, columnsAndValues);
+        } else if (connection.dtype === POSTGRESQL) {
+            result = await deleteDefaultPostgresTableRow(id, token, connection, table, columnsAndValues);
+        } else if (connection.dtype === MYSQL) {
+            result = await deleteDefaultMysqlTableRow(id, token, connection, table, columnsAndValues);
         }
 
-        const oldColumnsLen = columnsAndValues.length;
-        let where = columnsAndValues.map((cAndV, index) => {
-            if (index === oldColumnsLen - 1) {
-                return ` ${cAndV[0]} ${typeof cAndV[1] === 'string' ? `= '${cAndV[1]}'` : `is ${cAndV[1]}`}`;
-            } else {
-                return ` ${cAndV[0]} ${typeof cAndV[1] === 'string' ? `= '${cAndV[1]}'` : `is ${cAndV[1]}`} and`;
-            }
-        });
-
-        const query = `DELETE FROM ${table.table} WHERE ${where.join().replace(/,/g, '')};`;
-
-        auth.addHistoryItem(id, token, 'delete', table.table, where.join().replace(/,/g, ''));
-        return await sequelize.query(query);
+        return result;
     } catch (e) {
-        console.log(e);
+        console.log(`[${new Date().toLocaleString()}] DELETE TABLE ROW ERROR: `, e);
     }
 }
 
@@ -459,8 +433,7 @@ async function updateTableQuery(connectionName, alias, newQuery, newAlias) {
         return queries;
 
     } catch (e) {
-
-        console.error(e);
+        console.log(`[${new Date().toLocaleString()}] UPDATE TABLE QUERY ERROR: `, e);
     }
 }
 
