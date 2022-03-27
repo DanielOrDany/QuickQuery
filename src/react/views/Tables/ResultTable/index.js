@@ -907,7 +907,7 @@ export default class Result extends React.Component {
                                                                     }
                                                                 }
                                                             } else if (typeof value === "object") {
-                                                                if (value._seconds) {
+                                                                if (value?._seconds) {
                                                                     const renderItem = new Date(Number(value._seconds));
 
                                                                     if (renderItem) {
