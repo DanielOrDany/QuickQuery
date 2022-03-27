@@ -91,7 +91,7 @@ export default class Connections extends React.Component {
     closeFirebasePopup = () => {
         this.setState({
             isFirebaseConnectionPopup: false,
-            isDBMiniMenu: false,
+            isDBMiniMenu: null,
         });
     };
 
@@ -192,25 +192,23 @@ export default class Connections extends React.Component {
             isConfigureManuallyPopup: false,
             isSSHConnectionPopup: false,
             isFirebaseConnectionPopup: false,
-            isDBMiniMenu: false,
+            isDBMiniMenu: null,
             editConnection: null
         });
     };
 
     openDelete = (alias) => {
         this.setState({ choosedConnetion: alias});
-        this.setState({ isDeleteOpen: true, isDBMiniMenu: false });
+        this.setState({ isDeleteOpen: true, isDBMiniMenu: null });
     };
 
     handleDeleteSubmit = () => {
         this.deleteConnection(this.state.choosedConnetion);
-        this.setState({ choosedConnetion: ''});
-        this.setState({ isDeleteOpen: false, isDBMiniMenu: false });
+        this.setState({ choosedConnetion: '', isDeleteOpen: false, isDBMiniMenu: null});
     };
 
     handleDeleteCancel = () => {
-        this.setState({ choosedConnetion: ''});
-        this.setState({ isDeleteOpen: false, isDBMiniMenu: false });
+        this.setState({ choosedConnetion: '', isDeleteOpen: false, isDBMiniMenu: ""});
     };
 
     async componentDidMount() {
@@ -259,7 +257,7 @@ export default class Connections extends React.Component {
                         isSimplifiedConnectionPopup: false,
                         isSSHConnectionPopup: false,
                         isFirebaseConnectionPopup: false,
-                        isDBMiniMenu: false,
+                        isDBMiniMenu: null,
                         editConnection: null
                     });
 
@@ -1189,9 +1187,6 @@ export default class Connections extends React.Component {
                                 <div className="empty-connections-page-block">
                                     <img src={empty_connections_page_icon} alt="empty page"/>
                                     <span>Not added any connection.<br/>Please add database connection to list.</span>
-                                    <button type="button" id="add-button"
-                                            onClick={() => this.openSimplifiedConnectionPopup()}>Add connection
-                                    </button>
                                 </div>
                             </div>
                     }
