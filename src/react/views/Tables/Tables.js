@@ -134,8 +134,6 @@ export default class Tables extends React.Component {
     if (id && token) {
       const verified = await authVerifyToken(id, token);
 
-      console.log('verified user', verified);
-
       if (verified && verified.data) {
         localStorage.setItem("deleteAccess", verified.data.employee.dataValues.delete_access);
         localStorage.setItem("updateAccess", verified.data.employee.dataValues.update_access);
@@ -152,20 +150,20 @@ export default class Tables extends React.Component {
 
   async createTable() {
     const subPlan = localStorage.getItem("employeePlan");
-    const tablesNum = JSON.parse(localStorage.getItem("current_connection")).native_tables.length;
+    // const tablesNum = JSON.parse(localStorage.getItem("current_connection")).native_tables.length;
 
     let limit = 0;
     if (subPlan === "Startup Plan") {
-      limit = tablesNum + 5;
+      limit = 5 // tablesNum + 5;
     } else if (subPlan === "Pro Plan") {
-      limit = tablesNum + 25;
+      limit = 25 // tablesNum + 25;
     } else { // Personal
-      limit = tablesNum + 2;
+      limit = 2 // tablesNum + 2;
     }
 
     if (this.state.tables.length >= limit) {
       this.setState({
-        warning: `Your limit for ${subPlan} is ${limit} report schemas. Please upgrade your plan.`
+        warning: `Your limit for ${subPlan} is ${limit} joined tables. Please upgrade your plan.`
       });
     } else {
       if (localStorage.getItem("current_result_info")) {

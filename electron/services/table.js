@@ -138,6 +138,10 @@ async function addTable (connectionName, query, type, alias) {
     }
 }
 
+/*
+*  IN DEVELOPING
+*/
+
 async function searchByAllTables(connectionName, value) {
     try {
         const connection = db.read()

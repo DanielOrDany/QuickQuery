@@ -1,6 +1,10 @@
 import React from 'react';
 import './index.scss';
 
+function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+}
+
 const HiddenColumnsPopup = ({
     isOpen,
     showAll,
@@ -14,14 +18,12 @@ const HiddenColumnsPopup = ({
         return selectedColumns.indexOf(x) < 0;
     });
 
-    console.log(filteredColumns);
-
     return (
         <>
             { isOpen &&
                 <div className="hidden-columns-popup">
                     <div className="hidden-columns">
-                        { selectedColumns && selectedColumns.map(column => (
+                        { selectedColumns && selectedColumns.filter(onlyUnique).map(column => (
                             <div className="hidden-column">
                                 <input className="column-checkbox" onChange={(() => unhide(column))} type="checkbox" id={column} checked={true}/>
                                 <label className="column-label" htmlFor={column}>{column}</label>

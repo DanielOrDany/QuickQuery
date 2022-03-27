@@ -62,9 +62,9 @@ async function getPostgresTableSize(connection, connectionName, alias) {
     // Get table result
     const query = db.read()
         .get('connections')
-        .find({name: connectionName})
+        .find({ name: connectionName })
         .get('queries')
-        .find({alias: alias})
+        .find({ alias: alias })
         .value()
         .query;
 
@@ -200,20 +200,23 @@ async function loadPostgresTable(connection, queryData, loadingOptions) {
                     const d1 = newFilter1[2] + newFilter1[0] + newFilter1[1];
                     const d2 = newFilter2[2] + newFilter2[0] + newFilter2[1];
 
+                    const d1Timestamp = new Date(newFilter1[2], newFilter1[0] - 1, newFilter1[1]).getTime();
+                    const d2Timestamp = new Date(newFilter2[2], newFilter2[0] - 1, newFilter2[1]).getTime();
+
                     if (searchColumnNum > 0) {
                         if (d2 < d1) {
-                            query += ` AND ${column} BETWEEN \'${d2}\' AND \'${d1}\'`;
+                            query += ` AND ${column} BETWEEN \'${d2}\' AND \'${d1}\' OR ${column} BETWEEN \'${d2Timestamp}\' AND \'${d1Timestamp}\'`;
                             searchColumnNum += 1;
                         } else {
-                            query += ` AND ${column} BETWEEN \'${d1}\' AND \'${d2}\'`;
+                            query += ` AND ${column} BETWEEN \'${d1}\' AND \'${d2}\' OR ${column} BETWEEN \'${d1Timestamp}\' AND \'${d2Timestamp}\'`;
                             searchColumnNum += 1;
                         }
                     } else {
                         if (d2 < d1) {
-                            query += ` WHERE ${column} BETWEEN \'${d2}\' AND \'${d1}\'`;
+                            query += ` WHERE ${column} BETWEEN \'${d2}\' AND \'${d1}\' OR ${column} BETWEEN \'${d2Timestamp}\' AND \'${d1Timestamp}\'`;
                             searchColumnNum += 1;
                         } else {
-                            query += ` WHERE ${column} BETWEEN \'${d1}\' AND \'${d2}\'`;
+                            query += ` WHERE ${column} BETWEEN \'${d1}\' AND \'${d2}\' OR ${column} BETWEEN \'${d1Timestamp}\' AND \'${d2Timestamp}\'`;
                             searchColumnNum += 1;
                         }
                     }
@@ -257,52 +260,6 @@ async function loadPostgresTable(connection, queryData, loadingOptions) {
         if (orderColumn && order) {
             query += ` ORDER BY ${orderColumn} ${order}`;
         }
-
-        // Add orders
-        // let orderByNum = 0;
-        //
-        // const lastChangedOption = loadingOptions.operationsOptions.find((option) => option.last === true);
-        //
-        // if (lastChangedOption) {
-        //     let lastTableColumn = lastChangedOption.column;
-        //
-        //     tableColumns.forEach(tableColumn => {
-        //         if (lastChangedOption.column.match(tableColumn)) {
-        //             lastTableColumn = lastChangedOption.column.replace(`${tableColumn}_`, `${tableColumn}.`);
-        //         }
-        //     });
-        //
-        //     query += ` ORDER BY ${lastTableColumn} ${lastChangedOption.order}`;
-        //     orderByNum += 1;
-        // }
-        //
-        // loadingOptions.operationsOptions.forEach((option) => {
-        //     let column = option.column;
-        //
-        //     const order = option.order;
-        //
-        //     // Join cases
-        //     tableColumns.forEach(tableColumn => {
-        //         const regex = /\./g;
-        //         const fullColumn = column.replace(regex, '_');
-        //
-        //         if (fullColumn.match(tableColumn) && queryType === 'new') {
-        //             column = fullColumn.replace(`${tableColumn}_`, `${tableColumn}.`);
-        //         }
-        //     });
-        //
-        //     if (orderByNum === 0 && order === 'DESC') {
-        //         query += ` ORDER BY ${column} ${order}`;
-        //         orderByNum += 1;
-        //     }
-        //
-        //     // if (orderByNum > 0 && !option.last) {
-        //     //     query += `, ${column} ${order}`;
-        //     // } else if (orderByNum === 0 && !option.last) {
-        //     //     query += ` ORDER BY ${column} ${order}`;
-        //     //     orderByNum += 1;
-        //     // }
-        // });
     }
 
     query += ` LIMIT ${limit} OFFSET ${offset}`;

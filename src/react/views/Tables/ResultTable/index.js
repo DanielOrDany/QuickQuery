@@ -165,23 +165,18 @@ export default class Result extends React.Component {
             localStorage.setItem("reportsPerMonth", JSON.stringify(reportsNum));
             reportsNum += 1;
         } else {
-            console.log("number", Number(JSON.parse(localStorage.getItem("reportsPerMonth"))));
             reportsNum = Number(JSON.parse(localStorage.getItem("reportsPerMonth")));
             reportsNum += 1;
-            console.log("result", reportsNum);
         }
 
         let limit = 0;
         if (subPlan === "Startup Plan") {
             limit = 100 - reportsNum;
         } else if (subPlan === "Pro Plan") {
-            limit = 300 - reportsNum;
+            limit = 1000 - reportsNum;
         } else { // Personal
             limit = 15 - reportsNum;
         }
-
-        console.log("limit", limit);
-        console.log("reportsNum", reportsNum);
 
         if (limit >= 0) {
             saveTableResult(connectionName, result, loadingOptions).then(async data => {
@@ -199,9 +194,8 @@ export default class Result extends React.Component {
                     let wb = XLSX.utils.book_new();
 
                     XLSX.utils.book_append_sheet(wb, binaryWS, `${result}`);
-                    XLSX.writeFile(wb, `report.xlsx`, {bookSST: true, compression: true});
+                    XLSX.writeFile(wb, `report.xlsx`, { bookSST: true, compression: true });
 
-                    console.log("reportsPerMonth", reportsNum);
                     localStorage.setItem("reportsPerMonth", JSON.stringify(reportsNum));
 
                     this.setState({
@@ -217,7 +211,6 @@ export default class Result extends React.Component {
                 }
             });
         } else {
-            console.log("limited!");
             this.setState({
                 limitWarning: "You have exceeded the monthly limit. Please upgrade your plan.",
                 isLoading: false,
@@ -260,13 +253,11 @@ export default class Result extends React.Component {
             const timeOfUseInMs = Date.now() - Number(countSubFrom);
             const timeOfUseInDays = timeOfUseInMs / (1000 * 60 * 60 * 24);
 
-            console.log("days", timeOfUseInDays);
-
             if (!localStorage.getItem("timeOfUseInDays")) {
                 localStorage.setItem("timeOfUseInDays", JSON.stringify(timeOfUseInDays));
             } else {
                 const storedTimeOfUseInDays = Number(JSON.parse(localStorage.getItem("timeOfUseInDays")));
-                console.log('timeOfUseInDays - storedTimeOfUseInDays', timeOfUseInDays - storedTimeOfUseInDays);
+
                 if ((timeOfUseInDays - storedTimeOfUseInDays) <= 30) {
                     this.saveResult(connectionName, result, loadingOptions, removedColumns, subPlan);
                 } else {
@@ -312,7 +303,6 @@ export default class Result extends React.Component {
         localStorage.setItem('isChangedPicker2', false);
 
         loadTableResult(connectionName, result, loadingOptions).then(async data => {
-            console.log("loadTableResult", data);
             if (data) {
                 if (tableSize === 0) {
                     this.setState({
@@ -321,30 +311,45 @@ export default class Result extends React.Component {
                     });
                 } else {
                     const db_rows = await Promise.all(data.rows);
-                    const headers = Object.keys(db_rows[0]);
-                    const rows = Object.values(db_rows);
 
-                    const tableOptions = headers.map((header) => {
-                        return {
-                            column: header,
-                            // order: ASC,
-                            search: "",
-                            filter1: "",
-                            filter2: "",
-                            last: false,
-                            isFilterOpened: false
-                        }
-                    });
-                    this.setState({
-                        pages: rowsPerPage,
-                        options: tableOptions,
-                        isNullResults: false,
-                        isLoading: false,
-                        records: tableSize,
-                        isEmptyQuery: false,
-                        headers,
-                        rows
-                    });
+                    if (db_rows.length > 0) {
+                        const headers = Object.keys(db_rows[0]);
+                        const rows = Object.values(db_rows);
+
+                        const tableOptions = headers.map((header) => {
+                            return {
+                                column: header,
+                                // order: ASC,
+                                search: "",
+                                filter1: "",
+                                filter2: "",
+                                last: false,
+                                isFilterOpened: false
+                            }
+                        });
+
+                        this.setState({
+                            pages: rowsPerPage,
+                            options: tableOptions,
+                            isNullResults: false,
+                            isLoading: false,
+                            records: tableSize,
+                            isEmptyQuery: false,
+                            headers,
+                            rows
+                        });
+                    } else {
+                        this.setState({
+                            pages: rowsPerPage,
+                            options: [],
+                            isEmptyQuery: true,
+                            isNullResults: false,
+                            isLoading: false,
+                            records: tableSize,
+                            headers: [],
+                            rows: []
+                        });
+                    }
                 }
             } else {
                 console.error("ERROR, loadTableResult: ", data);
@@ -447,19 +452,26 @@ export default class Result extends React.Component {
     };
 
     unhideColumn = (column) => {
-        let { hiddenColumns } = this.state;
+        let { hiddenColumns, removedColumns } = this.state;
 
+        removedColumns = removedColumns.filter(e => e !== column);
         hiddenColumns = hiddenColumns.filter(e => e !== column);
 
         this.setState({
-            hiddenColumns
+            hiddenColumns,
+            removedColumns
         });
+
+        this.reloadTable();
     };
 
     unhideAllColumns = () => {
         this.setState({
-            hiddenColumns: []
+            hiddenColumns: [],
+            removedColumns: []
         });
+
+        this.reloadTable();
     };
 
     changePage = (operation) => {
@@ -603,6 +615,7 @@ export default class Result extends React.Component {
                     localStorage.setItem('isChangedPicker1', true);
                 }
             }
+
             return option;
         });
 
@@ -693,7 +706,7 @@ export default class Result extends React.Component {
 
         if (result) {
             this.reloadTable();
-            this.setState({setTableModalActive: false});
+            this.setState({ setTableModalActive: false });
         }
     };
 
@@ -713,12 +726,12 @@ export default class Result extends React.Component {
 
         if (result) {
             this.reloadTable();
-            this.setState({setTableModalActive: false});
+            this.setState({ setTableModalActive: false });
         }
     };
 
     handleImgCancel = () => {
-        this.setState({TableImgModalActive: false});
+        this.setState({ TableImgModalActive: false });
     };
 
 
@@ -729,12 +742,11 @@ export default class Result extends React.Component {
 
 
     ImgCheck(renderItem) {
-        if (String(renderItem).indexOf(".png") > -1) {
+        if (String(renderItem).indexOf(".png") > -1 || String(renderItem).indexOf(".jpg") > -1) {
             return (
                 <img src={renderItem} alt={'img'} className={'result-table-td-img'}
                      onClick={() => this.setTableImgModal()}/>
             )
-
         } else {
             return (
                 <input value={renderItem}/>)
@@ -845,19 +857,21 @@ export default class Result extends React.Component {
                     {/* ------------------------------------- RESULT PAGE HEADER ----------------------------------- */}
 
                     <div className='result-page-header'>
-                        <div className="menu-and-title">
+                        <div className="menu-and-title" onClick={() => isOpenHiddenColumnsPopup && this.closeHiddenColumnsPopup()}>
                             <img id="menu-opened" src={menu_black_24dp} onClick={() => this.hideTablesMenu()}/>
                             <img id="menu-open" src={menu_open_black_24dp} onClick={() => this.hideTablesMenu()}/> {tableName}
                         </div>
 
-                        <button className='result-page-header-show-hidden-btn' onClick={() => this.openHiddenColumnsPopup()}>Show hidden</button>
+                        <div className="header-empty-space" onClick={() => isOpenHiddenColumnsPopup && this.closeHiddenColumnsPopup()}></div>
+
+                        <button className='result-page-header-show-hidden-btn' onClick={() => this.openHiddenColumnsPopup()}>Show hidden {hiddenColumns.length > 0 && hiddenColumns.length}</button>
 
                         <HiddenColumnsPopup unhide={this.unhideColumn} showAll={this.unhideAllColumns} hide={this.hideColumn} selectedColumns={hiddenColumns} columns={headers} isOpen={isOpenHiddenColumnsPopup} done={this.closeHiddenColumnsPopup}/>
                     </div>
 
                     {/* ------------------------------------- RESULT PAGE BODY ------------------------------------- */}
 
-                    <div className="result-page-body">
+                    <div className="result-page-body" onClick={() => isOpenHiddenColumnsPopup && this.closeHiddenColumnsPopup()}>
                         <table>
 
                             {/* ------------------------------------ TABLE HEADER ---------------------------------- */}
@@ -871,6 +885,7 @@ export default class Result extends React.Component {
                                             const firstRow = rows[0];
                                             let currentHeaderIsDate = false;
                                             let currentHeaderIsNumber = false;
+
                                             for (const [key, value] of Object.entries(firstRow)) {
                                                 if (firstRow) {
                                                     if (key === header) {
@@ -880,6 +895,25 @@ export default class Result extends React.Component {
                                                                 const dateFormat = value.split("T")[0];
                                                                 currentHeaderIsDate = /^\d{4}(\-|\/)(((0)[0-9])|((1)[0-2]))(\-|\/)([0-2][0-9]|(3)[0-1])$/.test(dateFormat);
 
+                                                                if (currentHeaderIsDate === false) {
+                                                                    if (value.length === 13 && Number(value)) {
+                                                                        const renderItem = new Date(Number(value));
+
+                                                                        if (renderItem) {
+                                                                            currentHeaderIsDate = true;
+                                                                        }
+                                                                    } else if (Number(value)) {
+                                                                        currentHeaderIsNumber = true;
+                                                                    }
+                                                                }
+                                                            } else if (typeof value === "object") {
+                                                                if (value._seconds) {
+                                                                    const renderItem = new Date(Number(value._seconds));
+
+                                                                    if (renderItem) {
+                                                                        currentHeaderIsDate = true;
+                                                                    }
+                                                                }
                                                             } else {
                                                                 currentHeaderIsNumber = /^-?\d+$/.test(value);
                                                             }
@@ -1047,7 +1081,9 @@ export default class Result extends React.Component {
                                                 /* ------------------------------ TABLE LINE ---------------------------- */
 
                                                 <tr key={rowKey} className='table-line'>
-                                                    <td className="row-number">{rowKey + 1}</td>
+                                                    { Object.values(item).length > 0 &&
+                                                        <td className="row-number">{rowKey + 1}</td>
+                                                    }
 
                                                     { Object.values(item).map((get_item, key) => {
 
@@ -1057,10 +1093,14 @@ export default class Result extends React.Component {
 
                                                             if (get_item === null) {
                                                                 renderItem = "";
+                                                            } else if (get_item._seconds) { // <- firestore date case
+                                                                renderItem = new Date(Number(get_item._seconds) * 1000).toLocaleString();
                                                             } else {
                                                                 renderItem = JSON.stringify(get_item);
                                                             }
 
+                                                        } else if (get_item.length === 13 && Number(get_item)) {
+                                                            renderItem = new Date(Number(get_item)).toLocaleString()
                                                         } else {
                                                             renderItem = get_item;
                                                         }

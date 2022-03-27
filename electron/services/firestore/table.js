@@ -35,33 +35,93 @@ async function loadFirestoreTable(connection, queryData, loadingOptions) {
         let query = firebase_db.collection(queryData.table);
 
         const offset = Number(loadingOptions.page) * Number(loadingOptions.pageSize);
-        const tableColumns = loadingOptions.columns ? sortByLength(loadingOptions.columns) : [];
         const numberOfRecords = Number(loadingOptions.numberOfRecords);
         const limit = Number(loadingOptions.pageSize);
 
+        // Options
         if (loadingOptions.operationsOptions) {
+
+            // Searches
             loadingOptions.operationsOptions.forEach((option) => {
                 let column = option.column;
                 const search = option.search;
-
-                // Join cases
-                tableColumns.forEach(tableColumn => {
-                    const regex = /\./g;
-                    const fullColumn = column.replace(regex, '_');
-
-                    if (fullColumn.match(tableColumn)) {
-                        column = fullColumn.replace(`${tableColumn}_`, `${tableColumn}.`);
-                    }
-                });
 
                 let searchArray = [];
                 for (let i = 0; i < search.length; i++) {
                     searchArray.push(search.slice(0, i + 1));
                 }
 
-                console.log(searchArray)
                 if (searchArray.length > 0) {
                     query = query.where(column, '==', search)
+                }
+            });
+
+            // Filters
+            loadingOptions.operationsOptions.forEach((option) => {
+                let column = option.column;
+
+                const filter1 = option.filter1;
+                const filter2 = option.filter2;
+
+                if (!isEmpty(filter1) && !isEmpty(filter2)) {
+                    const filter1IsDate = (new Date(filter1) !== "Invalid Date") && !isNaN(new Date(filter1));
+                    const filter1IsNumber = /^-?\d+$/.test(filter1);
+                    const filter2IsDate = (new Date(filter2) !== "Invalid Date") && !isNaN(new Date(filter2));
+                    const filter2IsNumber = /^-?\d+$/.test(filter2);
+
+                    // Date
+                    if (
+                        filter1IsDate &&
+                        filter2IsDate &&
+                        !filter1IsNumber &&
+                        !filter2IsNumber
+                    ) {
+                        const newFilter1 = filter1.split("/");
+                        const newFilter2 = filter2.split("/");
+                        const d1 = newFilter1[2] + newFilter1[0] + newFilter1[1];
+                        const d2 = newFilter2[2] + newFilter2[0] + newFilter2[1];
+
+                        const d1Timestamp = new Date(newFilter1[2], newFilter1[0] - 1, newFilter1[1]);
+                        const d2Timestamp = new Date(newFilter2[2], newFilter2[0] - 1, newFilter2[1]);
+
+                        if (d2 < d1) {
+                            query = query
+                                .where(column, '>', d2Timestamp)
+                                .where(column, '<', d1Timestamp)
+
+                        } else {
+                            query = query
+                                .where(column, '>', d1Timestamp)
+                                .where(column, '<', d2Timestamp)
+                        }
+
+                    // Numbers
+                    } else {
+                        let n1, n2;
+
+                        if (
+                            !filter1IsNumber &&
+                            !filter2IsNumber
+                        ) {
+                            n1 = parseInt(filter1);
+                            n2 = parseInt(filter2);
+                        } else {
+                            n1 = filter1;
+                            n2 = filter2;
+                        }
+
+                        if (n2 < n1) {
+                            query = query
+                                .where(column, '>=', n2)
+                                .where(column, '<=', n1)
+
+                        } else {
+                            query = query
+                                .where(column, '>=', n1)
+                                .where(column, '<=', n2)
+
+                        }
+                    }
                 }
             });
 
@@ -124,22 +184,14 @@ async function saveFirestoreTableResult(connection, queryData, loadingOptions) {
         const firebase_db = admin.firestore();
 
         let query = firebase_db.collection(queryData.table);
-        const tableColumns = loadingOptions.columns ? sortByLength(loadingOptions.columns) : [];
 
+        // Options
         if (loadingOptions.operationsOptions) {
+
+            // Searches
             loadingOptions.operationsOptions.forEach((option) => {
                 let column = option.column;
                 const search = option.search;
-
-                // Join cases
-                tableColumns.forEach(tableColumn => {
-                    const regex = /\./g;
-                    const fullColumn = column.replace(regex, '_');
-
-                    if (fullColumn.match(tableColumn)) {
-                        column = fullColumn.replace(`${tableColumn}_`, `${tableColumn}.`);
-                    }
-                });
 
                 let searchArray = [];
                 for (let i = 0; i < search.length; i++) {
@@ -148,6 +200,75 @@ async function saveFirestoreTableResult(connection, queryData, loadingOptions) {
 
                 if (searchArray.length > 0) {
                     query = query.where(column, '==', search)
+                }
+            });
+
+            // Filters
+            loadingOptions.operationsOptions.forEach((option) => {
+                let column = option.column;
+
+                const filter1 = option.filter1;
+                const filter2 = option.filter2;
+
+                if (!isEmpty(filter1) && !isEmpty(filter2)) {
+                    const filter1IsDate = (new Date(filter1) !== "Invalid Date") && !isNaN(new Date(filter1));
+                    const filter1IsNumber = /^-?\d+$/.test(filter1);
+                    const filter2IsDate = (new Date(filter2) !== "Invalid Date") && !isNaN(new Date(filter2));
+                    const filter2IsNumber = /^-?\d+$/.test(filter2);
+
+                    // Date
+                    if (
+                        filter1IsDate &&
+                        filter2IsDate &&
+                        !filter1IsNumber &&
+                        !filter2IsNumber
+                    ) {
+                        const newFilter1 = filter1.split("/");
+                        const newFilter2 = filter2.split("/");
+                        const d1 = newFilter1[2] + newFilter1[0] + newFilter1[1];
+                        const d2 = newFilter2[2] + newFilter2[0] + newFilter2[1];
+
+                        const d1Timestamp = new Date(newFilter1[2], newFilter1[0] - 1, newFilter1[1]);
+                        const d2Timestamp = new Date(newFilter2[2], newFilter2[0] - 1, newFilter2[1]);
+
+                        if (d2 < d1) {
+                            query = query
+                                .where(column, '>', d2Timestamp)
+                                .where(column, '<', d1Timestamp)
+
+                        } else {
+                            query = query
+                                .where(column, '>', d1Timestamp)
+                                .where(column, '<', d2Timestamp)
+                        }
+
+                        // Numbers
+                    } else {
+                        let n1, n2;
+
+                        if (
+                            !filter1IsNumber &&
+                            !filter2IsNumber
+                        ) {
+                            n1 = parseInt(filter1);
+                            n2 = parseInt(filter2);
+                        } else {
+                            n1 = filter1;
+                            n2 = filter2;
+                        }
+
+                        if (n2 < n1) {
+                            query = query
+                                .where(column, '>=', n2)
+                                .where(column, '<=', n1)
+
+                        } else {
+                            query = query
+                                .where(column, '>=', n1)
+                                .where(column, '<=', n2)
+
+                        }
+                    }
                 }
             });
 
@@ -215,7 +336,16 @@ async function updateDefaultFirestoreTableRow(id, token, connection, table, colu
     if (snapshot.docs.length > 0) {
         let updateQuery = firebase_db.collection(table.table);
 
-        const entries = updateColumns.map(c => [c[0], c[1]]);
+        const entries = updateColumns.map(c => {
+            const column = c[0];
+            let value = c[1];
+
+            if (JSON.parse(value)) {
+                value = JSON.parse(value);
+            }
+
+            return [column, value];
+        });
         const obj = Object.fromEntries(entries);
 
         updateQuery.doc(snapshot.docs[0].id).update(obj);
@@ -293,6 +423,10 @@ async function getFirestoreTableColumns(connection, table) {
         }
     });
 }
+
+/*
+*  IN DEVELOPING
+*/
 
 async function runFirestoreQuery(connection, query) {
     if (!admin.apps.length) {
