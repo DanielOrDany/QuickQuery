@@ -9,7 +9,8 @@ import {
   getTable
 } from "../../methods";
 import { ReactComponent as MiniMenuIcon } from "../../icons/tables-page-left-menu-table-menu.svg";
-import xxx from "../../icons/loop.svg";
+import expand_more_black_24dp from "../../icons/expand_more_black_24dp.svg";
+import chevron_right_black_24dp from "../../icons/chevron_right_black_24dp.svg";
 import empty_result_page from "../../icons/empry-result-page.svg";
 import MiniMenu from "../../components/MiniMenu";
 import Modal from "../../popups/Modal";
@@ -25,6 +26,7 @@ export default class Tables extends React.Component {
     super(props);
 
     this.state = {
+      dtype: null,
       tables: [],
       searchedTables: [],
       isOpen: false,
@@ -39,11 +41,11 @@ export default class Tables extends React.Component {
       return;
     }
 
-    const connectionName = JSON.parse(
+    const connection = JSON.parse(
         localStorage.getItem("current_connection")
-    ).name;
+    );
 
-    await this.loadTables(connectionName);
+    await this.loadTables(connection.name, connection.dtype);
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
@@ -80,9 +82,15 @@ export default class Tables extends React.Component {
     window.location.hash = "#/connections";
   };
 
-  async loadTables(connectionName) {
+  async loadTables(connectionName, dtype) {
+    if (dtype === "firestore") {
+      let topMenu = document.getElementById('top-menu');
+      topMenu.style.height = '100%';
+    }
+
     await getAllTables(connectionName).then(tables => {
       this.setState({
+        dtype,
         tables: tables,
         searchedTables: tables
       });
@@ -126,8 +134,6 @@ export default class Tables extends React.Component {
     if (id && token) {
       const verified = await authVerifyToken(id, token);
 
-      console.log('verified user', verified);
-
       if (verified && verified.data) {
         localStorage.setItem("deleteAccess", verified.data.employee.dataValues.delete_access);
         localStorage.setItem("updateAccess", verified.data.employee.dataValues.update_access);
@@ -143,27 +149,21 @@ export default class Tables extends React.Component {
   }
 
   async createTable() {
-    //await this.verifyEmployee();
     const subPlan = localStorage.getItem("employeePlan");
-    const tablesNum = JSON.parse(localStorage.getItem("current_connection")).native_tables.length;
-
-    console.log(subPlan, tablesNum);
+    // const tablesNum = JSON.parse(localStorage.getItem("current_connection")).native_tables.length;
 
     let limit = 0;
     if (subPlan === "Startup Plan") {
-      limit = tablesNum + 5;
+      limit = 5 // tablesNum + 5;
     } else if (subPlan === "Pro Plan") {
-      limit = tablesNum + 25;
+      limit = 25 // tablesNum + 25;
     } else { // Personal
-      limit = tablesNum + 2;
+      limit = 2 // tablesNum + 2;
     }
 
-    console.log(limit);
-
     if (this.state.tables.length >= limit) {
-      console.log('set limit');
       this.setState({
-        warning: `Your limit for ${subPlan} is ${limit} report schemas. Please upgrade your plan.`
+        warning: `Your limit for ${subPlan} is ${limit} joined tables. Please upgrade your plan.`
       });
     } else {
       if (localStorage.getItem("current_result_info")) {
@@ -201,14 +201,97 @@ export default class Tables extends React.Component {
     }
   };
 
+  hideDatabaseTablesMenu() {
+    let less_icon = document.getElementById('expand_less_top');
+    let more_icon = document.getElementById('expand_more_top');
+
+    const dtype = this.state.dtype;
+
+    if (dtype === 'firestore') {
+      let topMenu = document.getElementById('top-menu');
+      let topTablesMenu = document.getElementById('top-menu-tables');
+
+      if (topTablesMenu.style.display === 'none') {
+        topTablesMenu.style.display = 'block';
+        less_icon.style.display = 'none';
+        more_icon.style.display = 'block';
+        topMenu.style.height = '100%';
+      } else {
+        less_icon.style.display = 'block';
+        more_icon.style.display = 'none';
+        topTablesMenu.style.display = 'none';
+        topMenu.style.height = '0%';
+        topMenu.style.minHeight = '35px';
+      }
+    } else {
+      let topMenu = document.getElementById('bottom-menu');
+      let bottomMenu = document.getElementById('top-menu');
+      let bottomTablesMenu = document.getElementById('top-menu-tables');
+
+      if (bottomTablesMenu.style.display === 'none') {
+        bottomTablesMenu.style.display = 'block';
+        less_icon.style.display = 'none';
+        more_icon.style.display = 'block';
+        bottomMenu.style.height = '50%';
+        topMenu.style.height = '50%';
+
+      } else {
+        less_icon.style.display = 'block';
+        more_icon.style.display = 'none';
+        bottomTablesMenu.style.display = 'none';
+        bottomMenu.style.height = '0%';
+        bottomMenu.style.minHeight = '35px';
+        topMenu.style.height = '100%';
+      }
+    }
+  }
+
+  hideJoinedTablesMenu() {
+    let less_icon = document.getElementById('expand_less_bottom');
+    let more_icon = document.getElementById('expand_more_bottom');
+    let bottomMenu = document.getElementById('bottom-menu');
+    let bottomTablesMenu = document.getElementById('bottom-menu-tables');
+
+    if (bottomTablesMenu.style.display === 'none') {
+      less_icon.style.display = 'none';
+      more_icon.style.display = 'block';
+      bottomTablesMenu.style.display = 'block';
+      bottomMenu.style.height = '100%';
+
+    } else {
+      less_icon.style.display = 'block';
+      more_icon.style.display = 'none';
+      bottomTablesMenu.style.display = 'none';
+      bottomMenu.style.height = '0%';
+      bottomMenu.style.minHeight = '35px';
+    }
+  }
+
   render() {
-    const { currentOpenedTable, tables, isOpen, searchedTables, warning } = this.state;
+    const { currentOpenedTable, tables, isOpen, searchedTables, warning, dtype } = this.state;
 
     if (!tables || !searchedTables) {
       return (
-          <div className={"loading"}>
-            <img src={xxx}/>
-            Loading...
+          <div className="loading">
+            <div className='body'>
+                  <span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </span>
+              <div className='base'>
+                <span></span>
+                <div className='face'></div>
+              </div>
+            </div>
+            <div className='longfazers'>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <h1>Loading..</h1>
           </div>
       );
     } else
@@ -243,110 +326,187 @@ export default class Tables extends React.Component {
 
 
               {/* ----------------------------------- TABLES PAGE LEFT MENU BUTTON ----------------------------------- */}
-              <div className='left-menu-button' onClick={() => this.createTable()}>
-                {/*<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">*/}
-                {/*  <path*/}
-                {/*      d="M6.39373 6.10322L11.0138 6.10322C11.3007 6.10334 11.5334 5.88125 11.5333 5.60737C11.5333 5.33338 11.3008 5.11152 11.0138 5.11152L6.39373 5.11152L6.39361 0.701345C6.39361 0.427353 6.16118 0.205494 5.87415 0.205494C5.58723 0.205377 5.35456 0.42747 5.35468 0.701345L5.3548 5.11152L0.73462 5.11141C0.447704 5.11129 0.215035 5.33338 0.215157 5.60726C0.21528 5.74414 0.273447 5.86816 0.367372 5.95781C0.461296 6.04747 0.591224 6.10299 0.734743 6.10299L5.35493 6.10311L5.35493 10.5132C5.35493 10.6502 5.41309 10.7742 5.50702 10.8638C5.60094 10.9535 5.73087 11.009 5.87439 11.009C6.16131 11.0091 6.39398 10.787 6.39385 10.5132L6.39373 6.10322Z"*/}
-                {/*      fill="white"/>*/}
-                {/*</svg>*/}
-                <span>New Spreadsheet</span>
-
-              </div>
-
-                <div className="new-tab">
-                    <span>Default db tables</span>
-                    <div className="left-menu-line"></div>
+              <div className="top-menu-part" id="top-menu">
+                <div className="new-tab" onClick={() => this.hideDatabaseTablesMenu()}>
+                  <div className="new-tab-title"><img id="expand_more_top" src={expand_more_black_24dp}/><img id="expand_less_top" src={chevron_right_black_24dp}/> Database tables</div>
+                  <div className="left-menu-line"></div>
                 </div>
 
-              {/* --------------------------------- TABLES PAGE LEFT MENU ALL TABLES ------------------------------- */}
-              <div className='left-menu-all-tables'>
-                {searchedTables.length ? (
-                        searchedTables.map((table, i) => {
-                          let evenConn = searchedTables.indexOf(table) % 2 === 0;
-                          return (
+                {/* --------------------------------- TABLES PAGE LEFT MENU ALL TABLES ------------------------------- */}
+                <div className='left-menu-all-tables' id="top-menu-tables">
+                  { searchedTables.length ? (
+                          searchedTables.filter(st => st.type === 'default_query').map((table, i) => {
+                            let evenConn = searchedTables.indexOf(table) % 2 === 0;
+                            return (
 
-                              /* ---------------------------------- LEFT MENU TABLE --------------------------------- */
-                              <div className='table-page-left-menu-table'>
-                                <div className='left-menu-table' id={table.alias} key={table.alias}>
+                                /* ---------------------------------- LEFT MENU TABLE --------------------------------- */
+                                <div className='table-page-left-menu-table'>
+                                  <div className='left-menu-table' id={table.alias} key={table.alias}>
 
-                                  {/* --------------------------------- TABLE ICON ----------------------------------- */}
-                                  <div className='table-icon' onClick={() => this.openTable(table.alias)}>
-                                    <svg width="24" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={
-                                      localStorage.getItem("openedTable")
-                                          ? table.alias ===
-                                          localStorage.getItem("openedTable")
-                                          ? {fill: "#2A7C50"}
-                                          : null
-                                          : table.alias === currentOpenedTable
-                                          ? {fill: "#2A7C50"}
-                                          : null
-                                    }>
-                                      <path d="M0 0h24v24H0V0z" fill="none"/><path d="M10 10.02h5V21h-5zM17 21h3c1.1 0 2-.9 2-2v-9h-5v11zm3-18H5c-1.1 0-2 .9-2 2v3h19V5c0-1.1-.9-2-2-2zM3 19c0 1.1.9 2 2 2h3V10H3v9z"/>
-                                    </svg>
-                                  </div>
-
-                                  {/* --------------------------------- TABLE NAME ----------------------------------- */}
-                                  <div className='table-name' title={table.alias} onClick={() => this.openTable(table.alias)}>
-                                    {
-                                      table.alias.match(engRE) ?
-                                          <span id="table-n" style={
+                                    {/* --------------------------------- TABLE ICON ----------------------------------- */}
+                                    <div className='table-icon' onClick={() => this.openTable(table.alias)}>
+                                      <svg width="24" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={
+                                        localStorage.getItem("openedTable")
+                                            ? table.alias ===
                                             localStorage.getItem("openedTable")
-                                                ? table.alias ===
-                                                localStorage.getItem("openedTable")
-                                                ? {color: "#2A7C50",
-                                                  fontWeight: 500}
-                                                : null
-                                                : table.alias === currentOpenedTable
-                                                ? {color: "#2A7C50",
-                                                  fontWeight: 500}
-                                                : null
-                                          }>{(table.type === 'default_query' ? 'db ' : '') + table.alias}</span>
-                                          :
-                                          <span id="table-n" style={
-                                            localStorage.getItem("openedTable")
-                                                ? table.alias ===
-                                                localStorage.getItem("openedTable")
-                                                ? {color: "#2A7C50",
-                                                fontWeight: 500}
-                                                : null
-                                                : table.alias === currentOpenedTable
-                                                ? {color: "#2A7C50",
-                                                  fontWeight: 500}
-                                                : null
-                                          }> {(table.type === 'default_query' ? 'db ' : '')}{
-                                             (table.alias.length === 24 && table.alias.match(base64RE)) ? utf8.decode(base64.decode(table.alias)) : table.alias
-                                          }</span>
+                                            ? {fill: "#2A7C50"}
+                                            : null
+                                            : table.alias === currentOpenedTable
+                                            ? {fill: "#2A7C50"}
+                                            : null
+                                      }>
+                                        <path d="M0 0h24v24H0V0z" fill="none"/><path d="M10 10.02h5V21h-5zM17 21h3c1.1 0 2-.9 2-2v-9h-5v11zm3-18H5c-1.1 0-2 .9-2 2v3h19V5c0-1.1-.9-2-2-2zM3 19c0 1.1.9 2 2 2h3V10H3v9z"/>
+                                      </svg>
+                                    </div>
+
+                                    {/* --------------------------------- TABLE NAME ----------------------------------- */}
+                                    <div className='table-name' title={table.alias} onClick={() => this.openTable(table.alias)}>
+                                      {
+                                        table.alias.match(engRE) ?
+                                            <span id="table-n" style={
+                                              localStorage.getItem("openedTable")
+                                                  ? table.alias ===
+                                                  localStorage.getItem("openedTable")
+                                                  ? {color: "#2A7C50",
+                                                    fontWeight: 500}
+                                                  : null
+                                                  : table.alias === currentOpenedTable
+                                                  ? {color: "#2A7C50",
+                                                    fontWeight: 500}
+                                                  : null
+                                            }>{table.alias}</span>
+                                            :
+                                            <span id="table-n" style={
+                                              localStorage.getItem("openedTable")
+                                                  ? table.alias ===
+                                                  localStorage.getItem("openedTable")
+                                                  ? {color: "#2A7C50",
+                                                    fontWeight: 500}
+                                                  : null
+                                                  : table.alias === currentOpenedTable
+                                                  ? {color: "#2A7C50",
+                                                    fontWeight: 500}
+                                                  : null
+                                            }>{
+                                              (table.alias.length === 24 && table.alias.match(base64RE)) ? utf8.decode(base64.decode(table.alias)) : table.alias
+                                            }</span>
+                                      }
+                                    </div>
+
+                                    {/* --------------------------------- TABLE MENU ----------------------------------- */}
+
+                                    { table.type === 'new' &&
+                                      <div className='table-menu'>
+                                        <MiniMenu icon={<MiniMenuIcon/>} table={table}/>
+                                      </div>
                                     }
                                   </div>
-
-                                  {/* --------------------------------- TABLE MENU ----------------------------------- */}
-
-                                  { table.type === 'new' &&
-                                    <div className='table-menu'>
-                                      <MiniMenu icon={<MiniMenuIcon/>} table={table}/>
-                                    </div>
-                                  }
                                 </div>
-                                  {
-                                      table.type === 'default_query' && searchedTables.length > i + 1 && searchedTables[i + 1].type !== 'default_query' &&
-                                      <div className="new-tab">
-                                          <span>Created spreadsheets</span>
-                                          <div className="left-menu-line"></div>
-                                      </div>
-                                  }
-                              </div>
-                          );
-                        })
-                    )
-                    :
-                    (
-                        /* ------------------------------------ EMPTY LEFT MENU TABLES ------------------------------ */
-                        <div className="empty-rows">
+                            );
+                          })
+                      )
+                      :
+                      (
+                          /* ------------------------------------ EMPTY LEFT MENU TABLES ------------------------------ */
+                          <div className="empty-rows">
 
-                        </div>
-                    )
-                }
+                          </div>
+                      )
+                  }
+                </div>
               </div>
+
+              { dtype !== "firestore" &&
+                  <div className="bottom-menu-part" id="bottom-menu">
+                    <div className="new-tab">
+                      <div className="new-tab-title"><img id="expand_more_bottom" src={expand_more_black_24dp} onClick={() => this.hideJoinedTablesMenu()}/><img id="expand_less_bottom" src={chevron_right_black_24dp} onClick={() => this.hideJoinedTablesMenu()}/> <div onClick={() => this.hideJoinedTablesMenu()}>Joined tables</div> <div className='create-new-table-btn' onClick={() => this.createTable()}>+</div></div>
+                      <div className="left-menu-line"></div>
+                    </div>
+                    <div className='left-menu-all-tables' id="bottom-menu-tables">
+                      { searchedTables.length ? (
+                              searchedTables.filter(st => st.type !== 'default_query').map((table, i) => {
+                                let evenConn = searchedTables.indexOf(table) % 2 === 0;
+
+                                return (
+
+                                    /* ---------------------------------- LEFT MENU TABLE --------------------------------- */
+                                    <div className='table-page-left-menu-table'>
+                                      <div className='left-menu-table' id={table.alias} key={table.alias}>
+
+                                        {/* --------------------------------- TABLE ICON ----------------------------------- */}
+                                        <div className='table-icon' onClick={() => this.openTable(table.alias)}>
+                                          <svg width="24" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={
+                                            localStorage.getItem("openedTable")
+                                                ? table.alias ===
+                                                localStorage.getItem("openedTable")
+                                                ? {fill: "#2A7C50"}
+                                                : null
+                                                : table.alias === currentOpenedTable
+                                                ? {fill: "#2A7C50"}
+                                                : null
+                                          }>
+                                            <path d="M0 0h24v24H0V0z" fill="none"/><path d="M10 10.02h5V21h-5zM17 21h3c1.1 0 2-.9 2-2v-9h-5v11zm3-18H5c-1.1 0-2 .9-2 2v3h19V5c0-1.1-.9-2-2-2zM3 19c0 1.1.9 2 2 2h3V10H3v9z"/>
+                                          </svg>
+                                        </div>
+
+                                        {/* --------------------------------- TABLE NAME ----------------------------------- */}
+                                        <div className='table-name' title={table.alias} onClick={() => this.openTable(table.alias)}>
+                                          {
+                                            table.alias.match(engRE) ?
+                                                <span id="table-n" style={
+                                                  localStorage.getItem("openedTable")
+                                                      ? table.alias ===
+                                                      localStorage.getItem("openedTable")
+                                                      ? {color: "#2A7C50",
+                                                        fontWeight: 500}
+                                                      : null
+                                                      : table.alias === currentOpenedTable
+                                                      ? {color: "#2A7C50",
+                                                        fontWeight: 500}
+                                                      : null
+                                                }>{table.alias}</span>
+                                                :
+                                                <span id="table-n" style={
+                                                  localStorage.getItem("openedTable")
+                                                      ? table.alias ===
+                                                      localStorage.getItem("openedTable")
+                                                      ? {color: "#2A7C50",
+                                                        fontWeight: 500}
+                                                      : null
+                                                      : table.alias === currentOpenedTable
+                                                      ? {color: "#2A7C50",
+                                                        fontWeight: 500}
+                                                      : null
+                                                }>{
+                                                  (table.alias.length === 24 && table.alias.match(base64RE)) ? utf8.decode(base64.decode(table.alias)) : table.alias
+                                                }</span>
+                                          }
+                                        </div>
+
+                                        {/* --------------------------------- TABLE MENU ----------------------------------- */}
+
+                                        { table.type === 'new' &&
+                                        <div className='table-menu'>
+                                          <MiniMenu icon={<MiniMenuIcon/>} table={table}/>
+                                        </div>
+                                        }
+                                      </div>
+                                    </div>
+                                );
+                              })
+                          )
+                          :
+                          (
+                              /* ------------------------------------ EMPTY LEFT MENU TABLES ------------------------------ */
+                              <div className="empty-rows">
+
+                              </div>
+                          )
+                      }
+                    </div>
+                  </div>
+              }
+
             </div>
 
 
@@ -361,11 +521,6 @@ export default class Tables extends React.Component {
 
                       <span>Table is not selected. <br/>
                       Please select it from the list on left.</span>
-
-                      <div className='empty-right-side-tables-page-btn'>
-                        <span>OR</span> <button onClick={() => this.createTable()}>Create New Spreadsheet</button>
-                      </div>
-
                     </div>
 
                   </div>

@@ -17,32 +17,31 @@
 
 
   .table-row-popup-window {
-    height: 560px;
+    height: 510px;
     width: 660px;
     background: #FFFFFF;
     border-radius: 6px;
 
-
-    .table-row-popup-cross {
-      display: flex;
-      margin-left: auto;
-      margin-top: 32px;
-      margin-right: 45px;
-      cursor: pointer;
-    }
-
-
-
     .table-row-popup-title {
       text-align: left;
       margin-left: 45px;
+      align-items: center;
 
-      span {
+      .table-row-popup-cross {
+        display: flex;
+        margin-left: auto;
+        margin-right: 45px;
+        cursor: pointer;
+        margin-top: -23px;
+      }
+
+      div {
         font-family: Roboto, sans-serif;
         font-style: normal;
         font-weight: 500;
         font-size: 28px;
         line-height: 33px;
+        margin-top: 20px;
 
         color: #3E3E3E;
       }

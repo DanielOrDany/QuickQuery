@@ -1,0 +1,244 @@
+
+/* POP-UP */
+.firebase-popup-BG {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background: #000000A6;
+
+  z-index: 100;
+
+
+
+
+  /* POP-UP WINDOW */
+  .firebase-popup-window {
+    height: 520px;
+    width: 660px;
+
+    background: #FFFFFF;
+    border-radius: 8px 8px 6px 6px;
+
+
+
+
+    /* POP-UP HEADER */
+    .firebase-popup-header {
+      display: flex;
+      align-items: center;
+      height: 59px;
+      width: 660px;
+      border-radius: 6px 6px 0 0;
+      background: linear-gradient(180deg, #2A7E52 0%, #27774C 99.97%);
+      margin-bottom: 0;
+      padding-left: 46px;
+
+
+
+
+      /* POP-UP HEADER TEXT */
+      span {
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 21px;
+
+        color: #FFFFFF;
+
+        mix-blend-mode: normal;
+        opacity: 0.8;
+      }
+    }
+
+
+
+
+
+
+
+    /* POP-UP CROSS */
+    .firebase-popup-cross {
+      display: flex;
+      margin-left: auto;
+      margin-top: 34px;
+      margin-right: 35px;
+
+      height: 22px;
+    }
+
+    .firebase-popup-cross:hover {
+      cursor: pointer;
+    }
+
+
+
+    /* POP-UP TITLE */
+    .firebase-popup-title {
+      padding-left: 46px;
+
+      span {
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 28px;
+        line-height: 33px;
+
+        color: #3E3E3E;
+      }
+    }
+
+
+
+
+
+    /* POP-UP BUTTON */
+    .firebase-popup-btn {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 11px;
+
+
+      /* POP-UP CANCEL BUTTON */
+      .firebase-popup-cancel-btn {
+        height: 42px;
+        width: 104px;
+        text-transform: capitalize;
+        margin-right: 26px;
+
+        border: 2px solid #D3D3D3;
+        border-radius: 4px;
+
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 17px;
+        line-height: 20px;
+
+        letter-spacing: -0.11px;
+
+        color: rgba(139, 139, 139, 0.836589);
+      }
+
+
+      /* POP-UP CREATE BUTTON */
+      .firebase-popup-create-btn {
+        height: 42px;
+        width: 108px;
+        text-transform: capitalize;
+        margin-right: 45px;
+
+        background: #28794E;
+        border-radius: 4px;
+
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 17px;
+        line-height: 20px;
+
+        letter-spacing: -0.11px;
+
+        color: #FFFFFF;
+      }
+    }
+
+    .firebase-popup-btn-no-error {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 60px;
+
+      /* POP-UP CANCEL BUTTON */
+      .firebase-popup-cancel-btn {
+        height: 42px;
+        width: 104px;
+        text-transform: capitalize;
+        margin-right: 26px;
+
+        border: 2px solid #D3D3D3;
+        border-radius: 4px;
+
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 17px;
+        line-height: 20px;
+
+        letter-spacing: -0.11px;
+
+        color: rgba(139, 139, 139, 0.836589);
+      }
+
+
+      /* POP-UP CREATE BUTTON */
+      .firebase-popup-create-btn {
+        height: 42px;
+        width: 108px;
+        text-transform: capitalize;
+        margin-right: 45px;
+
+        background: #28794E;
+        border-radius: 4px;
+
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 17px;
+        line-height: 20px;
+
+        letter-spacing: -0.11px;
+
+        color: #FFFFFF;
+      }
+    }
+
+
+    .firebase-error-message {
+      background: #FFEEED;
+      border: 1px solid #FF6C65;
+      box-sizing: border-box;
+      border-radius: 6px;
+
+      height: 32px;
+      width: 170px;
+      padding-left: 13px;
+      margin-top: 17px;
+      margin-left: 45px;
+      padding-top: 1px;
+
+
+      span {
+        font-family: Roboto, sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 14px;
+
+        text-align: center;
+
+        color: #FF6C65;
+      }
+    }
+  }
+}
+
+
+#firebase-popup-cancel-btn:hover {
+  color: #5C5D6F;
+  border: 2px solid #5C5D6F;
+  transition: .2s;
+}
+
+#firebase-popup-create-btn:hover {
+  background: #5BC470;
+  transition: .2s;
+}

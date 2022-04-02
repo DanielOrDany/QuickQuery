@@ -6,8 +6,15 @@ const FileSync = require('lowdb/adapters/FileSync');
 const appDataDirPath = getAppDataPath();
 const adapter = new FileSync(path.join(appDataDirPath, 'database.json'));
 const SequelizeTunnelService = require('./sequalize');
+const FireSQL = require("firesql").FireSQL;
+const firebase = require("firebase/app");
+const admin = require("firebase-admin");
+const getFirestore = require("firebase/firestore/lite").getFirestore;
 
-if(fs.existsSync(adapter.source)) {
+// Required for side-effects
+require("firebase/firestore");
+
+if (fs.existsSync(adapter.source)) {
     console.log("The file exists.");
 } else {
     console.log('The file does not exist.');
@@ -15,45 +22,11 @@ if(fs.existsSync(adapter.source)) {
         fs.mkdirSync(appDataDirPath);
     }
     fs.writeFileSync(adapter.source, JSON.stringify({
-        "connections": [
-            {
-                "name": "Database for testing",
-                "URI": "postgres://yjcuhopxndsamd:9fa832ec5a7703b1605de6e12234585b6cbc638636b16918697b0f6a2b95d1da@ec2-54-155-226-153.eu-west-1.compute.amazonaws.com:5432/d1r8qbgs2nh6u1",
-                "schema": "public",
-                "queries": [
-                    {
-                        "query": " SELECT * FROM locations",
-                        "type": "default_query",
-                        "alias": "locations",
-                        "table": "locations"
-                    },
-                    {
-                        "query": " SELECT * FROM todos",
-                        "type": "default_query",
-                        "alias": "todos",
-                        "table": "todos"
-                    },
-                    {
-                        "query": " SELECT * FROM users",
-                        "type": "default_query",
-                        "alias": "users",
-                        "table": "users"
-                    }
-                ],
-                "native_tables": [
-                    "locations",
-                    "todos",
-                    "users"
-                ],
-                "createdAt": "21/03/2021"
-            }
-        ],
-        "settings":
-            {
-                "language": "en",
-                "theme": "white"
-            },
-        "licenseKey": "ZChKQCQxeiMkIWRnZGYkJTJmZA=="
+        "connections": [],
+        "settings": {
+            "language": "en",
+            "theme": "white"
+        }
     }));
 
     if(fs.existsSync(adapter.source)) {
@@ -129,127 +102,186 @@ async function addConnection(params) {
         sshPort,
         sshUser,
         sshPassword,
-        sshPrivateKey
+        sshPrivateKey,
+        firebaseConfig
     } = params;
 
-    if (uri) {
-        dtype = uri.split('://')[0];
-    }
+    console.log("params", params);
 
-    // throw error if connection already exist
-    await verifyConnection(name);
-
-    try {
-        let sequelize;
-
+    if (dtype === 'mysql' || dtype === 'postgres') {
         if (uri) {
-            sequelize = new Sequelize(uri);
-        } else if (sshHost) {
-
-            // basic connection to a database
-            const dbConfig = {
-                database: database,
-                username: user,
-                password: password,
-                dialect: dtype,
-                port: port
-            };
-
-            // ssh tunnel configuration
-            const tunnelConfig = {
-                username: sshUser,
-                host: sshHost,
-                port: sshPort,
-                privateKey: require("fs").readFileSync(sshPrivateKey)
-            };
-
-            // initialize service
-            const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
-            const connection = await sequelizeTunnelService.getConnection();
-
-            sequelize = connection.sequelize;
-        } else if (!sshHost) {
-            sequelize = new Sequelize(database,
-                user,
-                password,
-                {
-                    host: host,
-                    dialect: dtype
-                    // ssl: true,
-                    // dialectOptions: {
-                    //     ssl: {
-                    //         require: true,
-                    //         rejectUnauthorized: false // <<<<<< YOU NEED THIS
-                    //     }
-                    // }
-                }
-            );
+            dtype = uri.split('://')[0];
         }
 
-        const selectAllTablesQuery = `
+        // throw error if connection already exist
+        await verifyConnection(name);
+
+        try {
+            let sequelize;
+
+            if (uri) {
+                sequelize = new Sequelize(uri);
+            } else if (sshHost) {
+
+                // basic connection to a database
+                const dbConfig = {
+                    database: database,
+                    username: user,
+                    password: password,
+                    dialect: dtype,
+                    port: port
+                };
+
+                // ssh tunnel configuration
+                const tunnelConfig = {
+                    username: sshUser,
+                    host: sshHost,
+                    port: sshPort,
+                    privateKey: require("fs").readFileSync(sshPrivateKey)
+                };
+
+                // initialize service
+                const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
+                const connection = await sequelizeTunnelService.getConnection();
+
+                sequelize = connection.sequelize;
+            } else if (!sshHost) {
+                sequelize = new Sequelize(database,
+                    user,
+                    password,
+                    {
+                        host: host,
+                        dialect: dtype
+                        // ssl: true,
+                        // dialectOptions: {
+                        //     ssl: {
+                        //         require: true,
+                        //         rejectUnauthorized: false // <<<<<< YOU NEED THIS
+                        //     }
+                        // }
+                    }
+                );
+            }
+
+            const selectAllTablesQuery = `
         SELECT table_name 
         FROM information_schema.tables
         WHERE table_type='BASE TABLE'
         AND table_schema='${schema}';`;
 
-        const connection = {
-            name: name, // connection alias
-            URI: uri ? uri : { // connection credentials
-                database: database,
-                user: user,
-                password: password,
-                port: port,
-                others: {
-                    host: host,
-                    dialect: dtype
+            const connection = {
+                name: name, // connection alias
+                URI: uri ? uri : { // connection credentials
+                    database: database,
+                    user: user,
+                    password: password,
+                    port: port,
+                    others: {
+                        host: host,
+                        dialect: dtype
+                    }
+                },
+                schema: schema,
+                queries: [], // saved constructor queries
+                native_tables: [], // native db names of tables
+                createdAt: getCurrentDate(), // date connection was added
+                sshHost,
+                sshPort,
+                sshUser,
+                sshPassword,
+                sshPrivateKey,
+                dtype
+            };
+
+            /** Select All Tables */
+            /* Select all names of tables in database and creating default queries */
+
+            await sequelize.query(selectAllTablesQuery).then(tables => {
+
+                // Generate default queries
+                if (dtype === 'postgres') {
+                    tables[0].forEach(table => {
+
+                        // save native table name
+                        connection.native_tables.push(table.table_name);
+
+                        // save default query
+                        connection.queries.push({
+                            query: ` SELECT * FROM ${table.table_name}`,
+                            type: 'default_query',
+                            alias: table.table_name,
+                            table: table.table_name
+                        });
+                    });
+                } else {
+                    tables[0].forEach(table => {
+
+                        // save native table name
+                        connection.native_tables.push(table.TABLE_NAME);
+
+                        // save default query
+                        connection.queries.push({
+                            query: ` SELECT * FROM ${table.TABLE_NAME}`,
+                            type: 'default_query',
+                            alias: table.TABLE_NAME,
+                            table: table.TABLE_NAME
+                        });
+                    });
                 }
-            },
-            schema: schema,
-            queries: [], // saved constructor queries
-            native_tables: [], // native db names of tables
-            createdAt: getCurrentDate(), // date connection was added
-            sshHost,
-            sshPort,
-            sshUser,
-            sshPassword,
-            sshPrivateKey
-        };
 
-        /** Select All Tables */
-        /* Select all names of tables in database and creating default queries */
+                // Get all connections from the app storage
+                const connections = db.get('connections').value();
 
-        await sequelize.query(selectAllTablesQuery).then(tables => {
+                // Add new one to them
+                connections.push(connection);
 
-            // Generate default queries
-            if (dtype === 'postgres') {
-                tables[0].forEach(table => {
+                // & update connections after
+                db.get('connections').assign({ connections }).write();
+            });
 
-                    // save native table name
-                    connection.native_tables.push(table.table_name);
+            return connection;
 
-                    // save default query
-                    connection.queries.push({
-                        query: ` SELECT * FROM ${table.table_name}`,
-                        type: 'default_query',
-                        alias: table.table_name,
-                        table: table.table_name
-                    });
+        } catch (e) {
+            console.error(e);
+        }
+
+    } else if (dtype === 'firestore') {
+        try {
+            const serviceAccount = require(firebaseConfig);
+
+            const connection = {
+                name: name, // connection alias
+                schema: '*',
+                firebaseConfig: serviceAccount,
+                queries: [], // saved constructor queries
+                native_tables: [], // native db names of tables
+                createdAt: getCurrentDate(), // date connection was added
+                dtype
+            };
+
+            admin.initializeApp({
+                credential: admin.credential.cert(serviceAccount)
+            });
+
+            const firebase_db = admin.firestore();
+
+            const tablesRef = await firebase_db.listCollections();
+
+            const tables = tablesRef.map((tableRef) => {
+                return tableRef.id;
+            });
+
+            tables.forEach((tableName) => {
+                connection.native_tables.push(tableName);
+
+                // save default query
+                connection.queries.push({
+                    query: ` SELECT * FROM ${tableName}`,
+                    type: 'default_query',
+                    alias: tableName,
+                    table: tableName
                 });
-            } else {
-                tables[0].forEach(table => {
-
-                    // save native table name
-                    connection.native_tables.push(table.TABLE_NAME);
-
-                    // save default query
-                    connection.queries.push({
-                        query: ` SELECT * FROM ${table.TABLE_NAME}`,
-                        type: 'default_query',
-                        alias: table.TABLE_NAME,
-                        table: table.TABLE_NAME
-                    });
-                });
-            }
+            });
 
             // Get all connections from the app storage
             const connections = db.get('connections').value();
@@ -259,13 +291,29 @@ async function addConnection(params) {
 
             // & update connections after
             db.get('connections').assign({ connections }).write();
-        });
 
-        return connection;
+            return connection;
+            // const fireSQL = new FireSQL(app.firestore());
 
-    } catch (e) {
+            // const citiesPromise = fireSQL.query(`SELECT * FROM public`);
+            //
+            // citiesPromise.then(cities => {
+            //     console.log(cities);
+            // });
 
-        console.error(e);
+            // const firebaseApp = firebase.initializeApp(firebaseConfig);
+            //
+            // const db = firebaseApp.firestore;
+            // console.log("dbRef", db);
+            //
+            // const fireSQL = new FireSQL(db);
+            // console.log("fireSQL", fireSQL);
+            //
+            // const citiesPromise = await fireSQL.query(`SELECT * FROM public`);
+            // console.log("citiesPromise", citiesPromise);
+        } catch (e) {
+            console.log('e e e', e);
+        }
     }
 }
 
