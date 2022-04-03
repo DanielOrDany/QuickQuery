@@ -51,7 +51,7 @@ function createWindow () {
 
   // Set/Remove devtools
   mainWindow.webContents.on("devtools-opened", () => {
-      // mainWindow.closeDevTools();
+      mainWindow.closeDevTools();
   });
 
   // Set/Remove MENU
