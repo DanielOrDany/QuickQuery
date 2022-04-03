@@ -1,4 +1,26 @@
 import React from 'react';
+import { Offline } from "react-detect-offline";
+
+import footer_arrow_left from "../../icons/connections-page-footer-arrow-left.svg";
+import footer_arrow_right from "../../icons/connections-page-footer-arrow-right.svg";
+import filters_arrow from "../../icons/connections-page-filter-arrow.svg";
+import empty_connections_page_icon from "./icons/empty-connections-page.svg";
+import firestore from "../../icons/firestore.svg";
+import postgresql from "../../icons/postgresql.svg";
+import mysql from "../../icons/mysql.svg";
+
+import './Connections.scss';
+import Modal from '../../popups/Modal';
+import Button from '../../components/Button';
+import ConfigureManuallyPopup from "./popups/ConfigureManuallyPopup";
+import SimplifiedConnectionPopup from "./popups/SimplifiedConnectionPopup";
+import SSHConnectionPopup from "./popups/SSHConnectionsPopup";
+import DatabaseMiniMenuPopup from "./popups/DatabaseMiniMenu";
+import DeleteConnectionPopup from "./popups/DeleteConnectionPopup";
+import ConnectionErrorModal from '../../popups/MessagePopup';
+import ConnectionPopup from "./popups/ConnectionPopup";
+import FirebasePopup from "./popups/FirebasePopup";
+
 import {
     getDataFromDatabase,
     deleteConnection,
@@ -6,30 +28,6 @@ import {
     authVerifyToken,
     renameConnection
 } from "../../methods";
-import './Connections.scss';
-import Modal from '../../popups/Modal';
-import Button from '../../components/Button';
-import { Offline } from "react-detect-offline";
-import footer_arrow_left from "../../icons/connections-page-footer-arrow-left.svg";
-import footer_arrow_right from "../../icons/connections-page-footer-arrow-right.svg";
-import filters_arrow from "../../icons/connections-page-filter-arrow.svg";
-import empty_connections_page_icon from "./icons/empty-connections-page.svg";
-
-import firestore from "../../icons/firestore.svg";
-import postgresql from "../../icons/postgresql.svg";
-import mysql from "../../icons/mysql.svg";
-import ConfigureManuallyPopup from "./popups/ConfigureManuallyPopup";
-import SimplifiedConnectionPopup from "./popups/SimplifiedConnectionPopup";
-import SSHConnectionPopup from "./popups/SSHConnectionsPopup";
-import DatabaseMiniMenuPopup from "./popups/DatabaseMiniMenu";
-import DeleteConnectionPopup from "./popups/DeleteConnectionPopup";
-import ConnectionErrorModal from '../../popups/MessagePopup';
-
-import ssh_popup_arrow_hint from "../../icons/ssh-popup-arrow-hint.svg";
-import ssh_popup_arrow_hint2 from "../../icons/ssh-popup-arrow-hint2.svg";
-import ssh_popup_arrow_hint3 from "../../icons/ssh-popup-arrow-hint3.svg";
-import ConnectionPopup from "./popups/ConnectionPopup";
-import FirebasePopup from "./popups/FirebasePopup";
 
 
 export default class Connections extends React.Component {
@@ -92,12 +90,6 @@ export default class Connections extends React.Component {
         this.setState({
             isFirebaseConnectionPopup: false,
             isDBMiniMenu: null,
-        });
-    };
-
-    openSimplifiedConnectionPopup = () => {
-        this.setState({
-            isSimplifiedConnectionPopup: true
         });
     };
 
@@ -195,11 +187,6 @@ export default class Connections extends React.Component {
             isDBMiniMenu: null,
             editConnection: null
         });
-    };
-
-    openDelete = (alias) => {
-        this.setState({ choosedConnetion: alias});
-        this.setState({ isDeleteOpen: true, isDBMiniMenu: null });
     };
 
     handleDeleteSubmit = () => {

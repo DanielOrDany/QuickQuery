@@ -203,32 +203,31 @@ class Menu extends React.Component {
     }
   }
 
-  render() {
-    const currentConnection = JSON.parse(localStorage.getItem("current_connection"));
+  async giveFeedback() {
+    const shell = window.electron.shell;
+    await shell.openExternal("https://forms.gle/AxHKxtBM5KJZcDWx8");
+  }
 
+  render() {
     return (
         <>
-          {
-            !this.state.isSignedIn &&
+          { !this.state.isSignedIn &&
             <AuthPopup onLogin={this.login}/>
           }
-          {
-            this.state.error &&
+          { this.state.error &&
             <Modal
                 title="Error"
                 isOpen={this.state.isOpen}
                 onCancel={this.handleCancel}
                 onSubmit={this.handleSubmit}
                 submitTitle="OK"
-            >
-              <div>
+            ><div>
                 <strong>{this.state.message}</strong>
               </div>
             </Modal>
           }
-          {
-            !this.state.error &&
 
+          { !this.state.error &&
 
             <SettingsPopup
                 title="Settings"
@@ -236,24 +235,7 @@ class Menu extends React.Component {
                 onCancel={this.handleCancel}
                 submitButton={false}
                 exportBtn={this.share}
-            >
-              {/*<div className="sharing-buttons">
-                <div id="import-div">
-                  <input id="import-button" type="file" onChange={(event) => this.importConfigFile(event)}/>
-                  <p>Import settings from file</p>
-                </div>
-                <div id="export-div">
-                  <span id="export-button" onClick={() => this.share()}>Export</span>
-                  <p>Export app settings into file</p>
-                </div>
-                <div id="logout-div">
-                  <span id="logout-button" onClick={() => this.logout()}>Exit</span>
-                  <p>Logout from the app</p>
-                </div>
-              </div>*/}
-            </SettingsPopup>
-
-
+            ></SettingsPopup>
           }
 
           <LogoutPopup
@@ -270,29 +252,13 @@ class Menu extends React.Component {
                 <div className={'logo_bg'}></div>
                 <img src={logo_icon} id="l-icon"/>
                 <img src={home_icon} id="home-icon" onClick={() => this.openConnections()}/>
-
-                { //!this.state.toTables &&
-                  /*<div id="back-section">
-                    <img src={arrow_back} id="arrow-back" onClick={() => this.openConnections()}/>
-                    <div id="connection-name" onClick={() => this.openConnections()}>
-                      <div>{currentConnection.name}</div>
-                    </div>
-                  </div>*/
-                }
               </div>
-
-
-              {/*
-                <div className={'search-div'}>
-                <img src={search_conn_icon} className={'search-conn-icon'} alt={'search'}/>
-                <input className={'search-connection'} placeholder={'Search'}/>
-              </div>
-              */}
-
-
               <div className="menu-box">
+                <div className="feedback" onClick={() => this.giveFeedback()}>
+                  <div className="feedback-title">Give Us Feedback</div>
+                  <div className="feedback-icon">❤️</div>
+                </div>
                 <div className="settings-buttons">
-
                   <img src={header_settings} id="settings-button"
                        onClick={() => this.setState({error: false, isOpen: true})}/>
                 </div>

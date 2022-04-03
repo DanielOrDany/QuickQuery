@@ -289,7 +289,7 @@
     max-height: calc(100vh - 80px);
     min-width: 255px;
     border-right: 1px solid #e3e2e5;
-    background-color: #f7f7f7;
+    background-color: #fafafa;
     z-index: 100;
 
     .top-menu-part {
@@ -305,7 +305,7 @@
     .new-tab {
       display: flex;
       flex-direction: column;
-      background: #EDECEF;
+      background: #f7f6f9;
 
       .new-tab-title {
         display: flex;
@@ -325,7 +325,7 @@
         }
 
         .create-new-table-btn {
-          background: #28794E;
+          background: #2e9664;
           border-radius: 4px;
           font-family: Roboto, sans-serif;
           font-style: normal;

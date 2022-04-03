@@ -7,11 +7,14 @@ import export_icon from "./icons/settings-export-btn.svg";
 import Button from "../../components/Button";
 
 const SettingsPopup = ({
-                                    isOpen,
-                                    onCancel,
-                                    onSubmit,
-                                    exportBtn
-                                }) => {
+    isOpen,
+    onCancel,
+    onSubmit,
+    exportBtn
+}) => {
+
+    const subPlan = localStorage.getItem("employeePlan");
+    console.log("subPlan", subPlan)
     return (
         <>
             {isOpen &&
@@ -38,7 +41,7 @@ const SettingsPopup = ({
                             </div>
 
 
-                            <div id="export-div" onClick={exportBtn}>
+                            <div id="export-div" title={subPlan === 'Hobby' && 'Not available for your Hobby Plan'} className={subPlan === 'Hobby' ? 'export-disabled' : ''} onClick={() => subPlan !== 'Hobby' && exportBtn}>
                                 <img src={export_icon} alt='export'/>
                                 <span>Export settings</span>
 

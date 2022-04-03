@@ -69,7 +69,6 @@
     }
 
 
-
     .import-div {
       height: 159px;
       width: 182px;
@@ -118,14 +117,10 @@
       cursor: pointer;
     }
 
-
-
-
-
-
-
-
-
+    .export-disabled {
+      opacity: 50%;
+      cursor: none;
+    }
 
     #export-div {
       height: 159px;
