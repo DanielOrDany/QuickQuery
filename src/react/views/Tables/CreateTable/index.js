@@ -168,8 +168,6 @@ export default class CreateTable extends React.Component {
             }
         }
 
-        console.log(optionsOfTables);
-
         localStorage.setItem("current_result_options", JSON.stringify({
             connectionName: connection.name,
             options: optionsOfTables
@@ -357,7 +355,6 @@ export default class CreateTable extends React.Component {
                         tablesAndColumns.forEach((tableAndColumn, tAndCIndex) => {
                             const table = tableAndColumn.split('.')[0];
                             const column = tableAndColumn.split('.')[1];
-                            //console.log("table", table);
 
                             const prevTable = tables[tables.length - 1];
 
