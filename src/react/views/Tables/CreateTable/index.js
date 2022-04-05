@@ -24,6 +24,7 @@ import deleteIcon from "../../../icons/delete-create-table.svg";
 import saveIcon from "../../../icons/save-create-table.svg";
 import reloadIcon from "../../../icons/create-table-reload.svg";
 import MessagePopup from "../../../popups/MessagePopup";
+import mixpanel from "mixpanel-browser";
 
 const utf8 = require('utf8');
 const base64 = require('base-64');
@@ -132,6 +133,9 @@ export default class CreateTable extends React.Component {
     };
 
     reload () {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track('Reload tables', { employeeId: employeeId});
+
         const connection = JSON.parse(localStorage.getItem("current_connection"));
         let optionsOfTables = [];
 
@@ -182,7 +186,6 @@ export default class CreateTable extends React.Component {
     /* Method for loading names of tables */
 
     async loadTableNames(connection) {
-
         let optionsOfTables = [];
 
         if (!localStorage.getItem("current_result_options") ||
@@ -244,6 +247,9 @@ export default class CreateTable extends React.Component {
             secondColumns
         } = this.state;
 
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track('Add new table in constructor', { employeeId: employeeId});
+
         const tableIndex = tables.indexOf('select table');
         const columnIndex = columns.indexOf('select column');
 
@@ -267,11 +273,14 @@ export default class CreateTable extends React.Component {
     }
 
     async removeTable(index) {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track('Remove table in constructor', { employeeId: employeeId});
+
         let { tables, columns, secondColumns } = this.state;
         tables.splice(index, 1);
         columns.splice(index, 1);
         secondColumns.splice(index, 1);
-        console.log(tables);
+
         this.setState({ tables, columns, secondColumns });
     }
 
@@ -281,6 +290,9 @@ export default class CreateTable extends React.Component {
     }
 
     async handleTableChange(e, index) {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track('Select table column in constructor', { employeeId: employeeId});
+
         const tableName = e.target.value;
 
         // Getting connection data
@@ -461,6 +473,9 @@ export default class CreateTable extends React.Component {
                             localStorage.setItem("need_update", JSON.stringify(true));
                             window.location.hash = "#/tables";
                         });
+
+                        const employeeId = localStorage.getItem("employeeId");
+                        mixpanel.track('Update existing table in constructor', { employeeId: employeeId});
                     } else {
                         this.setState({
                             errorMessage: "The result of the query is not valid! Please check your chosen columns to see if any of them work together by type. For example, in the first table with column name \"user_id\" you should select a second column name like \"employee_id\" into another table. So, please do not do something like join table 1 with table 2 by \"user_id\" and \"company_name\" - they are different logic types of data.",
@@ -479,6 +494,9 @@ export default class CreateTable extends React.Component {
                 } else {
                     testTableQuery(connectionName, newQuery).then(data => {
                         if (data) {
+                            const employeeId = localStorage.getItem("employeeId");
+                            mixpanel.track('Create new table', { employeeId: employeeId});
+
                             addTable(connectionName, newQuery, "new", queryName).then(() => {
                                 localStorage.setItem("new_table", JSON.stringify(true));
                                 window.location.hash = "#tables";
@@ -502,7 +520,9 @@ export default class CreateTable extends React.Component {
 
     run() {
         const { tables, columns, options, secondColumns } = this.state;
-
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track('Test-run table in constructor', { employeeId: employeeId});
+        
         if (tables.length < 1 && columns.length < 1) {
             this.setState({
                 errorMessage: "The result of the query is not valid! Please check your chosen columns to see if any of them work together by type. For example, in the first table with column name \"user_id\" you should select a second column name like \"employee_id\" into another table. So, please do not do something like join table 1 with table 2 by \"user_id\" and \"company_name\" - they are different logic types of data.",

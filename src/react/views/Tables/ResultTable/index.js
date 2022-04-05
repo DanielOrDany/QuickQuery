@@ -23,6 +23,7 @@ import DayPickerInput from "react-day-picker/DayPickerInput";
 import TableFilter from "../popups/TableFilter";
 import MessagePopup from "../../../popups/MessagePopup";
 import toast, { Toaster } from 'react-hot-toast';
+import mixpanel from "mixpanel-browser";
 
 const DESC = "DESC";
 const ASC = "ASC";
@@ -160,6 +161,9 @@ export default class Result extends React.Component {
     }
 
     saveResult(connectionName, result, loadingOptions, removedColumns, subPlan) {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`Save table result`, { employeeId: employeeId});
+
         let reportsNum = 0;
         if (!localStorage.getItem("reportsPerMonth")) {
             localStorage.setItem("reportsPerMonth", JSON.stringify(reportsNum));
@@ -409,6 +413,9 @@ export default class Result extends React.Component {
     };
 
     removeColumn = (column) => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`Remove column in table result`, { employeeId: employeeId});
+
         const { removedColumns, hiddenColumns } = this.state;
 
         removedColumns.push(column);
@@ -423,6 +430,9 @@ export default class Result extends React.Component {
     };
 
     hideColumn = (column) => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`Hide column in table result`, { employeeId: employeeId});
+
         const { hiddenColumns } = this.state;
 
         hiddenColumns.push(column);
@@ -431,6 +441,9 @@ export default class Result extends React.Component {
     };
 
     closeHiddenColumnsPopup = () => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`closeHiddenColumnsPopup`, { employeeId: employeeId});
+
         const { hiddenColumns } = this.state;
 
         this.setState({
@@ -442,6 +455,9 @@ export default class Result extends React.Component {
     };
 
     openHiddenColumnsPopup = () => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`openHiddenColumnsPopup`, { employeeId: employeeId});
+
         const { isOpenHiddenColumnsPopup } = this.state;
 
         if (isOpenHiddenColumnsPopup) {
@@ -452,6 +468,9 @@ export default class Result extends React.Component {
     };
 
     unhideColumn = (column) => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`unhideColumn`, { employeeId: employeeId});
+
         let { hiddenColumns, removedColumns } = this.state;
 
         removedColumns = removedColumns.filter(e => e !== column);
@@ -466,6 +485,9 @@ export default class Result extends React.Component {
     };
 
     unhideAllColumns = () => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`unhideAllColumns`, { employeeId: employeeId});
+
         this.setState({
             hiddenColumns: [],
             removedColumns: []
@@ -475,6 +497,9 @@ export default class Result extends React.Component {
     };
 
     changePage = (operation) => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`changePage`, { employeeId: employeeId});
+
         this.setState({isLoading: true});
         let n = this.state.pageNumber + operation;
 
@@ -491,6 +516,9 @@ export default class Result extends React.Component {
     }
 
     handleOpenFilter(columnName) {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`handleOpenFilter`, { employeeId: employeeId});
+
         const newOptions = this.state.options.map(option => {
             if (option.column === columnName) {
                 if (option.isFilterOpened) {
@@ -509,6 +537,9 @@ export default class Result extends React.Component {
     }
 
     handleChangeOrder(columnName) {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`handleChangeOrder`, { employeeId: employeeId});
+
         const newOptions = this.state.options.map(option => {
             if (option.column === columnName) {
                 option.last = true;
@@ -539,6 +570,9 @@ export default class Result extends React.Component {
     }
 
     handleChangeSearchValue(event, columnName) {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`handleChangeSearchValue`, { employeeId: employeeId});
+
         const searchedValue = event.target.value;
 
         const newOptions = this.state.options.map(option => {
@@ -560,6 +594,9 @@ export default class Result extends React.Component {
     }
 
     handleChangeFilterValue1(event, columnName) {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`handleChangeFilterValue1`, { employeeId: employeeId});
+
         const filteredValue = event.target.value;
         const newOptions = this.state.options.map(option => {
             if (option.column === columnName) {
@@ -576,6 +613,9 @@ export default class Result extends React.Component {
     }
 
     handleChangeFilterValue2(event, columnName) {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`handleChangeFilterValue2`, { employeeId: employeeId});
+
         const filteredValue = event.target.value;
         const newOptions = this.state.options.map(option => {
             if (option.column === columnName) {
@@ -592,6 +632,9 @@ export default class Result extends React.Component {
     }
 
     applyFilter = (columnName) => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`applyFilter`, { employeeId: employeeId});
+
         const newOptions = this.state.options.map(option => {
             if (option.column === columnName) {
                 option.isFilterOpened = false;
@@ -608,6 +651,9 @@ export default class Result extends React.Component {
     };
 
     handleDatePicker1(filteredValue, columnName) {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`handleDatePicker1`, { employeeId: employeeId});
+
         const newOptions = this.state.options.map(option => {
             if (option.column === columnName) {
                 if (option.filter1 !== filteredValue) {
@@ -629,6 +675,9 @@ export default class Result extends React.Component {
     }
 
     handleDatePicker2(filteredValue, columnName) {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`handleDatePicker2`, { employeeId: employeeId});
+
         const newOptions = this.state.options.map(option => {
             if (option.column === columnName) {
                 if (option.filter2 !== filteredValue) {
@@ -649,6 +698,9 @@ export default class Result extends React.Component {
     }
 
     handlePageChange = (event) => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`handlePageChange`, { employeeId: employeeId});
+
         this.setState({
             rowsPerPage: event.target.value
         });
@@ -663,6 +715,9 @@ export default class Result extends React.Component {
     }
 
     clearFilters(columnName) {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`clearFilters`, { employeeId: employeeId});
+
         const newOptions = this.state.options.map(option => {
             if (option.column === columnName) {
                 option.filter1 = "";
@@ -690,6 +745,9 @@ export default class Result extends React.Component {
     };
 
     handleUpdate = async (rowColumns) => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`handleUpdate`, { employeeId: employeeId});
+
         let result;
 
         if (localStorage.getItem("current_result_info") && localStorage.getItem("current_result_info").includes('default_query')) {
@@ -711,6 +769,9 @@ export default class Result extends React.Component {
     };
 
     handleDelete = async (rowColumns) => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`handleDelete`, { employeeId: employeeId});
+
         let result;
 
         if (localStorage.getItem("current_result_info") && localStorage.getItem("current_result_info").includes('default_query')) {
@@ -731,6 +792,9 @@ export default class Result extends React.Component {
     };
 
     handleImgCancel = () => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`handleImgCancel`, { employeeId: employeeId});
+
         this.setState({ TableImgModalActive: false });
     };
 
@@ -754,6 +818,9 @@ export default class Result extends React.Component {
     }
 
     hideTablesMenu() {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`hideTablesMenu`, { employeeId: employeeId});
+
         let menuOpened = document.getElementById('menu-opened');
         let menuOpen = document.getElementById('menu-open');
         let pageFooter = document.getElementById('result-page-footer-id');

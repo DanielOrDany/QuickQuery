@@ -25,6 +25,7 @@ import '../styles/Menu.scss';
 
 import SettingsPopup from "../popups/Settings";
 import LogoutPopup from "../popups/Logout";
+import mixpanel from "mixpanel-browser";
 
 class Menu extends React.Component {
   constructor(props) {
@@ -69,7 +70,7 @@ class Menu extends React.Component {
 
   changeSignedStatus(status) {
     const currentStatus = this.state.isSignedIn;
-    console.log("changeSignedStatus", currentStatus, status);
+
     if (currentStatus !== status) {
       this.setState({
         isSignedIn: status
@@ -83,8 +84,6 @@ class Menu extends React.Component {
 
     if (id && token) {
       const verified = await authVerifyToken(id, token);
-
-      console.log('verified user', verified);
 
       if (verified && verified.data) {
         localStorage.setItem("deleteAccess", verified.data.employee.dataValues.delete_access);
@@ -121,12 +120,18 @@ class Menu extends React.Component {
   };
 
   openLogoutPopup = () => {
+    const employeeId = localStorage.getItem("employeeId");
+    mixpanel.track('Open logout popup', { employeeId: employeeId});
+
     this.setState({isLogoutPopupOpen: true})
-  }
+  };
 
   closeLogoutPopup = () => {
+    const employeeId = localStorage.getItem("employeeId");
+    mixpanel.track('Close logout popup', { employeeId: employeeId});
+
     this.setState({isLogoutPopupOpen: false})
-  }
+  };
 
   importConfigFile = (event) => {
     try {
@@ -144,6 +149,8 @@ class Menu extends React.Component {
         });
       };
       reader.readAsText(input.files[0]);
+      const employeeId = localStorage.getItem("employeeId");
+      mixpanel.track('Import config', { employeeId: employeeId});
     } catch (e) {
       console.log(e);
     }
@@ -162,6 +169,9 @@ class Menu extends React.Component {
       } else {
         pom.click();
       }
+
+      const employeeId = localStorage.getItem("employeeId");
+      mixpanel.track('Export config', { employeeId: employeeId});
     } catch (e) {
       this.setState({error: true, message: "FAIL", isOpen: true});
     }
@@ -173,14 +183,20 @@ class Menu extends React.Component {
     localStorage.removeItem('employeePlan');
     this.setState({isSignedIn: false, isOpen: false, message: ""});
     this.setState({isLogoutPopupOpen: false});
+    const employeeId = localStorage.getItem("employeeId");
+    mixpanel.track('Logout', { employeeId: employeeId});
   }
 
   openConnections() {
+    const employeeId = localStorage.getItem("employeeId");
+    mixpanel.track('Open connections page', { employeeId: employeeId});
     this.setState({toTables: true});
     window.location.hash = '#/connections';
   }
 
   openTables() {
+    const employeeId = localStorage.getItem("employeeId");
+    mixpanel.track('Open tables page', { employeeId: employeeId});
     if (localStorage.getItem("current_connection")) {
       this.setState({toTables: false});
     }
@@ -205,7 +221,7 @@ class Menu extends React.Component {
 
   async register(email, password, fullName, companyName) {
     const result = await authRegister(email, password, fullName, companyName);
-    console.log("REGISTER:", result);
+
     if (result && !result.success) {
       return { error: result.message };
     } else if (result && result.data) {
@@ -221,6 +237,8 @@ class Menu extends React.Component {
 
   async giveFeedback() {
     const shell = window.electron.shell;
+    const employeeId = localStorage.getItem("employeeId");
+    mixpanel.track('Open feedback', { employeeId: employeeId});
     await shell.openExternal("https://forms.gle/AxHKxtBM5KJZcDWx8");
   }
 

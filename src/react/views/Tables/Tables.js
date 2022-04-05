@@ -15,6 +15,7 @@ import empty_result_page from "../../icons/empry-result-page.svg";
 import MiniMenu from "../../components/MiniMenu";
 import Modal from "../../popups/Modal";
 import MessagePopup from "../../popups/MessagePopup";
+import mixpanel from "mixpanel-browser";
 
 const utf8 = require('utf8');
 const base64 = require('base-64');
@@ -88,6 +89,9 @@ export default class Tables extends React.Component {
       topMenu.style.height = '100%';
     }
 
+    const employeeId = localStorage.getItem("employeeId");
+    mixpanel.track(`Open ${dtype} database`, { employeeId: employeeId});
+
     await getAllTables(connectionName).then(tables => {
       this.setState({
         dtype,
@@ -98,6 +102,9 @@ export default class Tables extends React.Component {
   }
 
   async openTable(alias) {
+    const employeeId = localStorage.getItem("employeeId");
+    mixpanel.track(`Open table`, { employeeId: employeeId});
+
     const connectionName = JSON.parse(
         localStorage.getItem("current_connection")
     ).name;
@@ -149,6 +156,9 @@ export default class Tables extends React.Component {
   }
 
   async createTable() {
+    const employeeId = localStorage.getItem("employeeId");
+    mixpanel.track(`Open table constructor`, { employeeId: employeeId});
+
     const subPlan = localStorage.getItem("employeePlan");
     // const tablesNum = JSON.parse(localStorage.getItem("current_connection")).native_tables.length;
 
@@ -212,11 +222,17 @@ export default class Tables extends React.Component {
       let topTablesMenu = document.getElementById('top-menu-tables');
 
       if (topTablesMenu.style.display === 'none') {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`Open database tables menu`, { employeeId: employeeId});
+
         topTablesMenu.style.display = 'block';
         less_icon.style.display = 'none';
         more_icon.style.display = 'block';
         topMenu.style.height = '100%';
       } else {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`Hide database tables menu`, { employeeId: employeeId});
+
         less_icon.style.display = 'block';
         more_icon.style.display = 'none';
         topTablesMenu.style.display = 'none';
@@ -229,6 +245,9 @@ export default class Tables extends React.Component {
       let bottomTablesMenu = document.getElementById('top-menu-tables');
 
       if (bottomTablesMenu.style.display === 'none') {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`Open database tables menu`, { employeeId: employeeId});
+
         bottomTablesMenu.style.display = 'block';
         less_icon.style.display = 'none';
         more_icon.style.display = 'block';
@@ -236,6 +255,9 @@ export default class Tables extends React.Component {
         topMenu.style.height = '50%';
 
       } else {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`Hide database tables menu`, { employeeId: employeeId});
+
         less_icon.style.display = 'block';
         more_icon.style.display = 'none';
         bottomTablesMenu.style.display = 'none';
@@ -253,12 +275,18 @@ export default class Tables extends React.Component {
     let bottomTablesMenu = document.getElementById('bottom-menu-tables');
 
     if (bottomTablesMenu.style.display === 'none') {
+      const employeeId = localStorage.getItem("employeeId");
+      mixpanel.track(`Open joined tables menu`, { employeeId: employeeId});
+
       less_icon.style.display = 'none';
       more_icon.style.display = 'block';
       bottomTablesMenu.style.display = 'block';
       bottomMenu.style.height = '100%';
 
     } else {
+      const employeeId = localStorage.getItem("employeeId");
+      mixpanel.track(`Hide joined tables menu`, { employeeId: employeeId});
+
       less_icon.style.display = 'block';
       more_icon.style.display = 'none';
       bottomTablesMenu.style.display = 'none';

@@ -1,6 +1,6 @@
 {
   "name": "quick-query",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "productName": "QuickQuery",
   "main": "electron/main.js",
   "private": true,
@@ -26,6 +26,7 @@
     "lowdb": "^1.0.0",
     "mariadb": "^2.1.5",
     "material-design-icons": "^3.0.1",
+    "mixpanel-browser": "^2.45.0",
     "mongodb": "^3.5.2",
     "mssql": "^6.0.1",
     "mysql": "^2.17.1",

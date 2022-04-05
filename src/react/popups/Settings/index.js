@@ -14,7 +14,7 @@ const SettingsPopup = ({
 }) => {
 
     const subPlan = localStorage.getItem("employeePlan");
-    console.log("subPlan", subPlan)
+
     return (
         <>
             {isOpen &&

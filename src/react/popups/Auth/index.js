@@ -1,6 +1,7 @@
 import React from 'react';
 import './Auth.scss';
 import appIcon from '../../icons/logo.svg';
+import mixpanel from 'mixpanel-browser';
 
 export default class AuthPopup extends React.Component {
     constructor(props) {
@@ -27,9 +28,11 @@ export default class AuthPopup extends React.Component {
 
         if (result) {
             if(result.error) {
+                mixpanel.track('ERROR: Sign in', { email: email, error: result.error });
                 this.setState({error: result.error, isError: true});
             }
             else {
+                mixpanel.track('Sign in', { email: email });
                 this.setState({isError: false});
             }
         }
@@ -40,18 +43,21 @@ export default class AuthPopup extends React.Component {
         const { registerEmail, registerPassword, fullName, companyName } = this.state;
 
         const result = await this.props.onRegister(registerEmail, registerPassword, fullName, companyName);
-        console.log('fff', result);
+
         if (result) {
             if(result.error) {
+                mixpanel.track('ERROR: Sign in', { email: registerEmail, error: result.error });
                 this.setState({error: result.error, isError: true});
-            }
-            else {
+            } else {
+                mixpanel.track('Sign up', { email: registerEmail, name: fullName, company: companyName });
                 this.setState({isError: false});
             }
         }
     }
 
     async openRegister() {
+        mixpanel.track('Open register popup');
+
         this.setState({
             isLogin: false
         });
@@ -61,6 +67,8 @@ export default class AuthPopup extends React.Component {
     }
 
     async openLogin() {
+        mixpanel.track('Open login popup');
+
         this.setState({
             isLogin: true
         });

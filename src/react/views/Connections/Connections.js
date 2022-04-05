@@ -28,6 +28,7 @@ import {
     authVerifyToken,
     renameConnection
 } from "../../methods";
+import mixpanel from "mixpanel-browser";
 
 
 export default class Connections extends React.Component {
@@ -79,14 +80,23 @@ export default class Connections extends React.Component {
     };
 
     openConnectionPopup = () => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`openConnectionPopup`, { employeeId: employeeId});
+
         this.setState({ isConnectionPopup: true });
     };
 
     closeConnectionPopup = () => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`closeConnectionPopup`, { employeeId: employeeId});
+
         this.setState({ isConnectionPopup: false });
     };
 
     closeFirebasePopup = () => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`closeFirebasePopup`, { employeeId: employeeId});
+
         this.setState({
             isFirebaseConnectionPopup: false,
             isDBMiniMenu: null,
@@ -94,12 +104,18 @@ export default class Connections extends React.Component {
     };
 
     isDBMiniMenuOpen = (connectionName) => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`isDBMiniMenuOpen`, { employeeId: employeeId});
+
         this.setState({
             isDBMiniMenu: connectionName,
         })
     };
 
     changeInputsModal = (modal) => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`changeInputsModal ${modal}`, { employeeId: employeeId});
+
         if (modal === "ssh") {
             this.setState({
                 isConfigureManuallyPopup: false,
@@ -372,7 +388,12 @@ export default class Connections extends React.Component {
                         isDBMiniMenu: false
                     });
 
+                    const employeeId = localStorage.getItem("employeeId");
+                    mixpanel.track(`Added new connection`, { employeeId: employeeId});
                 } else {
+                    const employeeId = localStorage.getItem("employeeId");
+                    mixpanel.track(`Cannot add new connection`, { employeeId: employeeId});
+
                     this.setState({
                         errorMessage: "Seems like such a name already exists or you fill in the wrong data, please fix this and click on the 'create' button.",
                         isErrorOpen: true
@@ -385,6 +406,9 @@ export default class Connections extends React.Component {
     deleteConnection = (name) => {
         deleteConnection(name).then(connections => {
             if (connections) {
+                const employeeId = localStorage.getItem("employeeId");
+                mixpanel.track(`Delete connection`, { employeeId: employeeId});
+
                 this.setState({
                     connections: connections,
                     searchedConnections: connections,
@@ -422,6 +446,8 @@ export default class Connections extends React.Component {
 
     async openConnection(name) {
         await this.verifyEmployee();
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`openConnection`, { employeeId: employeeId});
         const currentConnection = this.getConnectionData(name);
         localStorage.setItem('current_connection', JSON.stringify(currentConnection));
         window.location.hash = `#/tables/${name}`;
@@ -858,6 +884,9 @@ export default class Connections extends React.Component {
     };
 
     closeMiniMenu = () => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`closeMiniMenu`, { employeeId: employeeId});
+
         const { isDBMiniMenu } = this.state;
 
         if (isDBMiniMenu) {
@@ -884,6 +913,9 @@ export default class Connections extends React.Component {
     }
 
     search = () => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`search connection`, { employeeId: employeeId});
+
         const searchNameValue = document.getElementById('connection-name-search').value;
         const searchSchemaValue = document.getElementById('connection-schema-search').value;
         const searchDateValue = document.getElementById('connection-date-search').value;
@@ -906,6 +938,9 @@ export default class Connections extends React.Component {
     };
 
     moveNext = () => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`move next connection`, { employeeId: employeeId});
+
         const { pageNumber, rowsPerPage, searchedConnections } = this.state;
         const l = searchedConnections.length;
 
@@ -915,6 +950,9 @@ export default class Connections extends React.Component {
     };
 
     moveBack = () => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`move back connection`, { employeeId: employeeId});
+
         const { pageNumber } = this.state;
 
         if (pageNumber !== 1) {
@@ -923,6 +961,9 @@ export default class Connections extends React.Component {
     };
 
     changeOrder = (byColumn) => {
+        const employeeId = localStorage.getItem("employeeId");
+        mixpanel.track(`change connection order`, { employeeId: employeeId});
+
         const {
             orderByName,
             orderBySchema,
