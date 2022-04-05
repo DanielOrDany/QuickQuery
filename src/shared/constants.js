@@ -2,6 +2,7 @@ module.exports = {
   channels: {
     APP_INFO: 'app_info',
     AUTH_LOGIN: 'auth_login',
+    AUTH_REGISTER: 'auth_register',
     AUTH_VERIFY_TOKEN: 'auth_verify_token',
     DELETE_CONNECTION: 'delete-connection',
     ADD_CONNECTION: 'add-connection',

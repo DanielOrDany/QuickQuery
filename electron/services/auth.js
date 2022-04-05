@@ -23,6 +23,22 @@ async function login (email, password) {
     }
 }
 
+async function register (email, password, fullName, companyName) {
+    try {
+        const lowerEmail = email.toString().toLowerCase();
+
+        const response = await axios.post(API_URL + '/api/v1/customers/account', {
+            email: lowerEmail, password: password, name: fullName, phone: companyName
+        }, { httpsAgent: agent });
+        console.log("Register", response.data);
+        return response.data;
+
+    } catch (e) {
+        console.log("response", e);
+        return e.response.data;
+    }
+}
+
 async function verifyToken (id, auth) {
     try {
         const response = await axios.get(API_URL + '/api/v1/employees/verify', {
@@ -62,5 +78,6 @@ async function addHistoryItem (id, auth, action, table, old_value, new_value) {
 module.exports = {
     login,
     verifyToken,
-    addHistoryItem
+    addHistoryItem,
+    register
 };

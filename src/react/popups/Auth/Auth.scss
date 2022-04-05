@@ -28,7 +28,7 @@
     border-radius: 4px;
     color: $box-text-color;
     display: flex;
-    padding: 15px 30px;
+    padding: 15px 30px 35px 30px;
     flex-direction: column;
 
     .auth-form-header-image {
@@ -104,6 +104,13 @@
       display: flex;
       flex-direction: column;
       width: 100%;
+
+      .auth-form-input-tip {
+        display: flex;
+        margin-top: 5px;
+        font-size: 10pt;
+        justify-content: start;
+      }
 
       .auth-form-input-label {
         font-family: Roboto, sans-serif;

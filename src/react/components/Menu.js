@@ -8,6 +8,7 @@ import {
   importConfig,
   exportConfig,
   authLogin,
+  authRegister,
   authVerifyToken
 } from "../methods";
 import Modal from '../popups/Modal';
@@ -25,8 +26,6 @@ import '../styles/Menu.scss';
 import SettingsPopup from "../popups/Settings";
 import LogoutPopup from "../popups/Logout";
 
-
-
 class Menu extends React.Component {
   constructor(props) {
     super(props);
@@ -39,6 +38,7 @@ class Menu extends React.Component {
     };
 
     this.login = this.login.bind(this);
+    this.register = this.register.bind(this);
     this.logout = this.logout.bind(this);
     this.verifyEmployee = this.verifyEmployee.bind(this);
     this.changeSignedStatus = this.changeSignedStatus.bind(this);
@@ -203,6 +203,22 @@ class Menu extends React.Component {
     }
   }
 
+  async register(email, password, fullName, companyName) {
+    const result = await authRegister(email, password, fullName, companyName);
+    console.log("REGISTER:", result);
+    if (result && !result.success) {
+      return { error: result.message };
+    } else if (result && result.data) {
+      localStorage.setItem('employeeId', result.data.customer.id);
+      localStorage.setItem('employeeToken', result.data.token);
+      localStorage.setItem('employeePlan', "Hobby");
+      this.setState({ isSignedIn: true });
+      return null;
+    } else {
+      return { error: "network error" };
+    }
+  }
+
   async giveFeedback() {
     const shell = window.electron.shell;
     await shell.openExternal("https://forms.gle/AxHKxtBM5KJZcDWx8");
@@ -212,7 +228,7 @@ class Menu extends React.Component {
     return (
         <>
           { !this.state.isSignedIn &&
-            <AuthPopup onLogin={this.login}/>
+            <AuthPopup onLogin={this.login} onRegister={this.register}/>
           }
           { this.state.error &&
             <Modal

@@ -15,6 +15,15 @@ export const
         });
     },
 
+    authRegister = async (email, password, fullName, companyName) => {
+        return new Promise(resolve => {
+            ipcRenderer.send(channels.AUTH_REGISTER, email, password, fullName, companyName);
+            ipcRenderer.on(channels.AUTH_REGISTER, (event, result) => {
+                resolve(result.data);
+            });
+        });
+    },
+
     authVerifyToken = async (id, token) => {
         return new Promise(resolve => {
             ipcRenderer.send(channels.AUTH_VERIFY_TOKEN, id, token);

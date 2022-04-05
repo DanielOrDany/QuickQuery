@@ -51,7 +51,7 @@ function createWindow () {
 
   // Set/Remove devtools
   mainWindow.webContents.on("devtools-opened", () => {
-      mainWindow.closeDevTools();
+      // mainWindow.closeDevTools();
   });
 
   // Set/Remove MENU
@@ -106,6 +106,17 @@ ipcMain.on(channels.AUTH_LOGIN, async (event, email, password) => {
   } catch (e) {
     unsuccessful.message = e;
     await event.sender.send(channels.AUTH_LOGIN, unsuccessful);
+  }
+});
+
+ipcMain.on(channels.AUTH_REGISTER, async (event, email, password, fullName, companyName) => {
+  try {
+    const result = await Auth.register(email, password, fullName, companyName);
+    successful.data = result;
+    await event.sender.send(channels.AUTH_REGISTER, successful);
+  } catch (e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.AUTH_REGISTER, unsuccessful);
   }
 });
 
