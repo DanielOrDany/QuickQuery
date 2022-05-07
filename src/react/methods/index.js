@@ -213,6 +213,15 @@ export const
         });
     },
 
+    getTableRelations = async (connectionName, relationData) => {
+        return new Promise(resolve => {
+            ipcRenderer.send(channels.GET_TABLE_RELATIONS, connectionName, relationData);
+            ipcRenderer.on(channels.GET_TABLE_RELATIONS, (event, result) => {
+                resolve(result.data);
+            });
+        });
+    },
+
     getAllTables = async (connectionName) => {
         return new Promise(resolve => {
             ipcRenderer.send(channels.GET_ALL_TABLES, connectionName);

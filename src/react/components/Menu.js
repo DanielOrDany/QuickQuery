@@ -283,9 +283,14 @@ class Menu extends React.Component {
           <Router hashType="noslash">
             <div className="menu-header" expand="md">
               <div className="logo-box">
-                <div className={'logo_bg'}></div>
-                <img src={logo_icon} id="l-icon"/>
-                <img src={home_icon} id="home-icon" onClick={() => this.openConnections()}/>
+                {/* <div className={'logo_bg'}></div>
+                <img src={logo_icon} id="l-icon"/> */}
+                <div className='logo'>
+                  <div className='logo-text'>Quick</div>
+                  <div className='logo-emoji'>⚡️</div>
+                  <div className='logo-text'>Query</div>
+                </div>
+                {/* <img src={home_icon} id="home-icon" onClick={() => this.openConnections()}/> */}
               </div>
               <div className="menu-box">
                 <div className="feedback" onClick={() => this.giveFeedback()}>

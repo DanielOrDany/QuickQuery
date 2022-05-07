@@ -51,7 +51,7 @@ function createWindow () {
 
   // Set/Remove devtools
   mainWindow.webContents.on("devtools-opened", () => {
-      mainWindow.closeDevTools();
+      //smainWindow.closeDevTools();
   });
 
   // Set/Remove MENU
@@ -287,6 +287,17 @@ ipcMain.on(channels.UPDATE_KEY, async(event, key) => {
 /**
  *  Tables
  */
+
+ipcMain.on(channels.GET_TABLE_RELATIONS, async (event, connectionName, relationData) => {
+  try {
+    const result = await Table.getTableRelations(connectionName, relationData);
+    successful.data = result;
+    await event.sender.send(channels.GET_TABLE_RELATIONS, successful);
+  } catch (e) {
+    unsuccessful.message = e;
+    await event.sender.send(channels.GET_TABLE_RELATIONS, unsuccessful);
+  }
+});
 
 ipcMain.on(channels.GET_ALL_TABLES, async (event, connectionName) => {
   try {

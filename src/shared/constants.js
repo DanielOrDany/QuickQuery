@@ -16,6 +16,7 @@ module.exports = {
     SET_TRIAL: 'set-trial',
     UPDATE_KEY: 'update-key',
     GET_ALL_TABLES: 'get-all-tables',
+    GET_TABLE_RELATIONS: 'get-table-relations',
     DELETE_TABLE: 'delete-table',
     GET_TABLE: 'get-table',
     ADD_TABLE: 'add-table',

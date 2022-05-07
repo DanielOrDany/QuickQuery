@@ -5,7 +5,11 @@ const low = require('lowdb');
 const pg = require('pg');
 const auth = require('../auth');
 
-const { isEmpty, sortByLength, getAppDataPath } = require('../helpers');
+const {
+    isEmpty,
+    sortByLength,
+    getAppDataPath
+} = require('../helpers');
 
 const FileSync = require('lowdb/adapters/FileSync');
 const appDataDirPath = getAppDataPath();
@@ -14,6 +18,112 @@ const db = low(adapter);
 
 
 pg.defaults.ssl = true;
+
+/**
+ * 
+ * @param { URI, sshHost, sshPort, sshUser, sshPrivateKey } connection 
+ * @param { columns, rows} relationData 
+ * @returns 
+ */
+
+async function getPostgresTableRelations(connection, relationData) {
+    const URI = connection.URI;
+    const sshHost = connection.sshHost;
+    const sshPort = connection.sshPort;
+    const sshUser = connection.sshUser;
+    const sshPrivateKey = connection.sshPrivateKey;
+
+    let sequelize;
+
+    if (typeof URI === "string") {
+        sequelize = new Sequelize(URI);
+
+    } else if (sshHost) {
+
+        // basic connection to a database
+        const dbConfig = {
+            database: URI.database,
+            username: URI.user,
+            password: URI.password,
+            dialect: URI.others.dialect,
+            port: URI.port
+        };
+
+        // ssh tunnel configuration
+        const tunnelConfig = {
+            username: sshUser,
+            host: sshHost,
+            port: sshPort,
+            privateKey: require("fs").readFileSync(sshPrivateKey)
+        };
+
+        // initialize service
+        const sequelizeTunnelService = new SequelizeTunnelService(dbConfig, tunnelConfig);
+        const connection = await sequelizeTunnelService.getConnection();
+
+        sequelize = connection.sequelize;
+    } else if (!sshHost) {
+        sequelize = new Sequelize(URI.database,
+            URI.user,
+            URI.password,
+            URI.others
+        );
+    }
+
+    const defaultQueries = connection.queries.filter((q) => q.type === 'default_query').map((mq) => mq.table)
+
+    const searchWholeDBScript = `
+        CREATE OR REPLACE FUNCTION search_whole_db(_like_pattern text)
+        RETURNS TABLE(_tbl regclass, _ctid tid) AS
+        $func$
+        BEGIN
+            FOR _tbl IN
+                SELECT c.oid::regclass
+                FROM   pg_class c
+                JOIN   pg_namespace n ON n.oid = relnamespace
+                WHERE  c.relkind = 'r'                           -- only tables
+                AND    n.nspname !~ '^(pg_|information_schema)'  -- exclude system schemas
+                ORDER BY n.nspname, c.relname
+            LOOP
+                RETURN QUERY EXECUTE format(
+                'SELECT $1, ctid FROM %s t WHERE t::text ~~ %L'
+                , _tbl, '%' || _like_pattern || '%')
+                USING _tbl;
+            END LOOP;
+        END
+        $func$ LANGUAGE plpgsql;
+    `;
+
+    try {
+        await sequelize.query(searchWholeDBScript);
+    } catch (e) {
+        console.log(`Time: ${new Date().toLocaleString()}, Add PostgreSQL Search Fucntion Error:`, e);
+        throw "Cannot create a function in your database to search relations between tables."
+    }
+
+
+    const relationedTables = await Promise.all(relationData.map(async (data) => {
+        const searchQ = `SELECT * FROM search_whole_db('${data[1]}');`
+        const res = await sequelize.query(searchQ);
+
+        return res[0].map((tData) => {
+            return tData._tbl;
+        })
+    }));
+
+    // Relationed tables without duplicates
+
+    const resultTables = [];
+    relationedTables.forEach((tables) => {
+        tables.forEach((table) => {
+            if (!resultTables.includes(table) && defaultQueries.includes(table)) {
+                resultTables.push(table);
+            }
+        })
+    })
+
+    return resultTables;
+}
 
 async function getPostgresTableSize(connection, connectionName, alias) {
     const URI = connection.URI;
@@ -62,9 +172,13 @@ async function getPostgresTableSize(connection, connectionName, alias) {
     // Get table result
     const query = db.read()
         .get('connections')
-        .find({ name: connectionName })
+        .find({
+            name: connectionName
+        })
         .get('queries')
-        .find({ alias: alias })
+        .find({
+            alias: alias
+        })
         .value()
         .query;
 
@@ -264,7 +378,7 @@ async function loadPostgresTable(connection, queryData, loadingOptions) {
 
     query += ` LIMIT ${limit} OFFSET ${offset}`;
 
-    const number = numberOfRecords/limit;
+    const number = numberOfRecords / limit;
     const one = Number(number).toFixed(0);
 
     let pages = 0;
@@ -495,7 +609,7 @@ async function savePostgresTableResult(connection, queryData, loadingOptions) {
     }
 
     /** Full table */
-    const number = numberOfRecords/limit;
+    const number = numberOfRecords / limit;
     const one = Number(number).toFixed(0);
 
     let pages = 0;
@@ -784,5 +898,6 @@ module.exports = {
     updateDefaultPostgresTableRow,
     deleteDefaultPostgresTableRow,
     getPostgresTableColumns,
-    runPostgresQuery
+    runPostgresQuery,
+    getPostgresTableRelations
 };

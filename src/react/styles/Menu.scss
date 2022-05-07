@@ -30,6 +30,32 @@
 
 .logo-box {
   display: flex;
+
+  .logo {
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+    margin-left: 20px;
+    align-items: center;
+
+    .logo-emoji {
+      margin-left: 3px;
+      animation: blinker 1.5s infinite;
+      background: transparent;
+      text-shadow: 0.5px 0.5px $yellow;
+      font-size: 24px;
+    }
+
+    @keyframes blinker {
+      60% { opacity: 0 }
+    }
+
+    .logo-text {
+      color: $white;
+      text-shadow: 1px 1px $black;
+      font-size: 20px;
+    }
+  }
 }
 
 .sharing-buttons {
@@ -159,7 +185,7 @@
   height: 80px;
   width: 100vw;
 
-  background: linear-gradient(180deg, #2A7E52 0%, #27774C 99.97%);
+  background: $black; // linear-gradient(180deg, #2A7E52 0%, #27774C 99.97%);
 
 
   /* LOGO */

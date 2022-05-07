@@ -20,7 +20,8 @@ const {
     updateDefaultPostgresTableRow,
     deleteDefaultPostgresTableRow,
     getPostgresTableColumns,
-    runPostgresQuery
+    runPostgresQuery,
+    getPostgresTableRelations
 } = require('./postgres/table');
 const { loadMysqlTable,
     getMysqlTableSize,
@@ -50,6 +51,30 @@ const FIRESTORE = "firestore";
 // }
 
 pg.defaults.ssl = true;
+
+// Get table relations
+async function getTableRelations(connectionName, relationData) {
+    try {
+        const connection = db.read()
+            .get('connections')
+            .find({name: connectionName})
+            .value();
+
+        let result;
+
+        if (connection.dtype === FIRESTORE) {
+            // todo
+        } else if (connection.dtype === POSTGRESQL) {
+            result = await getPostgresTableRelations(connection, relationData);
+        } else if (connection.dtype === MYSQL) {
+            // todo
+        }
+
+        return result
+    } catch (e) {
+        console.log(`[${new Date().toLocaleString()}] GET TABLE RELATIONS ERROR: `, e);
+    }
+}
 
 // Add new table to the current connection
 async function addTable (connectionName, query, type, alias) {
@@ -532,5 +557,6 @@ module.exports = {
     getTableSize,
     updateDefaultTableRow,
     deleteDefaultTableRow,
-    searchByAllTables
+    searchByAllTables,
+    getTableRelations
 };

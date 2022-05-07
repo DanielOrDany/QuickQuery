@@ -1,7 +1,10 @@
 import React from 'react';
 import './TableModal.scss';
 import cross_icon from "../../../../icons/pop-up-cross.svg";
-import {authVerifyToken} from "../../../../methods";
+import { 
+    authVerifyToken,
+    getTableRelations
+} from "../../../../methods";
 import toast from "react-hot-toast";
 
 export default class TableRowPopup extends React.Component {
@@ -12,15 +15,21 @@ export default class TableRowPopup extends React.Component {
             onUpdate,
             onDelete,
             tableRows,
-            tableName } = this.props;
+            tableName 
+        } = this.props;
 
         this.state = {
             onCancel,
             onUpdate,
             onDelete,
             tableName,
-            tableType: JSON.parse(localStorage.getItem('current_result_info')).type,
-            oldRowColumns: JSON.parse(JSON.stringify(tableRows)),
+            relatedTables: null,
+            tableType: JSON.parse(
+                localStorage.getItem('current_result_info')
+            ).type,
+            oldRowColumns: JSON.parse(
+                JSON.stringify(tableRows)
+            ),
             rowColumns: tableRows
         };
 
@@ -30,6 +39,11 @@ export default class TableRowPopup extends React.Component {
     async componentDidMount() {
         const id = localStorage.getItem("employeeId");
         const token = localStorage.getItem("employeeToken");
+        const connectionName = JSON.parse(localStorage.getItem('current_connection')).name;
+        const relatedTables = await getTableRelations(connectionName, this.state.oldRowColumns);
+        console.log("relatedTables", relatedTables);
+
+        this.setState({ relatedTables });
 
         if (id && token) {
             const verified = await authVerifyToken(id, token);
@@ -66,51 +80,58 @@ export default class TableRowPopup extends React.Component {
                             <img className='table-row-popup-cross' src={cross_icon} onClick={this.state.onCancel} alt={'cross'}/>
                         </div>
 
-                        <div className='table-row-popup-body'>
+                        <div className='popup-body'>
+                            <div className='table-row-popup-body'>
+                                <div className='table-row-popup-body-header'>
+                                    <div className='body-header-column-name'>
+                                        <span className='body-header-text'>name</span>
+                                    </div>
 
-                            <div className='table-row-popup-body-header'>
-                                <div className='body-header-column-name'>
-                                    <span className='body-header-text'>name</span>
+                                    <div className='body-header-column-info'>
+                                        <span className='body-header-text'>description</span>
+                                    </div>
                                 </div>
 
-                                <div className='body-header-column-info'>
-                                    <span className='body-header-text'>description</span>
-                                </div>
-                            </div>
+                                <div className='table-row-popup-body-rows'>
+                                    { this.state.rowColumns.map(columnName => {
 
-                            <div className='table-row-popup-body-rows'>
-                                { this.state.rowColumns.map(columnName => {
+                                        let renderItem;
 
-                                    let renderItem;
+                                        if (typeof columnName[1] === 'object') {
 
-                                    if (typeof columnName[1] === 'object') {
+                                            if (columnName[1] === null) {
+                                                renderItem = "";
+                                            } else {
+                                                renderItem = JSON.stringify(columnName[1]);
+                                            }
 
-                                        if (columnName[1] === null) {
-                                            renderItem = "";
                                         } else {
-                                            renderItem = JSON.stringify(columnName[1]);
+                                            renderItem = columnName[1];
                                         }
 
-                                    } else {
-                                        renderItem = columnName[1];
-                                    }
+                                        return (
+                                            <div className='table-row-popup-body-row'>
+                                                <div className='body-row-name'>
+                                                    <input className='body-row-text' value={columnName[0]}/>
+                                                </div>
 
-                                    return (
-                                        <div className='table-row-popup-body-row'>
-                                            <div className='body-row-name'>
-                                                <input className='body-row-text' value={columnName[0]}/>
+                                                <div className='body-row-info'>
+                                                    <input className='body-row-text' value={renderItem} onChange={(e) => {
+                                                        this.handleColumnChange(e, columnName[0], this.state.rowColumns);
+                                                    }}/>
+                                                </div>
                                             </div>
-
-                                            <div className='body-row-info'>
-                                                <input className='body-row-text' value={renderItem} onChange={(e) => {
-                                                    this.handleColumnChange(e, columnName[0], this.state.rowColumns);
-                                                }}/>
-                                            </div>
-                                        </div>
-                                    )
-                                })}
+                                        )
+                                    })}
+                                </div>
                             </div>
-
+                            <div className='related-tables'>
+                                { this.state.relatedTables ?
+                                    this.state.relatedTables.map((relatedTable) => <div className='related-table-item'>{relatedTable}</div>)
+                                    : 
+                                    'loading'
+                                }
+                            </div>
                         </div>
 
                         <div className='table-row-popup-buttons'>
