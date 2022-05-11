@@ -38,7 +38,7 @@
   //width: max-content;
   //justify-content: space-between;
   .ssh-btn {
-    font-family: Roboto, sans-serif;
+    font-family: $font-family;
     font-style: normal;
     font-weight: 500;
     font-size: 18px;
@@ -58,7 +58,7 @@
   }
 
   #configure-manually-btn {
-    font-family: Roboto, sans-serif;
+    font-family: $font-family;
     font-style: normal;
     font-weight: 500;
     font-size: 18px;
@@ -76,7 +76,7 @@
   }
 
   #simplified-connection-btn {
-    font-family: Roboto, sans-serif;
+    font-family: $font-family;
     font-style: normal;
     font-weight: 500;
     font-size: 18px;
@@ -98,27 +98,26 @@
 .choose-database-popup {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   width: 100%;
   height: 100%;
 
   .database-list {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    padding: 50px 30px;
+    justify-content: start;
+    margin-top: 20px;
 
     img {
       width: 100px;
       height: 100px;
-      border: #737a8f 2px solid;
-      border-radius: 5px;
       padding: 10px;
       margin: 15px;
     }
 
     img:hover {
-      border: #318f43 2px solid;
+      cursor: pointer;
+      padding: 5px;
     }
   }
 }
@@ -133,7 +132,7 @@
 
 
   .small-input-title {
-    font-family: Roboto, sans-serif;
+    font-family: $font-family;
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
@@ -163,7 +162,7 @@
 
 
 
-    font-family: Roboto, sans-serif;
+    font-family: $font-family;
     font-style: normal;
     font-weight: normal;
     font-size: 16px;
@@ -196,7 +195,7 @@
   margin-left: 46px;
 
   .firebase-input-title {
-    font-family: Roboto, sans-serif;
+    font-family: $font-family;
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
@@ -214,7 +213,7 @@
     box-sizing: border-box;
     border-radius: 4px;
     padding-left: 22px;
-    font-family: Roboto, sans-serif;
+    font-family: $font-family;
     font-style: normal;
     font-weight: normal;
     font-size: 16px;
@@ -254,7 +253,7 @@
     .big-input-title {
       display: flex;
       height: 21px;
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: 400;
       font-size: 18px;
@@ -273,7 +272,7 @@
       box-sizing: border-box;
       border-radius: 4px;
 
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: normal;
       font-size: 16px;
@@ -313,7 +312,7 @@
 
     /* FOOTER SIMPLIFIED CONNECTION BUTTON */
     #simplified-connection-btn {
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -332,7 +331,7 @@
     }
 
     #configure-manually-btn {
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -350,7 +349,7 @@
     }
 
     //.ssh-btn {
-    //  font-family: Roboto, sans-serif;
+    //  font-family: $font-family;
     //  font-style: normal;
     //  font-weight: 500;
     //  font-size: 18px;
@@ -370,7 +369,7 @@
 
     /* FOOTER SIMPLIFIED CONNECTION BUTTON */
     #simplified-connection-btn {
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -388,7 +387,7 @@
     }
 
     .ssh-btn {
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -426,7 +425,7 @@
 
 
     .ssh-input-title {
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: normal;
       font-size: 18px;
@@ -439,7 +438,7 @@
     .ssh-input-title-and-hint {
       display: flex;
       align-items: center;
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: normal;
       font-size: 18px;
@@ -466,7 +465,7 @@
       border-radius: 4px;
       padding-left: 21px;
 
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: normal;
       font-size: 16px;
@@ -487,7 +486,7 @@
       border-radius: 4px;
       padding-top: 11px;
 
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: normal;
       font-size: 16px;
@@ -505,7 +504,7 @@
 
 
     .ssh-form-control::placeholder {
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: normal;
       font-size: 16px;
@@ -532,7 +531,7 @@
 
 
           .ssh-choose-db-title {
-            font-family: Roboto, sans-serif;
+            font-family: $font-family;
             font-style: normal;
             font-weight: normal;
             font-size: 18px;
@@ -586,7 +585,7 @@
     margin-left: 45px;
 
     #configure-manually-btn {
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -599,7 +598,7 @@
     }
 
     #simplified-connection-btn {
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -671,7 +670,7 @@
     .big-input-title {
       display: flex;
       height: 21px;
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: 400;
       font-size: 18px;
@@ -690,7 +689,7 @@
       box-sizing: border-box;
       border-radius: 4px;
 
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: normal;
       font-size: 16px;
@@ -730,7 +729,7 @@
 
     /* FOOTER SIMPLIFIED CONNECTION BUTTON */
     #simplified-connection-btn {
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -749,7 +748,7 @@
     }
 
     #configure-manually-btn {
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -767,7 +766,7 @@
     }
 
     //.ssh-btn {
-    //  font-family: Roboto, sans-serif;
+    //  font-family: $font-family;
     //  font-style: normal;
     //  font-weight: 500;
     //  font-size: 18px;
@@ -787,7 +786,7 @@
 
     /* FOOTER SIMPLIFIED CONNECTION BUTTON */
     #simplified-connection-btn {
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -805,7 +804,7 @@
     }
 
     .ssh-btn {
-      font-family: Roboto, sans-serif;
+      font-family: $font-family;
       font-style: normal;
       font-weight: 500;
       font-size: 18px;
@@ -858,7 +857,7 @@
   .input-title {
     display: flex;
 
-    font-family: Roboto, sans-serif;
+    font-family: $font-family;
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
@@ -880,7 +879,7 @@
     margin-bottom: 25px;
 
 
-    font-family: Roboto, sans-serif;
+    font-family: $font-family;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -1009,7 +1008,7 @@
 
   #choose-db-title {
     height: 21px;
-    font-family: Roboto, sans-serif;
+    font-family: $font-family;
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
@@ -1046,66 +1045,17 @@
   .connections-page-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     height: 73px;
     width: 100vw;
     min-width: 450px;
-    background: #FFFFFF;
-
-
-
-    /* HEADER PAGE NAME */
-    .connections-page-name {
-      font-family: Roboto, sans-serif;
-      font-style: normal;
-      font-weight: 500;
-      font-size: 28px;
-      line-height: 33px;
-
-      color: #3E3E3E;
-      margin-left: 49px;
-    }
-
-
-
-    /* ADD DATABASE BUTTON */
-    .add-database-button {
-      height: 42px;
-      min-width: 194px;
-      background: #28794E;
-      border-radius: 4px;
-      border: none;
-
-      font-family: Roboto, sans-serif;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 16px;
-      line-height: 19px;
-
-      letter-spacing: -0.11px;
-
-      color: #FFFFFF;
-      margin-right: 34px;
-    }
-
-
-    .add-database-button:hover {
-      background: #5BC470;
-      transition: .2s;
-    }
+    background: $sub-header;
   }
-
-
-
-
-
 
   /* --------------------------------------------- EMPTY CONNECTIONS PAGE ------------------------------------------- */
   .empty-connections-page {
     display: flex;
     justify-content: center;
-
-    height: calc(100vh - 153px);
     width: 100vw;
     background-color: #F8F8FA;
 
@@ -1130,7 +1080,7 @@
 
       /* EMPTY CONNECTIONS PAGE TEXT */
       span {
-        font-family: Roboto, sans-serif;
+        font-family: $font-family;
         font-style: normal;
         font-weight: normal;
         font-size: 16px;
@@ -1157,7 +1107,7 @@
         filter: drop-shadow(0px 11px 15px rgba(0, 0, 0, 0.0535402));
         border-radius: 4px;
 
-        font-family: Roboto, sans-serif;
+        font-family: $font-family;
         font-style: normal;
         font-weight: 500;
         font-size: 16px;
@@ -1175,7 +1125,6 @@
 
   /* --------------------------------------------- FILLED CONNECTIONS PAGE ------------------------------------------ */
   .filled-connections-page {
-    height: calc(100vh - 153px);
     width: 100vw;
     background-color: #F8F8FA;
     overflow: hidden;
@@ -1185,8 +1134,6 @@
     .filled-connections-page-body {
       overflow-x: auto;
       overflow-y: hidden;
-      height: calc(100vh - 208px);
-
     }
 
 
@@ -1204,7 +1151,7 @@
 
       /* FILTERS COMMON TITLE CSS */
       .connections-page-filters-title {
-        font-family: Roboto, sans-serif;
+        font-family: $font-family;
         font-style: normal;
         font-weight: 500;
         font-size: 14px;
@@ -1225,7 +1172,7 @@
         border: 1px solid #E2DFE3;
         border-radius: 6px;
 
-        font-family: Roboto, sans-serif;
+        font-family: $font-family;
         font-style: normal;
         font-weight: 500;
         font-size: 14px;
@@ -1286,7 +1233,30 @@
         min-width: 470px;
         border-bottom: 1px solid #E2DFE3;
 
+        /* ADD DATABASE BUTTON */
+        .add-database-button {
+          height: max-content;
+          width: max-content;
+          background: $button;
+          border-radius: 4px;
+          padding: 3px 7px;
+          border: none;
 
+          font-family: $font-family;
+          font-style: normal;
+          font-weight: normal;
+          font-size: $sub-header-font-size;
+
+          letter-spacing: -0.11px;
+
+          color: #FFFFFF;
+          margin-right: 20px;
+        }
+
+        .add-database-button:hover {
+          background: $hover;
+          transition: .2s;
+        }
 
         /* FILTER DATE CREATED (TITLE, ARROW, SEARCH) */
         .DATE-CREATED-search-div {
@@ -1342,7 +1312,7 @@
     .connections-page-databases-block {
       width: 100%;
       min-width: 1225px;
-      height: calc(100vh - 253px);
+      height: calc(100vh - 180px);
       overflow-x: hidden;
       overflow-y: auto;
       position: relative;
@@ -1354,8 +1324,6 @@
     .connections-page-all-databases {
       box-shadow: 0 1px 5px #E2DFE3;
 
-
-
       /* DATABASE */
       .database {
         display: flex;
@@ -1363,19 +1331,15 @@
         background-color: #FFFFFF;
         width: 100%;
         min-width: 1225px;
-
         border-bottom: 1px solid #E2DFE3;
-
-
 
         /* DATABASE COMMON TEXT CSS */
         .database-text {
-          font-family: Roboto, sans-serif;
+          font-family: $font-family;
           font-style: normal;
           font-weight: normal;
           font-size: 14px;
           line-height: 16px;
-
           color: #25213B;
         }
 
@@ -1473,7 +1437,7 @@
 
         /* DATABASES COMMON TEXT CSS HOVER */
         .database-text {
-          color: #2A7C50;
+          color: $hover;
           font-weight: 500;
         }
 
@@ -1483,7 +1447,7 @@
         .database-icon {
 
           svg {
-            fill: #2A7C50;
+            fill: $hover;
           }
         }
       }
@@ -1502,11 +1466,9 @@
       background-color: #FFFFFF;
       border-top: 1px solid #E2DFE3;
 
-
-
       /* FOOTER COMMON TEXT CSS */
       .connections-page-footer-text {
-        font-family: Roboto, sans-serif;
+        font-family: $font-family;
         font-style: normal;
         font-weight: 600;
         font-size: 12px;

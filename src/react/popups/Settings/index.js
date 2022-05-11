@@ -41,7 +41,7 @@ const SettingsPopup = ({
                             </div>
 
 
-                            <div id="export-div" title={subPlan === 'Hobby' && 'Not available for your Hobby Plan'} className={subPlan === 'Hobby' ? 'export-disabled' : ''} onClick={() => subPlan !== 'Hobby' && exportBtn}>
+                            <div id="export-div" onClick={() => exportBtn}>
                                 <img src={export_icon} alt='export'/>
                                 <span>Export settings</span>
 

@@ -1049,16 +1049,6 @@ export default class Connections extends React.Component {
             /* ------------------------------------------ CONNECTION PAGE ------------------------------------------- */
 
             <div className="connections-page">
-
-                {/* ------------------------------------ CONNECTION PAGE HEADER ------------------------------------ */}
-                <div className='connections-page-header'>
-                    <span className="connections-page-name">Databases</span>
-                    <button className="add-database-button" type="button" id="add-button"
-                            onClick={() => this.openConnectionPopup()}
-                    >Add database
-                    </button>
-                </div>
-
                 <div>
                     { connections.length !== 0 ?
 
@@ -1116,6 +1106,11 @@ export default class Connections extends React.Component {
                                                        id="connection-date-search"
                                                        placeholder="Search" onChange={() => this.search()}/>
                                             </div>
+
+                                            <button className="add-database-button" type="button" id="add-button"
+                                                    onClick={() => this.openConnectionPopup()}
+                                            >Connect to database
+                                            </button>
                                         </div>
                                     </div>
 

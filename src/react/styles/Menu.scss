@@ -30,6 +30,18 @@
 
 .logo-box {
   display: flex;
+  
+  .go-back-btn {
+    width: 30px;
+    margin-left: 20px;
+    margin-top: 5px;
+    fill: $color;
+  }
+
+  .go-back-btn:hover {
+    fill: $hover;
+    cursor: pointer;
+  }
 
   .logo {
     display: flex;
@@ -185,7 +197,7 @@
   height: 80px;
   width: 100vw;
 
-  background: $black; // linear-gradient(180deg, #2A7E52 0%, #27774C 99.97%);
+  background: $header; // linear-gradient(180deg, #2A7E52 0%, #27774C 99.97%);
 
 
   /* LOGO */
@@ -295,24 +307,18 @@
       padding: 10px;
       margin-right: 20px;
 
+      .feedback-text {
+        color: $color;
+        margin-right: 10px;
+      }
+
       .feedback-icon {
-        margin-left: 10px;
-        -webkit-animation:fontbulger 2s infinite;
-        -moz-animation:fontbulger 2s infinite;
-        -o-animation:fontbulger 2s infinite;
-        animation:fontbulger 2s infinite;
+        width: 25px;
+        // -webkit-animation:fontbulger 1s infinite;
+        // -moz-animation:fontbulger 1s infinite;
+        // -o-animation:fontbulger 1s infinite;
+        // animation:fontbulger 1s infinite;
       }
-
-      .feedback-title {
-        font-size: 16pt;
-        margin-left: 25px;
-        color: white;
-        font-weight: bold;
-      }
-    }
-
-    .feedback-title:hover {
-      color: #e29f6a;
     }
 
     /* SETTINGS BUTTON */
@@ -354,44 +360,44 @@
 
 @-webkit-keyframes fontbulger  {
   0%, 100% {
-    font-size:16px;
+    width: 30px;
   }
 
   50% {
-    font-size:21px;
+    width: 32px;
   }
 
 }
 
 @-moz-keyframes fontbulger  {
   0%, 100% {
-    font-size:16px;
+    width: 30px;
   }
 
   50% {
-    font-size:21px;
+    width: 32px;
   }
 
 }
 
 @-o-keyframes fontbulger  {
   0%, 100% {
-    font-size:16px;
+    width: 30px;
   }
 
   50% {
-    font-size:21px;
+    width: 32px;
   }
 
 }
 
 @keyframes fontbulger  {
   0%, 100% {
-    font-size:16px;
+    width: 30px;
   }
 
   50% {
-    font-size:21px;
+    width: 32px;
   }
 
 }
