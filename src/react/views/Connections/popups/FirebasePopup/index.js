@@ -19,20 +19,14 @@ const FirebasePopup = ({
                     <div className={'firebase-popup-BG'}>
                         <div className={'firebase-popup-window'}>
                             <div className={'firebase-popup-header'}>
-                                <span>Fill out all required information for creating a connection</span>
+                                <span>🔌 Connect to database</span>
+                                <img className='connection-popup-cross' src={cross_icon} onClick={onCancel}
+                                 alt={'cross'}/>
                             </div>
-                            <img className={'firebase-popup-cross'} src={cross_icon} onClick={onCancel} alt={'cross'}/>
-                            <div className={'firebase-popup-title'}>
-                                <span>{isEdit ? "Edit" : "Create"} a connection</span>
-                            </div>
-                            <div>
-                                {children}
-                            </div>
+                            <div>{children}</div>
                             <div className='firebase-popup-btn-no-error'>
-                                <Button id='firebase-popup-cancel-btn' className='firebase-popup-cancel-btn'
-                                        onClick={onCancel} invert>Cancel</Button>
                                 <Button id='firebase-popup-create-btn' className='firebase-popup-create-btn'
-                                        onClick={isEdit ? onSave : onSubmit}>{isEdit ? "Save" : "Create"}</Button>
+                                        onClick={isEdit ? onSave : onSubmit}>{isEdit ? "Update" : "Connect & save"}</Button>
                             </div>
                         </div>
                     </div>

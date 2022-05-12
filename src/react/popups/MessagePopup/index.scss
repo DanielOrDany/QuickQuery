@@ -11,8 +11,8 @@
 }
 
 .message {
-  padding-left: 48px;
-  padding-top: 20px;
+  margin-top: -20px;
+  padding-left: 150px;
   padding-right: 348px;
 }
 
@@ -28,6 +28,11 @@
   height: max-content;
   padding: 20px 10px;
   background: #FFFFFF;
+
+  img {
+    height: 120px;
+    margin-right: 20px;
+  }
 }
 
 .message-popup-title {
@@ -49,25 +54,15 @@
   #subBtn {
     height: 42px;
     width: 108px;
-    background: #28794E;
+    background: $button;
     border-radius: 4px;
-    font-family: Roboto, sans-serif;
+    font-family: $font-family;
     font-style: normal;
     font-weight: 500;
     font-size: 17px;
     line-height: 20px;
     letter-spacing: -0.11px;
-    color: #FFFFFF;
+    color: $color;
     margin-right: 42px;
   }
 }
-//
-//#subBtn {
-//  font-size: 14px;
-//  font-family: 'Scada', sans-serif;
-//  text-transform: none;
-//  color: white;
-//  background-color: #2d9d73;
-//  border-radius: 5px;
-//  border: 0 solid;
-//}

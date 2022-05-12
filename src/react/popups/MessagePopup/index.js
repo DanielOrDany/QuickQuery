@@ -3,6 +3,7 @@ import Portal from '../../components/Portal';
 import Button from '../../components/Button';
 import PropTypes from 'prop-types';
 import './index.scss';
+import cyborg_man_dancing_icon from "../../icons/cyborg-man-dancing.png";
 
 const MessagePopup = ({
     isOpen,
@@ -19,8 +20,10 @@ const MessagePopup = ({
                 <div className="message-popup-overlay">
                     <div className="message-popup-window">
                         <div className="message-popup-box">
+                            
                             <div className="message-popup-title">
-                                <span>{title}</span>
+                                <img src={cyborg_man_dancing_icon}/>
+                                <span>This is not a screamer - this is a message</span>
                             </div>
                             <div className="message-popup-body">
                                 <div className="message">{text}</div>

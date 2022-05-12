@@ -1,3 +1,4 @@
+@import "../../../../styles/variables.scss";
 
 /* POP-UP */
 .configure-manually-popup-BG {
@@ -5,208 +6,83 @@
     align-items: center;
     justify-content: center;
     position: fixed;
-
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-
     background: #000000A6;
-
     z-index: 100;
-
-
 
     /* POP-UP WINDOW */
     .configure-manually-popup-window {
-        height: 722px;
+        height: max-content;
         width: 850px;
-
-        background: #FFFFFF;
+        background: $background;
         border-radius: 8px 8px 6px 6px;
-
-
+        padding-bottom: 20px;
 
         /* POP-UP HEADER */
         .configure-manually-popup-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            padding-left: 46px;
             height: 59px;
             width: 850px;
-            background: linear-gradient(180deg, #2A7E52 0%, #27774C 99.97%);
             border-radius: 6px 6px 0 0;
-
+            background: $sub-header;
+            margin-bottom: 0;
+            padding: 0px 20px;
 
             /* POP-UP HEADER TEXT */
             span {
-                font-family: Roboto, sans-serif;
+                font-family: $font-family;
                 font-style: normal;
                 font-weight: 500;
                 font-size: 18px;
                 line-height: 21px;
 
-                display: flex;
-                align-items: center;
-
-                color: #FFFFFF;
+                color: $color;
 
                 mix-blend-mode: normal;
                 opacity: 0.8;
             }
         }
 
-
-
-
         /* POP-UP CROSS */
         .configure-manually-popup-cross {
-            display: flex;
-            margin-left: auto;
-            margin-top: 34px;
-            margin-right: 46px;
-
             height: 22px;
         }
 
         .configure-manually-popup-cross:hover {
             cursor: pointer;
+            width: 21px;
         }
-
-
-
-
-        /* POP-UP TITLE */
-        .configure-manually-popup-title {
-            padding-left: 46px;
-
-
-            span {
-                font-family: Roboto, sans-serif;
-                font-style: normal;
-                font-weight: 500;
-                font-size: 28px;
-                line-height: 33px;
-
-                color: #3E3E3E;
-            }
-        }
-
-
-
-        /* POP-UP BUTTON */
-        .configure-manually-popup-btn {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            margin-top: 4px;
-
-
-
-            /* POP-UP CANCEL BUTTON */
-            .configure-manually-popup-cancel-btn {
-                height: 42px;
-                width: 104px;
-                border: 2px solid #D3D3D3;
-                border-radius: 4px;
-                text-transform: capitalize;
-                margin-right: 25px;
-
-                font-family: Roboto, sans-serif;
-                font-style: normal;
-                font-weight: 500;
-                font-size: 17px;
-                line-height: 20px;
-
-                letter-spacing: -0.11px;
-
-                color: rgba(139, 139, 139, 0.836589);
-            }
-
-
-            /* POP-UP CREATE BUTTON */
-            .configure-manually-popup-create-btn {
-                height: 42px;
-                width: 108px;
-                background: #28794E;
-                border-radius: 4px;
-                text-transform: capitalize;
-                margin-right: 46px;
-
-                font-family: Roboto, sans-serif;
-                font-style: normal;
-                font-weight: 500;
-                font-size: 17px;
-                line-height: 20px;
-
-                letter-spacing: -0.11px;
-
-                color: #FFFFFF;
-            }
-        }
-
-        /* POP-UP CANCEL BUTTON */
-        #configure-manually-popup-cancel-btn:hover {
-            color: #5C5D6F;
-            border: 2px solid #5C5D6F;
-            transition: .2s;
-        }
-
-
-        /* POP-UP CREATE BUTTON */
-        #configure-manually-popup-create-btn:hover {
-            background: #5BC470;
-            transition: .2s;
-        }
-
 
         .configure-manually-popup-btn-no-error {
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            margin-top: 36px;
-
-
-
-            /* POP-UP CANCEL BUTTON */
-            .configure-manually-popup-cancel-btn {
-                height: 42px;
-                width: 104px;
-                border: 2px solid #D3D3D3;
-                border-radius: 4px;
-                text-transform: capitalize;
-                margin-right: 25px;
-
-                font-family: Roboto, sans-serif;
-                font-style: normal;
-                font-weight: 500;
-                font-size: 17px;
-                line-height: 20px;
-
-                letter-spacing: -0.11px;
-
-                color: rgba(139, 139, 139, 0.836589);
-            }
-
+            padding: 0px 20px;
+            margin-top: 20px;
 
             /* POP-UP CREATE BUTTON */
             .configure-manually-popup-create-btn {
                 height: 42px;
-                width: 108px;
-                background: #28794E;
+                width: max-content;
+                background: $button;
                 border-radius: 4px;
                 text-transform: capitalize;
-                margin-right: 46px;
-
                 font-family: Roboto, sans-serif;
                 font-style: normal;
                 font-weight: 500;
                 font-size: 17px;
                 line-height: 20px;
-
                 letter-spacing: -0.11px;
+                color: $color;
+            }
 
-                color: #FFFFFF;
+            .configure-manually-popup-create-btn:hover {
+                background: $hover;
             }
         }
 

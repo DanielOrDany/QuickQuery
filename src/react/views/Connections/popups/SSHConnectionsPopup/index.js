@@ -19,16 +19,13 @@ const SSHConnectionPopup = ({
                     <div className="ssh-connection-popup">
                         <div className="ssh-popup-window">
                             <div className="ssh-popup-header">
-                                <span>Fill out all required information for creating a connection</span>
-                            </div>
-                            <img className="ssh-popup-cross" src={cross_icon} onClick={onCancel} alt={'cross'}/>
-                            <div className="ssh-popup-title">
-                                <span>{isEdit ? "Edit" : "Create"} SSH connection</span>
+                                <span>🔌 Connect to database</span>
+                                <img className='ssh-popup-cross' src={cross_icon} onClick={onCancel}
+                                 alt={'cross'}/>
                             </div>
                             <div>{children}</div>
                             <div className="ssh-popup-btn">
-                                <Button id='ssh-popup-cancel-btn' className='ssh-popup-cancel-btn' onClick={onCancel} invert>Cancel</Button>
-                                <Button id='ssh-popup-create-btn' className='ssh-popup-create-btn' onClick={isEdit ? onSave : onSubmit}>{isEdit ? "Save" : "Create"}</Button>
+                                <Button id='ssh-popup-create-btn' className='ssh-popup-create-btn' onClick={isEdit ? onSave : onSubmit}>{isEdit ? "Save" : "Connect & save"}</Button>
                             </div>
                         </div>
                     </div>

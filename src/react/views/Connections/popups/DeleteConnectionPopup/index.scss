@@ -1,3 +1,5 @@
+@import "../../../../styles/variables";
+
 .delete-connection-popup-BG {
   display: flex;
   align-items: center;
@@ -92,7 +94,7 @@
       .delete-connection-popup-delete-btn {
         height: 42px;
         width: 108px;
-        background: #28794E;
+        background: $button;
         border-radius: 4px;
 
         font-family: Roboto, sans-serif;
@@ -120,7 +122,7 @@
 
 
     .delete-connection-popup-delete-btn:hover {
-      background: #5BC470;
+      background: $hover;
       transition: .2s;
     }
   }

@@ -1,8 +1,19 @@
-.db-mini-menu-window {
+.db-mini-background {
   position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  z-index: 99;
+  width: 100vw;
+  height: 100vh;
+  cursor: auto;
+}
+
+.db-mini-menu-window {
   height: 100px;
-  width: 214.6747283935547px;
-  right: 40px;
+  width: 214px;
+  margin-right: 50px;
+  z-index: 100;
 
   background: #FFFFFF;
   box-shadow: 0 11px 15px rgba(0, 0, 0, 0.139232);

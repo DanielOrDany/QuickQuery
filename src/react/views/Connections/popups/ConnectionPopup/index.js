@@ -15,12 +15,9 @@ const ConnectionPopup = ({
                     <div className={'connection-popup-BG'}>
                         <div className={'connection-popup-window'}>
                             <div className={'connection-popup-header'}>
-                                <span>Connect to database</span>
-                            </div>
-                            <img className='connection-popup-cross' src={cross_icon} onClick={onCancel}
+                                <span>💾 Select your database</span>
+                                <img className='connection-popup-cross' src={cross_icon} onClick={onCancel}
                                  alt={'cross'}/>
-                            <div className='connection-popup-title'>
-                                <span>Select your database</span>
                             </div>
                             <div>{children}</div>
                         </div>

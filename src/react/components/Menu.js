@@ -284,7 +284,7 @@ class Menu extends React.Component {
                   <div className='logo-emoji'>⚡️</div>
                   <div className='logo-text'>Query</div>
                 </div>
-                { (window.location.hash !== "#connections" && window.location.hash !== "#/connections") && 
+                { (window.location.hash !== "#connections" && window.location.hash !== "#/connections" && window.location.hash !== "") && 
                   <svg class="go-back-btn" version="1.0" xmlns="http://www.w3.org/2000/svg"
                     width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
                     preserveAspectRatio="xMidYMid meet" fill="#fff" onClick={() => this.openConnections()}>
