@@ -1163,383 +1163,111 @@
 
   /* --------------------------------------------- FILLED CONNECTIONS PAGE ------------------------------------------ */
   .filled-connections-page {
-    width: 100vw;
-    background-color: #F8F8FA;
-    overflow: hidden;
+    width: 100%;
+    background-color: $background;
 
-    .filled-connections-page-body {
-      overflow-x: auto;
-      overflow-y: hidden;
+    /* FILTERS COMMON SEARCH CSS */
+    .connections-page-filters-search {
+      height: 29px;
+      width: 100px;
+
+      background: #FFFFFF;
+      border: 1px solid #E2DFE3;
+      border-radius: 6px;
+
+      font-family: $font-family;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 16px;
+
+      color: #7A7D85;
     }
 
-    /* ---------------------------------------------------- FILTERS ------------------------------------------------- */
-    .connections-page-filters {
-      display: flex;
-      height: 45px;
-      width: 100vw;
-      background-color: #F8F8FA;
-
-      /* FILTERS COMMON TITLE CSS */
-      .connections-page-filters-title {
-        font-family: $font-family;
-        font-style: normal;
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 16px;
-        text-transform: capitalize;
-
-        color: #5C5D6F;
-      }
-
-      /* FILTERS COMMON SEARCH CSS */
-      .connections-page-filters-search {
-        height: 29px;
-        width: 100px;
-
-        background: #FFFFFF;
-        border: 1px solid #E2DFE3;
-        border-radius: 6px;
-
-        font-family: $font-family;
-        font-style: normal;
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 16px;
-
-        color: #7A7D85;
-
-        padding-left: 11.89px;
-        margin-left: 23.7px;
-      }
-
-      /* FILTER NAME */
-      .connections-page-filter-NAME {
-        display: flex;
-        align-items: center;
-        width: 547px;
-        min-width: 450px;
-        height: 45px;
-        text-align: left;
-        border-right: 1px solid #E2DFE3;
-        border-bottom: 1px solid #E2DFE3;
-
-        span {
-          margin-left: 126px;
-        }
-      }
-
-      /* FILTER SCHEMA NAME */
-      .connections-page-filter-SCHEMA-NAME {
-        display: flex;
-        align-items: center;
-        width: 399px;
-        min-width: 305px;
-        height: 45px;
-        border-right: 1px solid #E2DFE3;
-        border-bottom: 1px solid #E2DFE3;
-
-
-        span {
-          margin-left: 29.52px;
-        }
-      }
-
-      /* FILTER DATE CREATED */
-      .connections-page-filter-DATE-CREATED {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 45px;
-        width: 654px;
-        min-width: 470px;
-        border-bottom: 1px solid #E2DFE3;
-
-        /* ADD DATABASE BUTTON */
-        .add-database-button {
-          height: max-content;
-          width: max-content;
-          background: $button;
-          border-radius: 4px;
-          padding: 3px 7px;
-          margin: 0px 20px;
-          border: none;
-          font-family: $font-family;
-          font-style: normal;
-          font-weight: normal;
-          font-size: $sub-header-font-size;
-          color: $color;
-        }
-
-        @media screen and (max-width: 1350px) and (min-width: 1250px) {
-          .add-database-button {
-            font-size: 14px;
-            padding: 2px 7px;
-          }
-        }
-
-        @media screen and (max-width: 1250px) {
-          .add-database-button {
-            font-size: 12px;
-            padding: 1px 7px;
-          }
-        }
-
-        .add-database-button:hover {
-          background: $hover;
-          transition: .2s;
-        }
-
-        /* FILTER DATE CREATED (TITLE, ARROW, SEARCH) */
-        .DATE-CREATED-search-div {
-          display: flex;
-          align-items: center;
-          height: 45px;
-
-
-          span {
-            margin-left: 102px;
-          }
-        }
-
-
-
-
-        /* FILTER DATE CREATED (FILTER ICON) */
-        .DATE-CREATED-filter-div {
-          display: flex;
-          align-items: center;
-          height: 45px;
-
-
-          .connections-page-filters-filter-icon {
-            margin-right: 33px;
-          }
-
-
-          .connections-page-filters-filter-icon:hover {
-            cursor: pointer;
-          }
-        }
-      }
+    /* ADD DATABASE BUTTON */
+    .add-database-button {
+      height: max-content;
+      width: max-content;
+      background: $button;
+      border-radius: 4px;
+      padding: 3px 7px;
+      margin: 0px 20px;
+      border: none;
+      font-family: $font-family;
+      font-style: normal;
+      font-weight: normal;
+      font-size: $sub-header-font-size;
+      color: $color;
     }
-
-
-
-    .connections-page-filters-arrow:hover {
-      cursor: pointer;
-    }
-
-    .connections-page-filters-arrow-down:hover {
-      cursor: pointer;
-    }
-
-    .connections-page-filters-arrow-down {
-      cursor: pointer;
-      transform: rotate(180deg);
-    }
-
 
     /* ---------------------------------------------------- DATABASE ------------------------------------------------ */
     .connections-page-databases-block {
-      width: 100%;
-      min-width: 1225px;
-      height: calc(100vh - 180px);
-      overflow-x: hidden;
-      overflow-y: auto;
-      position: relative;
-
-    }
-
-
-    /* ALL DATABASES */
-    .connections-page-all-databases {
-      box-shadow: 0 1px 5px #E2DFE3;
-
-      /* DATABASE */
-      .database {
-        display: flex;
-        height: 60px;
-        background-color: #FFFFFF;
-        width: 100%;
-        min-width: 1225px;
-        border-bottom: 1px solid #E2DFE3;
-
-        /* DATABASE COMMON TEXT CSS */
-        .database-text {
-          font-family: $font-family;
-          font-style: normal;
-          font-weight: normal;
-          font-size: 14px;
-          line-height: 16px;
-          color: #25213B;
-        }
-
-
-        /* DATABASE ICON */
-        .database-icon {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 126px;
-          min-width: 126px;
-          height: 60px;
-
-
-          svg {
-            width: 24px;
-            height: 24px;
-            fill: #5C5D6F;
-          }
-        }
-
-
-
-        /* DATABASE NAME */
-        .database-name {
-          display: flex;
-          align-items: center;
-          width: 421px;
-          min-width: 324px;
-
-          height: 60px;
-          text-align: left;
-          padding-right: 40px;
-        }
-
-
-
-        /* DATABASE SCHEMA NAME */
-        .database-schema-name {
-          display: flex;
-          align-items: center;
-          width: 399px;
-          min-width: 305px;
-
-          height: 60px;
-          text-align: left;
-          padding-left: 29.52px;
-          padding-right: 29.52px;
-        }
-
-
-        /* DATABASE DATE CREATED */
-        .database-date-created {
-          display: flex;
-          align-items: center;
-          width: 614px;
-          min-width: 430px;
-
-
-          height: 60px;
-          text-align: left;
-          padding-left: 102px;
-          padding-right: 102px;
-        }
-
-
-        .database-mini-menu {
-          width: 20px;
-          height: 60px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-right: 20px;
-
-
-
-          svg {
-            height: 20px;
-            width: 5px;
-          }
-        }
-      }
-
-
-
-
-      /* ------------------------------------------------ DATABASE HOVER -------------------------------------------- */
-      .database:hover {
-        cursor: pointer;
-
-
-        background: #F8F8FA;
-
-
-
-        /* DATABASES COMMON TEXT CSS HOVER */
-        .database-text {
-          color: $hover;
-          font-weight: 500;
-        }
-
-
-
-        /* DATABASE ICON HOVER */
-        .database-icon {
-
-          svg {
-            fill: $hover;
-          }
-        }
-      }
-    }
-
-
-
-    /* ----------------------------------------- FILLED CONNECTIONS PAGE FOOTER ------------------------------------- */
-    .connections-page-footer {
       display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      height: 55px;
+      flex-wrap: wrap;
       width: 100%;
-      min-width: 450px;
-      background-color: #FFFFFF;
-      border-top: 1px solid #E2DFE3;
+      height: 100vh;
 
-      /* FOOTER COMMON TEXT CSS */
-      .connections-page-footer-text {
-        font-family: $font-family;
-        font-style: normal;
-        font-weight: 600;
-        font-size: 12px;
-        line-height: 15px;
+      .database {
+        width: 230px;
+        height: 100px;
+        background: linear-gradient(40deg, $database-item-background 80%, $database-item-hover 0%);
+        border-radius: 1px;
+        display: flex;
+        border: $database-item-border 1px solid;
+        color: $color;
+        align-items: center;
 
-        letter-spacing: 0.05em;
+        .database-icon {
+          img {
+            height: 80px;
+            width: 80px;
+          }
+        }
 
-        color: #6E6893;
+        .database-user {
+          display: flex;
+          font-size: 12px;
+          align-items: center;
 
-      }
+          img {
+            height: 12px;
+            margin-right: 5px;
+          }
+        }
 
+        .database-host {
+          display: flex;
+          font-size: 12px;
+          align-items: center;
 
+          img {
+            height: 12px;
+            margin-right: 5px;
+          }
+        }
 
-      /* NUMBER OF DATABASES PER PAGE */
-      .databases-on-page {
+        .database-info {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          width: max-content;
 
-        span {
-          margin-right: 11px;
+          .database-text {
+            width: 100%;
+            text-align: start;
+            display: block;
+            white-space: nowrap; 
+            width: 120px; 
+            overflow: hidden;
+            text-overflow: ellipsis; 
+          }
         }
       }
 
-
-      /* NUMBER OF DATABASES */
-      .databases-amount {
-        margin-left: 50px;
-        margin-right: 58px;
-      }
-
-
-
-      /* DATABASE PAGES */
-      .database-pages {
-
-        .database-pages-arrow-left {
-          margin-right: 50px;
-        }
-
-        .database-pages-arrow-right {
-          margin-right: 50px;
-        }
+      .database:hover {
+        background: $database-item-hover;
+        border: $hover 1px solid;
+        cursor: pointer;
       }
     }
   }

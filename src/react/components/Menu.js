@@ -17,6 +17,7 @@ import Tables from '../views/Tables/Tables';
 import Connections from '../views/Connections/Connections';
 import praise from "../icons/praise.svg";
 import goBack from "../icons/go-back.svg";
+import homeIcon from "../icons/home-icon.svg";
 import '../styles/Menu.scss';
 
 import SettingsPopup from "../popups/Settings";
@@ -277,51 +278,19 @@ class Menu extends React.Component {
 
 
           <Router hashType="noslash">
-            <div className="menu-header" expand="md">
-              <div className="logo-box">
-                <div className='logo'>
-                  <div className='logo-text'>Quick</div>
-                  <div className='logo-emoji'>⚡️</div>
-                  <div className='logo-text'>Query</div>
-                </div>
-                { (window.location.hash !== "#connections" && window.location.hash !== "#/connections" && window.location.hash !== "") && 
-                  <svg class="go-back-btn" version="1.0" xmlns="http://www.w3.org/2000/svg"
-                    width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
-                    preserveAspectRatio="xMidYMid meet" fill="#fff" onClick={() => this.openConnections()}>
-
-                    <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" stroke="none">
-                    <path d="M935 4075 c-181 -96 -338 -184 -347 -196 -23 -27 -23 -74 0 -96 34
-                    -35 669 -363 701 -363 68 0 94 75 44 129 -16 16 -100 67 -188 113 l-160 83
-                    1460 3 c995 1 1476 -1 1511 -8 128 -27 270 -123 347 -237 60 -87 87 -166 94
-                    -273 16 -250 -130 -471 -373 -563 l-59 -22 -1395 -5 -1395 -6 -75 -22 c-129
-                    -40 -226 -97 -315 -187 -89 -89 -135 -159 -170 -262 -67 -192 -56 -381 31
-                    -561 73 -151 213 -283 370 -346 134 -55 157 -56 892 -56 672 0 680 0 706 21
-                    34 27 37 86 5 115 -20 18 -51 19 -733 24 -783 6 -739 3 -867 71 -169 90 -276
-                    260 -287 455 -6 109 7 171 55 272 62 131 200 248 353 298 52 18 136 19 1450
-                    24 l1395 5 80 28 c307 109 486 359 488 682 0 131 -17 207 -73 320 -87 177
-                    -230 298 -435 367 l-70 23 -1500 5 -1499 5 187 99 c195 103 207 113 198 171
-                    -4 31 -42 65 -70 65 -14 -1 -174 -79 -356 -175z"/>
-                    <path d="M2836 1339 c-35 -27 -36 -86 -3 -117 23 -22 26 -22 429 -22 224 0
-                    414 3 423 6 24 10 46 60 39 89 -3 14 -18 34 -31 45 -25 19 -42 20 -428 20
-                    -392 0 -403 -1 -429 -21z"/>
-                    <path d="M3969 1331 c-36 -36 -37 -60 -3 -100 l26 -31 259 0 260 0 24 25 c33
-                    33 32 70 -4 106 l-29 29 -252 0 -252 0 -29 -29z"/>
-                    </g>
-                  </svg>
-                }
+            <div className="menu-header">
+              <div className="header-tab" onClick={() => this.openConnections()}>
+                <img id="home-icon" src={homeIcon}/>  
               </div>
-              <div className="menu-box">
-                <div className="feedback" onClick={() => this.giveFeedback()}>
-                  <div className="feedback-text">Feedback</div>
-                  <img className="feedback-icon" src={praise}/>
-                </div>
-              </div>
+              
             </div>
-            <Switch>
-              <Route path="/tables" component={() => <Tables changeSignedStatus={this.changeSignedStatus}/>}/>
-              <Route path="/connections" component={() => <Connections changeSignedStatus={this.changeSignedStatus}/>}/>
-              <Route path="/" component={() => <Connections changeSignedStatus={this.changeSignedStatus}/>}/>
-            </Switch>
+            <div id="main-content-body">
+              <Switch>
+                <Route path="/tables" component={() => <Tables changeSignedStatus={this.changeSignedStatus}/>}/>
+                <Route path="/connections" component={() => <Connections changeSignedStatus={this.changeSignedStatus}/>}/>
+                <Route path="/" component={() => <Connections changeSignedStatus={this.changeSignedStatus}/>}/>
+              </Switch>
+            </div>
           </Router>
         </>
     );
