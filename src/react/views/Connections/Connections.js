@@ -4,7 +4,8 @@ import { Offline } from "react-detect-offline";
 import footer_arrow_left from "../../icons/connections-page-footer-arrow-left.svg";
 import footer_arrow_right from "../../icons/connections-page-footer-arrow-right.svg";
 import filters_arrow from "../../icons/connections-page-filter-arrow.svg";
-import empty_connections_page_icon from "./icons/cyborg-131.png";
+import add_icon from "../../icons/add-icon.svg";
+import empty_connections_page_icon from "../../icons/database.png";
 import firestore from "../../icons/firestore.svg";
 import postgresql from "../../icons/postgresql.svg";
 import mysql from "../../icons/mysql.svg";
@@ -38,7 +39,7 @@ export default class Connections extends React.Component {
         super(props);
 
         this.state = {
-            connections: [],
+            connections: null,
             searchedConnections: [],
             nameInput: '',
             hostInput: '',
@@ -112,7 +113,7 @@ export default class Connections extends React.Component {
     isDBMiniMenuOpen = (connectionName) => {
         const employeeId = localStorage.getItem("employeeId");
         mixpanel.track(`isDBMiniMenuOpen`, { employeeId: employeeId});
-
+        console.log('open context menu')
         this.setState({
             isDBMiniMenu: connectionName,
         })
@@ -451,12 +452,16 @@ export default class Connections extends React.Component {
     }
 
     async openConnection(name) {
-        await this.verifyEmployee();
-        const employeeId = localStorage.getItem("employeeId");
-        mixpanel.track(`openConnection`, { employeeId: employeeId});
-        const currentConnection = this.getConnectionData(name);
-        localStorage.setItem('current_connection', JSON.stringify(currentConnection));
-        window.location.hash = `#/tables/${name}`;
+        if (this.state.isDBMiniMenu) {
+            // do nothing
+        } else {
+            await this.verifyEmployee();
+            const employeeId = localStorage.getItem("employeeId");
+            mixpanel.track(`openConnection`, { employeeId: employeeId});
+            const currentConnection = this.getConnectionData(name);
+            localStorage.setItem('current_connection', JSON.stringify(currentConnection));
+            window.location.hash = `#/tables/${name}`;
+        }
     };
 
     nameKeyPress = (e) => {
@@ -942,15 +947,11 @@ export default class Connections extends React.Component {
         mixpanel.track(`search connection`, { employeeId: employeeId});
 
         const searchNameValue = document.getElementById('connection-name-search').value;
-        const searchSchemaValue = document.getElementById('connection-schema-search').value;
-        const searchDateValue = document.getElementById('connection-date-search').value;
         let searchedConnections = [];
 
         if (this.state.connections.length !== 0) {
             this.state.connections.forEach(connection => {
-                if (connection.name.includes(searchNameValue) &&
-                    connection.schema.includes(searchSchemaValue) &&
-                    connection.createdAt.includes(searchDateValue)) {
+                if (connection.name.includes(searchNameValue)) {
                         searchedConnections.push(connection);
                 }
             });
@@ -1070,38 +1071,53 @@ export default class Connections extends React.Component {
         const searchedResults = searchedConnections.length;
         searchedConnections = searchedConnections.slice(paginationFrom - 1, paginationTo);
 
+        console.log("connections", connections)
         return (
             /* ------------------------------------------ CONNECTION PAGE ------------------------------------------- */
 
             <div className="connections-page">
                 <div>
-                    { connections.length !== 0 ?
+                    { connections && connections.length !== 0 ?
 
                             /* -------------------------- FILLED CONNECTIONS PAGE --------------------------- */
                             <div className="filled-connections-page">
 
                                 <div className='filled-connections-page-body'>
+                                    <div className="connections-page-header">
+                                        {/* ------------------------------- TITLE -------------------------------- */}
+                                        <div className="connections-page-title">
+                                            Connections
+                                            <img 
+                                                onClick={() => this.openConnectionPopup()}
+                                                src={add_icon}
+                                            />
+                                        </div>
 
-                                    {/* ------------------------------- FILTERS -------------------------------- */}
-                                    <div className="connections-page-filters" onClick={() => this.closeMiniMenu()}>
-                                        <input className="connections-page-filters-search"
-                                            id="connection-name-search"
-                                            placeholder="Search" onChange={() => this.search()}/>
+                                        {/* ------------------------------- FILTERS -------------------------------- */}
+                                        <div className="connections-page-filters" onClick={() => this.closeMiniMenu()}>
+                                            <input className="connections-page-filters-search"
+                                                id="connection-name-search"
+                                                placeholder="Search connections" onChange={() => this.search()}/>
+                                        </div>
                                     </div>
-
+                                    
                                     {/* ------------------------------ DATABASES ------------------------------- */}
-                                    <div className='connections-page-databases-block'>
+                                    <div className='connections-page-databases-block' onClick={() => this.closeMiniMenu()}>
                                     {
                                         searchedConnections.map(conn => {
                                             return (
-                                                <div className='database' id={conn.name} key={conn.name} >
+                                                <div className='database' id={conn.name} key={conn.name}
+                                                    onClick={() => this.openConnection(conn.name)}
+                                                    onContextMenu={() => (this.isDBMiniMenuOpen(conn.name),
+                                                    this.saveDeleteConnectionName(conn.name))} 
+                                                >
 
                                                     {/* ----------------- DATABASES ICON ------------------- */}
-                                                    <div className='database-icon' onClick={() => this.openConnection(conn.name)}>
-                                                        <img src={conn.dtype === 'posgres' ? postgresql : conn.dtype === 'mysql' ? mysql : firestore }/>
+                                                    <div className='database-icon'>
+                                                        <img src={conn.dtype === 'postgres' ? postgresql : conn.dtype === 'mysql' ? mysql : firestore }/>
                                                     </div>
 
-                                                    <div className='database-info' onClick={() => this.openConnection(conn.name)}>
+                                                    <div className='database-info'>
                                                         {/* ----------------- DATABASES NAME ------------------- */}
 
                                                         <div className="database-name">
@@ -1120,16 +1136,6 @@ export default class Connections extends React.Component {
                                                         </div>
                                                     </div>
                                                     
-
-                                                    <div className="database-mini-menu"
-                                                            onClick={() => (this.isDBMiniMenuOpen(conn.name),
-                                                            this.saveDeleteConnectionName(conn.name))}>
-                                                        <svg>
-                                                            <path
-                                                                d="M2.14286 7.80488C3.33333 7.80488 4.28571 8.78049 4.28571 10C4.28571 11.2195 3.33333 12.1951 2.14286 12.1951C0.952381 12.1951 0 11.2195 0 10C0 8.78049 0.952381 7.80488 2.14286 7.80488ZM0 2.19512C0 3.41463 0.952381 4.39024 2.14286 4.39024C3.33333 4.39024 4.28571 3.41463 4.28571 2.19512C4.28571 0.97561 3.33333 0 2.14286 0C0.952381 0 0 0.97561 0 2.19512ZM0 17.8049C0 19.0244 0.952381 20 2.14286 20C3.33333 20 4.28571 19.0244 4.28571 17.8049C4.28571 16.5854 3.33333 15.6098 2.14286 15.6098C0.952381 15.6098 0 16.5854 0 17.8049Z"
-                                                                fill="#5C5D6F"/>
-                                                        </svg>
-                                                    </div>
                                                     <DatabaseMiniMenuPopup
                                                         isOpen={this.state.isDBMiniMenu === conn.name}
                                                         connectionName={conn.name}
@@ -1145,7 +1151,7 @@ export default class Connections extends React.Component {
                                 </div>
                             </div>
 
-                            : // Else
+                            : connections && connections.length !== 0 && // Else
 
                             /* ------------------------------ EMPTY CONNECTIONS PAGE -------------------------------- */
                             <div className="empty-connections-page">

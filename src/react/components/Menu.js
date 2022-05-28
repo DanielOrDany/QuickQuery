@@ -54,14 +54,14 @@ class Menu extends React.Component {
 
     if (!(window.location.hash == "" || window.location.hash == "#connections")) {
       this.setState({toTables: false});
-    }
+    } 
 
     window.onhashchange = () => {
       if (!(window.location.hash == "" || window.location.hash == "#connections") && this.state.toTables) {
         this.setState({toTables: false});
       }
     };
-
+    
     this.verifyEmployee();
   }
 
@@ -185,10 +185,12 @@ class Menu extends React.Component {
   }
 
   openConnections() {
-    const employeeId = localStorage.getItem("employeeId");
-    mixpanel.track('Open connections page', { employeeId: employeeId});
-    this.setState({toTables: true});
-    window.location.hash = '#/connections';
+    if (!window.location.hash.includes('#connections')) {
+      const employeeId = localStorage.getItem("employeeId");
+      mixpanel.track('Open connections page', { employeeId: employeeId});
+      this.setState({toTables: true});
+      window.location.hash = '#/connections';
+    }
   }
 
   openTables() {

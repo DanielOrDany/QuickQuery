@@ -1,21 +1,24 @@
+@import "../../../../styles/variables";
+
 .db-mini-background {
   position: absolute;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   z-index: 99;
-  width: 100vw;
-  height: 100vh;
+  margin-top: 20px;
+  margin-left: 20px;
+  //width: 100vw;
+  //height: 100vh;
   cursor: auto;
 }
 
 .db-mini-menu-window {
-  height: 100px;
-  width: 214px;
-  margin-right: 50px;
+  min-height: 100px;
+  min-width: 214px;
   z-index: 100;
 
-  background: #FFFFFF;
+  background: $background;
   box-shadow: 0 11px 15px rgba(0, 0, 0, 0.139232);
   border-radius: 4px;
 
@@ -29,13 +32,13 @@
     align-items: center;
     padding-left: 22.44px;
 
-    font-family: Roboto, sans-serif;
+    font-family: $font-family;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
     line-height: 24px;
 
-    color: #3E3E3E;
+    color: $color;
   }
 
   .db-mini-menu-delete {
@@ -48,13 +51,13 @@
     align-items: center;
     padding-left: 22.44px;
 
-    font-family: Roboto, sans-serif;
+    font-family: $font-family;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
     line-height: 24px;
 
-    color: #3E3E3E;
+    color: $color;
   }
 
 }
@@ -62,10 +65,10 @@
 
 .db-mini-menu-edit:hover {
   cursor: pointer;
-  background: #F8F8FA;
+  background: $hover;
 }
 
 .db-mini-menu-delete:hover {
   cursor: pointer;
-  background: #F8F8FA;
+  background: $hover;
 }
