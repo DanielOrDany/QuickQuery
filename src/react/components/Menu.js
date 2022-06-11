@@ -17,6 +17,7 @@ import Tables from '../views/Tables/Tables';
 import Connections from '../views/Connections/Connections';
 import praise from "../icons/praise.svg";
 import goBack from "../icons/go-back.svg";
+import databaseIcon from "../icons/database.svg";
 import homeIcon from "../icons/home-icon.svg";
 import '../styles/Menu.scss';
 
@@ -130,50 +131,6 @@ class Menu extends React.Component {
     this.setState({isLogoutPopupOpen: false})
   };
 
-  importConfigFile = (event) => {
-    try {
-      const input = event.target;
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        const content = reader.result;
-        importConfig(content).then(data => {
-          if (data === true) {
-            this.setState({error: true, message: "Successfully uploaded.", isOpen: true});
-          } else {
-            this.setState({error: true, message: "Wrong file!", isOpen: true});
-          }
-        });
-      };
-      reader.readAsText(input.files[0]);
-      const employeeId = localStorage.getItem("employeeId");
-      mixpanel.track('Import config', { employeeId: employeeId});
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  exportConfig(filename, text) {
-    try {
-      const pom = document.createElement('a');
-      pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-      pom.setAttribute('download', filename);
-
-      if (document.createEvent) {
-        let event = document.createEvent('MouseEvents');
-        event.initEvent('click', true, true);
-        pom.dispatchEvent(event);
-      } else {
-        pom.click();
-      }
-
-      const employeeId = localStorage.getItem("employeeId");
-      mixpanel.track('Export config', { employeeId: employeeId});
-    } catch (e) {
-      this.setState({error: true, message: "FAIL", isOpen: true});
-    }
-  }
-
   logout() {
     localStorage.removeItem('employeeId');
     localStorage.removeItem('employeeToken');
@@ -241,12 +198,38 @@ class Menu extends React.Component {
     await shell.openExternal("https://forms.gle/AxHKxtBM5KJZcDWx8");
   }
 
+  hoverMenuItem(id) {
+    const hovColor = '#ffffff';
+
+    if (id == 'db') {
+      document.getElementById(id + '-1').style.fill = hovColor;
+      document.getElementById(id + '-2').style.fill = hovColor;
+      document.getElementById(id + '-3').style.fill = hovColor;
+    } else if (id == 'graph') {
+      document.getElementById(id).style.fill = hovColor;
+    }
+  }
+
+  leaveMenuItem(id, selected) {
+    const defColor = '#676a6f';
+
+    if (!selected) {
+      if (id == 'db') {
+        document.getElementById(id + '-1').style.fill = defColor;
+        document.getElementById(id + '-2').style.fill = defColor;
+        document.getElementById(id + '-3').style.fill = defColor;
+      } else if (id == 'graph') {
+        document.getElementById(id).style.fill = defColor;
+      }
+    }
+  }
+
   render() {
     return (
         <>
-          { !this.state.isSignedIn &&
+          {/* { !this.state.isSignedIn &&
             <AuthPopup onLogin={this.login} onRegister={this.register}/>
-          }
+          } */}
           { this.state.error &&
             <Modal
                 title="Error"
@@ -284,9 +267,31 @@ class Menu extends React.Component {
               <div className="header-tab" onClick={() => this.openConnections()}>
                 <img id="home-icon" src={homeIcon}/>  
               </div>
-              
             </div>
-            <div id="main-content-body">
+            <div id="main-content-body" className='main-content-body'>
+              { this.state.toTables &&
+                <div className='left-menu'>
+                  <div className='left-menu-item'>
+                    <svg version="1.1" id="db" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                      height="50px"
+                      viewBox="0 0 32 32" onMouseOver={() => this.hoverMenuItem('db')} onMouseLeave={() => this.leaveMenuItem('db', true)}>
+                      <g>
+                        <path fill="white" id='db-1' d="M5,12.4V16c0,3.4,4.8,6,11,6s11-2.6,11-6v-3.6c-2.2,2.2-6.2,3.6-11,3.6S7.2,14.6,5,12.4z"/>
+                        <path fill="white" id='db-2' d="M5,20.4V24c0,3.4,4.8,6,11,6s11-2.6,11-6v-3.6c-2.2,2.2-6.2,3.6-11,3.6S7.2,22.6,5,20.4z"/>
+                        <ellipse fill="white" id='db-3' cx="16" cy="8" rx="11" ry="6"/>
+                      </g>
+                    </svg>
+                  </div>
+                  <div className='left-menu-item'>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 0 32 32" id="graph" fill="white" onMouseOver={() => this.hoverMenuItem('graph')} onMouseLeave={() => this.leaveMenuItem('graph', false)}>
+                      <rect fill="none"/>
+                      <g>
+                        <path d="M14.06,9.94L12,9l2.06-0.94L15,6l0.94,2.06L18,9l-2.06,0.94L15,12L14.06,9.94z M4,14l0.94-2.06L7,11l-2.06-0.94L4,8 l-0.94,2.06L1,11l2.06,0.94L4,14z M8.5,9l1.09-2.41L12,5.5L9.59,4.41L8.5,2L7.41,4.41L5,5.5l2.41,1.09L8.5,9z M4.5,20.5l6-6.01l4,4 L23,8.93l-1.41-1.41l-7.09,7.97l-4-4L3,19L4.5,20.5z"/>
+                      </g>
+                    </svg>
+                  </div>
+                </div>
+              }
               <Switch>
                 <Route path="/tables" component={() => <Tables changeSignedStatus={this.changeSignedStatus}/>}/>
                 <Route path="/connections" component={() => <Connections changeSignedStatus={this.changeSignedStatus}/>}/>

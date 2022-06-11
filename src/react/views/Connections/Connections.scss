@@ -1171,7 +1171,7 @@
       display: flex;
       justify-content: space-between;
       background-color: $background;
-      padding: 0px 100px;
+      padding: 0px 20px;
 
       .connections-page-title {
         color: $color;
@@ -1180,6 +1180,7 @@
           cursor: pointer;
           border: 1px solid $border-color;
           margin-left: 10px;
+          border-radius: 50%;
         }
 
         img:hover {
@@ -1192,6 +1193,7 @@
         height: 29px;
         width: 140px;
         text-align: center;
+        margin-right: 100px;
 
         background: $background;
         border: 1px solid #E2DFE3;
@@ -1229,7 +1231,7 @@
       flex-wrap: wrap;
       width: 100%;
       height: calc(100vh - 25px);
-      padding: 0px 100px;
+      padding: 0px 10px;
 
       .database {
         width: 230px;
