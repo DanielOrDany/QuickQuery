@@ -160,8 +160,8 @@
     height: 52px;
     width: 100%;
     padding-left: 20px;
-    background: #FFFFFF;
-    border: 2px solid #D8DFEA;
+    background: $background;
+    border: 1px solid $border-color;
     box-sizing: border-box;
     border-radius: 4px;
     font-family: $font-family;
@@ -169,12 +169,11 @@
     font-weight: normal;
     font-size: 16px;
     line-height: 19px;
-    color: $black;
+    color: $color;
   }
 
   .small-form-control:hover {
-    background: #FFFFFF;
-    border: 3px solid #8EB6F4;
+    border: 1px solid $hover;
     border-radius: 4px;
   }
 }
@@ -209,8 +208,8 @@
   .firebase-form-control {
     height: 52px;
     width: 100%;
-    background: #FFFFFF;
-    border: 2px solid #D8DFEA;
+    background: $background;
+    border: 1px solid $border-color;
     box-sizing: border-box;
     border-radius: 4px;
     padding-left: 22px;
@@ -219,12 +218,11 @@
     font-weight: normal;
     font-size: 16px;
     line-height: 19px;
-    color: #000000;
+    color: $color;
   }
 
   .firebase-form-control:hover {
-    background: #FFFFFF;
-    border: 3px solid #8EB6F4;
+    border: 1px solid $hover;
     border-radius: 4px;
   }
 
@@ -242,15 +240,16 @@
       position: absolute;
       top: 0;
       left: 0;
-      background: #fff;
+      background: $background;
       padding: 10px 15px;
       display: block;
+      border: 2px solid $border-color;
       width: calc(100% - 40px);
       pointer-events: none;
       z-index: 20;
       height: 60px;
       line-height: $height - 20px;
-      color: #999;
+      color: $color;
       border-radius: 5px 10px 10px 5px;
       font-weight: 300;
     }
@@ -262,8 +261,8 @@
       right: 0;
       display: inline-block;
       height: 60px;
-      background: $defaultColor;
-      color: #fff;
+      background: $sub-button;
+      color: $color;
       font-weight: 700;
       z-index: 25;
       font-size: 16px;
@@ -276,7 +275,7 @@
     
     &:hover {
       &:before {
-        background: darken($defaultColor, 10%);
+        background: darken($sub-button-hover, 10%);
       }
     }
     
@@ -337,8 +336,8 @@
     .big-form-control {
       height: 52px;
       width: 362px;
-      background: #FFFFFF;
-      border: 2px solid #D8DFEA;
+      background: $background;
+      border: 1px solid $border-color;
       box-sizing: border-box;
       border-radius: 4px;
       font-family: $font-family;
@@ -346,7 +345,7 @@
       font-weight: normal;
       font-size: 16px;
       line-height: 19px;
-      color: $black;
+      color: $color;
       padding-left: 20px;
     }
 
@@ -355,7 +354,7 @@
     }
 
     .big-form-control:hover {
-      border: 3px solid #8EB6F4;
+      border: 1px solid $hover;
       padding-left: 21px;
     }
 
@@ -496,8 +495,8 @@
       height: 52px;
       width: 387px;
 
-      background: #FFFFFF;
-      border: 2px solid #D8DFEA;
+      background: $background;
+      border: 1px solid $border-color;
       box-sizing: border-box;
       border-radius: 4px;
       padding-left: 21px;
@@ -508,13 +507,12 @@
       font-size: 16px;
       line-height: 19px;
 
-      color: #000000;
+      color: $color;
 
     }
 
 
     .file-upload-wrapper {
-      $defaultColor: $sub-button;
       $height: 60px;
       
       position: relative;
@@ -527,7 +525,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        background: #fff;
+        background: $background;
         padding: 10px 15px;
         display: block;
         width: calc(100% - 40px);
@@ -535,7 +533,8 @@
         z-index: 20;
         height: 60px;
         line-height: $height - 20px;
-        color: #999;
+        color: $color;
+        border: 1px solid $border-color;
         border-radius: 5px 10px 10px 5px;
         font-weight: 300;
       }
@@ -547,8 +546,8 @@
         right: 0;
         display: inline-block;
         height: 60px;
-        background: $defaultColor;
-        color: #fff;
+        background: $sub-button;
+        color: $color;
         font-weight: 700;
         z-index: 25;
         font-size: 16px;
@@ -561,7 +560,7 @@
       
       &:hover {
         &:before {
-          background: darken($defaultColor, 10%);
+          background: darken($sub-button-hover, 10%);
         }
       }
       
@@ -764,8 +763,8 @@
     .big-form-control {
       height: 52px;
       width: 388px;
-      background: #FFFFFF;
-      border: 2px solid #D8DFEA;
+      background: $background;
+      border: 1px solid $border-color;
       box-sizing: border-box;
       border-radius: 4px;
 
@@ -775,18 +774,18 @@
       font-size: 16px;
       line-height: 19px;
 
-      color: #000000;
+      color: $color;
       padding-left: 22px;
 
     }
 
     .big-form-control::placeholder {
-      color: rgba(92, 93, 111, 0.6);;
+      color: rgba(92, 93, 111, 0.6);
     }
 
     .big-form-control:hover {
-      border: 3px solid #8EB6F4;
-      padding-left: 21px;
+      border: 1px solid $hover;
+      padding-left: 22px;
     }
 
     /* BODY FIRST COLUMN */

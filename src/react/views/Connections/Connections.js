@@ -458,8 +458,23 @@ export default class Connections extends React.Component {
             await this.verifyEmployee();
             const employeeId = localStorage.getItem("employeeId");
             mixpanel.track(`openConnection`, { employeeId: employeeId});
+
             const currentConnection = this.getConnectionData(name);
             localStorage.setItem('current_connection', JSON.stringify(currentConnection));
+
+            let openedConnections = localStorage.getItem('openedConnections');
+            if (openedConnections && openedConnections.length > 0) {
+                openedConnections = JSON.parse(openedConnections); // [name]
+
+                if (openedConnections.indexOf(name) < 0) {
+                    openedConnections.push(name);
+                    localStorage.setItem('openedConnections', JSON.stringify(openedConnections));
+                }
+            } else {
+                localStorage.setItem('openedConnections', JSON.stringify([name]));
+            }
+            
+
             window.location.hash = `#/tables/${name}`;
         }
     };
@@ -838,7 +853,7 @@ export default class Connections extends React.Component {
                             </div>
                             <div className="ssh-information-field">
                                 <span className="ssh-input-title">SSH Port</span>
-                                <input id="input-field-host" ref="host" className="ssh-form-control" type="text" placeholder="22" type="search"
+                                <input id="input-field-host" ref="host" className="ssh-form-control" type="text" placeholder="22"
                                        defaultValue={editConnection && editConnection.sshPort}
                                        disabled={!!editConnection}
                                        onChange={this.sshPortOnChange}/>

@@ -9,14 +9,15 @@ import {
   exportConfig,
   authLogin,
   authRegister,
-  authVerifyToken
+  authVerifyToken,
+  getDataFromDatabase
 } from "../methods";
 import Modal from '../popups/Modal';
 import AuthPopup from "../popups/Auth";
 import Tables from '../views/Tables/Tables';
 import Connections from '../views/Connections/Connections';
 import praise from "../icons/praise.svg";
-import goBack from "../icons/go-back.svg";
+import closeIcon from "../icons/cross.png";
 import databaseIcon from "../icons/database.svg";
 import homeIcon from "../icons/home-icon.svg";
 import '../styles/Menu.scss';
@@ -25,15 +26,18 @@ import SettingsPopup from "../popups/Settings";
 import LogoutPopup from "../popups/Logout";
 import mixpanel from "mixpanel-browser";
 
+
 class Menu extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       theme: false,
+      change: null,
       toTables: true,
       isSignedIn: true,
-      isLogoutPopupOpen: false
+      isLogoutPopupOpen: false,
+      connections: null
     };
 
     this.login = this.login.bind(this);
@@ -52,6 +56,17 @@ class Menu extends React.Component {
         error: true
       });
     }
+
+    getDataFromDatabase()
+      .then(data => {
+          this.setState({
+              connections: data.connections,
+              searchedConnections: data.connections
+          });
+
+          localStorage.setItem("connections", JSON.stringify(data.connections));
+          localStorage.setItem("data", JSON.stringify(data));
+      });
 
     if (!(window.location.hash == "" || window.location.hash == "#connections")) {
       this.setState({toTables: false});
@@ -146,6 +161,7 @@ class Menu extends React.Component {
       const employeeId = localStorage.getItem("employeeId");
       mixpanel.track('Open connections page', { employeeId: employeeId});
       this.setState({toTables: true});
+      localStorage.removeItem('current_connection');
       window.location.hash = '#/connections';
     }
   }
@@ -224,7 +240,75 @@ class Menu extends React.Component {
     }
   }
 
+  closeTab(name) {
+    let currentConnection = localStorage.getItem('current_connection');
+    let openedConnections = localStorage.getItem('openedConnections');
+    
+    if (openedConnections) {
+      openedConnections = JSON.parse(openedConnections);
+    }
+
+    if (currentConnection) {
+      currentConnection = JSON.parse(currentConnection).name;
+    } 
+
+    const nameIndex = openedConnections.indexOf(name);
+
+    if (nameIndex > -1) {
+      openedConnections.splice(nameIndex, 1);
+    }
+
+    if (name === currentConnection) {
+      this.openConnections();
+    }
+
+    localStorage.setItem('openedConnections', JSON.stringify(openedConnections));
+
+    this.setState({change: new Date()});
+  }
+
+  getConnectionData(connectionName) {
+    return this.state.connections.find(connection => connection.name === connectionName);
+  };
+
+  openConnection(name) {
+    const existingConnection = localStorage.getItem('current_connection');
+    
+    if (existingConnection && JSON.parse(existingConnection).name === name) {
+      // nothing
+    } else {
+      const currentConnection = this.getConnectionData(name);
+      localStorage.setItem('current_connection', JSON.stringify(currentConnection));
+
+      let openedConnections = localStorage.getItem('openedConnections');
+      if (openedConnections && openedConnections.length > 0) {
+          openedConnections = JSON.parse(openedConnections);
+
+          if (openedConnections.indexOf(name) < 0) {
+            openedConnections.push(name);
+            localStorage.setItem('openedConnections', JSON.stringify(openedConnections));
+          }
+      } else {
+        localStorage.setItem('openedConnections', JSON.stringify([name]));
+      }
+      
+      window.location.hash = `#/tables/${name}`;
+      this.setState({ change: new Date() })
+    }   
+  }
+
   render() {
+    let currentConnection = localStorage.getItem('current_connection');
+    let openedConnections = localStorage.getItem('openedConnections');
+    
+    if (openedConnections) {
+      openedConnections = JSON.parse(openedConnections);
+    }
+
+    if (currentConnection) {
+      currentConnection = JSON.parse(currentConnection).name;
+    } 
+
     return (
         <>
           {/* { !this.state.isSignedIn &&
@@ -267,6 +351,12 @@ class Menu extends React.Component {
               <div className="header-tab" onClick={() => this.openConnections()}>
                 <img id="home-icon" src={homeIcon}/>  
               </div>
+              { openedConnections ? openedConnections.map((openedConnection) => 
+                <div className={ currentConnection === openedConnection ? 'header-tab header-active-tab' : 'header-tab'}>
+                  <div onClick={() => this.openConnection(openedConnection)}>{openedConnection}</div>
+                  <img className="close-icon" src={closeIcon} onClick={() => this.closeTab(openedConnection)}/>  
+                </div>
+              ) : ''}
             </div>
             <div id="main-content-body" className='main-content-body'>
               { this.state.toTables &&
